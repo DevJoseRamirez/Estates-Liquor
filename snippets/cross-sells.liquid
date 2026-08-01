@@ -1,0 +1,55 @@
+{% comment %}
+  Renders a "cross-sells" component that displays a list of products
+
+  Accepts:
+  - title: {String} heading of the block eg. block.settings.title
+  - cross_sells_products: {Array} an array of product handles to display
+  - main_product_url: {String} the URL of the main product on which the cross sells are based
+
+  Usage:
+    {% render 'cross-sells', title: block.settings.title, cross_sells_products: cross_sells_products, main_product_url: main_product_url %}
+{% endcomment %}
+
+{%- unless cross_sells_products == blank -%}
+  <div class="cross-sells-wrapper" id="cross-sells-{{ id }}">
+    {% if title != blank %}
+      <div class="header label-font">{{ title }}</div>
+    {% endif %}
+
+    {%- if cross_sells_products != blank -%}
+      <div class="cross-sells-products{% if cross_sells_products.size > 3 %} scrollable{% endif %}">
+        {% if cross_sells_products.size > 3 %}<scrollable-container class="top">{% endif %}
+          {%- for cross_sells_product in cross_sells_products -%}
+            {%- unless cross_sells_product == blank -%}
+              {%- assign preorder_product = false -%}
+              {%- if all_products[cross_sells_product].tags contains 'preorder' -%}
+                {%- assign preorder_product = true -%}
+              {%- endif -%}
+              {% liquid
+                assign preorder_string = 'products.product.preorder' | t | downcase
+                assign preorder_product = false
+                for tag in all_products[cross_sells_product].tags
+                  assign lowecase_tag = tag | downcase
+                  if lowecase_tag contains preorder_string
+                    assign preorder_product = true
+                  endif
+                endfor
+              %}
+              {% render 'product-cross-sell', product_id: cross_sells_product, index: forloop.index0, preorder_product: preorder_product, main_product_url: main_product_url %}
+            {%- endunless -%}
+          {%- endfor -%}
+        {% if cross_sells_products.size > 3 %}</scrollable-container>{% endif %}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <safe-load-scripts class="hidden">
+    <script src="{{ 'component-product-cross-sell.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-product-cross-sell"></script>
+  </safe-load-scripts>
+
+  {% if cross_sells_products.size > 3 %}
+    <safe-load-scripts class="hidden">
+      <script src="{{ 'component-scrollable-container.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-scrollable-container"></script>
+    </safe-load-scripts>
+  {% endif %}
+{%- endunless -%}

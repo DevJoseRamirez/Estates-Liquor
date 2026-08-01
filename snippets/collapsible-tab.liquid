@@ -1,0 +1,29 @@
+{% if content != blank %}
+  <div class="collapsible-tab js{% if open_by_default %} open{% endif %}" data-open-by-default="{{ open_by_default }}">
+    <collapsible-button data-block-id="{{ block_id }}" tabindex="0">
+      <div class="summary">
+        {% render 'text-with-icon', icon: icon, custom_icon: custom_icon, text: heading, text_classes: heading_classes %}
+        <span class="inline-icon--wrapper icon--right">
+          {% if open_close_icon == "plus_minus" %}
+            {% render 'theme-icon', icon: 'plus', iconClasses: 'plus-icon' %}
+            {% render 'theme-icon', icon: 'minus', iconClasses: 'minus-icon' %}
+          {% elsif open_close_icon == "caret" %}
+            {% render 'theme-icon', icon: 'chevron_down', iconClasses: 'chevron-down' %}
+          {% endif %}
+        </span>
+      </div>
+    </collapsible-button>
+
+    <div class="collapsible-content">
+      <div class="content rte">
+        <div class="text-link-animated richtext-block">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <safe-load-scripts class="hidden">
+    <script src="{{ 'component-collapsible-button.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-collapsible-button"></script>
+  </safe-load-scripts>
+{% endif %}

@@ -1,0 +1,65 @@
+{% comment %}
+  Renders a filter swatch for a given filter option, this can either be a color or image swatch.
+
+  Accepts:
+    type {String}: The type of swatch to render, either 'color' or 'image'
+    value {Object}: Will be an array of color drops, or image drop, depending on the type
+    show_swatch_label {Boolean}: Whether or not to show the swatch label
+    swatch_label {String}: The label to show for the swatch
+    swatch_has_image {Boolean}: Whether or not the swatch has an image (used for color swatches with images)
+
+  Usage:
+    {% render 'filter-swatch',
+      type: filter_swatch_type,
+      value: filter_swatch_value,
+      show_swatch_label: section.settings.show_swatch_filter_labels,
+      swatch_label: value.label,
+      swatch_has_image: swatch_has_image
+    %}
+{% endcomment %}
+
+<div class="filter-swatch--wrapper">
+  {% case type %}
+    {% when 'color' %}
+      <div class="filter-swatch--swatch">
+        <div 
+          class="filter-swatch--color" 
+          style="{% if swatch_has_image %}background-image: url({{ value | image_url: width: 50 }}); background-size: cover; background-position: center center; background-repeat: no-repeat;{% else %}background-color: {{ value }};{% endif %}"
+        >
+          <span class="filter-swatch-sold-out filter-swatch-sold-out-background"></span>
+          <span class="filter-swatch-sold-out filter-swatch-sold-out-foreground"></span>
+        </div>
+      </div>
+    {% when 'image' %}
+      <div class="filter-swatch--swatch">
+        {{
+          value
+          | image_url: width: 300
+          | image_tag: class: 'filter-swatch--image theme-img', alt: value.alt, loading: 'lazy'
+        }}
+
+        <span class="filter-swatch-sold-out filter-swatch-sold-out-background"></span>
+        <span class="filter-swatch-sold-out filter-swatch-sold-out-foreground"></span>
+      </div>
+    {% else %}
+      <div class="filter-swatch--swatch empty-state">
+        {% comment %} Color swatch empty state {% endcomment %}
+        <div class="filter-swatch--color color-swatch-empty">
+          <span class="filter-swatch-sold-out filter-swatch-sold-out-background color-swatch--disabled"></span>
+          <span class="filter-swatch-sold-out filter-swatch-sold-out-foreground color-swatch--disabled"></span>
+        </div>
+
+        {% comment %} Image swatch empty state {% endcomment %}
+        <div class="filter-swatch--image image-swatch-empty"></div>
+
+        <span class="filter-swatch-sold-out filter-swatch-sold-out-background image-swatch--disabled"></span>
+        <span class="filter-swatch-sold-out filter-swatch-sold-out-foreground image-swatch--disabled"></span>
+      </div>
+  {% endcase %}
+
+  {% if show_swatch_label %}
+    <div class="filter-swatch--label">{{ swatch_label | escape }}</div>
+  {% else %}
+    <span class="sr-only">{{ swatch_label | escape }}</span>
+  {% endif %}
+</div>

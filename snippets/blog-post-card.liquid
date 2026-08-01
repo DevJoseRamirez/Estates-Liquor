@@ -1,0 +1,180 @@
+{% comment %}
+  Usage:
+  {% render 'blog-post-card',
+    post: article,
+    show_date: section.settings.blog_show_date,
+    show_image: section.settings.show_image,
+    show_excerpt: section.settings.show_excerpt,
+    image_shape: section.settings.image_aspect_ratio,
+    show_read_more: section.settings.show_read_more,
+    heading_font: section.settings.heading_font,
+    heading_font_size: section.settings.heading_font_size,
+    alignment: section.settings.alignment,
+    show_author: section.settings.show_author_name,
+    show_tags: section.settings.show_tags,
+    show_reading_time: section.settings.show_reading_time,
+    show_comment_count: section.settings.show_comment_count
+  %}
+{% endcomment %}
+
+{%- liquid
+  if post == blank
+
+    assign tags_size = 2
+    assign onboarding_tag_1 = 'general.onboarding.blog_tag_1' | t
+    assign onboarding_tag_2 = 'general.onboarding.blog_tag_2' | t
+    assign onboarding_tags = onboarding_tag_1 | append: ',' | append: onboarding_tag_2
+    assign post_tags_list = onboarding_tags | split: ','
+
+    assign post_image = 'image' | placeholder_svg_tag: 'icon icon--placeholder block-radius'
+    assign post_url = '#'
+    assign post_date = '2024-12-25'
+    assign post_author = 'general.onboarding.blog_author' | t
+    assign word_count = 800
+    assign comments_count = 8
+    assign post_title = 'general.onboarding.blog_post' | t
+
+    assign has_excerpt = false
+    assign post_excerpt = 'general.onboarding.blog_excerpt' | t
+
+  else
+
+    assign tags_size = post.tags.size
+    assign post_tags_list = post.tags
+
+    if post.image
+      capture post_image
+        render 'responsive-image', image: post.image, allow_stretch: true
+      endcapture
+    endif
+
+    assign post_url = post.url
+    assign post_date = post.published_at
+    assign post_author = post.author
+    assign word_count = post.content | strip_html | split: ' ' | size
+    assign comments_count = post.comments_count
+    assign post_title = post.title
+
+    if post.excerpt.size > 0
+      assign has_excerpt = true
+      assign post_excerpt = post.excerpt
+    else
+      assign post_excerpt = post.content | strip_html | truncatewords: 20
+    endif
+
+  endif
+-%}
+
+{% if show_tags and tags_size > 0 %}
+  {% capture post_tags %}
+    <div class="blog-post-card__tags">
+      {% for tag in post_tags_list %}
+        {%- liquid
+          assign tag_handle = tag | handle
+          if blog.url
+            assign tags_url = blog.url | append: '/tagged/' | append: tag_handle
+          elsif post != blank and post.url
+            assign post_url_parts = post.url | split: '/'
+            assign blog_url = '/' | append: post_url_parts[1] | append: '/' | append: post_url_parts[2]
+            assign tags_url = blog_url | append: '/tagged/' | append: tag_handle
+          else
+            assign tags_url = '#'
+          endif
+        -%}
+
+        <a class="blog-post-card__tag custom-badge badge" href="{{ tags_url }}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+  {% endcapture %}
+{% endif %}
+
+<div class="blog-post-card blog-post-card--{{ alignment }}">
+  {% assign no_image = true %}
+  {% if post_image and show_image %}
+    {% assign no_image = false %}
+    <div class="blog-post-card__image-wrap">
+      <div class="blog-post-card__image block-radius-clip{% unless image_shape == 'original' %} blog-post-card__image--aspect-ratio--{{ image_shape }}{% endunless %}">
+        <a href="{{ post_url }}" tabindex="-1" data-animate-hover-zoom>
+          {{ post_image }}
+        </a>
+        {% if show_tags and tags_size > 0 and image_shape != 'circle' %}
+          <div class="blog-post-card__tags-over-image">
+            {{ post_tags }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if show_tags and tags_size > 0 %}
+    {% if no_image or image_shape == 'circle' %}
+      <div class="blog-post-card__tags-block">
+        {{ post_tags }}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <div class="blog-post-card__header">
+    {% if show_date or show_author or show_reading_time or show_comment_count %}
+      <div class="blog-post-card__meta">
+        {% if show_date %}
+          <time class="blog-post-card__date" datetime="{{ post_date | date: '%Y-%m-%d' }}">{{ post_date | time_tag: format: 'date' }}</time>
+        {% endif %}
+        {% if show_author and post_author %}
+          {% if show_date %}
+            <span class="blog-post-card__meta-separator"></span>
+          {% endif %}
+          <span class="blog-post-card__author">{{ post_author }}</span>
+        {% endif %}
+        {% if show_reading_time %}
+          {% assign reading_time = word_count | divided_by: 200 | plus: 1 %}
+          {% if show_date or show_author %}
+            <span class="blog-post-card__meta-separator"></span>
+          {% endif %}
+          <span class="blog-post-card__reading-time">{{ 'blogs.article.reading_time' | t: time: reading_time }}</span>
+        {% endif %}
+        {% if show_comment_count %}
+          {% if show_date or show_author or show_reading_time %}
+            <span class="blog-post-card__meta-separator"></span>
+          {% endif %}
+          <span class="blog-post-card__comment-count">
+            {% if comments_count == 1 %}
+              {{ 'blogs.comments.with_count.one' | t: count: comments_count }}
+            {% else %}
+              {{ 'blogs.comments.with_count.other' | t: count: comments_count }}
+            {% endif %}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <h5 class="blog-post-card__title{% if heading_font == 'body' %} blog-post-card__title--body{% endif %}"{% if heading_font_size %} style="font-size: {{ heading_font_size }}px;"{% endif %}><a href="{{ post_url }}">{{ post_title }}</a></h5>
+  </div>
+
+  {% if show_excerpt %}
+    <div class="blog-post-card__excerpt rte">
+      {% if has_excerpt %}
+        {{ post_excerpt }}
+      {% else %}
+        <p>{{ post_excerpt }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if show_read_more %}
+    {% assign read_more_text = 'blogs.article.read_more' | t %}
+    {% if button_style %}
+      {% render 'dynamic-section-button',
+        id: button_id,
+        link: post_url,
+        label: read_more_text,
+        style: button_style
+      %}
+    {% else %}
+      <div class="text-link-animated">
+        <a href="{{ post_url }}">{{ read_more_text }}</a>
+      </div>
+    {% endif %}
+  {% endif %}
+
+</div>

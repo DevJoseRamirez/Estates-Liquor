@@ -1,0 +1,230 @@
+{{ 'section-accordion.min.css' | asset_url | stylesheet_tag }}
+
+{% liquid 
+  assign width_class = ''
+  unless section.settings.section_width == 'full-width'
+    assign width_class = 'width--' | append: section.settings.section_width
+  endunless
+
+%}
+
+<section
+  class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="accordion--faq"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  {% comment %} Section title and description {% endcomment %}
+  {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, alignment: section.settings.section_header_alignment, wrapper_classes: width_class %}
+
+  <div{% unless section.settings.section_width == 'full-width' %} class="{{ width_class }}"{% endunless %}>
+    {% for block in section.blocks %}
+      {% assign content = block.settings.text %}
+      {% if block.settings.page.content %}
+        {% assign content = content | append: block.settings.page.content %}
+      {% endif %}
+
+      {% unless content == blank %}
+        <div
+          class="accordion-content"
+          data-animate
+          data-animate-order="{% render 'block-animation-offset', 
+            title: section.settings.title, 
+            description: section.settings.description, 
+            base: forloop.index 
+          %}"
+          {{ block.shopify_attributes }}
+        >
+          {% render 'collapsible-tab', icon: 'none', custom_icon: false, heading: block.settings.question, content: content, open_close_icon: section.settings.faq_icon, open_by_default: block.settings.open_by_default, block_id: block.id %}
+        </div>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.accordion.name",
+  "class": "accordion-faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "radio",
+      "id": "faq_icon",
+      "label": "t:all.Open_Close_icon_style",
+      "options": [
+        {
+          "value": "plus_minus",
+          "label": "t:all.Plus_minus"
+        },
+        {
+          "value": "caret",
+          "label": "t:all.Caret"
+        }
+      ],
+      "default": "plus_minus"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:all.Narrow"
+        },
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full-width",
+          "label": "t:all.Full_width"
+        }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_content",
+      "name": "t:sections.accordion.blocks.tab_content.name",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.info.content"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.tab_heading.label"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:all.Heading",
+          "default": "Place your question or heading here"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "t:sections.template--product.blocks.collapsible-tab.settings.open_by_default.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "<p>Here you can place an explanation or answer to the question.</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "t:all.Page"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.accordion.presets.name",
+      "blocks": [
+        {
+          "type": "tab_content"
+        },
+        {
+          "type": "tab_content"
+        },
+        {
+          "type": "tab_content"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

@@ -1,0 +1,88 @@
+{% comment %}
+    Renders an input.
+    Accepts:
+    - has_label: {Boolean} use if the input should be accompanied by a label
+    - hint_text: {String} the text to display as a hint (optional)
+    - animate_label: {Boolean} use if you want to animate label on input focus
+    - label_text: {String} the text to display as the label
+    - label_class: {String} any custom classes for the label element
+    - container_classes: {String} add custom classes to the container (only works if animated)
+    - type: {String} sets the value of the type attribute. If none is specified, the type will be 'text' by default.
+    - id: {String} ID to be applied to the input
+    - classes: {String} custom classes to be applied to the input (optional)
+    - max_characters: {Number} the maximum number of characters allowed in a text input (optional)
+    - secondary_label: {String} the text to display as a secondary label. The label will be positioned below the input (optional)
+    - value: {String} the input value (optional)
+    - placeholder: {String} use if you want to show placeholder text for the input (required only if animate_label is true)
+    - name: {String} the name attribute of the input
+    - attributes: {String} add custom element attributes (data-* or aria)
+    - required: {Boolean} use if the input cannot be submitted unless a value is provided
+    - data_aid: {String} this will apply to the input element (will have a default value if left blank)
+    - checked: {Boolean} determines whether the input is checked
+    - disabled: {Boolean} determines whether the input is disabled
+    - form_id: {String} the form id to be used for the form attribute (optional)
+    - error_message: {String} the error message to display if the input is invalid
+
+    Usage:
+      {% render 'form-input', type: 'email', id: 'yellow', classes: 'py-3', value: 'email', placeholder: 'Enter email address', name: 'contact[email]'', attributes: 'aria-label="email address"', required: true, has_label: true %}
+
+    Usage with animate_label:
+      {% render 'form-input', has_label: true, animate_label: true, label_text: "Label text", id: "name", placeholder: "name", classes: "w-full", value: form.author, name: "name", attributes: name-attributes, required: true %}
+{% endcomment %}
+
+{% capture label %}
+  <label {% if label_class %}class="{{ label_class }}"{% endif %} for="{{ id }}"{% if animate_label %} animate-label aria-hidden="true"{% endif %}>{{ label_text }}</label>
+{% endcapture %}
+
+
+{% unless animate_label %}
+  {% if has_label %}
+    {{ label }}
+  {% endif %}
+{% endunless %}
+
+{% if hint_text != blank %}
+  <div class="form-input-hint text-link-animated">{{ hint_text }}</div>
+{% endif %}
+
+{% if animate_label %}
+  <div class="{% if container_classes %} {{ container_classes }}{% endif %}">
+  {% assign placeholder = placeholder | default: 'general.forms.form_input' | t %}
+{% endif %}
+
+{% unless has_label %}
+  <label class="sr-only" for="{{ id }}">{{ placeholder }}</label>
+{% endunless %}
+
+<input
+  type="{{ type | default: "text" }}"
+  name="{{ name }}" 
+  placeholder="{{ placeholder }}" 
+  {% if error_message %}data-error-message="{{ error_message | escape }}"{% endif %}
+  {% if classes %}class="{{ classes }}"{% endif %} 
+  {% if animate_label %}animate-label{% endif %} 
+  {% if id %}id="{{ id }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if attributes %}{{ attributes }}{% endif %}
+  {% if required %}required aria-required="true"{% endif %}
+  {% if type == 'number' %}min="0" max="9999"{% endif %}
+  {% if type == 'tel' %}pattern="[0-9\-\+]*"{% endif %}
+  {% if type == 'email' %}pattern=".+@.+\..+" title="{{ 'general.forms.email_must_be_formatted_as_an_email' | t }}"{% endif %}
+  {% if data_aid %}data-aid="{{ data_aid }}"{% else %}data-aid="form-input"{% endif %}
+  {% if checked %}checked{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if form_id %}form="{{ form_id }}"{% endif %}
+  {% if max_characters != '' %}maxlength="{{ max_characters }}"{% endif %}
+>
+
+{% if has_label and animate_label == true %}
+  {{ label }}
+{% endif %}
+
+{% if has_label and animate_label %}
+  </div>
+{% endif %}
+
+{% if secondary_label and secondary_label != '' %}
+  <label class="input-label--secondary">{{ secondary_label }}</label>
+{% endif %}

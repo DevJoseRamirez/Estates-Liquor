@@ -1,0 +1,400 @@
+{{ 'section-interactive-menu.min.css' | asset_url | stylesheet_tag }}
+
+<style>
+  /* overrides global font-sizes with section font-sizes */
+  [data-wetheme-section-id="{{ section.id }}"] .interactive-menu-wrapper * {
+    font-size: {{ section.settings.menu_item_size }}px !important;
+    line-height: normal;
+  }
+
+  {% if section.settings.menu_items_color != "rgba(0,0,0,0)" %}
+    [data-wetheme-section-id="{{ section.id }}"] .interactive-menu-wrapper interactive-menu .custom-cursor {
+      background-color: rgba({{ section.settings.menu_items_color.rgba }});
+    }
+    
+    [data-wetheme-section-id="{{ section.id }}"] .interactive-menu-wrapper .placeholder-noblocks,
+    [data-wetheme-section-id="{{ section.id }}"] .interactive-menu-wrapper interactive-menu {
+      color: rgba({{ section.settings.menu_items_color.rgba }}) !important;
+    }
+  {% endif %}
+</style>
+
+{% liquid
+  assign section_height = 'interactive-menu-section-height--' | append: section.settings.min_height
+
+  assign menu_position = 'menu-position--' | append: section.settings.menu_position 
+  
+  assign menu_aligment = 'menu-aligment-mobile--' | append: section.settings.alignment_mobile | append: ' menu-aligment-desktop--' | append: section.settings.alignment_desktop
+
+  assign menu_items_color = 'inherit'
+  if section.settings.menu_items_color != "rgba(0,0,0,0)"
+    assign menu_items_color = 'rgba(' | append: section.settings.menu_items_color.rgba | append: ')'
+  endif
+
+  assign animation_offset = 2
+%}
+
+<section
+  class="wrapper-spacing--v{% if section.settings.section_width == 'content' %} wrapper-spacing--h{% endif %}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="interactive-menu"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--margin-section-top: {{ section.settings.section_margin_top }}px; --margin-section-bottom: {{ section.settings.section_margin_bottom }}px;"
+>
+
+  <div class="interactive-menu-wrapper {{ section_height }} color-scheme--{{ section.settings.colors }}{% if section.settings.section_width == 'content' %} width--content block-radius-clip{% endif %}">
+    {% if section.blocks.size == 0 and section.settings.image_desktop_default == blank %}
+      <div class="placeholder-noblocks">
+        {{ 'homepage.onboarding.no_content' | t }}
+      </div>
+
+    {% else %}
+
+      <interactive-menu>
+
+        {% if section.settings.image_desktop_default or section.settings.image_mobile %}
+          <div class="default--imgs" data-default-imgs-wrapper>
+            {% liquid
+      
+              if section.settings.image_mobile
+                assign bg_img_mobile = section.settings.image_mobile
+                assign bg_img_mobile_classes = ' interactive-menu--bg-img-mobile'
+                
+                render 'responsive-image', image: bg_img_mobile, wrapper_class: bg_img_mobile_classes, allow_stretch: true, sizes: '100vw'
+              endif
+      
+              if section.settings.image_desktop_default
+                assign bg_img_desktop = section.settings.image_desktop_default
+                assign bg_img_desktop_classes = ' interactive-menu--bg-img-desktop ' | append: section_height
+                assign bg_img_desktop_fit_container = true
+                if section.settings.min_height == 'original'
+                  assign bg_img_desktop_fit_container = false
+                endif
+                
+                render 'responsive-image', image: bg_img_desktop, wrapper_class: bg_img_desktop_classes, allow_stretch: bg_img_desktop_fit_container, sizes: '100vw'
+              endif
+            %}
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <ul class="interactive-menu--images">
+            {% for block in section.blocks %}
+              <li data-menu-image-block="{{ block.id }}" class="interactive-menu--image-wrapper{% if block.settings.menu_item_image == blank %} interactive-menu--block-bg-img-placeholder{% endif %}" {{ block.shopify_attributes }}>
+                {% if block.settings.menu_item_image != blank %}
+                  {% liquid
+                    assign block_bg_img = block.settings.menu_item_image
+                    assign block_bg_img_classes = ' interactive-menu--block-bg-img ' | append: section_height
+                    assign block_bg_img_fit_container = true
+                    if section.settings.min_height == 'original'
+                      assign block_bg_img_fit_container = false
+                    endif
+                    
+                    render 'responsive-image', image: block_bg_img, wrapper_class: block_bg_img_classes, allow_stretch: block_bg_img_fit_container, sizes: '100vw'
+                  %}
+                {% else %}
+                  {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                  <div class="interactive-menu--placeholder-wrapper">
+                    {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder--subdued' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+                  </div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="interactive-menu--items nav-link-animated--custom {{ menu_position }} {{ menu_aligment }}" style="color: {{ menu_items_color }}">
+            {% for block in section.blocks %}
+              {% liquid
+                assign tabindex = 'tabindex="0"'
+                if block.settings.menu_item_link
+                  assign tabindex = 'tabindex="-1"'
+                endif 
+              %}
+              {% capture menu_item_data %}
+                data-menu-item data-menu-item-block="{{ block.id }}" data-menu-item-color="rgba({{ block.settings.menu_item_color.rgba }})"
+              {% endcapture %}
+            
+              <li class="h2 interactive-menu--item{% unless block.settings.menu_item_link %} animated-link--item--nested{% endunless %}" {{ tabindex }}{% unless block.settings.menu_item_link %} {{ menu_item_data }}{% endunless %} data-animate data-animate-order="{{ forloop.index | plus: animation_offset }}" {{ block.shopify_attributes }}>
+                {% if block.settings.menu_item_link %}
+                  <a href="{{ block.settings.menu_item_link }}" {{ menu_item_data }} class="animated-link--item--nested">
+                {% endif %}
+                  <span class="animated-underline">{{ block.settings.menu_item_text }}</span>
+                {% if block.settings.menu_item_link %}
+                  </a>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <div data-custom-cursor class="custom-cursor"></div>
+        
+      </interactive-menu>
+
+      <safe-load-scripts class="hidden">
+        <script src="{{ 'component-interactive-menu.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-interactive-menu"></script>
+      </safe-load-scripts>
+    {% endif %}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.interactive-menu.name",
+  "class": "section--interactive-menu",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop_default",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "select",
+      "id": "min_height",
+      "label": "t:all.Section_height",
+      "default": "40vw",
+      "options": [
+        {
+          "value": "30vw",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "40vw",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "50vw",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "alignment_desktop",
+      "label": "t:all.Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "menu_position",
+      "label": "t:sections.interactive-menu.settings.menu_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "select",
+      "id": "alignment_mobile",
+      "label": "t:all.Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Menu"
+    },
+    {
+      "type": "range",
+      "id": "menu_item_size",
+      "min": 15,
+      "max": 50,
+      "step": 1,
+      "unit": "t:all.px",
+      "label": "t:all.Font_size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "default": "full",
+      "options": [
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Full_width"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_items_color",
+      "label": "t:sections.interactive-menu.settings.menu_items_color.label",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "info": "t:sections.interactive-menu.settings.color.info",
+      "default": "accent",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "t:all.Menu_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item_text",
+          "label": "t:sections.interactive-menu.blocks.menu_item.settings.menu_item.label",
+          "default": "Menu item"
+        },
+        {
+          "type": "url",
+          "id": "menu_item_link",
+          "label": "t:all.Link"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.interactive-menu.blocks.menu_item.settings.hover_effects.label"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.interactive-menu.blocks.menu_item.settings.hover_effects.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "menu_item_image",
+          "label": "t:all.Image_on_desktop"
+        },
+        {
+          "type": "color",
+          "id": "menu_item_color",
+          "label": "t:all.Text",
+          "default": "#FFFFFF"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.interactive-menu.presets.name",
+      "blocks": [
+        {
+          "type": "menu_item"
+        },
+        {
+          "type": "menu_item"
+        },
+        {
+          "type": "menu_item"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

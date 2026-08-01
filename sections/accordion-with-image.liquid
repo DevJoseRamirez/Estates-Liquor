@@ -1,0 +1,402 @@
+{{ 'section-accordion-with-image.min.css' | asset_url | stylesheet_tag }}
+
+{% liquid 
+  assign width_class = ''
+  unless section.settings.section_width == 'full-width'
+    assign width_class = 'width--' | append: section.settings.section_width
+  endunless
+%}
+
+{% if section.blocks.size > 0 %}
+  <div 
+    class="accordion-with-image-container accordion-with-image--{{ section.id }} color-scheme--{{ section.settings.colors }} wrapper-spacing--v wrapper-spacing--h{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}" 
+    data-wetheme-section-type="image--image-with-text" 
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px; --image-max-width: {{ section.settings.image_max_width }}px;"
+  >
+    {% comment %} Section title and description {% endcomment %}
+    {% render 'dynamic-section-header', section_title: section.settings.section_title, section_description: section.settings.section_description, alignment: section.settings.section_header_alignment, wrapper_classes: width_class %}
+
+    <div class="{{ width_class }} main-content-wrapper{% if section.settings.image_position_desktop == 'left' %} main-content-wrapper--image-left{% endif %}{% if section.settings.image_position_mobile == 'top' %} main-content-wrapper--image-top{% endif %}">
+      <div class="accordion-wrapper">
+        {% for block in section.blocks %}
+          {% assign content = block.settings.text %}
+          {% if block.settings.page.content %}
+            {% assign content = content | append: block.settings.page.content %}
+          {% endif %}
+
+          {% unless content == blank %}
+            <div
+              class="collapsible-tab js{% if block.settings.open_by_default %} open{% endif %}{% if forloop.last %} last-tab{% endif %}" 
+              data-open-by-default="{{ block.settings.open_by_default }}"
+              data-animate
+              data-animate-order="{% render 'block-animation-offset', 
+                title: section.settings.section_title, 
+                description: section.settings.section_description, 
+                base: forloop.index 
+              %}"
+              {{ block.shopify_attributes }}
+            >
+              <collapsible-button data-block-id="{{ block.id }}" tabindex="0">
+                <div class="summary">
+                  {{ block.settings.accordion_header }}
+                  <span class="inline-icon--wrapper icon--right">
+                    {% if section.settings.faq_icon == "plus_minus" %}
+                      {% render 'theme-icon', icon: 'plus', iconClasses: 'plus-icon' %}
+                      {% render 'theme-icon', icon: 'minus', iconClasses: 'minus-icon' %}
+                    {% elsif section.settings.faq_icon == "caret" %}
+                      {% render 'theme-icon', icon: 'chevron_down', iconClasses: 'chevron-down' %}
+                    {% endif %}
+                  </span>
+                </div>
+              </collapsible-button>
+
+              <div class="collapsible-content">
+                <div class="content rte">
+                  <div class="text-link-animated richtext-block">
+                    {{ content }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <safe-load-scripts class="hidden">
+              <script src="{{ 'component-collapsible-button.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-collapsible-button"></script>
+            </safe-load-scripts>
+          {% endunless %}
+        {% endfor %}
+      </div>
+
+      <div class="image-wrapper block-radius-clip">
+        <div class="content-wrapper{% if section.settings.image--background-color == 'rgba(0,0,0,0)' %} content-wrapper--no-padding{% endif %}">
+          {% unless section.settings.link == blank %}
+            <a href="{{ section.settings.link }}" data-animate-hover-zoom>
+          {% endunless %}
+            <div class="image--container block-radius{% if settings.animations_enabled %} kb-enabled{% endif %}">
+              {% if section.settings.accordion_image %}
+                {% render 'responsive-image', image: section.settings.accordion_image, allow_stretch: true %}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+              {% endif %}
+            </div>
+            {% unless section.settings.title == blank %}<h2 style="color: rgba({{ section.settings.image--text-color.rgba }});">{{ section.settings.title | strip }}</h2>{% endunless %}
+            {% unless section.settings.text == blank %}<p style="color: rgba({{ section.settings.image--text-color.rgba }});">{{ section.settings.text | strip }}</p>{% endunless %}
+            {% unless section.settings.button_text == blank %}
+              <button class="btn accordion--button" style="background-color: rgba({{ section.settings.button_background_color.rgba }}); color: rgba({{ section.settings.button_text_color.rgba }});" aria-label="{{ section.settings.button_text }}">
+                {{ section.settings.button_text }}
+              </button>
+            {% endunless %}
+          {% unless section.settings.link == blank %}
+            </a>
+          {% endunless %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .accordion-with-image--{{ section.id }} .collapsible-tab .summary .minus-icon {
+      display: none;
+    }
+
+    .accordion-with-image--{{ section.id }} .collapsible-tab.open .summary .plus-icon {
+      display: none;
+    }
+
+    .accordion-with-image--{{ section.id }} .collapsible-tab.open .summary .minus-icon {
+      display: block;
+    }
+
+    .accordion-with-image--{{ section.id }} .content-wrapper {
+      background-color: rgba({{ section.settings.image--background-color.rgba }});
+    }
+
+    .accordion-with-image--{{ section.id }} .accordion--button {
+      background-color: rgba({{ section.settings.button_background_color.rgba }});
+      color: rgba({{ section.settings.button_text_color.rgba }});
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.product--accordion-with-image.name",
+  "class": "accordion-with-image",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "t:all.Heading",
+      "default": "Share your story"
+    },
+    {
+      "type": "richtext",
+      "id": "section_description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "radio",
+      "id": "faq_icon",
+      "label": "t:all.Open_Close_icon_style",
+      "options": [
+        {
+          "value": "plus_minus",
+          "label": "t:all.Plus_minus"
+        },
+        {
+          "value": "caret",
+          "label": "t:all.Caret"
+        }
+      ],
+      "default": "plus_minus"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "accordion_image",
+      "label": "t:all.Image",
+      "info": "t:all.1400_x_1400px_recommended"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "label": "t:all.Maximum_width",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "t:all.px",
+      "default": 350
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:all.Heading"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:all.Image_link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:all.Button_label"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position_desktop",
+      "label": "t:all.image_position_desktop",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "image_position_mobile",
+      "label": "t:all.image_position_mobile",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:all.Top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:all.Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:all.Narrow"
+        },
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full-width",
+          "label": "t:all.Full_width"
+        }
+      ],
+      "default": "content"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color",
+      "id": "image--background-color",
+      "label": "t:sections.product--accordion-with-image.settings.image--background-color.label",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "image--text-color",
+      "label": "t:sections.product--accordion-with-image.settings.image--text-color.label",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Button_background",
+      "default": "#242424"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Button_text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "light",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "t:sections.product--accordion-with-image.blocks.accordion.name",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.info.content"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.tab_heading.label"
+        },
+        {
+          "type": "text",
+          "id": "accordion_header",
+          "label": "t:all.Heading",
+          "default": "About us"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "t:sections.template--product.blocks.collapsible-tab.settings.open_by_default.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "<p>Place some content here to describe this topic.</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "t:all.Page"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product--accordion-with-image.presets.name",
+      "blocks": [
+        {
+          "type": "accordion"
+        },
+        {
+          "type": "accordion"
+        },
+        {
+          "type": "accordion"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

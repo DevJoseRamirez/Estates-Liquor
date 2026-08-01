@@ -1,0 +1,1252 @@
+{% comment %} ============ SECTION ASSETS ============ {% endcomment %}
+{{ 'section-layered-showcase.min.css' | asset_url | stylesheet_tag }}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-deferred-media.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="deferred-media"></script>
+</safe-load-scripts>
+
+{% liquid 
+  assign heading_color = section.settings.heading_color
+  if heading_color == 'rgba(0, 0, 0, 0)' or heading_color == 'rgba(0,0,0,0)'
+    assign heading_color = settings.color_body_text
+  endif
+
+  assign svg_index = '1,2,3' | split: ','
+%}
+
+{% unless request.visual_preview_mode %}
+  {% comment %} Load animation script only for multiple blocks {% endcomment %}
+  {% if section.blocks.size > 1 %}
+    <safe-load-scripts class="hidden">
+      <script src="{{ 'component-layered-showcase.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="layered-showcase"></script>
+    </safe-load-scripts>
+  {% endif %}
+
+  {% liquid 
+    assign ratio = section.settings.aspect_ratio
+    assign ratio_class = 'layered-showcase__aspect-ratio-' | append: ratio
+    assign first_block = section.blocks.first
+    assign centered_media = false
+
+    if first_block.settings.image != blank
+      assign first_block_image_width = first_block.settings.image.width | plus: 0
+      assign first_block_image_height = first_block.settings.image.height | plus: 0
+      assign first_block_image_width_threshold = first_block.settings.image.width | plus: 50
+    elsif first_block.settings.video != blank
+      if first_block.settings.cover_image != blank
+        assign first_block_image_width = first_block.settings.cover_image.width | plus: 0
+        assign first_block_image_height = first_block.settings.cover_image.height | plus: 0
+        assign first_block_image_width_threshold = first_block.settings.cover_image.width | plus: 50
+      else
+        assign first_block_image_width = first_block.settings.video.preview_image.width | plus: 0
+        assign first_block_image_height = first_block.settings.video.preview_image.height | plus: 0
+        assign first_block_image_width_threshold = first_block.settings.video.preview_image.width | plus: 50
+      endif
+    elsif first_block.settings.url != blank
+      if first_block.settings.cover_image != blank
+        assign first_block_image_width = first_block.settings.cover_image.width | plus: 0
+        assign first_block_image_height = first_block.settings.cover_image.height | plus: 0
+        assign first_block_image_width_threshold = first_block.settings.cover_image.width | plus: 50
+      else
+        assign first_block_image_width = 1920
+        assign first_block_image_height = 1080
+        assign first_block_image_width_threshold = 1920
+      endif
+    else
+      assign first_block_image_width = 1000
+      assign first_block_image_height = 1000
+      assign first_block_image_width_threshold = 1000
+    endif
+
+    assign bottom_padding_threshold = 0
+    if section.blocks.size == 2
+      assign bottom_padding_threshold = 20
+    elsif section.blocks.size == 3
+      assign bottom_padding_threshold = 40
+    endif
+
+    if first_block_image_height > first_block_image_width_threshold
+      assign centered_media = true
+    else
+      assign centered_media = false
+    endif
+  %}
+
+  {% if section.settings.override_button_colors %}
+    {% render 'button-color-overrides',
+      id: section.id,
+      style: section.settings.buttons_style,
+      text_color: section.settings.button_color,
+      background_color: section.settings.button_background_color
+    %}
+    {% assign play_btn_id = 'play-btn-' | append: section.id %}
+    {% render 'button-color-overrides',
+      id: play_btn_id,
+      style: 'filled',
+      text_color: section.settings.button_color,
+      background_color: section.settings.button_background_color
+    %}
+  {% endif %}
+  
+  {% comment %} ============ SECTION CONTAINER ============ {% endcomment %}
+  <div
+    class="layered-showcase wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }} show-on-scroll"
+    data-wetheme-section-type="layered-showcase"
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px; --heading-size-desktop: {{ section.settings.heading_font_size_desktop }}px; --heading-size-mobile: {{ section.settings.heading_font_size_mobile }}px; --text-size-desktop: {{ section.settings.text_font_size_desktop }}px; --text-size-mobile: {{ section.settings.text_font_size_mobile }}px; --bottom-padding-threshold: {{ bottom_padding_threshold }}px"
+  >
+    <div class="width--content">
+      {% if section.blocks.size == 0 %}
+        <div class="placeholder-noblocks">
+          {{ 'homepage.onboarding.no_content' | t }}
+        </div>
+      {% else %}
+        <layered-showcase data-section-id="{{ section.id }}" data-blocks-count="{{ section.blocks.size }}">
+          {% for i in (1..2) %}
+            {% liquid 
+              capture device
+                cycle 'desktop', 'mobile'
+              endcapture
+            %}
+
+            <div class="layered-showcase__container layered-showcase__container--{{ device }}" data-layered-showcase-blocks>
+              {% if device == 'mobile' and section.blocks.size > 1 %}
+                <safe-load-scripts class="hidden">
+                  <script src="{{ 'component-content-grid-slider.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="grid-slider"></script>
+                </safe-load-scripts>
+
+                <content-grid-slider 
+                  class="layered-showcase--slider"
+                  data-grid-slider-wrapper
+                  data-section-id="{{ section.id }}"
+                  data-desktop-only="false"
+                  data-mobile-only="true"
+                  data-slides-per-view-mobile="1"
+                  data-slides-per-view-desktop="1"
+                  data-peek-desktop-enabled="false"
+                  data-peek-mobile-enabled="false"
+                  data-pagination-overlay-enabled="false"
+                  data-remove-spacing="false"
+                  data-grid-spacing-desktop="30"
+                  data-grid-spacing-mobile="15"
+                >
+                  <div class="content-grid__slider swiper disable-desktop">
+                    <div class="content-grid swiper-wrapper content-grid--gap">
+              {% endif %}
+
+              {% comment %} ============ BLOCK PROCESSING ============ {% endcomment %}
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'image_and_text' %}
+                    {% comment %} ===== IMAGE AND TEXT BLOCK ===== {% endcomment %}
+                    <div
+                      class="layered-showcase__block{% if device == 'mobile' and section.blocks.size > 1 %} content-grid-item swiper-slide{% endif %} layered-showcase__block--image-text layered-showcase__block--{{ forloop.index }} layered-showcase__desktop-media-{{ section.settings.media_position_desktop }} layered-showcase__mobile-media-{{ section.settings.media_position_mobile }} layered-showcase__desktop-align-{{ section.settings.alignment_desktop }} layered-showcase__mobile-align-{{ section.settings.alignment_mobile }} {{ ratio_class }}{% if forloop.first %} layered-showcase__block--first{% else %} layered-showcase__block--layered{% endif %}"
+                      style="--aspect-width: {{ first_block_image_width }}; --aspect-height: {{ first_block_image_height }};"
+                      data-layered-showcase-block
+                      data-block-id="{{ block.id }}"
+                      data-center-media="{{ centered_media }}"
+                    >
+                      {% render 'layered-showcase-block-bg', block: block %}
+                      {% comment %} ==== MEDIA CONTENT ==== {% endcomment %}
+                      {% capture media_content %}
+                        <div class="layered-showcase__media" data-layered-showcase-media-content>
+                          {% if block.settings.image != blank %}
+                            {% render 'responsive-image', image: block.settings.image, allow_stretch: true, class: 'block-radius' %}
+                          {% else %}
+                            {{ 'collection-' | append: svg_index[forloop.index0] | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                          {% endif %}
+                        </div>
+                      {% endcapture %}
+
+                      {% comment %} Button logic {% endcomment %}
+                      {%- liquid
+                        assign has_button = false
+                        assign has_first_button = false
+                        assign has_second_button = false
+                        if block.settings.first_button_label != blank
+                          assign has_button = true
+                          assign has_first_button = true
+                        endif
+                        if block.settings.second_button_label != blank
+                          assign has_button = true
+                          assign has_second_button = true
+                        endif
+                      -%}
+
+                      {%- liquid
+                        assign block_heading_color = block.settings.block_heading_color
+                        if block_heading_color == 'rgba(0, 0, 0, 0)' or block_heading_color == 'rgba(0,0,0,0)'
+                          assign block_heading_color = blank
+                        endif
+                        assign block_text_color = block.settings.block_text_color
+                        if block_text_color == 'rgba(0, 0, 0, 0)' or block_text_color == 'rgba(0,0,0,0)'
+                          assign block_text_color = blank
+                        endif
+                      -%}
+                      {% comment %} ==== TEXT CONTENT ==== {% endcomment %}
+                      {% capture text_content %}
+                        {% unless block.settings.subheading == blank and block.settings.heading == blank and block.settings.text == blank and has_button == false %}
+                          <div class="layered-showcase__content layered-showcase__desktop-alignment--{{ section.settings.alignment_desktop }} layered-showcase__mobile-alignment--{{ section.settings.alignment_mobile }}" data-layered-showcase-text-content>
+                            <div class="layered-showcase__content-inner">
+                              {% assign animation_order = 1 %}
+                              
+                              {% if block.settings.subheading != blank %}
+                                <div class="layered-showcase__subheading" data-animate data-animate-order="{{ animation_order }}"{% if block_heading_color != blank %} style="color: {{ block_heading_color }};"{% endif %}>{{ block.settings.subheading }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.heading != blank %}
+                                <h3 class="layered-showcase__heading" data-animate data-animate-order="{{ animation_order }}" style="color: {{ block_heading_color | default: heading_color }}">{{ block.settings.heading }}</h3>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.text != blank %}
+                                <div class="layered-showcase__text rte text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order }}"{% if block_text_color != blank %} style="color: {{ block_text_color }};"{% endif %}>{{ block.settings.text }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if has_button %}
+                                <div class="layered-showcase__buttons{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}">
+                                  
+                                  {% if has_first_button %}
+                                    {% capture first_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.first_button_link,
+                                      label: block.settings.first_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: first_button_attr
+                                    %}
+                                    {% assign animation_order = animation_order | plus: 1 %}
+                                  {% endif %}
+                                  
+                                  {% if has_second_button %}
+                                    {% capture second_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.second_button_link,
+                                      label: block.settings.second_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: second_button_attr
+                                    %}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endunless %}
+                      {% endcapture %}
+
+                      {% comment %} ==== CONTENT ORDERING ==== {% endcomment %}
+                      {% if section.settings.media_position_desktop == 'left' %}
+                        {{ media_content }}
+                        {{ text_content }}
+                      {% else %}
+                        {{ text_content }}
+                        {{ media_content }}
+                      {% endif %}
+                    </div>
+
+                  {% when 'video_and_text' %}
+                    {% comment %} ===== VIDEO AND TEXT BLOCK ===== {% endcomment %}
+                    <div
+                      class="layered-showcase__block{% if device == 'mobile' and section.blocks.size > 1 %} content-grid-item swiper-slide{% endif %} layered-showcase__block--video-text layered-showcase__block--{{ forloop.index }} layered-showcase__desktop-media-{{ section.settings.media_position_desktop }} layered-showcase__mobile-media-{{ section.settings.media_position_mobile }} layered-showcase__desktop-align-{{ section.settings.alignment_desktop }} layered-showcase__mobile-align-{{ section.settings.alignment_mobile }} {{ ratio_class }}{% if forloop.first %} layered-showcase__block--first{% else %} layered-showcase__block--layered{% endif %}"
+                      style="--aspect-width: {{ first_block_image_width }}; --aspect-height: {{ first_block_image_height }};"
+                      data-layered-showcase-block
+                      data-block-id="{{ block.id }}"
+                      data-center-media="{{ centered_media }}"
+                    >
+                      {% render 'layered-showcase-block-bg', block: block %}
+                      {% comment %} ==== VIDEO CONTENT ==== {% endcomment %}
+                      {% capture media_content %}
+                        <div class="layered-showcase__media" data-layered-showcase-media-content>
+                          <div class="layered-showcase__video-wrapper block-radius-clip" data-video-wrapper>
+                            {% comment %} Video configuration {% endcomment %}
+                            {% liquid
+                              if block.settings.video != blank
+                                assign video = block.settings.video
+                              elsif block.settings.url != blank
+                                assign video = block.settings.url
+                              else
+                                assign video = null
+                              endif
+
+                              assign cover_image = null
+                              if block.settings.cover_image != blank
+                                assign cover_image = block.settings.cover_image
+                              endif
+                            %}
+
+                            {% if video %}
+                              {% render 'deferred-media',
+                                delayed_media: video,
+                                section_id: section.id,
+                                enable_video_loop: true,
+                                enable_autoplay: false,
+                                show_controls: true,
+                                mute: false,
+                                media_poster_image: cover_image,
+                                aspect_ratio: section.settings.aspect_ratio,
+                                media_type: 'grid',
+                                video_alt_text: block.settings.video_alt_text,
+                                remove_media_padding: false,
+                                is_background_media: false,
+                                is_product_media: false,
+                                use_js_api: true
+                              %}
+                            {% else %}
+                              <div class="homepage-video-content__placeholder">
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                                <div class="homepage-video-content__placeholder-overlay" aria-hidden="true">
+                                  <button class="round-icon-btn-lg btn dynamic-section-button--play-btn-{{ section.id }}">
+                                    {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+                                  </button>
+                                </div>
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endcapture %}
+
+                      {% comment %} Button logic {% endcomment %}
+                      {%- liquid
+                        assign has_button = false
+                        assign has_first_button = false
+                        assign has_second_button = false
+                        if block.settings.first_button_label != blank
+                          assign has_button = true
+                          assign has_first_button = true
+                        endif
+                        if block.settings.second_button_label != blank
+                          assign has_button = true
+                          assign has_second_button = true
+                        endif
+                      -%}
+
+                      {%- liquid
+                        assign block_heading_color = block.settings.block_heading_color
+                        if block_heading_color == 'rgba(0, 0, 0, 0)' or block_heading_color == 'rgba(0,0,0,0)'
+                          assign block_heading_color = blank
+                        endif
+                        assign block_text_color = block.settings.block_text_color
+                        if block_text_color == 'rgba(0, 0, 0, 0)' or block_text_color == 'rgba(0,0,0,0)'
+                          assign block_text_color = blank
+                        endif
+                      -%}
+                      {% comment %} ==== TEXT CONTENT ==== {% endcomment %}
+                      {% capture text_content %}
+                        {% unless block.settings.subheading == blank and block.settings.heading == blank and block.settings.text == blank and has_button == false %}
+                          <div class="layered-showcase__content layered-showcase__desktop-alignment--{{ section.settings.alignment_desktop }} layered-showcase__mobile-alignment--{{ section.settings.alignment_mobile }}" data-layered-showcase-text-content>
+                            <div class="layered-showcase__content-inner">
+                              {% assign animation_order = 1 %}
+                              
+                              {% if block.settings.subheading != blank %}
+                                <div class="layered-showcase__subheading" data-animate data-animate-order="{{ animation_order }}"{% if block_heading_color != blank %} style="color: {{ block_heading_color }};"{% endif %}>{{ block.settings.subheading }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.heading != blank %}
+                                <h3 class="layered-showcase__heading" data-animate data-animate-order="{{ animation_order }}" style="color: {{ block_heading_color | default: heading_color }}">{{ block.settings.heading }}</h3>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.text != blank %}
+                                <div class="layered-showcase__text rte text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order }}"{% if block_text_color != blank %} style="color: {{ block_text_color }};"{% endif %}>{{ block.settings.text }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if has_button %}
+                                <div class="layered-showcase__buttons{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}">
+                                
+                                  {% if has_first_button %}
+                                    {% capture first_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.first_button_link,
+                                      label: block.settings.first_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: first_button_attr
+                                    %}
+                                    {% assign animation_order = animation_order | plus: 1 %}
+                                  {% endif %}
+                                  
+                                  {% if has_second_button %}
+                                    {% capture second_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.second_button_link,
+                                      label: block.settings.second_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: second_button_attr
+                                    %}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endunless %}
+                      {% endcapture %}
+
+                      {% comment %} ==== CONTENT ORDERING ==== {% endcomment %}
+                      {% if section.settings.media_position_desktop == 'left' %}
+                        {{ media_content }}
+                        {{ text_content }}
+                      {% else %}
+                        {{ text_content }}
+                        {{ media_content }}
+                      {% endif %}
+                    </div>
+                {% endcase %}
+              {% endfor %}
+
+              {% if device == 'mobile' and section.blocks.size > 1 %}
+                  </div>
+                  <!-- Pagination -->
+                  <div class="swiper-pagination" style="--content-grid-pagination-offset: 0px"></div>
+                </div>
+              </content-grid-slider>
+            {% endif %}
+            </div>
+          {% endfor %}
+        </layered-showcase>
+
+        {% comment %} ============ BLOCK EDITING PREVIEW ============ {% endcomment %}
+        {% if request.design_mode %}
+          <div class="layered-showcase__editor" data-layered-showcase-editing-preview style="display:none;">
+            <div class="layered-showcase__container">
+              {% comment %} ============ BLOCK PROCESSING ============ {% endcomment %}
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'image_and_text' %}
+                    {% comment %} ===== IMAGE AND TEXT BLOCK ===== {% endcomment %}
+                    <div
+                      class="layered-showcase__block layered-showcase__block--image-text layered-showcase__block--{{ forloop.index }} layered-showcase__desktop-media-{{ section.settings.media_position_desktop }} layered-showcase__mobile-media-{{ section.settings.media_position_mobile }} layered-showcase__desktop-align-{{ section.settings.alignment_desktop }} layered-showcase__mobile-align-{{ section.settings.alignment_mobile }} {{ ratio_class }}{% if forloop.first %} layered-showcase__block--first{% else %} layered-showcase__block--layered{% endif %}"
+                      style="--aspect-width: {{ first_block_image_width }}; --aspect-height: {{ first_block_image_height }};"
+                      data-layered-showcase-block
+                      data-block-id="{{ block.id }}"
+                      data-center-media="{{ centered_media }}"
+                      {{ block.shopify_attributes }}
+                    >
+                      {% render 'layered-showcase-block-bg', block: block %}
+                      {% comment %} ==== MEDIA CONTENT ==== {% endcomment %}
+                      {% capture media_content %}
+                        <div class="layered-showcase__media">
+                          {% if block.settings.image != blank %}
+                            {% render 'responsive-image', image: block.settings.image, allow_stretch: true, class: 'block-radius' %}
+                          {% else %}
+                            {{ 'collection-' | append: svg_index[forloop.index0] | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                          {% endif %}
+                        </div>
+                      {% endcapture %}
+
+                      {% comment %} Button logic {% endcomment %}
+                      {%- liquid
+                        assign has_button = false
+                        assign has_first_button = false
+                        assign has_second_button = false
+                        if block.settings.first_button_label != blank
+                          assign has_button = true
+                          assign has_first_button = true
+                        endif
+                        if block.settings.second_button_label != blank
+                          assign has_button = true
+                          assign has_second_button = true
+                        endif
+                      -%}
+
+                      {%- liquid
+                        assign block_heading_color = block.settings.block_heading_color
+                        if block_heading_color == 'rgba(0, 0, 0, 0)' or block_heading_color == 'rgba(0,0,0,0)'
+                          assign block_heading_color = blank
+                        endif
+                        assign block_text_color = block.settings.block_text_color
+                        if block_text_color == 'rgba(0, 0, 0, 0)' or block_text_color == 'rgba(0,0,0,0)'
+                          assign block_text_color = blank
+                        endif
+                      -%}
+                      {% comment %} ==== TEXT CONTENT ==== {% endcomment %}
+                      {% capture text_content %}
+                        {% unless block.settings.subheading == blank and block.settings.heading == blank and block.settings.text == blank and has_button == false %}
+                          <div class="layered-showcase__content layered-showcase__desktop-alignment--{{ section.settings.alignment_desktop }} layered-showcase__mobile-alignment--{{ section.settings.alignment_mobile }}">
+                            <div class="layered-showcase__content-inner">
+                              {% assign animation_order = 1 %}
+                              
+                              {% if block.settings.subheading != blank %}
+                                <div class="layered-showcase__subheading" data-animate data-animate-order="{{ animation_order }}"{% if block_heading_color != blank %} style="color: {{ block_heading_color }};"{% endif %}>{{ block.settings.subheading }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.heading != blank %}
+                                <h3 class="layered-showcase__heading" data-animate data-animate-order="{{ animation_order }}" style="color: {{ block_heading_color | default: heading_color }}">{{ block.settings.heading }}</h3>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.text != blank %}
+                                <div class="layered-showcase__text rte text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order }}"{% if block_text_color != blank %} style="color: {{ block_text_color }};"{% endif %}>{{ block.settings.text }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if has_button %}
+                                <div class="layered-showcase__buttons{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}">
+                                  
+                                  {% if has_first_button %}
+                                    {% capture first_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.first_button_link,
+                                      label: block.settings.first_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: first_button_attr
+                                    %}
+                                    {% assign animation_order = animation_order | plus: 1 %}
+                                  {% endif %}
+                                  
+                                  {% if has_second_button %}
+                                    {% capture second_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.second_button_link,
+                                      label: block.settings.second_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: second_button_attr
+                                    %}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endunless %}
+                      {% endcapture %}
+
+                      {% comment %} ==== CONTENT ORDERING ==== {% endcomment %}
+                      {% if section.settings.media_position_desktop == 'left' %}
+                        {{ media_content }}
+                        {{ text_content }}
+                      {% else %}
+                        {{ text_content }}
+                        {{ media_content }}
+                      {% endif %}
+                    </div>
+
+                  {% when 'video_and_text' %}
+                    {% comment %} ===== VIDEO AND TEXT BLOCK ===== {% endcomment %}
+                    <div
+                      class="layered-showcase__block layered-showcase__block--video-text layered-showcase__block--{{ forloop.index }} layered-showcase__desktop-media-{{ section.settings.media_position_desktop }} layered-showcase__mobile-media-{{ section.settings.media_position_mobile }} layered-showcase__desktop-align-{{ section.settings.alignment_desktop }} layered-showcase__mobile-align-{{ section.settings.alignment_mobile }} {{ ratio_class }}{% if forloop.first %} layered-showcase__block--first{% else %} layered-showcase__block--layered{% endif %}"
+                      style="--aspect-width: {{ first_block_image_width }}; --aspect-height: {{ first_block_image_height }};"
+                      data-layered-showcase-block
+                      data-block-id="{{ block.id }}"
+                      data-center-media="{{ centered_media }}"
+                      {{ block.shopify_attributes }}
+                    >
+                      {% render 'layered-showcase-block-bg', block: block %}
+                      {% comment %} ==== VIDEO CONTENT ==== {% endcomment %}
+                      {% capture media_content %}
+                        <div class="layered-showcase__media">
+                          <div class="layered-showcase__video-wrapper block-radius-clip" data-video-wrapper>
+                            {% comment %} Video configuration {% endcomment %}
+                            {% liquid
+                              if block.settings.video != blank
+                                assign video = block.settings.video
+                              elsif block.settings.url != blank
+                                assign video = block.settings.url
+                              else
+                                assign video = null
+                              endif
+
+                              assign cover_image = null
+                              if block.settings.cover_image != blank
+                                assign cover_image = block.settings.cover_image
+                              endif
+                            %}
+
+                            {% if video %}
+                              {% render 'deferred-media',
+                                delayed_media: video,
+                                section_id: section.id,
+                                enable_video_loop: true,
+                                enable_autoplay: false,
+                                show_controls: true,
+                                mute: false,
+                                media_poster_image: cover_image,
+                                aspect_ratio: section.settings.aspect_ratio,
+                                media_type: 'grid',
+                                video_alt_text: block.settings.video_alt_text,
+                                remove_media_padding: false,
+                                is_background_media: false,
+                                is_product_media: false,
+                                use_js_api: true
+                              %}
+                            {% else %}
+                              <div class="homepage-video-content__placeholder">
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                                <div class="homepage-video-content__placeholder-overlay" aria-hidden="true">
+                                  <button class="round-icon-btn-lg btn dynamic-section-button--play-btn-{{ section.id }}">
+                                    {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+                                  </button>
+                                </div>
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endcapture %}
+
+                      {% comment %} Button logic {% endcomment %}
+                      {%- liquid
+                        assign has_button = false
+                        assign has_first_button = false
+                        assign has_second_button = false
+                        if block.settings.first_button_label != blank
+                          assign has_button = true
+                          assign has_first_button = true
+                        endif
+                        if block.settings.second_button_label != blank
+                          assign has_button = true
+                          assign has_second_button = true
+                        endif
+                      -%}
+
+                      {%- liquid
+                        assign block_heading_color = block.settings.block_heading_color
+                        if block_heading_color == 'rgba(0, 0, 0, 0)' or block_heading_color == 'rgba(0,0,0,0)'
+                          assign block_heading_color = blank
+                        endif
+                        assign block_text_color = block.settings.block_text_color
+                        if block_text_color == 'rgba(0, 0, 0, 0)' or block_text_color == 'rgba(0,0,0,0)'
+                          assign block_text_color = blank
+                        endif
+                      -%}
+                      {% comment %} ==== TEXT CONTENT ==== {% endcomment %}
+                      {% capture text_content %}
+                        {% unless block.settings.subheading == blank and block.settings.heading == blank and block.settings.text == blank and has_button == false %}
+                          <div class="layered-showcase__content layered-showcase__desktop-alignment--{{ section.settings.alignment_desktop }} layered-showcase__mobile-alignment--{{ section.settings.alignment_mobile }}">
+                            <div class="layered-showcase__content-inner">
+                              {% assign animation_order = 1 %}
+                              
+                              {% if block.settings.subheading != blank %}
+                                <div class="layered-showcase__subheading" data-animate data-animate-order="{{ animation_order }}"{% if block_heading_color != blank %} style="color: {{ block_heading_color }};"{% endif %}>{{ block.settings.subheading }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.heading != blank %}
+                                <h3 class="layered-showcase__heading" data-animate data-animate-order="{{ animation_order }}" style="color: {{ block_heading_color | default: heading_color }}">{{ block.settings.heading }}</h3>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if block.settings.text != blank %}
+                                <div class="layered-showcase__text rte text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order }}"{% if block_text_color != blank %} style="color: {{ block_text_color }};"{% endif %}>{{ block.settings.text }}</div>
+                                {% assign animation_order = animation_order | plus: 1 %}
+                              {% endif %}
+
+                              {% if has_button %}
+                                <div class="layered-showcase__buttons{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}">
+                                
+                                  {% if has_first_button %}
+                                    {% capture first_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.first_button_link,
+                                      label: block.settings.first_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: first_button_attr
+                                    %}
+                                    {% assign animation_order = animation_order | plus: 1 %}
+                                  {% endif %}
+                                  
+                                  {% if has_second_button %}
+                                    {% capture second_button_attr %}
+                                      data-animate
+                                      data-animate-order="{{ animation_order }}"
+                                    {% endcapture %}
+                                    {% render 'dynamic-section-button',
+                                      id: section.id,
+                                      link: block.settings.second_button_link,
+                                      label: block.settings.second_button_label,
+                                      style: section.settings.buttons_style,
+                                      wrapper: false,
+                                      attributes: second_button_attr
+                                    %}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endunless %}
+                      {% endcapture %}
+
+                      {% comment %} ==== CONTENT ORDERING ==== {% endcomment %}
+                      {% if section.settings.media_position_desktop == 'left' %}
+                        {{ media_content }}
+                        {{ text_content }}
+                      {% else %}
+                        {{ text_content }}
+                        {{ media_content }}
+                      {% endif %}
+                    </div>
+                {% endcase %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  {% comment %} ============ VISUAL PREVIEW MODE ============ {% endcomment %}
+  <div class="layered-showcase-preview section-preview">
+    {% comment %} ==== DESKTOP PREVIEW ==== {% endcomment %}
+    <div class="layered-showcase-preview__desktop">
+      <div class="layered-showcase-preview__images">
+        <div class="layered-showcase-preview__image layered-showcase-preview__image--1">
+          {{ 'collection-1' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+        </div>
+        
+        <div class="layered-showcase-preview__image layered-showcase-preview__image--2">
+          {{ 'collection-2' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+        </div>
+        
+        <div class="layered-showcase-preview__image layered-showcase-preview__image--3">
+          {{ 'collection-3' | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+        </div>
+      </div>
+      
+      {% if section.blocks.size > 0 %}
+        {% assign last_block = section.blocks.last %}
+        <div class="layered-showcase-preview__content">
+          {% if last_block.settings.subheading != blank %}
+            <div class="layered-showcase__subheading">{{ last_block.settings.subheading }}</div>
+          {% endif %}
+          
+          {% if last_block.settings.heading != blank %}
+            <h3 class="layered-showcase__heading" style="color: {{ block_heading_color | default: heading_color }}">{{ last_block.settings.heading }}</h3>
+          {% endif %}
+          
+          {% if last_block.settings.text != blank %}
+            <div class="layered-showcase__text rte">{{ last_block.settings.text }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    
+    {% comment %} ==== MOBILE PREVIEW ==== {% endcomment %}
+    <div class="layered-showcase-preview__mobile">
+      <safe-load-scripts class="hidden">
+        <script src="{{ 'component-content-grid-slider.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="grid-slider"></script>
+      </safe-load-scripts>
+
+      <content-grid-slider 
+        class="layered-showcase--slider"
+        data-grid-slider-wrapper
+        data-section-id="{{ section.id }}"
+        data-desktop-only="false"
+        data-mobile-only="true"
+        data-slides-per-view-mobile="1"
+        data-slides-per-view-desktop="1"
+        data-peek-desktop-enabled="false"
+        data-peek-mobile-enabled="false"
+        data-pagination-overlay-enabled="false"
+        data-remove-spacing="false"
+        data-grid-spacing-desktop="30"
+        data-grid-spacing-mobile="15"
+      >
+        <div class="content-grid__slider swiper disable-desktop">
+          <div class="content-grid swiper-wrapper content-grid--gap">
+            {% comment %} Mobile block previews {% endcomment %}
+            {% for block in section.blocks limit: 3 %}
+              <div class="layered-showcase-preview__mobile-block content-grid-item swiper-slide layered-showcase__desktop-media-{{ section.settings.media_position_desktop }} layered-showcase__mobile-media-{{ section.settings.media_position_mobile }}">
+                {% capture media_content %}
+                  <div class="layered-showcase__media">
+                    {% if block.settings.image != blank %}
+                      {% render 'responsive-image', image: block.settings.image, allow_stretch: true, class: 'block-radius' %}
+                    {% else %}
+                      {{ 'collection-' | append: svg_index[forloop.index0] | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                    {% endif %}
+                  </div>
+                {% endcapture %}
+                
+                {% capture text_content %}
+                  <div class="layered-showcase__content">
+                    <div class="layered-showcase__content-inner">
+                      {% if block.settings.subheading != blank %}
+                        <div class="layered-showcase__subheading">{{ block.settings.subheading }}</div>
+                      {% endif %}
+                      
+                      {% if block.settings.heading != blank %}
+                        <h3 class="layered-showcase__heading" style="color: {{ block_heading_color | default: heading_color }}">{{ block.settings.heading }}</h3>
+                      {% endif %}
+                      
+                      {% if block.settings.text != blank %}
+                        <div class="layered-showcase__text rte">{{ block.settings.text }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endcapture %}
+                
+                {% if section.settings.media_position_mobile == 'top' %}
+                  {{ media_content }}
+                  {{ text_content }}
+                {% else %}
+                  {{ text_content }}
+                  {{ media_content }}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Pagination -->
+          <div class="swiper-pagination" style="--content-grid-pagination-offset: 0px"></div>
+        </div>
+      </content-grid-slider>
+    </div>
+  </div>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "t:sections.layered_showcase.name",
+  "class": "section--layered-showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Desktop"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "t:all.heading_font_size",
+      "min": 12,
+      "max": 112,
+      "unit": "t:all.px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "text_font_size_desktop",
+      "label": "t:all.text_font_size",
+      "min": 12,
+      "max": 112,
+      "unit": "t:all.px",
+      "default": 18
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment_desktop",
+      "label": "t:all.Alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "media_position_desktop",
+      "label": "t:all.Media_position",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Mobile"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "t:all.heading_font_size",
+      "min": 12,
+      "max": 112,
+      "unit": "t:all.px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "text_font_size_mobile",
+      "label": "t:all.text_font_size",
+      "min": 12,
+      "max": 112,
+      "unit": "t:all.px",
+      "default": 16
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment_mobile",
+      "label": "t:all.Alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "media_position_mobile",
+      "label": "t:all.Media_position",
+      "default": "top",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:all.Top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:all.Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Media"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:all.Aspect_ratio",
+      "default": "square",
+      "options": [
+        {
+          "value": "adapt_to_first_image",
+          "label": "t:all.Shape_options.adapt_to_first_image"
+        },
+        {
+          "value": "square",
+          "label": "t:all.Square"
+        },
+        {
+          "value": "tall",
+          "label": "t:all.Tall"
+        },
+        {
+          "value": "wide",
+          "label": "t:all.Wide"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Buttons"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "filled",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors == true }}"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:all.Secondary_color",
+      "default": "#FFFFFF",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:all.Headings"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_and_text",
+      "name": "t:sections.template--product--info-columns.blocks.image_and_text.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:all.Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:all.Image",
+          "info": "t:all.1000_x_1000px_recommended"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "subheading",
+          "label": "t:all.Subheading",
+          "default": "<strong>SUBHEADING</strong>"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:all.Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "<p>Highlight features, promote collections or showcase your brand.</p>"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Buttons"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:all.first_button_link"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "label": "t:all.first_button_label"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:all.second_button_link"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:all.second_button_label"
+        },
+        { "type": "header", "content": "t:sections.layered_showcase.blocks.background.heading" },
+        { "type": "color", "id": "block_background_color", "label": "t:sections.layered_showcase.blocks.background.color_label" },
+        { "type": "image_picker", "id": "block_background_image", "label": "t:sections.layered_showcase.blocks.background.image_label" },
+        { "type": "range", "id": "block_background_overlay", "label": "t:sections.layered_showcase.blocks.background.overlay_label", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 0 },
+        { "type": "header", "content": "t:sections.layered_showcase.blocks.content_colors.heading" },
+        { "type": "color", "id": "block_heading_color", "label": "t:sections.layered_showcase.blocks.content_colors.heading_label", "info": "t:sections.layered_showcase.blocks.content_colors.info" },
+        { "type": "color", "id": "block_text_color", "label": "t:all.Text_color", "info": "t:sections.layered_showcase.blocks.content_colors.info" }
+      ]
+    },
+    {
+      "type": "video_and_text",
+      "name": "t:sections.template--product--info-columns.blocks.video_and_text.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:all.Video"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Shopify_hosted_video"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:all.Video"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Or_embed_video_from_URL"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:all.Embedded_video_info"
+        },
+        {
+          "id": "url",
+          "type": "video_url",
+          "label": "t:all.Video_URL",
+          "info": "t:all.Accepts_YouTube_and_Vimeo__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "cover_image",
+          "label": "t:all.Cover_image",
+          "info": "Will not display if autoplay is enabled."
+        },
+        {
+          "type": "text",
+          "id": "video_alt_text",
+          "label": "t:all.Video_alt_text",
+          "info": "t:all.Video_alt_text_info"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "subheading",
+          "label": "t:all.Subheading",
+          "default": "<strong>SUBHEADING</strong>"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:all.Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "<p>Add a video paired with text to give focus to your chosen product, collection, or blog post.</p>"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Buttons"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:all.first_button_link"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "label": "t:all.first_button_label"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:all.second_button_link"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:all.second_button_label"
+        },
+        { "type": "header", "content": "t:sections.layered_showcase.blocks.background.heading" },
+        { "type": "color", "id": "block_background_color", "label": "t:sections.layered_showcase.blocks.background.color_label" },
+        { "type": "image_picker", "id": "block_background_image", "label": "t:sections.layered_showcase.blocks.background.image_label" },
+        { "type": "range", "id": "block_background_overlay", "label": "t:sections.layered_showcase.blocks.background.overlay_label", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 0 },
+        { "type": "header", "content": "t:sections.layered_showcase.blocks.content_colors.heading" },
+        { "type": "color", "id": "block_heading_color", "label": "t:sections.layered_showcase.blocks.content_colors.heading_label", "info": "t:sections.layered_showcase.blocks.content_colors.info" },
+        { "type": "color", "id": "block_text_color", "label": "t:all.Text_color", "info": "t:sections.layered_showcase.blocks.content_colors.info" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "t:sections.layered_showcase.name",
+      "blocks": [
+        {
+          "type": "image_and_text"
+        },
+        {
+          "type": "image_and_text"
+        },
+        {
+          "type": "image_and_text"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

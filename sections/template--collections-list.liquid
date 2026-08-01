@@ -1,0 +1,720 @@
+{{ 'template-collection-list.min.css' | asset_url | stylesheet_tag: preload: true }}
+<script src="{{ 'component-theme-parallax.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="theme-parallax"></script>
+
+<div class="collection-main-body">
+
+  {% if section.settings.banner_image %}
+    <div class="list-collections--banner-image">
+      {% if section.settings.banner-image-size == 'original' %}
+        {% render 'responsive-image', image: section.settings.banner_image, class: 'collection-page--feature-image' %}
+      {% else %}
+        {%- liquid
+          assign parallax = false
+          if section.settings.parallax and section.settings.banner-image-size != 'original'
+            assign parallax = true
+          endif
+        -%}
+
+        <style>
+          {% if section.settings.banner_image != blank %}
+            {% capture selector %}.banner-image .collection-page--feature-image .collection-list--banner-image .parallax-child{% endcapture %}
+            {% render 'responsive-background-image', image: section.settings.banner_image, selector: selector %}
+          {% endif %}
+
+          .list-collections--banner-image {
+            height: {{ section.settings.banner-image-size }};
+          }
+
+          .banner-image,
+          .collection-page--feature-image,
+          .collection-list--banner-image {
+            display: block;
+            height: 100%;
+          }
+        </style>
+
+        {% capture image_layout %}
+          <div class="banner-image">
+            <div class="collection-page--feature-image{% if parallax %} parallax{% endif %}">
+              <theme-parallax data-parallax-enabled="{{ parallax }}" class="img collection-list--banner-image" role="img" aria-label="{{ section.settings.banner_image.alt | escape }}">
+                <div class="parallax-child"></div>
+              </theme-parallax>
+            </div>
+          </div>
+        {% endcapture %}
+
+        {{ image_layout }}
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+  <div
+    class="wrapper-spacing--h wrapper-spacing--v--template main-content page-main--wrapper content-align--{{ settings.template_heading_alignment }} collection-list-layout--{{ section.settings.layout }}"
+    data-wetheme-section-type="template--collection"
+    data-wetheme-section-id="{{ section.id }}"
+  >
+    <div class="width--content">
+      {% case section.settings.items_per_row %}
+        {% when 2 %}
+          {% capture grid_item_width %}large--one-half medium--one-half small--one-half{% endcapture %}
+        {% when 3 %}
+          {% capture grid_item_width %}large--one-third medium--one-half small--one-whole{% endcapture %}
+        {% when 4 %}
+          {% capture grid_item_width %}large--one-quarter medium--one-half small--one-half{% endcapture %}
+        {% when 5 %}
+          {% capture grid_item_width %}large--one-fifth medium--one-half small--one-half{% endcapture %}
+      {% endcase %}
+
+      {% case section.settings.layout %}
+        {% when 'preview' %}
+
+          {% if section.settings.show_options != 'selected' %}
+
+            {% for collection in collections %}
+
+              {% unless collection.handle == 'frontpage' or collection.products.size == 0 %}
+
+                {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+                <div class="section-header sitewide--title-wrapper">
+                  <h2 class="list-collections--title" style="text-align: {{ settings.template_heading_alignment }};">{{ collection_title }}</h2>
+
+                  {% unless settings.template_heading_alignment == 'center' %}
+                    <div class="list-collections--more-link nav-link-animated--custom inline-icon--wrapper view-more-link--desktop">
+                      <a class="animated-link--item--nested" href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                        <span class="animated-underline">{{ 'collections.general.see_more' | t }} {{ collection_title }}</span>
+                        {% render 'theme-icon', icon: 'chevron_right', iconSize: 16 %}
+                      </a>
+                    </div>
+                  {% endunless %}
+                </div>
+
+                <div class="grid-uniform collection-main-body-inner product-grid--wrapper show-on-scroll">
+                  {% for product in collection.products limit: section.settings.items_per_row %}
+                    {% render 'product-grid-item',
+                      product: product,
+                      collection: collection,
+                      blocks: section.blocks,
+                      index: forloop.index,
+                      show_highlight: section.settings.show_highlight,
+                      highlight_position: section.settings.highlight_position,
+                      highlight_icon: section.settings.highlight_icon,
+                      highlight_custom_icon: section.settings.highlight_custom_icon,
+                      highlight_heading: section.settings.highlight_heading,
+                      highlight_reference: section.settings.highlight_reference,
+                      highlight_text_color: section.settings.highlight_text_color,
+                      highlight_background_color: section.settings.highlight_background_color,
+                      highlight_alignment: section.settings.highlight_alignment,
+                      highlight_font_size: section.settings.highlight_font_size,
+                      highlight_show_border: section.settings.highlight_show_border,
+                      highlight_collapsible_tab: section.settings.highlight_collapsible_tab,
+                      highlight_open_close_icon: section.settings.highlight_open_close_icon,
+                      highlight_button_borders: section.settings.highlight_button_borders %}
+                  {% endfor %}
+                </div>
+
+                <div class="list-collections--more-link nav-link-animated--custom inline-icon--wrapper view-more-link--centered">
+                  <a class="animated-link--item--nested" href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                    <span class="animated-underline">{{ 'collections.general.see_more' | t }} {{ collection_title }}</span>
+                    {% render 'theme-icon', icon: 'chevron_right', iconSize: 16 %}
+                  </a>
+                </div>
+
+                {% unless forloop.last %}
+                    <hr>
+                {% endunless %}
+
+              {% endunless %}
+
+            {% endfor %}
+
+          {% else %}
+
+            {% for collection in section.settings.selected_collections %}
+
+              {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+              <div class="section-header sitewide--title-wrapper">
+                <h2 class="list-collections--title" style="text-align: {{ settings.template_heading_alignment }};">{{ collection_title }}</h2>
+
+                {% unless settings.template_heading_alignment == 'center' %}
+                  <div class="list-collections--more-link nav-link-animated--custom inline-icon--wrapper view-more-link--desktop">
+                    <a class="animated-link--item--nested" href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                      <span class="animated-underline">{{ 'collections.general.see_more' | t }} {{ collection_title }}</span>
+                      {% render 'theme-icon', icon: 'chevron_right', iconSize: 16 %}
+                    </a>
+                  </div>
+                {% endunless %}
+              </div>
+
+              <div class="grid-uniform collection-main-body-inner product-grid--wrapper show-on-scroll">
+                {% for product in collection.products limit: section.settings.items_per_row %}
+                  {% render 'product-grid-item',
+                    product: product,
+                    collection: collection,
+                    blocks: section.blocks,
+                    enable_badges: settings.show_badges,
+                    index: forloop.index,
+                    show_highlight: section.settings.show_highlight,
+                    highlight_icon: section.settings.highlight_icon,
+                    highlight_custom_icon: section.settings.highlight_custom_icon,
+                    highlight_heading: section.settings.highlight_heading,
+                    highlight_reference: section.settings.highlight_reference,
+                    highlight_text_color: section.settings.highlight_text_color,
+                    highlight_background_color: section.settings.highlight_background_color,
+                    highlight_alignment: section.settings.highlight_alignment,
+                    highlight_font_size: section.settings.highlight_font_size,
+                    highlight_show_border: section.settings.highlight_show_border,
+                    highlight_collapsible_tab: section.settings.highlight_collapsible_tab,
+                    highlight_open_close_icon: section.settings.highlight_open_close_icon,
+                    highlight_button_borders: section.settings.highlight_button_borders %}
+                {% endfor %}
+              </div>
+
+              {% if collection.products != empty %}
+              <div class="list-collections--more-link nav-link-animated--custom inline-icon--wrapper view-more-link--centered">
+                <a class="animated-link--item" href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                  <span>{{ 'collections.general.see_more' | t }} {{ collection_title }}</span>
+                  {% render 'theme-icon', icon: 'chevron_right', iconSize: 16 %}
+                </a>
+              </div>
+              {% endif %}
+
+              {% unless forloop.last %}<hr>{% endunless %}
+
+            {% endfor %}
+
+          {% endif %}
+
+        {% when 'grid' %}
+
+          {% if section.settings.show_options != 'selected' %}
+
+            <div class="grid-uniform grid-uniform--list-collections show-on-scroll">
+
+              {% for collection in collections %}
+
+                {% unless collection.handle == 'frontpage' %}
+
+                  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+                  <div class="grid__item {{ grid_item_width }} grid__item--list-collections" data-animate data-animate-order="{{ forloop.index }}">
+                    <div class="grid-view-item">
+                      <a href="{{ collection.url }}" class="grid__image block-radius-clip" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                        {% if collection.image %}
+                          {% assign img_alt = collection.image.alt %}
+                          {% if img_alt == collection.title %}
+                            {% assign img_alt = '' %}
+                          {% endif %}
+                          <img src="{{ collection.image | image_url: width: 480, height: 480 }}" alt="{{ img_alt | escape }}" class="list-collections--indiv-banner-image theme-img" loading="lazy" />
+                        {% else %}
+                          {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                          {{ 'collection-' | append: current | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+                        {% endif %}
+                      </a>
+                      <h3 class="list-collections--indiv-collection-title">{{ collection_title }}</h3>
+                    </div>
+                  </div>
+
+                {% endunless %}
+
+              {% endfor %}
+
+            </div>
+
+          {% else %}
+
+            <div class="grid-uniform grid-uniform--list-collections show-on-scroll">
+
+              {% for collection in section.settings.selected_collections %}
+
+                  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+                  <div class="grid__item {{ grid_item_width }} grid__item--list-collections" data-animate data-animate-order="{{ forloop.index }}">
+                    <div class="grid-view-item">
+                      <a href="{{ collection.url }}" class="grid__image" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+                        {% if collection.image %}
+                          {% assign img_alt = collection.image.alt %}
+                          {% if img_alt == collection.title %}
+                            {% assign img_alt = '' %}
+                          {% endif %}
+                          <img src="{{ collection.image | image_url: width: 480, height: 480 }}" alt="{{ img_alt | escape }}" class="list-collections--indiv-banner-image theme-img" loading="lazy" />
+                        {% else %}
+                          {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                          {{ 'collection-' | append: current | placeholder_svg_tag: 'icon icon--placeholder' }}
+                        {% endif %}
+                      </a>
+                      <h3 class="list-collections--indiv-collection-title">{{ collection_title }}</h3>
+                    </div>
+                  </div>
+
+              {% endfor %}
+
+            </div>
+
+          {% endif %}
+
+      {% endcase %}
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.template--collections-list.name",
+  "class": "template--collection-list",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Featured_image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "t:all.Image",
+      "info": "t:sections.template--collections-list.settings.banner_image.info"
+    },
+    {
+      "type": "select",
+      "id": "banner-image-size",
+      "label": "t:all.Image_size",
+      "options": [
+        {
+          "value": "20vh",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "30vh",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "40vh",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        }
+      ],
+      "default": "20vh"
+    },
+    {
+      "type": "checkbox",
+      "id": "parallax",
+      "label": "t:all.Enable_parallax_effect",
+      "default": true,
+      "info": "t:sections.template--collections-list.settings.parallax.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.template--collections-list.settings.header-8.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.template--collections-list.settings.paragraph-9.content"
+    },
+    {
+      "type": "radio",
+      "id": "show_options",
+      "label": "t:sections.template--collections-list.settings.show_options.label",
+      "default": "all",
+      "options": [
+        {
+          "value": "all",
+          "label": "t:sections.template--collections-list.settings.show_options.options.all"
+        },
+        {
+          "value": "selected",
+          "label": "t:sections.template--collections-list.settings.show_options.options.selected"
+        }
+      ]
+    },
+    {
+      "type": "collection_list",
+      "id": "selected_collections",
+      "label": "t:sections.template--collections-list.settings.selected_collections.label"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Highlights",
+      "visible_if": "{{ section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:all.Highlight_info",
+      "visible_if": "{{ section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_highlight",
+      "label": "t:all.Show_highlights",
+      "default": false,
+      "visible_if": "{{ section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "select",
+      "id": "highlight_position",
+      "label": "t:all.Position",
+      "options": [
+        {
+          "value": "below_image",
+          "label": "t:all.Highlight_position_below_image"
+        },
+        {
+          "value": "below_price",
+          "label": "t:all.Highlight_position_below_price"
+        },
+        {
+          "value": "bottom",
+          "label": "t:all.Highlight_position_below_content"
+        },
+        {
+          "value": "below_quick_view",
+          "label" : "t:all.Highlight_position_below_quick_view"
+        }
+      ],
+      "default": "bottom",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "select",
+      "id": "highlight_icon",
+      "label": "t:all.Icon",
+      "default": "heart",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:all.None"
+        },
+        {
+          "value": "arrow-right-circle",
+          "label": "t:all.Arrow_circle"
+        },
+        {
+          "value": "book",
+          "label": "t:all.Book"
+        },
+        {
+          "value": "cake",
+          "label": "t:all.Cake"
+        },
+        {
+          "value": "car",
+          "label": "t:all.Car"
+        },
+        {
+          "value": "multi-bubble",
+          "label": "t:all.Chat"
+        },
+        {
+          "value": "chat",
+          "label": "t:all.Chat_bubble"
+        },
+        {
+          "value": "chat-smile",
+          "label": "t:all.Chat_bubble_with_smile"
+        },
+        {
+          "value": "check-circle",
+          "label": "t:all.Check_circle"
+        },
+        {
+          "value": "clock",
+          "label": "t:all.Clock"
+        },
+        {
+          "value": "xmark-circle",
+          "label": "t:all.Cross"
+        },
+        {
+          "value": "crown",
+          "label": "t:all.Crown"
+        },
+        {
+          "value": "cup",
+          "label": "t:all.Cup"
+        },
+        {
+          "value": "service",
+          "label": "t:all.Customer_service"
+        },
+        {
+          "value": "delivery-truck",
+          "label": "t:all.Delivery"
+        },
+        {
+          "value": "leaf",
+          "label": "t:all.Eco"
+        },
+        {
+          "value": "mail",
+          "label": "t:all.Email"
+        },
+        {
+          "value": "exchange",
+          "label": "t:all.Exchange"
+        },
+        {
+          "value": "fire-flame",
+          "label": "t:all.Fire"
+        },
+        {
+          "value": "flag",
+          "label": "t:all.Flag"
+        },
+        {
+          "value": "gift",
+          "label": "t:all.Gift"
+        },
+        {
+          "value": "globe",
+          "label": "t:all.Globe"
+        },
+        {
+          "value": "handbag",
+          "label": "t:all.Handbag"
+        },
+        {
+          "value": "heart",
+          "label": "t:all.Heart"
+        },
+        {
+          "value": "help-circle",
+          "label": "t:all.Help_circle"
+        },
+        {
+          "value": "home-smile",
+          "label": "t:all.Home_with_smile"
+        },
+        {
+          "value": "info",
+          "label": "t:all.Info"
+        },
+        {
+          "value": "map-pin",
+          "label": "t:all.Map_pin"
+        },
+        {
+          "value": "measuring_tape",
+          "label": "t:all.Measuring_tape"
+        },
+        {
+          "value": "moon",
+          "label": "t:all.Moon"
+        },
+        {
+          "value": "phone",
+          "label": "t:all.Phone"
+        },
+        {
+          "value": "plus-circle",
+          "label": "t:all.Plus_circle"
+        },
+        {
+          "value": "price-tag",
+          "label": "t:all.Price_tag"
+        },
+        {
+          "value": "question-answer",
+          "label": "t:all.Question_and_answer"
+        },
+        {
+          "value": "quote",
+          "label": "t:all.Quote"
+        },
+        {
+          "value": "recycle",
+          "label": "t:all.Recycle"
+        },
+        {
+          "value": "restaurant",
+          "label": "t:all.Restaurant"
+        },
+        {
+          "value": "emoji",
+          "label": "t:all.Smiley"
+        },
+        {
+          "value": "sparks",
+          "label": "t:all.Sparks"
+        },
+        {
+          "value": "star",
+          "label": "t:all.Star"
+        },
+        {
+          "value": "store",
+          "label": "t:all.Store"
+        },
+        {
+          "value": "sun",
+          "label": "t:all.Sun"
+        },
+        {
+          "value": "takeaway",
+          "label": "t:all.Takeaway"
+        },
+        {
+          "value": "trophy",
+          "label": "t:all.Trophy"
+        },
+        {
+          "value": "truck",
+          "label": "t:all.Truck"
+        },
+        {
+          "value": "umbrella",
+          "label": "t:all.Umbrella"
+        },
+        {
+          "value": "wallet",
+          "label": "t:all.Wallet"
+        },
+        {
+          "value": "warning-circle",
+          "label": "t:all.Warning_circle"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlight_custom_icon",
+      "label": "t:all.Custom_icon",
+      "info": "t:all.Aspect_ratio_of_1_1_recommended",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "highlight_heading",
+      "label": "t:all.Heading",
+      "default": "Why we love it",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "text",
+      "id": "highlight_reference",
+      "label": "t:all.Highlight_reference",
+      "info": "eg. product.metafields.custom.highlight",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "color",
+      "id": "highlight_text_color",
+      "label": "t:all.Text",
+      "default": "rgba(0,0,0,0)",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "color",
+      "id": "highlight_background_color",
+      "label": "t:all.Background",
+      "default": "rgba(0,0,0,0)",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "highlight_alignment",
+      "label": "t:all.Alignment",
+      "default": "left",
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "select",
+      "id": "highlight_font_size",
+      "label": "t:all.Text_size",
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "medium",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "large",
+          "label": "t:all.Large"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_show_border",
+      "label": "t:all.Highlight_show_border",
+      "default": true,
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_collapsible_tab",
+      "label": "t:all.Enable_collapsible_tab",
+      "default": true,
+      "visible_if": "{{ section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "radio",
+      "id": "highlight_open_close_icon",
+      "label": "t:all.Open_Close_icon_style",
+      "options": [
+        {
+          "value": "plus_minus",
+          "label": "t:all.Plus_minus"
+        },
+        {
+          "value": "caret",
+          "label": "t:all.Caret"
+        }
+      ],
+      "default": "plus_minus",
+      "visible_if": "{{ section.settings.highlight_collapsible_tab and section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_button_borders",
+      "label": "t:all.Highlight_button_borders",
+      "info": "t:all.Highlight_button_borders_info",
+      "default": false,
+      "visible_if": "{{ section.settings.highlight_collapsible_tab and section.settings.show_highlight and section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:all.Product_card_settings_reference",
+      "visible_if": "{{ section.settings.layout == 'preview' }}"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "t:sections.template--collections-list.settings.layout.label",
+      "default": "preview",
+      "options": [
+        {
+          "value": "preview",
+          "label": "t:sections.template--collections-list.settings.layout.options.preview"
+        },
+        {
+          "value": "grid",
+          "label": "t:all.Grid"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "items_per_row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "t:sections.template--collections-list.settings.items_per_row.label",
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

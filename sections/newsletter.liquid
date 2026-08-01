@@ -1,0 +1,113 @@
+{{ 'section-newsletter.min.css' | asset_url | stylesheet_tag }}
+
+<div
+    class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }} newsletter--section-wrapper{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+    data-wetheme-section-type="newsletter--newsletter"
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  {% render 'newsletter-form', section: section, form_id: 'newsletter_section_form', text_alignment: section.settings.textAlignment %}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.newsletter--newsletter.name",
+  "tag": "section",
+  "class": "section--newsletter",
+  "settings": [
+    {
+      "id": "newsletter_heading",
+      "type": "text",
+      "label": "t:all.Heading",
+      "default": "Join our Mailing List"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_description",
+      "label": "t:all.Text"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "textAlignment",
+      "label": "t:all.Text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:all.Newsletter"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

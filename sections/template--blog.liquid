@@ -1,0 +1,843 @@
+{{ 'template-blog.min.css' | asset_url | stylesheet_tag: preload: true }}
+
+{% if section.settings.show_sidebar %}
+  {% assign has_sidebar_content = false %}
+  {% capture sidebar_content %}
+    <aside class="template-blog__sidebar">
+      {% if section.settings.show_sidebar_newsletter %}
+        {% assign has_sidebar_content = true %}
+        <div class="template-blog__newsletter block-radius color-scheme--{{ section.settings.newsletter_color_scheme }}">
+          {% if section.settings.newsletter_heading %}
+            <div class="template-blog__newsletter-heading">{{ section.settings.newsletter_heading }}</div>
+          {% endif %}
+
+          {% if section.settings.newsletter_description %}
+            <div class="template-blog__newsletter-description text-link-animated">{{ section.settings.newsletter_description }}</div>
+          {% endif %}
+
+          {% form 'customer', id: 'newsletter-blog_form' %}
+            {{ form.errors | default_errors }}
+
+            {% unless form.posted_successfully? %}
+              {% if customer and customer.email == form.email %}
+                <div class="errors template-blog__newsletter-errors">
+                  <span role="alert" class="error">{{ 'general.newsletter_form_section.already_subscribed' | t }}</span>
+                </div>
+              {% endif %}
+            {% endunless %}
+
+            {% if form.posted_successfully? %}
+              <p class="note form-success template-blog__newsletter-success" role="alert">{{ 'general.newsletter_form.confirmation' | t }}</p>
+            {% else %}
+              <div class="input-group template-blog__newsletter-input-group">
+                <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="BlogEmail" class="input-group-field template-blog__newsletter-email-input" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" pattern=".+@.+\..+" title="{{ 'general.forms.email_must_be_formatted_as_an_email' | t }}">
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                {% assign newsletter_button_label = 'general.newsletter_form.submit' | t %}
+                {% assign newsletter_button_id = 'blog-newsletter' %}
+
+                {% if section.settings.override_button_colors %}
+                  {% render 'button-color-overrides',
+                    id: newsletter_button_id,
+                    style: 'filled',
+                    text_color: section.settings.button_text_color,
+                    background_color: section.settings.button_background_color
+                  %}
+                {% endif %}
+
+                {% capture button_attr %}
+                  type="submit"
+                  name="subscribe"
+                  id="BlogSubscribe"
+                {% endcapture %}
+
+                {% render 'dynamic-section-button',
+                  id: newsletter_button_id,
+                  label: newsletter_button_label,
+                  has_link: false,
+                  style: 'filled',
+                  a_classes: 'template-article__newsletter-submit',
+                  wrapper: false,
+                  attributes: button_attr
+                %}
+              </div>
+            {% endif %}
+          {% endform %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_recent_posts %}
+        {% assign has_sidebar_content = true %}
+        <div class="template-blog__popular-articles">
+          <h4 class="template-blog__popular-articles-heading">{{ 'blogs.sidebar.popular_articles' | t }}</h4>
+
+          <div class="template-blog__popular-articles-list nav-link-animated--custom">
+            {% if section.settings.popular_article_1 != blank or section.settings.popular_article_2 != blank %}
+              {% if section.settings.popular_article_1 != blank %}
+                <div class="template-blog__popular-article">
+                  {% if section.settings.show_popular_articles_image and section.settings.popular_article_1.image %}
+                    <div class="template-blog__popular-article-image template-blog__popular-article-image--aspect-ratio--{{ section.settings.image_aspect_ratio }} thumbnail-radius-clip" data-animate-hover-zoom>
+                      <a href="{{ section.settings.popular_article_1.url }}">
+                        {% render 'responsive-image', image: section.settings.popular_article_1.image, class: 'thumbnail-radius', allow_stretch: true %}
+                      </a>
+                    </div>
+                  {% endif %}
+                  <div>
+                    <a href="{{ section.settings.popular_article_1.url }}" class="animated-link--item">
+                      {{ section.settings.popular_article_1.title }}
+                    </a>
+                    {% if section.settings.show_sidebar_dates %}
+                      <time class="template-blog__popular-article-date" datetime="{{ section.settings.popular_article_1.published_at | date: '%Y-%m-%d' }}">{{ section.settings.popular_article_1.published_at | time_tag: format: 'date' }}</time>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if section.settings.popular_article_2 != blank %}
+                <div class="template-blog__popular-article">
+                  {% if section.settings.show_popular_articles_image and section.settings.popular_article_2.image %}
+                    <div class="template-blog__popular-article-image template-blog__popular-article-image--aspect-ratio--{{ section.settings.image_aspect_ratio }} thumbnail-radius-clip" data-animate-hover-zoom>
+                      <a href="{{ section.settings.popular_article_2.url }}">
+                        {% render 'responsive-image', image: section.settings.popular_article_2.image, class: 'thumbnail-radius', allow_stretch: true %}
+                      </a>
+                    </div>
+                  {% endif %}
+                  <div>
+                    <a href="{{ section.settings.popular_article_2.url }}" class="animated-link--item">
+                      {{ section.settings.popular_article_2.title }}
+                    </a>
+                    {% if section.settings.show_sidebar_dates %}
+                      <time class="template-blog__popular-article-date" datetime="{{ section.settings.popular_article_2.published_at | date: '%Y-%m-%d' }}">{{ section.settings.popular_article_2.published_at | time_tag: format: 'date' }}</time>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% else %}
+              {% for i in (1..2) %}
+                <div class="template-blog__popular-article">
+                  {% if section.settings.show_popular_articles_image %}
+                    <div class="template-blog__popular-article-image template-blog__popular-article-image--aspect-ratio--{{ section.settings.image_aspect_ratio }} thumbnail-radius-clip" data-animate-hover-zoom>
+                      <a href="#">
+                        {{ 'image' | placeholder_svg_tag: 'icon icon--placeholder thumbnail-radius' }}
+                      </a>
+                    </div>
+                  {% endif %}
+                  <div>
+                    <a href="#" class="animated-link--item">
+                      {{ 'general.onboarding.blog_post' | t }}
+                    </a>
+                    {% if section.settings.show_sidebar_dates %}
+                      <time class="template-blog__popular-article-date" datetime="{{ "2024-12-25" | date: '%Y-%m-%d' }}">{{ "2024-12-25" | time_tag: format: 'date' }}</time>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.blog-sidebar-image != blank %}
+        {% assign has_sidebar_content = true %}
+        <div class="{% unless section.settings.sidebar_image_shape == 'circle' %}block-radius-clip{% endunless %}{% unless section.settings.sidebar_image_shape == 'original' %} template-blog__sidebar-image--aspect-ratio--{{ section.settings.sidebar_image_shape }}{% endunless %}">
+          {% if section.settings.blog-sidebar-link != blank %}
+            <a href="{{ section.settings.blog-sidebar-link }}" class="template-blog__sidebar-image-link" data-animate-hover-zoom>
+          {% endif %}
+            {% render 'responsive-image', image: section.settings.blog-sidebar-image, allow_stretch: true %}
+          {% if section.settings.blog-sidebar-link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.blog-sidebar-description != blank %}
+        {% assign has_sidebar_content = true %}
+        <div class="template-blog__sidebar-description text-link-animated">
+          {{ section.settings.blog-sidebar-description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_blog_tags and blog.tags.size > 0 %}
+        {% assign has_sidebar_content = true %}
+        <div class="template-blog__sidebar-tags">
+          <a href="{{ blog.url }}" class="template-blog__sidebar-tag custom-badge badge">{{ 'blogs.article.all' | t }}</a>
+          {% for tag in blog.tags %}
+            <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="template-blog__sidebar-tag custom-badge badge">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_social_icons %}
+        {% assign has_sidebar_content = true %}
+        <div class="template-blog__sidebar-social">
+          {% render 'social-icons' %}
+        </div>
+      {% endif %}
+    </aside>
+  {% endcapture %}
+{% endif %}
+
+{% paginate blog.articles by section.settings.posts_to_show %}
+  <div class="wrapper-spacing--v--template wrapper-spacing--h show-on-scroll">
+    <div class="width--content">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+
+            {% when 'tag_navigation' %}
+              {% if blog.tags.size > 0 %}
+
+                <safe-load-scripts class="hidden">
+                  <script src="{{ 'component-navigation-banner.js' | asset_url }}" defer="defer" type="module" data-internal-script data-flow-load-key="component-navigation-banner"></script>
+                </safe-load-scripts>
+
+                {% capture all_tags_button %}
+                  {% if block.settings.buttons_style == 'text' %}
+                    <a
+                      href="{{ blog.url }}"
+                      class="animated-link--item"
+                      {% if block.settings.override_button_colors %}
+                        style="color: rgba({{ block.settings.button_background_color.rgba }});"
+                      {% endif %}
+                    >{{ 'blogs.article.all' | t }}</a>
+                  {% elsif block.settings.buttons_style == 'badges' %}
+                    <a
+                      href="{{ blog.url }}"
+                      class="template-blog__tag-navigation__badge custom custom-badge badge"
+                      {% if block.settings.override_button_colors %}
+                        style="color: rgba({{ block.settings.button_text_color.rgba }}); background-color: rgba({{ block.settings.button_background_color.rgba }});"
+                      {% endif %}
+                    >{{ 'blogs.article.all' | t }}</a>
+                  {% else %}
+                    {% assign all_string = 'blogs.article.all' | t %}
+                    {% render 'dynamic-section-button',
+                      id: block.id,
+                      link: blog.url,
+                      label: all_string,
+                      style: block.settings.buttons_style,
+                      wrapper: false
+                    %}
+                  {% endif %}
+                {% endcapture %}
+
+                <div class="template-blog__tag-navigation" {{ block.shopify_attributes }}>
+                  {% if block.settings.override_button_colors %}
+                    {% render 'button-color-overrides',
+                      id: block.id,
+                      style: block.settings.buttons_style,
+                      text_color: block.settings.button_text_color,
+                      background_color: block.settings.button_background_color
+                    %}
+                  {% endif %}
+
+                  {% if block.settings.layout_style == 'slider' %}
+                    {% if block.settings.buttons_style == 'underlined' or block.settings.buttons_style == 'text' %}
+                      {% assign nav_slider_spacing = 30 %}
+                    {% elsif settings.grid_spacing == '5' %}
+                      {% assign nav_slider_spacing = settings.grid_spacing %}
+                    {% else %}
+                      {% assign nav_slider_spacing = 10 %}
+                    {% endif %}
+                    <nav-banner
+                      data-grid-spacing-desktop="{{ nav_slider_spacing }}"
+                      data-grid-spacing-mobile="{{ nav_slider_spacing | times: 0.75 }}"
+                      data-swiper-center="{% if block.settings.alignment == 'center' %}true{% else %}false{% endif %}"
+                    >
+                      <nav class="swiper template-blog__tag-navigation__swiper" data-animate-overflow-container>
+                        <div class="swiper-wrapper">
+                          <div
+                            class="swiper-slide{% if block.settings.buttons_style == 'underlined' %} text-link-animated{% elsif block.settings.buttons_style == 'text' %} nav-link-animated--custom{% endif %}"
+                            data-animate
+                            data-animate-order="1"
+                            data-animate-overflow-item
+                          >
+                            {{ all_tags_button }}
+                          </div>
+
+                          {% for tag in blog.tags %}
+                            <div
+                              class="swiper-slide{% if block.settings.buttons_style == 'underlined' %} text-link-animated{% elsif block.settings.buttons_style == 'text' %} nav-link-animated--custom{% endif %}"
+                              data-animate
+                              data-animate-order="{{ forloop.index | plus: 1 }}"
+                              data-animate-overflow-item
+                            >
+                              {% if block.settings.buttons_style == 'text' %}
+                                <a
+                                  href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                                  class="animated-link--item dynamic-section-button--tag_navigation"
+                                  {% if block.settings.override_button_colors %}
+                                    style="color: rgba({{ block.settings.button_background_color.rgba }});"
+                                  {% endif %}
+                                >{{ tag }}</a>
+                              {% elsif block.settings.buttons_style == 'badges' %}
+                                <a
+                                  href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                                  class="template-blog__tag-navigation__badge custom custom-badge badge"
+                                  {% if block.settings.override_button_colors %}
+                                    style="color: rgba({{ block.settings.button_text_color.rgba }}); background-color: rgba({{ block.settings.button_background_color.rgba }});"
+                                  {% endif %}
+                                >{{ tag }}</a>
+                              {% else %}
+                                {% assign tag_handle = tag | handle %}
+                                {% assign tag_url = blog.url | append: '/tagged/' | append: tag_handle %}
+                                {% render 'dynamic-section-button',
+                                  id: block.id,
+                                  link: tag_url,
+                                  label: tag,
+                                  style: block.settings.buttons_style,
+                                  wrapper: false
+                                %}
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                        </div>
+                        <div class="template-blog__tag-navigation__swiper-next" data-nav-banner-next style="--nav-banner-next-offset: {% if settings.animations_enabled %}var(--animation-translate-y){% else %}0px{% endif %}">
+                          {% render 'theme-icon', icon: 'chevron_right' %}
+                        </div>
+                      </nav>
+                    </nav-banner>
+                  {% else %}
+                    <nav style="--grid-alignment: {{ block.settings.alignment }}">
+                      <ul class="template-blog__tag-navigation__grid-list{% if block.settings.buttons_style == 'underlined' or block.settings.buttons_style == 'text' %} increase-spacing{% endif %}">
+                        <li
+                          class="{% if block.settings.buttons_style == 'underlined' %}text-link-animated{% elsif block.settings.buttons_style == 'text' %} nav-link-animated--custom{% endif %}"
+                          {% unless count > 10 %}
+                            data-animate
+                            data-animate-order="1"
+                          {% endunless %}
+                        >
+                          {{ all_tags_button }}
+                        </li>
+
+                        {% for tag in blog.tags %}
+                          <li
+                            class="{% if block.settings.buttons_style == 'underlined' %}text-link-animated{% elsif block.settings.buttons_style == 'text' %} nav-link-animated--custom{% endif %}"
+                            {% unless count > 10 %}
+                              data-animate
+                              data-animate-order="{{ forloop.index | plus: 1 }}"
+                            {% endunless %}
+                          >
+                            {% if block.settings.buttons_style == 'text' %}
+                              <a
+                                href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                                class="animated-link--item dynamic-section-button--tag_navigation"
+                                {% if block.settings.override_button_colors %}
+                                  style="color: rgba({{ block.settings.button_background_color.rgba }});"
+                                {% endif %}
+                              >{{ tag }}</a>
+                            {% elsif block.settings.buttons_style == 'badges' %}
+                              <a
+                                href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                                class="template-blog__tag-navigation__badge custom custom-badge badge"
+                                {% if block.settings.override_button_colors %}
+                                  style="color: rgba({{ block.settings.button_text_color.rgba }}); background-color: rgba({{ block.settings.button_background_color.rgba }});"
+                                {% endif %}
+                              >{{ tag }}</a>
+                            {% else %}
+                              {% assign tag_handle = tag | handle %}
+                              {% assign tag_url = blog.url | append: '/tagged/' | append: tag_handle %}
+                              {% render 'dynamic-section-button',
+                                id: block.id,
+                                link: tag_url,
+                                label: tag,
+                                style: block.settings.buttons_style,
+                                wrapper: false
+                              %}
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </nav>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+
+      <div class="{% if has_sidebar_content %}template-blog--with-sidebar{% endif %}">
+        {% if section.settings.show_sidebar %}
+          <article>
+        {% endif %}
+
+        <div style="--blog-posts-per-row: {{ section.settings.posts_per_row }}" class="template-blog__grid">
+          {% for article in blog.articles %}
+            <div data-animate data-animate-order="{{ forloop.index }}">
+              {% render 'blog-post-card',
+                post: article,
+                show_date: section.settings.blog_show_date,
+                show_image: section.settings.show_image,
+                show_excerpt: section.settings.show_excerpt,
+                show_read_more: section.settings.show_read_more,
+                image_shape: section.settings.image_shape,
+                show_tags: section.settings.show_tags
+                heading_font: section.settings.heading_font,
+                heading_font_size: section.settings.heading_font_size,
+                alignment: section.settings.alignment,
+                show_author: section.settings.show_author_name,
+                show_reading_time: section.settings.show_reading_time,
+                show_comment_count: section.settings.show_comment_count
+              %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          <div class="template-blog__pagination">
+            {% render 'pagination', paginate: paginate %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_sidebar %}
+          </article>
+          {{ sidebar_content }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "t:sections.template--blog.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.template--blog.settings.blog_post_card.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.template--blog.settings.show_image.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "label": "t:all.Image_shape",
+      "default": "natural",
+      "options": [
+        {
+          "value": "natural",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "circle",
+          "label": "t:all.Circle"
+        },
+        {
+          "value": "square",
+          "label": "t:all.Square"
+        },
+        {
+          "value": "tall",
+          "label": "t:all.Tall"
+        },
+        {
+          "value": "wide",
+          "label": "t:all.Wide"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_image }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:sections.template--blog.settings.show_tags.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_show_date",
+      "label": "t:all.Show_dates",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author_name",
+      "label": "t:sections.template--blog.settings.show_author_name.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_time",
+      "label": "t:sections.blog-posts.settings.show_reading_time.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comment_count",
+      "label": "t:sections.blog-posts.settings.show_comment_count.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "t:sections.template--blog.settings.show_excerpt.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_read_more",
+      "label": "t:sections.template--blog.settings.show_read_more.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "t:sections.template--blog.settings.heading_font.label",
+      "default": "heading",
+      "options": [
+        {
+          "value": "heading",
+          "label": "t:sections.template--blog.settings.heading_font.options.heading.label"
+        },
+        {
+          "value": "body",
+          "label": "t:sections.template--blog.settings.heading_font.options.body.label"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "t:all.heading_font_size",
+      "min": 12,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:all.Alignment",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Sidebar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar",
+      "label": "t:sections.template--blog.settings.show_sidebar.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.template--blog.settings.sidebar_newsletter.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar_newsletter",
+      "label": "t:sections.template--blog.settings.show_sidebar_newsletter.label",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_heading",
+      "label": "t:sections.template--blog.settings.newsletter_heading.label",
+      "default": "<h4>Join our mailing list</h4>",
+      "visible_if": "{{ section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_description",
+      "label": "t:sections.template--blog.settings.newsletter_description.label",
+      "default": "<p>Get priority access to events and exclusive offers</p>",
+      "visible_if": "{{ section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "select",
+      "id": "newsletter_color_scheme",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info",
+      "visible_if": "{{ section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors and section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#ffffff",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors and section.settings.show_sidebar_newsletter }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.template--blog.settings.sidebar_popular_articles.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recent_posts",
+      "label": "t:sections.template--blog.settings.show_recent_posts.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_popular_articles_image",
+      "label": "t:sections.template--blog.settings.show_image.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:all.Image_shape",
+      "default": "original",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "circle",
+          "label": "t:all.Circle"
+        },
+        {
+          "value": "square",
+          "label": "t:all.Square"
+        },
+        {
+          "value": "tall",
+          "label": "t:all.Tall"
+        },
+        {
+          "value": "wide",
+          "label": "t:all.Wide"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_popular_articles_image }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar_dates",
+      "label": "t:all.Show_dates",
+      "default": true
+    },
+    {
+      "type": "article",
+      "id": "popular_article_1",
+      "label": "t:sections.template--blog.settings.popular_article_1.label"
+    },
+    {
+      "type": "article",
+      "id": "popular_article_2",
+      "label": "t:sections.template--blog.settings.popular_article_2.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.template--blog.settings.sidebar_image.header"
+    },
+    {
+      "type": "image_picker",
+      "id": "blog-sidebar-image",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "select",
+      "id": "sidebar_image_shape",
+      "label": "t:all.Image_shape",
+      "default": "original",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "circle",
+          "label": "t:all.Circle"
+        },
+        {
+          "value": "square",
+          "label": "t:all.Square"
+        },
+        {
+          "value": "tall",
+          "label": "t:all.Tall"
+        },
+        {
+          "value": "wide",
+          "label": "t:all.Wide"
+        }
+      ]
+    },
+    {
+      "type": "url",
+      "id": "blog-sidebar-link",
+      "label": "t:all.Image_link"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.template--blog.settings.sidebar_extras.header"
+    },
+    {
+      "type": "richtext",
+      "id": "blog-sidebar-description",
+      "label": "t:all.Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blog_tags",
+      "label": "t:all.Show_tags",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "t:sections.template--blog.settings.show_social_icons.label",
+      "info": "t:sections.template--blog.settings.show_social_icons.info",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "posts_to_show",
+      "label": "t:sections.template--blog.settings.posts_to_show.label",
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "posts_per_row",
+      "label": "t:sections.template--blog.settings.posts_per_row.label",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tag_navigation",
+      "name": "t:sections.template--blog.blocks.tag_navigation.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "radio",
+          "id": "alignment",
+          "label": "t:all.Alignment",
+          "default": "center",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:all.Left"
+            },
+            {
+              "value": "center",
+              "label": "t:all.Center"
+            }
+          ]
+        },
+        {
+          "type": "radio",
+          "id": "layout_style",
+          "label": "t:all.Style",
+          "options": [
+            {
+              "value": "grid",
+              "label": "t:all.Grid"
+            },
+            {
+              "value": "slider",
+              "label": "t:all.Slider"
+            }
+          ],
+          "default": "grid"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Buttons"
+        },
+        {
+          "type": "select",
+          "id": "buttons_style",
+          "label": "t:all.button_style",
+          "default": "badges",
+          "options": [
+            {
+              "value": "filled",
+              "label": "t:all.Filled"
+            },
+            {
+              "value": "outlined",
+              "label": "t:all.Outlined"
+            },
+            {
+              "value": "underlined",
+              "label": "t:all.underlined"
+            },
+            {
+              "value": "badges",
+              "label": "t:all.badges"
+            },
+            {
+              "value": "text",
+              "label": "t:all.Text"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "override_button_colors",
+          "label": "t:all.Button_color_override",
+          "default": false,
+          "info": "t:all.Button_color_override_info"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "t:all.Primary_color",
+          "default": "#E68819",
+          "visible_if": "{{ block.settings.override_button_colors }}"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "t:all.Secondary_color",
+          "default": "#ffffff",
+          "info": "t:sections.template--blog.blocks.tag_navigation.settings.button_text_color.info",
+          "visible_if": "{{ block.settings.override_button_colors }}"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

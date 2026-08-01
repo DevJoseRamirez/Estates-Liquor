@@ -1,0 +1,61 @@
+<div
+  class="blog-header wrapper-spacing--v wrapper-spacing--h{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="blog-header"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  <div class="width--content" style="text-align: center;">
+    <h1 class="blog-header__title" style="font-size: {{ section.settings.heading_font_size }}px; margin: 0; text-align: {{ settings.template_heading_alignment }};">{{ blog.title }}</h1>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.blog-header.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "t:all.heading_font_size",
+      "min": 12,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.blog-header.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [ "blog" ]
+  }
+}
+{% endschema %}

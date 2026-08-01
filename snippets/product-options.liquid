@@ -1,0 +1,29 @@
+{% comment %}
+Dropdowns or swatches for product
+
+Parameters:
+* section_id: id of a section
+* variant_style: 'dropdowns' | 'swatches'
+{% endcomment %}
+
+{% assign hide_default_title = false %}
+{% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+  {% assign hide_default_title = true %}
+{% endif %}
+
+{% if product.variants.size > 0 %}
+  <div data-product-options {% if classes %}{{ classes }} {% endif %}{% if block_attributes %}{{ block_attributes }}{% endif %}>
+    {% for option in product.options_with_values %}
+      {% assign option_idx = forloop.index0 %}
+      {% if variant_style == 'dropdowns' %}
+        <div class="selector-wrapper js{% if hide_default_title == true %} hide{% endif %}">
+          {%- render 'variant-dropdown', dropdown_option: option, option_index: option_idx, product: product, size_option_name: size_option_name, size_guide_page: size_guide_page, size_guide_label: size_guide_label, hide_out_of_stock_variants: hide_out_of_stock_variants, dropdown_section_id: section_id -%}
+        </div>
+      {% else %}
+        {% if hide_default_title == false %}
+          {% render 'swatch', swatch_option: option, option_index: option_idx, size_option_name: size_option_name, size_guide_page: size_guide_page, size_guide_label: size_guide_label, hide_out_of_stock_variants: hide_out_of_stock_variants, swatch_section_id: section_id %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

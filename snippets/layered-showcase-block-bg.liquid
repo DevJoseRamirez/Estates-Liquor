@@ -1,0 +1,27 @@
+{%- comment -%}
+  Per-block background layer for the Layered Showcase section.
+  Renders only when a background colour or image is set, so blocks without one are
+  unchanged. The layer sits behind the media/content and is cross-faded by the
+  section's scroll animation (see layered-showcase.js).
+  Accepts: block
+{%- endcomment -%}
+{%- liquid
+  assign bg_color = block.settings.block_background_color
+  assign bg_image = block.settings.block_background_image
+  assign has_bg_color = false
+  if bg_color != blank and bg_color != 'rgba(0,0,0,0)' and bg_color != 'rgba(0, 0, 0, 0)'
+    assign has_bg_color = true
+  endif
+-%}
+{%- if has_bg_color or bg_image != blank -%}
+  <div
+    class="layered-showcase__bg"
+    data-layered-showcase-bg
+    style="{% if has_bg_color %}background-color: {{ bg_color }};{% endif %}{% if bg_image != blank %}background-image: url({{ bg_image | image_url: width: 1800 }});{% endif %}"
+    aria-hidden="true"
+  >
+    {%- if bg_image != blank and block.settings.block_background_overlay > 0 -%}
+      <span class="layered-showcase__bg-overlay" style="opacity: {{ block.settings.block_background_overlay | divided_by: 100.0 }};"></span>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,13 @@
+{%- liquid
+  assign min_heading_size = 16
+  assign base_size = base_size | default: settings.heading_text_size
+
+  assign h1_size = base_size | times: 1.25 | round | at_least: min_heading_size | append: 'px'
+  assign h2_size = base_size | at_least: min_heading_size | append: 'px'
+  assign h3_size = base_size | times: 0.875 | round | at_least: min_heading_size | append: 'px'
+  assign h4_size = base_size | times: 0.75 | round | at_least: min_heading_size | append: 'px'
+  assign h5_size = base_size | times: 0.625 | round | at_least: min_heading_size | append: 'px'
+  assign h6_size = base_size | times: 0.5 | round | at_least: min_heading_size | append: 'px'
+-%}
+
+style="--h1-size: {{ h1_size }}; --h1-size-mobile: {{ h1_size }}; --h2-size: {{ h2_size }}; --h2-size-mobile: {{ h2_size }}; --h3-size: {{ h3_size }}; --h3-size-mobile: {{ h3_size }}; --h4-size: {{ h4_size }}; --h4-size-mobile: {{ h4_size }}; --h5-size: {{ h5_size }}; --h5-size-mobile: {{ h5_size }}; --h6-size: {{ h6_size }}; --h6-size-mobile: {{ h6_size }}"

@@ -1,0 +1,87 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "custom.overlay",
+  "name": "Overlay",
+  "sections": {
+    "offers-drawer": {
+      "type": "offers-drawer",
+      "blocks": {
+        "offer-0": {
+          "type": "offer",
+          "settings": {
+            "image_position": "above",
+            "title": "Wellness week",
+            "description": "<p>Buy your weekday smoothies and get your weekend ones for free. <em>(7 for the price of 5!)</em></p>",
+            "discount_code": "WELLNESSWEEK",
+            "show_countdown": false,
+            "end_date": "",
+            "end_time": "",
+            "show_timer_labels": true,
+            "timer_expiry_action": "leave_at_zero",
+            "link": "shopify://collections/all",
+            "button_label": ""
+          }
+        },
+        "offer-1": {
+          "type": "offer",
+          "settings": {
+            "image_position": "left",
+            "title": "Almond and banana",
+            "description": "<p>50% off for a limited time.<br/><em>Was $5.99 Now $3.00</em></p>",
+            "discount_code": "",
+            "show_countdown": true,
+            "end_date": "",
+            "end_time": "",
+            "show_timer_labels": true,
+            "timer_expiry_action": "leave_at_zero",
+            "link": "/",
+            "button_label": ""
+          }
+        },
+        "offer_ErRbP7": {
+          "type": "offer",
+          "settings": {
+            "image_position": "left",
+            "title": "Cucumber and melon",
+            "description": "<p>33% off for a limited time.<br/><em>Was $5.99 Now $3.99</em></p>",
+            "discount_code": "",
+            "show_countdown": true,
+            "end_date": "",
+            "end_time": "",
+            "show_timer_labels": true,
+            "timer_expiry_action": "leave_at_zero",
+            "link": "/",
+            "button_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "offer-0",
+        "offer-1",
+        "offer_ErRbP7"
+      ],
+      "disabled": true,
+      "settings": {
+        "show_icon": true,
+        "title": "Today's offers",
+        "description": "",
+        "override_heading_font_size": false,
+        "heading_font_size": 24,
+        "empty_message": "There are currently no active offers, but check back soon for new deals!",
+        "suggested_collections": [],
+        "buttons_style": "filled"
+      }
+    }
+  },
+  "order": [
+    "offers-drawer"
+  ]
+}

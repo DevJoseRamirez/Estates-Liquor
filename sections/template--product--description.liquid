@@ -1,0 +1,297 @@
+{{ 'section-product-description.min.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign show_section = false
+  assign has_product_description = false
+  assign has_collapsible_tabs = false
+
+  assign product_description_block = section.blocks | where: "type", "product_description"
+  if product_description_block.size > 0 and product.description != blank
+    assign has_product_description = true
+  endif
+
+  assign collapsible_tab_blocks = section.blocks | where: "type", "collapsible_tab"
+  if collapsible_tab_blocks.size > 0
+    assign has_collapsible_tabs = true
+  endif
+
+  if has_product_description or has_collapsible_tabs
+    assign show_section = true
+  endif
+-%}
+
+{% if show_section %}  
+  <div
+    class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+    <div{% unless section.settings.section_width == 'full-width' %} class="width--{{ section.settings.section_width }}"{% endunless %}>
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'product_description' %}
+            {% if product.description != blank %}
+              {% if block.settings.collapsible_tab %}
+                <div class="product-details__collapsible-tab" data-animate data-animate-order="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  {% render 'collapsible-tab', icon: 'none', custom_icon: false, heading: block.settings.title, content: product.description, open_close_icon: section.settings.open_close_icon, open_by_default: block.settings.open_by_default, heading_classes: 'label-font' %}
+                </div>
+              {% else %}
+                <div class="rte product-details__description text-link-animated" {{ block.shopify_attributes }}>
+                  {{ product.description }}
+                </div>
+              {% endif %}
+            {% endif %}
+          {% when 'collapsible_tab' %}
+            {% assign content = block.settings.text %}
+            {% if block.settings.page.content %}
+              {% assign content = content | append: block.settings.page.content %}
+            {% endif %}
+            {% if content != blank %}
+              <div class="product-details__collapsible-tab" data-animate data-animate-order="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                {% render 'collapsible-tab', icon: 'none', custom_icon: false, heading: block.settings.title, content: content, open_close_icon: section.settings.open_close_icon, open_by_default: block.settings.open_by_default, heading_classes: 'label-font' %}
+              </div>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if section.blocks.size == 0 and request.design_mode %}
+  <div
+    class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+    <div class="width--{{ section.settings.section_width }}">
+      <div class="placeholder-noblocks">
+        {{ 'homepage.onboarding.no_content' | t }}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.template--product--description.name",
+  "tag": "section",
+  "class": "section--product-description",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Collapsible_tabs"
+    },
+    {
+      "type": "radio",
+      "id": "open_close_icon",
+      "label": "t:all.Open_Close_icon_style",
+      "options": [
+        {
+          "value": "plus_minus",
+          "label": "t:all.Plus_minus"
+        },
+        {
+          "value": "caret",
+          "label": "t:all.Caret"
+        }
+      ],
+      "default": "plus_minus"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:all.Narrow"
+        },
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full-width",
+          "label": "t:all.Full_width"
+        }
+      ],
+      "default": "content"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_readmore",
+      "label": "t:sections.template--product--description.settings.enable_readmore.label",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_description",
+      "name": "t:all.Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "collapsible_tab",
+          "label": "t:all.Enable_collapsible_tab",
+          "info": "t:all.Collapsible_tab_info",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "t:all.Collapsible_tab"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.template--product.blocks.product-description.settings.paragraph-2.content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "t:all.Heading",
+          "default": "Description"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "t:sections.template--product.blocks.collapsible-tab.settings.open_by_default.label",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "t:all.Collapsible_tab",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.info.content"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.template--product.blocks.collapsible-tab.settings.tab_heading.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "t:all.Heading",
+          "default": "Product details"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "t:sections.template--product.blocks.collapsible-tab.settings.open_by_default.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "<p>Share some information about your product</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "t:all.page"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.template--product--description.name",
+      "blocks": {
+        "product_description_3g6dqK": {
+          "type": "product_description",
+          "settings": {
+            "collapsible_tab": true,
+            "title": "Description",
+            "open_by_default": false
+          }
+        },
+        "collapsible_tab_nzdain": {
+          "type": "collapsible_tab",
+          "settings": {
+            "title": "Product details",
+            "open_by_default": false,
+            "text": "<p>Share some information about your product</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_description_3g6dqK",
+        "collapsible_tab_nzdain"
+      ],
+      "name": "t:sections.template--product--description.name",
+      "settings": {
+        "open_close_icon": "caret",
+        "section_width": "narrow",
+        "section_padding_top": 60,
+        "section_padding_bottom": 150,
+        "colors": "white",
+        "enable_readmore": false
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  }
+}
+{% endschema %}

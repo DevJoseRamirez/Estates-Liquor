@@ -1,0 +1,721 @@
+{{ 'section-animated-text.min.css' | asset_url | stylesheet_tag }}
+
+<style>
+  /* overrides global font-sizes with section font-sizes */
+  [data-wetheme-section-id="{{ section.id }}"] .content-wrapper--text_static *,
+  [data-wetheme-section-id="{{ section.id }}"] .content-wrapper--text_dynamic * {
+    font-size: {{ section.settings.text_size_mobile }}px !important;
+    line-height: normal;
+  }
+
+  @media only screen and (min-width: 768px) {
+    [data-wetheme-section-id="{{ section.id }}"] .content-wrapper--text_static *,
+    [data-wetheme-section-id="{{ section.id }}"] .content-wrapper--text_dynamic * {
+      font-size: {{ section.settings.text_size_desktop }}px !important;
+    }
+  }
+</style>
+
+{% liquid
+  assign img_desktop = 'blank'
+  if section.settings.image_desktop != blank
+    assign img_desktop = 'selected'
+  endif
+  assign img_mobile = 'blank'
+  if section.settings.image_mobile != blank
+    assign img_mobile = 'selected'
+  endif
+  assign section_imgs = 'img-mobile--' | append: img_mobile | append: ' img-desktop--' | append: img_desktop
+  assign section_height = 'height-mobile--' | append: section.settings.height_mobile | append: ' height-desktop--' | append: section.settings.height_desktop
+  assign content_position = 'content-position-mobile--' | append: section.settings.text_position_mobile | append: ' content-position-desktop--' | append: section.settings.text_position_desktop
+
+  case section.settings.text_position_mobile
+    when 'top_left' or 'left' or 'bottom_left'
+      assign alignment_mobile = 'left'
+    when 'top_center' or 'center' or 'bottom_center'
+      assign alignment_mobile = 'center'
+    when 'top_right' or 'right' or 'bottom_right'
+      assign alignment_mobile = 'right'
+  endcase
+
+  case section.settings.text_position_desktop
+    when 'top_left' or 'left' or 'bottom_left'
+      assign alignment_desktop = 'left'
+    when 'top_center' or 'center' or 'bottom_center'
+      assign alignment_desktop = 'center'
+    when 'top_right' or 'right' or 'bottom_right'
+      assign alignment_desktop = 'right'
+  endcase
+
+  assign content_aligment = 'content-wrapper-mobile--' | append: alignment_mobile | append: ' content-wrapper-desktop--' | append: alignment_desktop
+%}
+
+<section 
+  class="wrapper-spacing--v{% if section.settings.section_width == 'content' %} wrapper-spacing--h{% endif %}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}" 
+  data-wetheme-section-type="animated-text" 
+  data-wetheme-section-id="{{ section.id }}"
+  style="--margin-section-top: {{ section.settings.section_margin_top }}px; --margin-section-bottom: {{ section.settings.section_margin_bottom }}px;"
+>
+  <div{% if section.settings.section_width == 'content' %} class="width--content block-radius-clip"{% endif %}>
+    <div class="animated-text__content color-scheme--{{ section.settings.colors }} {{ section_height }} {{ section_imgs }} section--{{ section.id }}">
+      {% liquid
+        assign kb = ' kb-enabled'
+        if settings.animations_enabled == false
+          assign kb = ' kb-disabled'
+        endif
+
+        if section.settings.image_mobile
+          assign bg_img_mobile = section.settings.image_mobile
+          assign bg_img_mobile_classes = ' animated-text--bg-img-mobile' | append: kb
+          assign bg_img_mobile_fit_container = true
+          if section.settings.height_mobile == 'original'
+            assign bg_img_mobile_fit_container = false
+          endif
+          
+          render 'responsive-image', image: bg_img_mobile, wrapper_class: bg_img_mobile_classes, allow_stretch: bg_img_mobile_fit_container
+        endif
+
+        if section.settings.image_desktop
+          assign bg_img_desktop = section.settings.image_desktop
+          assign bg_img_desktop_classes = ' animated-text--bg-img-desktop' | append: kb
+          assign bg_img_desktop_fit_container = true
+          if section.settings.height_desktop == 'original'
+            assign bg_img_desktop_fit_container = false
+          endif
+          
+          render 'responsive-image', image: bg_img_desktop, wrapper_class: bg_img_desktop_classes, allow_stretch: bg_img_desktop_fit_container
+        endif
+
+        assign padding_override_classes = ''
+        if section.settings.colors == 'white'
+          if section.settings.image_desktop == blank
+            assign padding_override_classes = 'animated-text--content--remove-p-y-desktop'
+          endif
+          if section.settings.image_mobile == blank
+            assign padding_override_classes = padding_override_classes | append: ' animated-text--content--remove-p-y-mobile'
+          endif
+        endif
+
+        assign animation_offset = 2
+      %}
+
+      <div class="animated-text--inner {{ content_position }}">
+        <div class="animated-text--content {{ padding_override_classes }}">
+          {% for block in section.blocks %}
+            <div class="content-wrapper--{{ block.type }} {{ content_aligment }} block-id--{{ block.id }}" {{ block.shopify_attributes }}>
+              {% case block.type %}
+
+                {% when 'text_static' %}
+                  {% liquid 
+                    assign text_color = 'rgba(' | append: block.settings.text_color.rgba | append: ')'
+                    assign text_color_transparent50 = 'color-mix(in srgb, ' | append: text_color | append: ', transparent 50%)'
+                  %}
+
+                  <style>
+                    .block-id--{{ block.id }} .text-box-max-width {
+                      max-width: {{ block.settings.max_width_mobile }}%;
+                      display: inline-block;
+                    }
+
+                    {% if block.settings.text_color != 'rgba(0,0,0,0)' %}
+                      .block-id--{{ block.id }} .text-box-max-width a {
+                        color: {{ text_color }}!important;
+                        --custom-text-color-transparent50: {{ text_color_transparent50 }};
+                        --custom-text-color: {{ text_color }};
+                      }
+                    {% endif %}
+
+                    @media only screen and (min-width: 768px) {
+                      .block-id--{{ block.id }} .text-box-max-width {
+                        max-width: {{ block.settings.max_width_desktop }}%;
+                      }
+                    }
+                  </style>
+
+                  <div class="h2 text-box-max-width richtext-block{% if block.settings.text_color != 'rgba(0,0,0,0)' %} text-link-animated-custom-color{% else %} text-link-animated{% endif %}"{% if block.settings.text_color != 'rgba(0,0,0,0)' %} style="color: rgba({{ block.settings.text_color.rgba }}) !important;"{% endif %} data-animate data-animate-order="{{ forloop.index | plus: animation_offset }}">{{ block.settings.text_static }}</div>
+
+                {% when 'text_dynamic' %}
+                  <style>
+                    /* animation styles */
+                    .dynamic-words {
+                      position: relative;
+                      transition: width {{ block.settings.animation_timing }}ms cubic-bezier(0.2, 1, 0.3, 1);
+                      font-size: inherit!important;
+                      display: inline-flex!important;
+                      vertical-align: middle;
+                    }
+
+                    .dynamic-words > span:not(.active) {
+                      position: absolute;
+                      opacity: 0;
+                      pointer-events: none;
+                      left: 0;
+                      top: 0;
+                    }
+                    
+                    .dynamic-words span {
+                      transition: transform {{ block.settings.animation_timing }}ms cubic-bezier(0.2, 1, 0.3, 1), opacity {{ block.settings.animation_timing }}ms cubic-bezier(0.2, 1, 0.3, 1);
+                      display: block;
+                      white-space: nowrap;
+                    }
+                    
+                    .dynamic-words > span {
+                      overflow: hidden;
+                      transform: translate3d(-100%,0,0);
+                    }
+                    
+                    .dynamic-words > span span span {
+                      transform: translate3d(100%,0,0);
+                      margin: 0 1px;
+                    }
+                    
+                    .dynamic-words span.active,
+                    .dynamic-words span.active span span {
+                      transition-delay: 0.4s;
+                      transform: translate3d(0,0,0);
+                    }
+                    
+                    .content-wrapper--text_dynamic .text-wrap {
+                      overflow: hidden;
+                      display: inline-block;
+                    }
+                    
+                    .content-wrapper--text_dynamic .text-wrap > span {
+                      transition: transform {{ block.settings.animation_timing }}ms cubic-bezier(0.25, 1, 0.5, 1);
+                      transform: translate3d(0px, 0px, 0px);
+                    }
+                    
+                    .content-wrapper--text_dynamic .text-wrap > span {
+                      display: block;
+                      vertical-align: middle;
+                    }
+
+                    @media screen and (prefers-reduced-motion: reduce) {
+                      .dynamic-words,
+                      .dynamic-words span,
+                      .content-wrapper--text_dynamic .text-wrap > span {
+                        transition: none;
+                      }
+                    }
+                  </style>
+
+                  <animated-text class="dynamic-words h2" data-animation-speed="{{ block.settings.animation_timing }}" data-animation-delay="{{ block.settings.rotation_interval }}" data-animate data-animate-order="{{ forloop.index | plus: animation_offset }}">
+                    {% assign dynamic_words = block.settings.text_dynamic | split: "," %}
+                    {% for word in dynamic_words %}
+                      <span class="text-wrap{% if forloop.first %} active{% endif %}">
+                        <span>
+                          <span{% if block.settings.text_color != 'rgba(0,0,0,0)' %} style="color: rgba({{ block.settings.text_color.rgba }}) !important"{% endif %}>{{ word }}</span>
+                        </span>
+                      </span>
+                    {% endfor %}
+                  </animated-text>
+
+                  <safe-load-scripts class="hidden">
+                    <script src="{{ 'component-animated-text.js' | asset_url }}" defer="defer" type="module" data-internal-script></script>
+                  </safe-load-scripts>
+                  
+                {% when 'button' %}
+                  {% if block.settings.button_text != blank %}
+                    {% if block.settings.override_button_colors %}
+                      {% render 'button-color-overrides',
+                        id: block.id,
+                        style: block.settings.buttons_style,
+                        text_color: block.settings.color_button_text,
+                        background_color: block.settings.color_button_background
+                      %}
+                    {% endif %}
+
+                    {% capture button_attr %}
+                      data-section-main-link
+                      data-animate
+                      data-animate-order="{{ forloop.index | plus: animation_offset }}"
+                    {% endcapture %}
+
+                    {% render 'dynamic-section-button',
+                      id: block.id,
+                      link: block.settings.button_url,
+                      label: block.settings.button_text,
+                      style: block.settings.buttons_style,
+                      div_classes: 'homepage-section-btn-container',
+                      a_classes: 'homepage-section-btn',
+                      attributes: button_attr
+                    %}
+                  {% endif %}
+                {% endcase %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.animated-text.name",
+  "class": "animated-text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "t:all.Image",
+      "info": "t:all.Optional_2000_x_900px_recommended"
+    },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "t:all.Section_height",
+      "default": "m",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "s",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "m",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "l",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "xl",
+          "label": "t:all.Extra_Large"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Fullscreen"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_position_desktop",
+      "label": "t:all.Content_position",
+      "default": "left",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:all.Top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:all.Top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:all.Top_right"
+        },
+        {
+          "value": "left",
+          "label": "t:all.Center_left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:all.Bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:all.Bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:all.Bottom_right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "t:all.px",
+      "label": "t:all.Text_size",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:all.Image",
+      "info": "t:all.Optional"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "t:all.Section_height",
+      "default": "full",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "s",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "m",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "l",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "xl",
+          "label": "t:all.Extra_Large"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Fullscreen"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_position_mobile",
+      "label": "t:all.Content_position",
+      "default": "left",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:all.Top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:all.Top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:all.Top_right"
+        },
+        {
+          "value": "left",
+          "label": "t:all.Center_left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:all.Bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:all.Bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:all.Bottom_right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "t:all.px",
+      "label": "t:all.Text_size",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "default": "full",
+      "options": [
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Full_width"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "info": "t:sections.animated-text.settings.colors.info",
+      "default": "accent",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_static",
+      "limit": 2,
+      "name": "t:sections.animated-text.blocks.text_static.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text_static",
+          "label": "t:all.Text",
+          "default": "<p>Static text</p>"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Layout"
+        },
+        {
+          "type": "range",
+          "id": "max_width_desktop",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "unit": "t:all.percentage",
+          "label": "t:sections.animated-text.blocks.text_static.settings.max_width_desktop.label",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "max_width_mobile",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "unit": "t:all.percentage",
+          "label": "t:sections.animated-text.blocks.text_static.settings.max_width_mobile.label",
+          "default": 100
+        },
+        {
+          "type": "header",
+          "content": "t:all.Color"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:all.If_a_color_is_selected_it_will_override_the_section_colors"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "t:all.Text",
+          "default": "rgba(0,0,0,0)"
+        }
+      ]
+    },
+    {
+      "type": "text_dynamic",
+      "limit": 1,
+      "name": "t:sections.animated-text.blocks.text_dynamic.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text_dynamic",
+          "label": "t:all.Text",
+          "info": "t:sections.animated-text.blocks.text_dynamic.settings.text_dynamic.info",
+          "default": "amazing,fantastic,bestselling,jaw-dropping"
+        },
+        {
+          "type": "header",
+          "content": "t:all.animation"
+        },
+        {
+          "type": "range",
+          "id": "animation_timing",
+          "min": 200,
+          "max": 3000,
+          "step": 100,
+          "unit": "t:all.ms",
+          "label": "t:sections.animated-text.blocks.text_dynamic.settings.animation_timing.label",
+          "default": 500
+        },
+        {
+          "type": "range",
+          "id": "rotation_interval",
+          "min": 3000,
+          "max": 8000,
+          "step": 100,
+          "unit": "t:all.ms",
+          "label": "t:sections.animated-text.blocks.text_dynamic.settings.rotation_interval.label",
+          "default": 5000
+        },
+        {
+          "type": "header",
+          "content": "t:all.Color"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:all.If_a_color_is_selected_it_will_override_the_section_colors"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "t:all.Text",
+          "default": "rgba(0,0,0,0)"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "limit": 1,
+      "name": "t:all.Button",
+      "settings": [
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "t:all.Button_link"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:all.Button_label",
+          "default": "Shop now"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Style"
+        },
+        {
+          "type": "select",
+          "id": "buttons_style",
+          "label": "t:all.button_style",
+          "default": "filled",
+          "options": [
+            {
+              "value": "filled",
+              "label": "t:all.Filled"
+            },
+            {
+              "value": "outlined",
+              "label": "t:all.Outlined"
+            },
+            {
+              "value": "underlined",
+              "label": "t:all.underlined"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "override_button_colors",
+          "label": "t:all.Button_color_override",
+          "default": false,
+          "info": "t:all.Button_color_override_info"
+        },
+        {
+          "type": "color",
+          "id": "color_button_background",
+          "label": "t:all.Primary_color",
+          "default": "#E68819",
+          "visible_if": "{{ block.settings.override_button_colors }}"
+        },
+        {
+          "type": "color",
+          "id": "color_button_text",
+          "label": "t:all.Secondary_color",
+          "default": "#FFFFFF",
+          "info": "t:all.Secondary_button_color_info",
+          "visible_if": "{{ block.settings.override_button_colors }}"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.animated-text.presets.name",
+      "blocks": [
+        {
+          "type": "text_static",
+          "settings": {
+            "text_static": "<p>Shout about how</p>"
+          }
+        },
+        {
+          "type": "text_dynamic"
+        },
+        {
+          "type": "text_static",
+          "settings": {
+            "text_static": "<p>your product is.</p>"
+          }
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

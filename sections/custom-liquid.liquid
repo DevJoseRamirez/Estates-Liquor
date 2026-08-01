@@ -1,0 +1,163 @@
+
+{%-  liquid
+  assign full_width = false
+  if section.settings.section_width == 'full-width'
+    assign full_width = true
+  endif
+
+  assign header_width_class = ''
+  if full_width
+    assign header_width_class = 'wrapper-spacing--h'
+  endif
+-%}
+<style>
+  .custom-liquid img {
+    max-width: 100%;
+  }
+</style>
+<div
+  class="custom-liquid wrapper-spacing--v{% unless full_width %} wrapper-spacing--h{% endunless %} color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="advanced-layout--custom-html"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+	<div {% unless full_width %}class="width--{{ section.settings.section_width }}"{% endunless %}>
+    {% comment %} Section title and description {% endcomment %}
+    {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, alignment: section.settings.section_header_alignment, wrapper_classes: header_width_class %}
+
+    <div
+      class="rte text-link-animated"
+      data-animate
+      data-animate-order="{% render 'block-animation-offset', 
+        title: section.settings.title, 
+        description: section.settings.description, 
+        base: 1 
+      %}"
+    >
+      {{ section.settings.custom_liquid }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.advanced-layout--custom-liquid.name",
+  "tag": "section",
+  "class": "section--custom-liquid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "t:sections.advanced-layout--custom-liquid.name"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:all.Liquid",
+      "default": "<p style='text-align:center;margin:0;'>Add custom liquid code, support custom content or third party widgets like external forms, maps, calendar or iframe content.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:all.Narrow"
+        },
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full-width",
+          "label": "t:all.Full_width"
+        }
+      ],
+      "default": "content"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.advanced-layout--custom-liquid.name"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

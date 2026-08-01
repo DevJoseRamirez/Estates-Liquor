@@ -1,0 +1,40 @@
+{% comment %}
+  Set the default grid_item_width if no variable is set
+{% endcomment %}
+
+{% case section.settings.items_per_row %}
+{% when 2 %}
+  {% capture grid_item_width %}large--one-half medium--one-half small--one-half{% endcapture %}
+{% when 3 %}
+  {% capture grid_item_width %}large--one-third medium--one-half small--one-half{% endcapture %}
+{% when 4 %}
+  {% capture grid_item_width %}large--one-quarter medium--one-half small--one-half{% endcapture %}
+{% when 5 %}
+  {% capture grid_item_width %}large--one-fifth medium--one-half small--one-half{% endcapture %}
+{% endcase %}
+
+{% assign badge_anim_order = index | plus: 2 %}
+
+<div class="grid__item {{ grid_item_width }}" data-animate data-animate-order="{{ index }}">
+	{% render 'grid-view-item',
+		product: product,
+		collection: collection,
+		enable_badges: settings.show_badges,
+		grid_count_desktop: section.settings.items_per_row,
+		grid_count_mobile: 2,
+		badge_anim_order: badge_anim_order,
+		show_highlight: show_highlight,
+		highlight_position: highlight_position,
+		highlight_icon: highlight_icon,
+		highlight_custom_icon: highlight_custom_icon,
+		highlight_heading: highlight_heading,
+		highlight_reference: highlight_reference,
+		highlight_text_color: highlight_text_color,
+		highlight_background_color: highlight_background_color,
+		highlight_alignment: highlight_alignment,
+		highlight_font_size: highlight_font_size,
+		highlight_show_border: highlight_show_border,
+		highlight_collapsible_tab: highlight_collapsible_tab,
+		highlight_open_close_icon: highlight_open_close_icon,
+		highlight_button_borders: highlight_button_borders %}
+</div>

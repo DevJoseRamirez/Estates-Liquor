@@ -1,0 +1,22 @@
+{% comment %}
+  Renders a section header with a title and description.
+
+  Accepts:
+  - section_title (string): The title of the section.
+  - section_description (string): The description of the section.
+  - wrapper_classes (string): Additional classes to add to the wrapper div.
+  - title_classes (string): Additional classes to add to the title h2.
+  - description_classes (string): Additional classes to add to the description div.
+  - alignment (string): left, center, right (optional)
+{% endcomment %}
+
+{% if section_title != blank or section_description != blank %}
+  <div class="section-title--wrapper{% if alignment %} text-align--{{ alignment }}{% endif %}{% if wrapper_classes %} {{ wrapper_classes }}{% endif %}">
+    {% if section_title != blank %}
+      <h2 class="section-title text-link-animated{% if title_classes %} {{ title_classes }}{% endif %}" data-animate data-animate-order="1"{% if alignment %} style="text-align: {{ alignment }};{% endif %}">{{ section_title }}</h2>
+    {% endif %}
+    {% if section_description != blank %}
+      <div class="section-description subdued-text text-link-animated{% if description_classes %} {{ description_classes }}{% endif %}" data-animate data-animate-order="{% if section_title != blank %}2{% else %}1{% endif %}"{% if alignment %} style="text-align: {{ alignment }};{% endif %}">{{ section_description }}</div>
+    {% endif %}
+  </div>
+{% endif %}

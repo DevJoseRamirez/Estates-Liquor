@@ -1,0 +1,304 @@
+{{ 'section-video.min.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.override_button_colors %}
+  {% render 'button-color-overrides',
+    id: section.id,
+    style: 'filled',
+    text_color: section.settings.button_text_color,
+    background_color: section.settings.button_background_color
+  %}
+  {% assign button_class = 'dynamic-section-button--' | append: section.id %}
+{% endif %}
+
+<div
+  class="wrapper-spacing--v color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="video--video" 
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+
+  {% comment %} Section title and description {% endcomment %}
+  {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, wrapper_classes: 'wrapper-spacing--h', alignment: section.settings.section_header_alignment %}
+
+  <div class="grid grid--center">
+    {% assign type = 'mp4' %}
+    {% unless section.settings.video %}
+        {% assign type = section.settings.url.type %}
+    {% endunless %}
+
+    <div class="homepage-hero-content--video {% case section.settings.width_classes %}{% when 50 %}grid__item large--one-half{% when 75 %}grid__item large--three-quarters{% when 100 %}grid__item large--one-whole{% endcase %} type-{{ type }}">
+      {% liquid 
+        if section.settings.video != blank
+          assign video = section.settings.video
+        elsif section.settings.url != blank
+          assign video = section.settings.url
+        endif
+
+        assign image = null
+        if section.settings.image != blank
+          assign image = section.settings.image
+        endif
+
+        assign loop = false
+        if section.settings.loop == true
+          assign loop = true
+        endif
+
+        assign autoplay = false
+        if section.settings.autoplay == true
+          assign autoplay = true
+        endif
+
+        assign mute = false
+        if section.settings.mute == true
+          assign mute = true
+        endif
+
+        assign show_controls = section.settings.show_controls
+      %}
+
+      {% if video %}
+        <safe-load-scripts class="hidden">
+          <script src="{{ 'component-deferred-media.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="deferred-media"></script>
+        </safe-load-scripts>
+        
+        {% render 'deferred-media', 
+          delayed_media: video, 
+          section_id: section.id, 
+          enable_video_loop: loop, 
+          enable_autoplay: autoplay, 
+          mute: mute, 
+          show_controls: show_controls, 
+          media_poster_image: image, 
+          is_product_media: false,
+          aspect_ratio: 'original',
+          media_type: 'grid',
+          video_alt_text: section.settings.video_alt_text,
+          click_to_play: true,
+          button_classes: button_class
+        %}
+      {% else %}
+        <div class="homepage-video-content__placeholder">
+          {% if image and autoplay == false %}
+            <div class="homepage-video-content__placeholder-image">
+              {% render 'responsive-image', image: image, allow_stretch: true %}
+            </div>
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder' }}
+          {% endif %}
+          <div class="homepage-video-content__placeholder-overlay" aria-hidden="true">
+            <button class="round-icon-btn-lg btn {{ button_class }}">
+              {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.video--video.name",
+  "class": "section--video-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Shopify_hosted_video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:all.Video"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Or_embed_video_from_URL"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:all.Embedded_video_info"
+    },
+    {
+      "id": "url",
+      "type": "video_url",
+      "label": "t:all.Video_URL",
+      "info": "t:all.Accepts_YouTube_and_Vimeo__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:all.Cover_image",
+      "info": "t:sections.video--video.settings.image.info"
+    },
+    {
+      "type": "text",
+      "id": "video_alt_text",
+      "label": "t:all.Video_alt_text",
+      "info": "t:all.Video_alt_text_info"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Video_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "t:all.Loop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:all.Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "mute",
+      "label": "t:all.Mute",
+      "info": "t:all.Videos_are_muted",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "t:all.Show_video_controls",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "width_classes",
+      "min": 50,
+      "max": 100,
+      "step": 25,
+      "unit": "t:all.percentage",
+      "label": "t:all.Width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "info": "t:all.color_scheme_width_info",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "video_overlay_opacity",
+      "min": 0,
+      "max": 95,
+      "step": 5,
+      "unit": "t:all.percentage",
+      "label": "t:all.Overlay_opacity_deprecated",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "t:all.Button_color"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#ffffff",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:all.Video"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

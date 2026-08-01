@@ -1,0 +1,152 @@
+{% comment %}
+  Renders store availability information for a product variant.
+
+  Accepts:
+    - product_variant: The product variant to render store availability information for.
+    - block_id: The block ID of the section that this snippet is being rendered in.
+    - pickup_product: The product to render store availability information for.
+
+  Usage:
+    {% render 'store-availability', product_variant: product.selected_or_first_available_variant, block_id: block.id, pickup_product: product %}
+{% endcomment %}
+
+{{ 'section-store-availability.min.css' | asset_url | stylesheet_tag }}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-store-availability.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="store-availability"></script>
+  <script src="{{ 'component-store-availability-drawer.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="store-availability-drawer"></script>
+</safe-load-scripts>
+
+<store-availability
+  class="store-availability-container"
+  data-section-id="{{ section.id }}"
+  data-section-type="store-availability">
+  {%- liquid
+    assign pick_up_availabilities = product_variant.store_availabilities | where: 'pick_up_enabled', true
+    assign variant_is_available_for_pickup = false
+    for availability in pick_up_availabilities
+      if availability.available
+        assign variant_is_available_for_pickup = true
+      endif
+    endfor
+  -%}
+  <div class="store-availability-information">
+    {%- assign closest_location = pick_up_availabilities.first -%}
+    <div class="store-availability-information-container">
+      {%- if closest_location.available -%}
+        <div class="store-availability-information-container__icon">
+          <div class="inline-icon--wrapper inline-icon--wrapper--is-available">
+            {% render 'theme-icon', icon: 'checkmark', iconClasses: 'icon checkmark', iconAttributes: 'aria-hidden="true" focusable="false" role="presentation"' %}
+          </div>
+
+          <p class="store-availability-information__title">
+            {{ 'store_availability.general.pick_up_available_at_html' | t: location_name: closest_location.location.name }}
+          </p>
+        </div>
+        
+        <p class="store-availability-information__stock store-availability-small-text">
+          {{ closest_location.pick_up_time }}
+        </p>
+        <p class="store-availability-information__stores text-link-animated">
+          <a
+            href="#StoreAvailabilityModal"
+            class="store-availability-information__link js-modal-open-store-availability-modal store-availability-small-text"
+            data-store-availability-modal-open
+            aria-haspopup="dialog">
+            {%- if pick_up_availabilities.size == 1 -%}
+              {{ 'store_availability.general.view_store_info' | t }}
+            {%- else -%}
+              {{ 'store_availability.general.check_other_stores' | t }}
+            {%- endif -%}
+          </a>
+        </p>
+      {%- else -%}
+        <div class="store-availability-information-container__icon">
+          <div class="inline-icon--wrapper">
+            {% render 'theme-icon', icon: 'close', iconClasses: 'icon close', iconAttributes: 'aria-hidden="true" focusable="false" role="presentation"' %}
+          </div>
+
+          <p class="store-availability-information__title">
+            {%- if pick_up_availabilities.size > 1 and variant_is_available_for_pickup -%}
+              {{ 'store_availability.general.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}
+            {% else %}
+              {{ 'store_availability.general.pick_up_currently_unavailable' | t }}
+            {% endif %}
+          </p>
+        </div>
+        {%- if pick_up_availabilities.size > 1 and variant_is_available_for_pickup -%}
+          <p class="store-availability-information__stores text-link-animated">
+            <a
+              href="#StoreAvailabilityModal"
+              class="store-availability-information__link js-modal-open-store-availability-modal store-availability-small-text"
+              data-store-availability-modal-open
+              aria-haspopup="dialog">
+              {{ 'store_availability.general.check_other_stores' | t }}
+            </a>
+          </p>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+  <store-availability-drawer
+    aria-modal="true"
+    role="dialog"
+    aria-hidden="true"
+    class="global-drawer"
+    data-drawer-position="right"
+    {% if override_heading_font_size %}
+      {% render 'heading-font-overrides', base_size: heading_font_size %}
+    {% endif %}
+  >
+    <span data-drawer-close class="global-drawer__overlay"></span>
+    <div class="global-drawer__content">
+      <header class="global-drawer__sticky-header store-availability-drawer__sticky-header">
+        <button
+          data-drawer-close
+          type="button"
+          aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+          class="global-drawer__close"
+        >
+          <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
+          {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+        </button>
+        <h3 class="store-availability-drawer__title">{{ 'store_availability.general.pickup_availability' | t }}</h3>
+      </header>
+      <div class="global-drawer__body global-drawer__body--with-padding">
+        <div class="global-drawer__body--content store-availability-list">
+          <div class="store-availability-list__product-info">
+            <h4 class="store-availability-list__product-title h5">{{ pickup_product.title }}</h4>
+            {% unless product_variant.title == "Default Title" %}
+              <p class="store-availability-list__product-variant">
+                {% for option in pickup_product.options %}
+                  {{ option }}: {{ product_variant.options[forloop.index0] }}{% unless forloop.last %}, {% endunless %}
+                {% endfor %}
+              </p>
+            {% endunless %}
+          </div>
+          {% for availability in pick_up_availabilities %}
+            <div class="store-availability-list__item block-radius" data-animate data-animate-order="{{ forloop.index }}">
+              <h5 class="store-availability-list__location">{{ availability.location.name }}</h5>
+              <p class="store-availability-list__stock inline-icon--wrapper icon--left{% if availability.available %} store-availability-list__stock--available{% else %} store-availability-list__stock--unavailable{% endif %}">
+                {% if availability.available %}
+                  {% render 'theme-icon', icon: 'checkmark', iconClasses: 'icon checkmark', iconAttributes: 'aria-hidden="true" focusable="false" role="presentation"' %} {{ 'store_availability.general.pick_up_available' | t }}, {{ availability.pick_up_time | downcase }}
+                {% else %}
+                  {% render 'theme-icon', icon: 'close', iconClasses: 'icon close', iconAttributes: 'aria-hidden="true" focusable="false" role="presentation"' %} {{ 'store_availability.general.pick_up_currently_unavailable' | t }}
+                {% endif %}
+              </p>
+              {%- assign address = availability.location.address -%}
+              <address>
+                {{ address | format_address }}
+              </address>
+              {%- if address.phone.size > 0 -%}
+                <p class="store-availability-list__phone text-link-animated">
+                  <a href="tel:{{ address.phone }}">{{ address.phone }}</a><br>
+                </p>
+              {%- endif -%}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </store-availability-drawer>
+</store-availability>

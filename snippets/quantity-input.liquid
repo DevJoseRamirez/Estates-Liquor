@@ -1,0 +1,54 @@
+{% comment %}
+  Renders a quantity input field for a product.
+
+  Accepts:
+    - product: The product object to render the quantity input for.
+    - section_id: The section id. (required)
+
+  Usage:
+    {% render 'quantity-input', product: product, section_id: section.id %}
+{% endcomment %}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-quantity-input.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="quantity-input"></script>
+</safe-load-scripts>
+
+<quantity-input data-section-id="{{ section_id }}">
+  <label for="Quantity" class="js quantity-selector product-sub-label label-font">{{ 'products.product.quantity' | t }}</label>
+
+  <div class="js-qty input-radius">
+    {% comment %} ===== Decrease qty button ===== {% endcomment %}
+    <button 
+      name="minus" 
+      type="button" 
+      aria-label="{{ 'general.accessibility.quantity.decrease_quantity' | t }}" 
+      class="js-qty__adjust js-qty__adjust--minus icon-fallback-text standalone-icon--wrapper"
+    >
+      {% render 'theme-icon', icon: 'minus', iconClasses: 'flex-full', iconAttributes: 'aria-hidden="true"' %}
+      <span class="fallback-text">−</span>
+    </button>
+
+    {% comment %} ===== Quantity Input ===== {% endcomment %}
+    <input
+      type="text"
+      class="js-qty__num alt-input"
+      value="1"
+      min="1"
+      aria-label="quantity"
+      pattern="[0-9]*"
+      name="quantity-js"
+      id="Quantity"
+    >
+
+    {% comment %} ===== Increase qty button ===== {% endcomment %}
+    <button 
+      name="plus" 
+      type="button" 
+      aria-label="{{ 'general.accessibility.quantity.increase_quantity' | t }}" 
+      class="js-qty__adjust js-qty__adjust--plus icon-fallback-text standalone-icon--wrapper"
+    >
+      {% render 'theme-icon', icon: 'plus', iconClasses: 'flex-full', iconAttributes: 'aria-hidden="true"' %}
+      <span class="fallback-text">+</span>
+    </button>
+  </div>
+</quantity-input>

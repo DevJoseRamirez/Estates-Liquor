@@ -1,0 +1,17 @@
+{%- liquid
+  comment
+    Computes an "animation offset" for blocks based on whether a section title and description exist.
+    Expects:
+      - title
+      - description
+      - base (eg forloop.index)
+  endcomment
+  assign offset = base
+
+  if title != blank and description != blank
+    assign offset = offset | plus: 2
+  elsif title != blank or description != blank
+    assign offset = offset | plus: 1
+  endif
+-%}
+{{- offset -}}

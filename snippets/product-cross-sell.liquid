@@ -1,0 +1,61 @@
+{%- if product_id -%}
+  {% liquid 
+    assign product = all_products[product_id]
+    assign show_max_price = false
+
+    if settings.when_card_price_varies == 'show_max_price'
+      assign show_max_price = true
+    endif
+
+    assign placeholder_index = index | modulo: 6 | plus: 1
+    assign product_image_placeholder = 'product-' | append: placeholder_index | placeholder_svg_tag: 'icon icon--placeholder'
+
+    assign login_to_order = false
+    if settings.login_to_order and customer == blank
+      for tag in product.tags
+        assign formatted_tag = tag | downcase | replace: ' ', ''
+        if formatted_tag == 'b2b' or formatted_tag == 'wholesale'
+          assign login_to_order = true
+          break
+        endif
+      endfor
+    endif
+  %}
+  {%- if product.available -%}
+    {% capture srcset %}
+      {{ product.featured_image | image_url: width: 300 }} 300w,
+      {{ product.featured_image | image_url: width: 200 }} 200w,
+      {{ product.featured_image | image_url: width: 100 }} 100w,
+    {% endcapture %}
+    <product-cross-sell
+      v-pre
+      product="{{ product | json | escape }}"
+      product-image-placeholder='{{ product_image_placeholder }}'
+      image-aspect-ratio="{{ settings.product-grid }}"
+      image-srcset="{{ srcset }}"
+      money-format="{{ shop.money_format }}"
+      border-radius="{{ settings.border_radius }}"
+      data-add-to-cart="{% if preorder_product %}{{ 'products.product.preorder' | t }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}"
+      data-sold-out="{{ 'products.product.sold_out' | t }}"
+      data-choose-option="{{ 'products.product.choose_option' | t }}"
+      data-from="{{ 'products.general.from_text' | t }}"
+      data-not-available="{{ 'products.product.is_not_available' | t }}" 
+      data-loading="{{ 'products.product.loading' | t }}" 
+      data-added="{{ 'products.product.added' | t }}"
+      data-products-regular-price="{{ 'products.general.regular_price' | t }}"
+      data-product-price-display="{{ settings.when_card_price_varies }}"
+      data-product-url="{{ product.url }}"
+      data-show-max-price="{{ show_max_price }}"
+      data-login-to-order="{{ login_to_order }}"
+      data-login-to-order-label="{{ 'products.product.login_to_order' | t }}"
+      data-login-to-order-href="{{ routes.account_login_url }}?return_url={{ main_product_url | default: request.path }}"
+      data-shopping-bag-icon='{% render 'theme-icon', icon: 'shopping-bag', iconSize: 16 %}' 
+      data-dropdown-chevron='{% render 'theme-icon', icon: 'chevron_down', iconClasses: 'chevron' %}'
+      data-login-to-order-icon='{% render 'theme-icon', icon: 'user', iconSize: 16 %}'
+      data-animate
+      data-animate-nested
+      data-animate-order="{{ index | plus: 1 }}"
+    >
+    </product-cross-sell>
+  {%- endif -%}
+{%- endif -%}

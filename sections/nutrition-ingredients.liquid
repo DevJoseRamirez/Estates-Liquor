@@ -1,0 +1,273 @@
+{{ 'section-nutrition-ingredients.min.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Use the current product when on a product page; otherwise the merchant picks a
+  # source product (needed on home, blog, page, etc. where there is no product context).
+  assign source_product = product
+  if section.settings.source_product != blank
+    assign source_product = section.settings.source_product
+  endif
+
+  assign ingredients = source_product.metafields.custom.ingredients.value
+  assign benefits = source_product.metafields.custom.benefits.value
+  assign dietary = source_product.metafields.custom.dietary.value
+  assign ingredients_full = source_product.metafields.custom.ingredients_full.value
+
+  assign has_ingredients = false
+  if section.settings.show_ingredients and ingredients != blank and ingredients.size > 0
+    assign has_ingredients = true
+  endif
+
+  assign has_dietary = false
+  if section.settings.show_dietary and dietary != blank and dietary.size > 0
+    assign has_dietary = true
+  endif
+
+  assign has_benefits = false
+  if section.settings.show_benefits and benefits != blank and benefits.size > 0
+    assign has_benefits = true
+  endif
+
+  assign has_content = false
+  if has_ingredients or has_dietary or has_benefits
+    assign has_content = true
+  endif
+-%}
+
+{% if has_content %}
+  <div
+    class="nutrition-ingredients wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+    data-wetheme-section-type="nutrition-ingredients"
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+    <div class="width--content">
+
+      {% comment %} Dietary & allergen chips {% endcomment %}
+      {% if has_dietary %}
+        <ul class="nutrition-ingredients__chips" data-animate data-animate-order="1">
+          {% for tag in dietary %}
+            <li class="nutrition-ingredients__chip">{{ tag }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% comment %} Ingredients row {% endcomment %}
+      {% if has_ingredients %}
+        <div class="nutrition-ingredients__block" data-animate data-animate-order="2">
+          {% if section.settings.ingredients_heading != blank %}
+            <h2 class="nutrition-ingredients__heading">{{ section.settings.ingredients_heading }}</h2>
+          {% endif %}
+
+          <ul class="nutrition-ingredients__grid nutrition-ingredients__grid--ingredients">
+            {% for ingredient in ingredients %}
+              {%- liquid
+                assign ing_name = ingredient.name.value | default: ingredient.title.value
+                assign ing_benefit = ingredient.benefit.value | default: ingredient.description.value
+                assign ing_image = ingredient.image.value | default: ingredient.icon.value
+              -%}
+              <li class="nutrition-ingredients__item">
+                <span class="nutrition-ingredients__media">
+                  {% if ing_image != blank %}
+                    {{ ing_image | image_url: width: 160 | image_tag: widths: '80, 120, 160', loading: 'lazy', class: 'nutrition-ingredients__media-img', alt: ing_name | escape }}
+                  {% else %}
+                    {% render 'theme-icon', icon: 'leaf' %}
+                  {% endif %}
+                </span>
+                {% if ing_name != blank %}
+                  <span class="nutrition-ingredients__item-name">{{ ing_name }}</span>
+                {% endif %}
+                {% if ing_benefit != blank %}
+                  <span class="nutrition-ingredients__item-desc">{{ ing_benefit }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+
+          {% if ingredients_full != blank %}
+            <details class="nutrition-ingredients__full">
+              <summary class="nutrition-ingredients__full-toggle text-link-animated">
+                <span>{{ section.settings.full_list_label }}</span>
+                {% render 'theme-icon', icon: 'chevron_down', iconClasses: 'nutrition-ingredients__full-chevron' %}
+              </summary>
+              <div class="nutrition-ingredients__full-content rte">{{ ingredients_full }}</div>
+            </details>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} How it helps / benefits {% endcomment %}
+      {% if has_benefits %}
+        <div class="nutrition-ingredients__block" data-animate data-animate-order="3">
+          {% if section.settings.benefits_heading != blank %}
+            <h2 class="nutrition-ingredients__heading">{{ section.settings.benefits_heading }}</h2>
+          {% endif %}
+
+          <ul class="nutrition-ingredients__grid nutrition-ingredients__grid--benefits">
+            {% for benefit in benefits %}
+              {%- liquid
+                assign ben_title = benefit.title.value | default: benefit.name.value
+                assign ben_text = benefit.text.value | default: benefit.description.value
+                assign ben_icon = benefit.icon.value
+                assign ben_image = benefit.image.value
+              -%}
+              <li class="nutrition-ingredients__benefit">
+                <span class="nutrition-ingredients__benefit-icon">
+                  {% if ben_image != blank %}
+                    {{ ben_image | image_url: width: 120 | image_tag: widths: '60, 90, 120', loading: 'lazy', alt: ben_title | escape }}
+                  {% elsif ben_icon != blank %}
+                    {% render 'theme-icon', icon: ben_icon %}
+                  {% else %}
+                    {% render 'theme-icon', icon: 'heart' %}
+                  {% endif %}
+                </span>
+                <span class="nutrition-ingredients__benefit-body">
+                  {% if ben_title != blank %}
+                    <span class="nutrition-ingredients__benefit-title">{{ ben_title }}</span>
+                  {% endif %}
+                  {% if ben_text != blank %}
+                    <span class="nutrition-ingredients__benefit-text">{{ ben_text }}</span>
+                  {% endif %}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% elsif request.design_mode or request.visual_preview_mode %}
+  <div
+    class="nutrition-ingredients wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }} section-preview"
+    data-wetheme-section-type="nutrition-ingredients"
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+    <div class="width--content">
+      <div class="nutrition-ingredients__notice">
+        <h3 class="nutrition-ingredients__notice-title">{{ 'sections.nutrition-ingredients.no_setup_title' | t }}</h3>
+        <p class="nutrition-ingredients__notice-text text-link-animated">
+          {{ 'sections.nutrition-ingredients.no_setup_description' | t }}
+          <a href="https://help.shopify.com/en/manual/custom-data/metaobjects" target="_blank" rel="noopener noreferrer">{{ 'sections.nutrition-ingredients.learn_more' | t }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.nutrition-ingredients.name",
+  "class": "section--nutrition-ingredients",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.nutrition-ingredients.paragraph_info"
+    },
+    {
+      "type": "product",
+      "id": "source_product",
+      "label": "t:sections.nutrition-ingredients.settings.source_product.label",
+      "info": "t:sections.nutrition-ingredients.settings.source_product.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.nutrition-ingredients.ingredients_heading_group"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ingredients",
+      "label": "t:sections.nutrition-ingredients.settings.show_ingredients.label",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "ingredients_heading",
+      "label": "t:all.Heading",
+      "default": "Made from real, whole ingredients"
+    },
+    {
+      "type": "text",
+      "id": "full_list_label",
+      "label": "t:sections.nutrition-ingredients.settings.full_list_label.label",
+      "default": "View full ingredients list"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.nutrition-ingredients.dietary_heading_group"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dietary",
+      "label": "t:sections.nutrition-ingredients.settings.show_dietary.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.nutrition-ingredients.benefits_heading_group"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_benefits",
+      "label": "t:sections.nutrition-ingredients.settings.show_benefits.label",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "benefits_heading",
+      "label": "t:all.Heading",
+      "default": "How it helps"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        { "value": "white", "label": "t:all.Default" },
+        { "value": "light", "label": "t:all.First" },
+        { "value": "accent", "label": "t:all.Second" },
+        { "value": "dark", "label": "t:all.Third" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.nutrition-ingredients.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index", "product", "page", "blog", "article", "collection"]
+  }
+}
+{% endschema %}

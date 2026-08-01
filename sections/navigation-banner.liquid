@@ -1,0 +1,316 @@
+{%- liquid
+  assign banner_linklist = section.settings.banner_linklist
+  assign collection_list = section.settings.collection_list
+
+  assign list = linklists[banner_linklist].links
+  assign count = list.size
+  
+  if collection_list != blank
+    assign list = collection_list
+    assign count = list.count
+  endif
+-%}
+{% if count > 0 %}
+  {{ 'section-navigation-banner.min.css' | asset_url | stylesheet_tag }}
+
+  <safe-load-scripts class="hidden">
+    <script src="{{ 'component-navigation-banner.js' | asset_url }}" defer="defer" type="module" data-internal-script data-flow-load-key="component-navigation-banner"></script>
+  </safe-load-scripts>
+
+  {% if section.settings.override_button_colors %}
+    {% render 'button-color-overrides',
+      id: section.id,
+      style: section.settings.buttons_style,
+      text_color: section.settings.nav_text_color,
+      background_color: section.settings.nav_background_color
+    %}
+  {% endif %}
+  
+  <div
+    class="navigation-banner navigation-banner--{{ section.id }} wrapper-spacing--v wrapper-spacing--h content-align--{{ section.settings.section_header_alignment }} color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+    data-wetheme-section-type="navigation-banner"
+    data-wetheme-section-id="{{ section.id }}"
+    style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+    <div class="width--content">
+      {% comment %} Section title and description {% endcomment %}
+      {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, alignment: section.settings.section_header_alignment %}
+
+      
+      {% if section.settings.layout_style == 'slider' %}
+        {% if section.settings.buttons_style == 'underlined' %}
+          {% assign nav_slider_spacing = 30 %}
+        {% elsif settings.grid_spacing == '5' %}
+          {% assign nav_slider_spacing = settings.grid_spacing %}
+        {% else %}
+          {% assign nav_slider_spacing = 10 %}
+        {% endif %}
+        <nav-banner
+          data-grid-spacing-desktop="{{ nav_slider_spacing }}"
+          data-grid-spacing-mobile="{{ nav_slider_spacing | times: 0.75 }}"
+          data-swiper-center="{% if section.settings.navigation_position == 'center' %}true{% else %}false{% endif %}"
+        >
+          <nav class="swiper navigation-banner__swiper" data-animate-overflow-container>
+            <div class="swiper-wrapper">
+              {% for link in list %}
+                <div
+                  class="swiper-slide{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}"
+                  data-animate
+                  data-animate-order="{% render 'block-animation-offset', 
+                    title: section.settings.title, 
+                    description: section.settings.description, 
+                    base: forloop.index 
+                  %}"
+                  data-animate-overflow-item
+                >
+                  {% render 'dynamic-section-button',
+                    id: section.id,
+                    link: link.url,
+                    label: link.title,
+                    style: section.settings.buttons_style,
+                    wrapper: false
+                  %}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="navigation-banner__swiper-next" data-nav-banner-next style="--nav-banner-next-offset: {% if settings.animations_enabled %}var(--animation-translate-y){% else %}0px{% endif %}">
+              {% render 'theme-icon', icon: 'chevron_right' %}
+            </div>
+          </nav>
+        </nav-banner>
+      {% else %}
+        <nav style="--grid-alignment: {{ section.settings.navigation_position }}">
+          <ul class="navigation-banner__grid-list{% if section.settings.buttons_style == 'underlined' %} increase-spacing{% endif %}">
+            {% for link in list %}
+            <li
+              class="{% if section.settings.buttons_style == 'underlined' %}text-link-animated{% endif %}"
+              {% unless count > 10 %}
+                data-animate
+                data-animate-order="{% render 'block-animation-offset', 
+                  title: section.settings.title, 
+                  description: section.settings.description, 
+                  base: forloop.index 
+                %}"
+              {% endunless %}
+            >
+                {% render 'dynamic-section-button',
+                  id: section.id,
+                  link: link.url,
+                  label: link.title,
+                  style: section.settings.buttons_style,
+                  wrapper: false
+                %}
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.blog--navigation-banner.name",
+  "class": "blog--navigation-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Navigation"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.blog--navigation-banner.settings.navigation.paragraph"
+    },
+    {
+      "type": "link_list",
+      "id": "banner_linklist",
+      "label": "t:all.Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_list",
+      "label": "t:all.Collection_list"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Buttons"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "outlined",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "nav_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#FFFFFF",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "radio",
+      "id": "layout_style",
+      "label": "t:all.Style",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:all.Grid"
+        },
+        {
+          "value": "slider",
+          "label": "t:all.Slider"
+        }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "radio",
+      "id": "navigation_position",
+      "label": "t:sections.blog--navigation-banner.settings.navigation_position.label",
+      "info": "t:sections.blog--navigation-banner.settings.navigation_position.info",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.blog--navigation-banner.presets.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "404",
+      "article",
+      "cart",
+      "collection",
+      "list-collections",
+      "index",
+      "page",
+      "password",
+      "product",
+      "search",
+      "blog"
+    ],
+    "groups": [
+      "footer"
+    ]
+  }
+}
+{% endschema %}

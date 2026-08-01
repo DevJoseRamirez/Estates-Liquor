@@ -1,0 +1,59 @@
+{% comment %}
+    Renders a checkbox input
+
+    Accepts:
+    - hint_text: {String} the text to display as a hint (optional)
+    - label_text: {String} the text to display as the label
+    - label_class: {String} any custom classes for the label element
+    - container_classes: {String} add custom classes to the container
+    - id: {String} ID to be applied to the input
+    - classes: {String} custom classes to be applied to the input (optional)
+    - name: {String} the name attribute of the input
+    - attributes: {String} add custom element attributes (data-* or aria)
+    - required: {Boolean} use if the input cannot be submitted unless a value is provided
+    - data_aid: {String} data aid for the textarea
+    - disabled: {Boolean} determines whether the input is disabled or not
+    - form_id: {String} the form id to be used for the form attribute (optional)
+    - error_message: {String} the error message to display if the input is invalid
+
+    Usage:
+      {% render 'form-input--checkbox', id: 'contact-form--checkbox', name: 'properties[checkbox]', attributes: 'aria-label="Accept terms"', required: true  %}
+{% endcomment %}
+
+{{ 'component-checkbox.min.css' | asset_url | stylesheet_tag }}
+
+{% capture label %}
+  <label class="checkbox-label{% if label_class %} {{ label_class }}{% endif %}" {% if id %}for="{{ id }}" {% endif %}>{{ label_text }}</label>
+{% endcapture %}
+
+<div class="product-block-checkbox-field input-wrapper text-link-animated">
+  <div class="input-error-container"></div>
+  
+  <div class="form-input-wrapper{% if container_classes %} {{ container_classes }}{% endif %}">
+    <input
+      type="checkbox"
+      name="{{ name }}"
+      value="{{ 'products.general.yes' | t }}"
+      class="checkbox-input{% if classes %} {{ classes }}{% endif %}"
+      {% if error_message %}data-error-message="{{ error_message | escape }}"{% endif %}
+      {% if id %} id="{{ id }}"{% endif %}
+      {% if attributes %} {{ attributes }}{% endif %}
+      {% if required %} required aria-required="true"{% endif %}
+      {% if data_aid %}data-aid="{{ data_aid }}"{% else %}data-aid="checkbox"{% endif %}
+      {% if disabled %}disabled{% endif %}
+      {% if form_id %}form="{{ form_id }}"{% endif %}
+    />
+
+    <svg class="checkbox-box custom-input" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
+    </svg>
+
+    {% render 'theme-icon', icon: 'checkmark', iconSize: 14, iconClasses: 'icon icon-checkmark checkbox-icon', iconAttributes: 'aria-hidden="true" focusable="false"' %}
+
+    {{ label }}
+  </div>
+
+  {% if hint_text != blank %}
+    <div class="form-input-hint">{{ hint_text }}</div>
+  {% endif %}
+</div>

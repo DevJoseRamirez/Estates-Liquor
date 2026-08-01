@@ -1,0 +1,43 @@
+{% comment %}
+  Outputs button color css for a given identifier.
+
+  Accepts:
+  - id (string): Unique identifier for the button(s) (for example, section id or block id).
+  - style (string): Button style. Options are 'filled', 'outlined', 'underlined'.
+  - text_color (color): Text color for the button.
+  - background_color (color): Background color for the button.
+  - desktop_only (boolean): If true, the styles will only apply to desktop (default: false).
+{% endcomment %}
+
+{% liquid 
+  assign text_color = 'rgba(' | append: text_color.rgba | append: ')'
+  assign background_color = 'rgba(' | append: background_color.rgba | append: ')'
+  assign link_border_color = 'color-mix(in srgb, ' | append: background_color | append: ', transparent 50%)'
+%}
+
+<style>
+  {% if desktop_only %}
+    @media screen and (min-width: 768px) {
+  {% endif %}
+
+  {% if style == 'filled' %}
+    .dynamic-section-button--{{ id }} {
+      color: {{ text_color }} !important;
+      background-color: {{ background_color }} !important;
+    }
+  {% elsif style == 'outlined' or style == 'outline' %}
+    .dynamic-section-button--{{ id }} {
+      color: {{ background_color }} !important;
+      border: 1px solid {{ background_color }} !important;
+    }
+  {% elsif style == 'underlined' %}
+    .dynamic-section-button--{{ id }} {
+      color: {{ background_color }} !important;
+      --link-border-color: {{ link_border_color }};
+    }
+  {% endif %}
+
+  {% if desktop_only %}
+    }
+  {% endif %}
+</style>

@@ -1,0 +1,119 @@
+{% comment %}
+  Renders a dropdown for selecting a product variant.
+
+  Accepts:
+    - dropdown_option: The option to render the dropdown for.
+    - option_index: The index of the option.
+    - product: The product object to render the dropdown for.
+    - size_option_name: The name of the size option.
+    - size_guide_page: The size guide page object.
+    - size_guide_label: The label for the size guide link.
+    - hide_out_of_stock_variants: A boolean to determine if out of stock variants should be hidden.
+    - dropdown_section_id: The section id (required)
+
+  Usage:
+    {%- render 'variant-dropdown', dropdown_option: option, option_index: option_idx, product: product, size_option_name: size_option_name, size_guide_page: size_guide_page, size_guide_label: size_guide_label, hide_out_of_stock_variants: hide_out_of_stock_variants -%}
+{% endcomment %}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-variant-dropdown.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="variant-dropdown"></script>
+</safe-load-scripts>
+
+{% if product.options_with_values.size > 0 %}
+  <variant-dropdown data-option-index="{{ option_index }}" data-url="{{ product.url }}" data-section-id="{{ dropdown_section_id }}">
+    {% comment %} ============ OPTION LABEL ============ {% endcomment %}
+    <div class="option-label-wrapper">
+      <label for="SingleOptionSelector-{{ option_index }}-{{ dropdown_section_id }}" class="label-font">{{ dropdown_option.name }}</label>
+      {% assign formatted_dropdown_option_name = dropdown_option.name | downcase %}
+      {% assign formatted_size_option_name = size_option_name | downcase %}
+      {%- if formatted_dropdown_option_name == formatted_size_option_name and size_guide_page != blank -%}
+        <safe-load-scripts class="hidden">
+          <script src="{{ 'component-size-guide-link.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="size-guide-link"></script>
+        </safe-load-scripts>
+
+        <size-guide-link id="size-guide" class="text-link-animated">
+          <a data-size-guide-link id="size-guide-link" tabindex="0" href="{{ size_guide_page.url }}">{{ size_guide_label | default: size_guide_page.title }}</a>
+        </size-guide-link>
+      {%- endif -%}
+    </div>
+
+    {% comment %} ============ OPTION VARIANTS ============ {% endcomment %}
+    <div class="variant-dropdown">
+      {% comment %} Select {% endcomment %}
+      <button 
+        data-dropdown-button 
+        id="SingleOptionSelector-{{ option_index }}-{{ dropdown_section_id }}"
+        type="button" 
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-controls="SingleOptionSelector-{{ option_index }}-{{ dropdown_section_id }}-dropdown"
+      >
+        <span data-selected-option>{{ dropdown_option.selected_value }}</span>
+        <span class="icon-dropdown inline-icon--wrapper">
+          {% render 'theme-icon', icon: 'chevron_down' %}
+        </span>
+      </button>
+
+      {% comment %} Options {% endcomment %}
+      <ul 
+        role="listbox"
+        data-dropdown-list 
+        style="display: none;"
+        class="dropdown-list variant-dropdown-fade-enter" 
+        id="SingleOptionSelector-{{ option_index }}-{{ dropdown_section_id }}-dropdown"
+      >
+        {% for value in dropdown_option.values %}
+          {% comment %}Check if another variant with same value for given option is available{% endcomment %}
+          {% liquid
+            if hide_out_of_stock_variants and value.available == false
+            assign show_variant = false
+          else 
+            assign show_variant = true
+          endif
+
+            assign is_combined_listing = false
+            if value.product_url != blank
+              assign is_combined_listing = true
+              assign show_variant = true
+              assign item_fetch_url = value.product_url | append: '?variant=' | append: value.variant.id
+              assign product_url = value.product_url
+            else
+              assign item_fetch_url = value.variant.url
+              assign product_url = value.variant.product.url
+            endif
+          %}
+
+          {%- capture dropdown_id -%}
+            {{ dropdown_section_id }}-{{ option_index }}-{{ forloop.index0 -}}
+          {%- endcapture -%}
+
+          {% if show_variant %}
+            <li 
+              {% if dropdown_option.selected_value == value %}selected{% endif %}
+              data-product-variant
+              data-option-value-id="{{ value.id }}"
+              class="dropdown-list--item{% unless value.available %} sold-out{% endunless %}{% if dropdown_option.selected_value == value %} selected{% endif %}"
+              data-option-value="{{ value | escape }}"
+              data-option-name="{{ dropdown_option.name }}"
+              data-dropdown-id="{{ dropdown_id }}"
+              data-product-fetch-url="{{ item_fetch_url }}"
+              data-product-url="{{ product_url }}"
+              data-is-combined-listing="{{ is_combined_listing }}"
+              data-dropdown-variant-id="{{ value.variant.id }}"
+              tabindex="0">
+                <span data-option-label class="option-label">{{ value }}</span>
+                {% unless value.available %}<span data-status-text class="status-text">({{ 'products.product.sold_out' | t }})</span>{% endunless %}
+            </li>
+          {% endif %}
+
+          {% comment %} ============ VARIANT JSON ============ {% endcomment %}
+          {% if product.options_with_values.size > 0 %}
+            <script type="application/json" data-resource="{{ dropdown_id }}">
+              {{ value.variant | json }}
+            </script>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </variant-dropdown>
+{% endif %}

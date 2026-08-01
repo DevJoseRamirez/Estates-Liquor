@@ -1,0 +1,103 @@
+{% comment %}
+  Renders a link with section level button styling.
+
+  Accepts:
+  - id (string): Unique identifier for applying css (for example, section id or block id).
+  - has_link (boolean): If true, the button will be a link.
+  - link (url): Url for the button link.
+  - label (string): Button label.
+  - aria_label (string): Optional. Aria label for the anchor element.
+  - style (string): Button style. Options are 'filled', 'outlined', 'underlined'.
+  - wrapper (boolean): If true, the anchor element will be wrapped in a div (default: true).
+  - div_classes (string): Additional classes to add to the wrapper div.
+  - a_classes (string): Additional classes to add to the anchor element.
+  - attributes (string): Additional attributes to add to the anchor element.
+  - include_loading_icon (boolean): Optional. If true, includes loading icon structure for buttons.
+  - has_icon: {boolean} Optional. Whether the button has an icon or not.
+  - icon: {String} Optional. The icon to render.
+  - show_arrow: {boolean} Optional. If true, appends a trailing right-arrow icon that slides on hover.
+{% endcomment %}
+
+{% if label != blank %}
+
+  {%- liquid
+    unless wrapper == false
+      assign wrapper = true
+    endunless
+
+    case style
+      when 'filled'
+        assign style_classes = 'btn'
+      when 'outlined'
+        assign style_classes = 'btn btn--secondary'
+      when 'underlined'
+        if has_icon
+          assign style_classes = 'btn--underlined btn--underlined-with-icon inline-icon--wrapper'
+        else 
+          assign style_classes = 'btn--underlined'
+        endif
+    endcase
+
+    if show_arrow
+      assign style_classes = style_classes | append: ' btn--with-arrow'
+    endif
+
+    if has_link != true and has_link != false
+      assign has_link = true
+    endif
+  -%}
+
+  {% if wrapper %}
+    <div class="{{ div_classes }}{% if style == 'underlined' %} text-link-animated{% endif %}">
+  {% endif %}
+
+  {% if has_link %}
+    <a
+      href="{% if link %}{{ link }}{% else %}{{ request.origin }}{{ request.path }}{% endif %}"
+      class="dynamic-section-button--{{ id }} {{ style_classes }}{% if a_classes %} {{ a_classes }}{% endif %}"
+      {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+      {% if attributes %}{{ attributes }}{% endif %}
+    >
+      {% if has_icon %}
+        {% render 'theme-icon', icon: icon, iconSize: 14, iconClasses: 'btn--underlined-with-icon__icon' %}
+      {% endif %}
+
+      {{ label }}
+
+      {% if show_arrow %}
+        {% render 'theme-icon', icon: 'arrow-right', iconSize: 16, iconClasses: 'btn--arrow-icon' %}
+      {% endif %}
+    </a>
+  {% else %}
+    <button
+      class="dynamic-section-button--{{ id }} {{ style_classes }}{% if a_classes %} {{ a_classes }}{% endif %}"
+      {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+      {% if attributes %}{{ attributes }}{% endif %}
+    >
+      {% if include_loading_icon %}
+        <span data-button-text>{{ label }}</span>
+        
+        {% comment %} Loading icon {% endcomment %}
+        {% liquid
+          assign icon_fill = 'currentColor'
+          assign loading_icon_attributes = 'data-loading-icon'
+        %}
+        {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x hidden', iconAttributes: loading_icon_attributes, iconSize: '1.6em', icon_fill: icon_fill %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+      {% else %}
+        {% if has_icon %}
+          {% render 'theme-icon', icon: icon, iconSize: 14, iconClasses: 'btn--underlined-with-icon__icon' %}
+        {% endif %}
+
+        {{ label }}
+
+        {% if show_arrow %}
+          {% render 'theme-icon', icon: 'arrow-right', iconSize: 16, iconClasses: 'btn--arrow-icon' %}
+        {% endif %}
+      {% endif %}
+    </button>
+  {% endif %}
+
+  {% if wrapper %}
+    </div>
+  {% endif %}
+{% endif %}

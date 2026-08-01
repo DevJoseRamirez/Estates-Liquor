@@ -1,0 +1,112 @@
+{{ 'component-search-dropdown.min.css' | asset_url | stylesheet_tag }}
+{{ 'component-predictive-search.min.css' | asset_url | stylesheet_tag }}
+
+<search-dropdown
+  aria-modal="true"
+  role="dialog"
+  aria-hidden="true"
+  class="search-dropdown popup-shadow"
+>
+  <predictive-search
+    is-predictive="{{ settings.predictive_search_enabled }}"
+  >
+    <div class="predictive-search__search-bar wrapper-spacing--h">
+      <div class="predictive-search__input-container input-radius">
+        <button
+          data-predictive-search-submit
+          type="button"
+          aria-label="{{ 'general.search.submit' | t }}"
+          class="predictive-search__submit standalone-icon--wrapper"
+          tabindex="0"
+        >
+          {% render 'theme-icon', icon: 'search', iconSize: 20 %}
+        </button>
+        <input
+          type="search" name="q" placeholder="{{ settings.search_input_label }}"
+          data-predictive-search-input
+          data-search-dropdown-initial-focus
+          class="predictive-search__input alt-input" aria-label="{{ settings.search_input_label }}" autocomplete="off" autocorrect="off" spellcheck="false"
+        />
+        <button
+          data-predictive-search-clear
+          type="button"
+          aria-label="{{ 'general.search.clear' | t }}"
+          class="hide predictive-search__clear"
+        >
+          {{ 'general.search.clear' | t }}
+        </button>
+        <button
+          data-search-dropdown-close
+          type="button"
+          aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+          class="search-dropdown__close standalone-icon--wrapper"
+        >
+          {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+        </button>
+      </div>
+    </div>
+    {% if settings.predictive_search_enabled %}
+      <div class="predictive-search__results-container" data-predictive-search-results>{% comment %} Search results go here {% endcomment %}</div>
+    {% endif %}
+    {%- liquid
+      assign has_menu_content = false
+      assign has_products_content = false
+
+      if settings.predictive_search_menu_heading != blank or settings.predictive_search_menu != blank
+        assign has_menu_content = true
+      endif
+
+      if settings.predictive_search_products_heading != blank or settings.predictive_search_products != blank
+        assign has_products_content = true
+      endif
+    -%}
+    {% if has_menu_content or has_products_content %}
+      <div class="predictive-search__empty-state" data-predictive-search-empty-state>
+        <div class="predictive-search__results wrapper-spacing--h{% if has_menu_content and has_products_content %} predictive-search__results--is-grid{% endif %}">
+          {% if has_menu_content %}
+            <div class="predictive-search__list">
+              {% if settings.predictive_search_menu_heading != blank %}
+                <p class="predictive-search__title h5">{{ settings.predictive_search_menu_heading }}</p>
+              {% endif %}
+              {% if settings.predictive_search_menu != blank %}
+                <div class="predictive-search__list-items nav-link-animated{% unless has_products_content %} predictive-search__list-items--list-only{% endunless %}">
+                  {% for empty_state_link in settings.predictive_search_menu.links %}
+                    <div>
+                      <a href="{{ empty_state_link.url }}" class="predictive-search__list-item"><span class="animated-underline">{{ empty_state_link.title }}</span></a>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if has_products_content %}
+            <div class="predictive-search__main-results">
+              {% if settings.predictive_search_products_heading != blank %}
+                <p class="predictive-search__title h5">{{ settings.predictive_search_products_heading }}</p>
+              {% endif %}
+              {% if settings.predictive_search_products != blank %}
+                <div class="predictive-search__grid predictive-search__grid--products">
+                  {% for empty_state_product in settings.predictive_search_products %}
+                    <div class="predictive-search__grid-item" data-animate data-animate-order="{{ forloop.index }}">
+                      {% render 'grid-view-item', product: empty_state_product, is_search_result: true, enable_badges: settings.show_badges, grid_count_desktop: 4, grid_count_mobile: 2 %}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </predictive-search>
+</search-dropdown>
+
+<div class="search-dropdown__overlay"></div>
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-search-dropdown.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-search-dropdown"></script>
+</safe-load-scripts>
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-predictive-search.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-predictive-search"></script>
+</safe-load-scripts>

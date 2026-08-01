@@ -1,0 +1,81 @@
+{% comment %}
+  Renders event calendar's card ('grid' layout).
+{% endcomment %}
+
+<div class="event-item">
+
+  {% if cta_link != blank and cta_text == blank %}
+    <a href="{{ cta_link }}" class="event-item--link block-radius-clip" data-animate-hover-zoom>
+  {% endif %}
+    <div class="event-item--img-wrapper block-radius-clip">
+      <div class="event-item--img{% if event_image_aspect_ratio != 'natural' %} event-image-aspect-ratio--{{ event_image_aspect_ratio }}{% endif %}">
+        {% if event_image != blank %}
+          
+            {% render 'responsive-image', image: event_image, crop: 'center', blur: false %}
+
+        {% else %}
+          {{ 'product-' | append: placeholder_number | placeholder_svg_tag: 'icon icon--placeholder block-radius' }}
+        {% endif %}
+      </div>
+
+      <div class="event-item--date h3 thumbnail-radius">
+        {% unless tbc %}
+          <time datetime="{{ month | date: "%m" }}-{{ day }}">
+            <span class="event-item--day">{{ day }}</span>
+            <span class="event-item--month">{{ month }}</span>
+          </time>
+        {% else %}
+          <span class="event-item--tbc">{{ 'sections.events_calendar.tbc_text' | t }}</span>
+        {% endunless %}
+      </div>
+    </div>
+  {% if cta_link != blank and cta_text == blank %}
+    </a>
+  {% endif %}
+
+  {% if cta_link != blank and cta_text == blank %}
+    <a href="{{ cta_link }}" class="event-item--link">
+  {% endif %}
+    <div class="event-item--details">
+      {% unless day_time == blank and price == blank %}
+        {% unless day_time == blank %}
+          <span class="event-item--subheading">{{ day_time }}
+        {% endunless %}
+        {% liquid
+          unless price == blank
+            assign divider = false
+            if day_time != ''
+              assign divider = true
+            endif
+            render 'price-currency-specified', price: price, add_divider: divider
+          endunless
+        %}
+        {% if day_time != '' %}
+          </span>
+        {% endif %}
+      {% endunless %}
+
+      {% unless heading == blank %}
+        <h3 class="event-item--heading">{{ heading }}</h3>
+      {% endunless %}
+
+      {% unless event_location == blank %}
+        <span class="event-item--location">{{ event_location }}</span>
+      {% endunless %}
+
+      {% unless cta_text == blank %}
+        {% render 'dynamic-section-button',
+          id: section_id,
+          link: cta_link,
+          label: cta_text,
+          style: cta_style,
+          div_classes: 'event-cta',
+          attributes: 'data-section-main-link'
+        %}
+      {% endunless %}
+    </div>
+  {% if cta_link != blank and cta_text == blank %}
+    </a>
+  {% endif %}
+
+</div>

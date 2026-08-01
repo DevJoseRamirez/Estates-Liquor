@@ -1,0 +1,414 @@
+{{ 'section-before-after-slider.min.css' | asset_url | stylesheet_tag }}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-before-after-slider.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="before-after-slider"></script>
+</safe-load-scripts>
+
+{%- liquid
+   assign slider_handle_id = 'slider-handle--' | append: section.id
+
+   assign is_full_width = false
+   if section.settings.desktop_content_position == 'above' and section.settings.section_width == 'full'
+      assign is_full_width = true
+   endif
+-%}
+
+{% if section.settings.override_button_colors %}
+  {% render 'button-color-overrides',
+    id: slider_handle_id,
+    style: 'filled',
+    text_color: section.settings.button_color,
+    background_color: section.settings.button_background_color
+  %}
+{% endif %}
+
+<div
+	class="before-after-slider wrapper-spacing--v{% unless is_full_width %} wrapper-spacing--h{% endunless %}{% if section.settings.section_width == 'full' %} before-after-slider--full-width{% endif %} color-scheme--{{ section.settings.colors }}"
+   data-wetheme-section-type="before-after-slider"
+	data-wetheme-section-id="{{ section.id }}"
+   style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  <div class="{% if section.settings.desktop_content_position != 'above' %} width--content{% else %} width--{{ section.settings.section_width }}{% endif %} before-after-slider__position--{{ section.settings.desktop_content_position }}">
+   
+   {% liquid 
+      assign header_width_classes = ''
+      if is_full_width
+         assign header_width_classes = ' wrapper-spacing--h'
+      endif
+
+      assign header_wrapper_class = 'section-preview' | append: header_width_classes
+      unless request.visual_preview_mode
+         assign header_wrapper_class = 'show-on-scroll' | append: header_width_classes
+      endunless
+   %}
+
+    {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, wrapper_classes: header_wrapper_class, alignment: section.settings.section_header_alignment %}
+    
+    {% if section.blocks.size > 1 %}
+      <before-after-slider class="before-after-slider--button-{{ section.settings.button_style }} before-after-slider--content-{{ section.settings.content_position }}" data-section-id="{{ section.id }}">
+        <div class="before-after-slider__container block-radius-clip{% unless request.visual_preview_mode %} show-on-scroll{% endunless %}">
+          <div class="before-after-slider__image before-after-slider__image--after{% if section.blocks[1].settings.image_mobile %} has-mobile-image{% endif %}">
+            {% comment %} Desktop image {% endcomment %}
+            {% if section.blocks[1].settings.image_desktop %}
+              <div class="before-after-slider__image-desktop">
+                {% render 'responsive-image', image: section.blocks[1].settings.image_desktop, allow_stretch: true, sizes: '100vw' %}
+              </div>
+            {% endif %}
+            
+            {% comment %} Mobile image (if different from desktop) {% endcomment %}
+            {% if section.blocks[1].settings.image_mobile %}
+              <div class="before-after-slider__image-mobile">
+                {% render 'responsive-image', image: section.blocks[1].settings.image_mobile, allow_stretch: true, sizes: '100vw' %}
+              </div>
+            {% endif %}
+            
+            {% comment %} Placeholder if no images {% endcomment %}
+            {% unless section.blocks[1].settings.image_desktop or section.blocks[1].settings.image_mobile %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder--subdued block-radius' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+            {% endunless %}
+            
+            {% comment %} Label overlay {% endcomment %}
+            {% if section.blocks[1].settings.text != blank %}
+              <div class="before-after-slider__label-container before-after-slider__label-container--after">
+                <div class="before-after-slider__label{% if section.settings.font == 'heading' %} header-font{% endif %}" style="{% if section.settings.label_background != blank %}--label-background-color: {{ section.settings.label_background }};{% endif %}{% if section.settings.label_text != blank %}--label-text-color: {{ section.settings.label_text }};{% endif %}">
+                  {{ section.blocks[1].settings.text }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <div class="before-after-slider__image before-after-slider__image--before before-after-slider__image--before--{{ section.settings.aspect_ratio }}{% if section.blocks[0].settings.image_mobile %} has-mobile-image{% endif %}">
+            {% comment %} Desktop image {% endcomment %}
+            {% if section.blocks[0].settings.image_desktop %}
+              <div class="before-after-slider__image-desktop">
+                {% render 'responsive-image', image: section.blocks[0].settings.image_desktop, allow_stretch: true, sizes: '100vw' %}
+              </div>
+            {% endif %}
+            
+            {% comment %} Mobile image (if different from desktop) {% endcomment %}
+            {% if section.blocks[0].settings.image_mobile %}
+              <div class="before-after-slider__image-mobile">
+                {% render 'responsive-image', image: section.blocks[0].settings.image_mobile, allow_stretch: true, sizes: '100vw' %}
+              </div>
+            {% endif %}
+            
+            {% comment %} Placeholder if no images {% endcomment %}
+            {% unless section.blocks[0].settings.image_desktop or section.blocks[0].settings.image_mobile %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder--subdued block-radius' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+            {% endunless %}
+            
+            {% comment %} Label overlay {% endcomment %}
+            {% if section.blocks[0].settings.text != blank %}
+              <div class="before-after-slider__label-container before-after-slider__label-container--before">
+                <div class="before-after-slider__label{% if section.settings.font == 'heading' %} header-font{% endif %}" style="{% if section.settings.label_background != blank %}--label-background-color: {{ section.settings.label_background }};{% endif %}{% if section.settings.label_text != blank %}--label-text-color: {{ section.settings.label_text }};{% endif %}">
+                  {{ section.blocks[0].settings.text }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <div class="before-after-slider__divider">
+            <div class="before-after-slider__handle">
+               <span class="{% unless section.settings.button_style == 'simple' %}btn-hover-default {% endunless %}btn-colors-primary dynamic-section-button--{{ slider_handle_id }}" tabindex="0" role="slider" aria-label="{{ 'general.accessibility.before_after_slider' | t }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+               {% render 'theme-icon', icon: 'chevron_left' %}
+               {% render 'theme-icon', icon: 'chevron_right' %}
+               </span>
+            </div>
+          </div>
+        </div>
+      </before-after-slider>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.before-after-slider.name",
+  "class": "section--before-after-slider",
+  "settings": [
+   {
+      "type": "header",
+      "content": "t:all.Heading"
+   },
+   {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Before/after slider"
+   },
+   {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+   },
+   {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+   },
+   {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "t:all.Position_on_desktop",
+      "default": "above",
+      "options": [
+         {
+            "value": "above",
+            "label": "t:all.Above"
+         },
+         {
+            "value": "left",
+            "label": "t:all.Left"
+         },
+         {
+            "value": "right",
+            "label": "t:all.Right"
+         }
+      ]
+   },
+   {
+      "type": "header",
+      "content": "t:sections.before-after-slider.slider_handle_button.label"
+   },
+   {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:all.button_style",
+      "default": "simple",
+      "options": [
+         {
+            "value": "filled",
+            "label": "t:all.Filled"
+         },
+         {
+            "value": "simple",
+            "label": "t:sections.before-after-slider.settings.button_style.options.simple"
+         }
+      ]
+   },
+   {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+   },
+   {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+   },
+   {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:all.Secondary_color",
+      "default": "#FFFFFF",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+   },
+   {
+      "type": "header",
+      "content": "t:all.Label"
+   },
+   {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:all.Position",
+      "default": "bottom",
+      "options": [
+         {
+            "value": "top",
+            "label": "t:all.Top"
+         },
+         {
+            "value": "center",
+            "label": "t:all.Center"
+         },
+         {
+            "value": "bottom",
+            "label": "t:all.Bottom"
+         }
+      ]
+   },
+   {
+      "type": "select",
+      "id": "font",
+      "label": "t:all.Font",
+      "default": "heading",
+      "options": [
+         {
+            "value": "heading",
+            "label": "t:all.Heading"
+         },
+         {
+            "value": "body",
+            "label": "t:all.Body"
+         }
+      ]
+   },
+   {
+      "type": "color",
+      "id": "label_background",
+      "label": "t:all.Background",
+      "default": "#FFFFFF"
+   },
+   {
+      "type": "color",
+      "id": "label_text",
+      "label": "t:all.Text_color",
+      "default": "#242424"
+   },
+   {
+      "type": "header",
+      "content": "t:all.Layout"
+   },
+   {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:all.Aspect_ratio",
+      "default": "adapt_to_first_image",
+      "options": [
+         {
+            "value": "adapt_to_first_image",
+            "label": "t:all.Shape_options.adapt_to_first_image"
+         },
+         {
+            "value": "square",
+            "label": "t:all.Square"
+         },
+         {
+            "value": "tall",
+            "label": "t:all.Tall"
+         },
+         {
+            "value": "wide",
+            "label": "t:all.Wide"
+         }
+      ]
+   },
+   {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "default": "content",
+      "options": [
+         {
+            "value": "narrow",
+            "label": "t:all.Narrow"
+         },
+         {
+            "value": "content",
+            "label": "t:all.Content_width"
+         },
+         {
+            "value": "full",
+            "label": "t:all.Full_width"
+         }
+      ],
+      "info": "t:sections.before-after-slider.settings.width.info"
+   },
+   {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+   },
+   {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+   },
+   {
+      "type": "header",
+      "content": "t:all.Color"
+   },
+   {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+         {
+            "value": "white",
+            "label": "t:all.Default"
+         },
+         {
+            "value": "light",
+            "label": "t:all.First"
+         },
+         {
+            "value": "accent",
+            "label": "t:all.Second"
+         },
+         {
+            "value": "dark",
+            "label": "t:all.Third"
+         }
+      ]
+   }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:all.Image",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "t:all.Image_on_desktop",
+          "info": "t:sections.before-after-slider.blocks.image.settings.image_desktop.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "t:all.Image_on_mobile",
+          "info": "t:sections.before-after-slider.blocks.image.settings.image_mobile.info"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "default": "Before"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.before-after-slider.name",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image",
+            "settings": {
+               "text": "After"
+            }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

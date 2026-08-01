@@ -1,0 +1,292 @@
+{% comment %}
+  Renders color swatches for a product, either an image or a color swatch.
+
+  Accepts the following parameters:
+    - option_index: {Integer} The index of the option to render swatches for
+    - show_color_label: {Boolean} Whether to show the color label
+    - swatch_product: {Object} The product that the swatch is for
+    - swatch_option: {Object} The option to render swatches for
+    - hide_out_of_stock_variants: {Boolean} Whether to hide out of stock variants
+
+  Usage:
+{% endcomment %}
+
+{% liquid 
+  assign color_langs = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ','
+  assign show_color_label = show_color_label | default: false
+  assign hide_out_of_stock_variants = hide_out_of_stock_variants | default: false
+  assign swatch_image_options = settings.show_variant_image_for_options | split: ','
+  assign file_extension = 'png'
+  assign srcset_widths = '550,750,1100,1445,1680,2048,2200,2890' | split: ','
+  assign swatch_value_count = swatch_option.values | size
+  assign swatch_option_index = ''
+  assign is_color_swatch = false
+  assign is_category_swatch = false
+  assign show_variant_image = false
+
+  for option in swatch_product.options_with_values
+    comment
+      Check if the swatch should reflect the variant image
+    endcomment
+    assign option_name_formatted = option.name | camelize
+    for image_option in swatch_image_options
+      assign image_option_formatted = image_option | camelize
+      if image_option_formatted == option_name_formatted
+        assign show_variant_image = true
+        assign swatch_option_index = option.position
+      endif
+      if show_variant_image
+        break
+      endif
+    endfor
+
+    if show_variant_image
+      break
+    endif
+
+    comment
+      Check if the swatch is a category metafield swatch 
+    endcomment
+    for value in option.values
+      if value.swatch.image != blank or value.swatch.color != blank
+        assign is_category_swatch = true
+        assign swatch_option_index = option.position
+        break
+      endif
+    endfor
+
+    if is_category_swatch
+      break
+    endif
+
+    comment
+      Check if the swatch is a regular color swatch 
+    endcomment
+    assign option_downcase = option.name | camelize | downcase
+    if color_langs contains option_downcase
+      assign is_color_swatch = true
+      assign swatch_option_index = option.position
+    endif
+  endfor
+%}
+
+{% comment %} ==== Product Card Swatches ==== {% endcomment %}
+{% comment %} Hide the swatch row when fewer than 2 unique colour values exist — a single-colour row communicates nothing {% endcomment %}
+{% if swatch_option_index == option_index and swatch_value_count > 1 %}
+  {% if is_color_swatch or is_category_swatch or show_variant_image %}
+    <div class="color-swatch--block">
+      {% style %}
+        .card-color-swatch--wrapper.swatch-no-slider {
+          {% if settings.product_card_text_alignment == 'center' %}
+            justify-content: center;
+          {% elsif settings.product_card_text_alignment == 'right' %}
+            justify-content: flex-end;
+          {% endif %}
+        }
+      {% endstyle %}
+
+      {% if show_color_label %}
+        <div 
+          data-product-card-swatch-color-name
+          style="text-align:{{ settings.product_card_text_alignment }};"
+        >
+          {{ swatch_option.selected_value | truncate: 22 }}
+        </div>
+      {% endif %}
+
+      <div class="card-color-swatch--wrapper swiper">
+        <div class="swiper-wrapper">
+          {% for value in swatch_option.values %}
+            {% liquid
+              assign show_swatch = true
+              if hide_out_of_stock_variants and value.variant.available == false
+                assign show_swatch = false
+              endif
+
+              comment
+                Define the color value
+              endcomment
+              assign bg_color = value | camelize | downcase
+              if value contains '#'
+                assign bg_color = value | downcase
+              endif
+
+              comment
+                Reassign the color value if the swatch has a category metafield color
+              endcomment
+              if value.swatch.color
+                assign bg_color = value.swatch.color
+              endif
+
+              comment
+                Define the image url with priority order:
+                1. Metafield swatch image (explicit, most reliable)
+                2. Variant featured image (when show_variant_image is enabled)
+                3. File-based image (legacy support)
+              endcomment
+              assign has_swatch_image = false
+              assign bg_img_url = ''
+
+              comment
+                Priority 1: Metafield swatch image
+              endcomment
+              if value.swatch.image
+                assign bg_img_url = value.swatch.image | image_url: width: 50
+                assign has_swatch_image = true
+              endif
+
+              comment
+                Priority 2: Variant featured image (when enabled)
+              endcomment
+              if has_swatch_image == false and show_variant_image and value.variant.featured_image
+                assign bg_img_url = value.variant.featured_image | image_url: width: 50
+                assign has_swatch_image = true
+              endif
+
+              comment
+                Priority 3: File-based image (legacy support)
+                Always attempt to load - CSS background-color provides fallback
+              endcomment
+              if has_swatch_image == false
+                assign bg_img_url = value | handle | append: '.' | append: file_extension | file_url
+                assign has_swatch_image = true
+              endif
+
+              comment
+                Pre-sized image data for the JS card-image swap (mirrors the responsive-image width tiers)
+              endcomment
+              assign variant_image = value.variant.featured_image
+              assign secondary_image = ''
+              if settings.hover-effect and swatch_product.media.size > 1 and value.variant.featured_media
+                assign secondary_media = swatch_product.media[value.variant.featured_media.position]
+                if secondary_media
+                  assign secondary_image = secondary_media.preview_image
+                endif
+              endif
+            %}
+
+            {%- if variant_image -%}
+              {%- capture variant_image_srcset -%}
+                {%- for width_string in srcset_widths -%}
+                  {%- assign srcset_width = width_string | plus: 0 -%}
+                  {%- if variant_image.width >= srcset_width -%}{{ variant_image | image_url: width: srcset_width }} {{ srcset_width }}w,{%- endif -%}
+                {%- endfor -%}
+                {{ variant_image | image_url: width: variant_image.width }} {{ variant_image.width }}w
+              {%- endcapture -%}
+            {%- endif -%}
+
+            {%- if secondary_image -%}
+              {%- capture secondary_image_srcset -%}
+                {%- for width_string in srcset_widths -%}
+                  {%- assign srcset_width = width_string | plus: 0 -%}
+                  {%- if secondary_image.width >= srcset_width -%}{{ secondary_image | image_url: width: srcset_width }} {{ srcset_width }}w,{%- endif -%}
+                {%- endfor -%}
+                {{ secondary_image | image_url: width: secondary_image.width }} {{ secondary_image.width }}w
+              {%- endcapture -%}
+            {%- endif -%}
+
+            {% if show_swatch %}
+              <div 
+                data-variant="{{ value.variant | json | escape }}"
+                data-variant-url="{{ value.variant.url }}"
+                {% if variant_image %}
+                  data-variant-image-src="{{ variant_image | image_url: width: 1445 }}"
+                  data-variant-image-srcset="{{ variant_image_srcset | strip }}"
+                {% endif %}
+                {% if secondary_image %}
+                  data-variant-secondary-src="{{ secondary_image | image_url: width: 1445 }}"
+                  data-variant-secondary-srcset="{{ secondary_image_srcset | strip }}"
+                {% endif %}
+                data-variant-price-value="{{ value.variant.price }}"
+                data-variant-price="{% if settings.show_currency_code %}{{ value.variant.price | money_with_currency }}{% else %}{{ value.variant.price | money }}{% endif %}"
+                data-variant-compare-at-price-value="{{ value.variant.compare_at_price }}"
+                data-variant-compare-at-price="{% if settings.show_currency_code %}{{ value.variant.compare_at_price | money_with_currency }}{% else %}{{ value.variant.compare_at_price | money }}{% endif %}"
+                data-color-value="{{ value | escape | truncate: 22 }}"
+                data-product-title="{{ swatch_product.title | escape }}"
+                data-product-id="{{ swatch_product.id }}"
+                data-color-selected-string="{{ 'sections.collection_template.new_color_selected' | t }}"
+                class="card-color-swatch--inner swiper-slide {% if swatch_option.selected_value == value %} active{% endif %}{% unless value.available %} non-focusable{% endunless %}"
+              >
+                {% if show_color_label %}
+                  <div class="card-color-swatch-color-label"></div>
+                {% endif %}
+          
+                <div class="card-color-swatch-input--wrapper">
+                  <button
+                    data-product-card-swatch-button
+                    {% unless value.available %} tabindex="-1"{% endunless %}
+                    id="{{ section.id }}-swatch-{{ value.variant.id }}-{{ value | escape }}"
+                    class="card-color-swatch-input{% if swatch_option.selected_value == value %} swatch-selected{% endif %}{% unless value.available %} sold-out{% endunless %}"
+                    aria-label="{{ swatch_product.title | escape | replace: "|", "" }} | {{ value | escape }}"
+                    style="{% if has_swatch_image %}background-image: url({{ bg_img_url }}); background-size: cover; background-position: center center;{% endif %} background-color: {{ bg_color }};"
+                  >
+                    <span class="swatch-sold-out swatch-sold-out-background"></span>
+                    <span class="swatch-sold-out swach-sold-out-foreground"></span>
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="swatch-swiper-button--next">
+          {% render 'theme-icon', icon: 'chevron_right' %}
+        </div>
+        <div class="swatch-swiper-button--prev">
+          {% render 'theme-icon', icon: 'chevron_left' %}
+        </div>
+      </div>
+    </div>
+
+    <div id="aria-swatch-live-region-{{ swatch_product.id }}" class="visually-hidden" aria-live="polite"></div>
+  {% endif %}
+{% endif %}
+
+{% comment %} ==== Placeholder Swatches ==== {% endcomment %}
+{% unless swatch_product %}
+  {% assign color_label = 'sections.collection_template.color_label' | t %}
+  <div class="color-swatch--block">
+    {% if show_color_label %}
+      <div 
+        data-product-card-swatch-color-name
+        style="text-align:{{ settings.product_card_text_alignment }};"
+      >
+        {{ color_label }} {{ 'general.numbers.number_1' | t | downcase }}
+      </div>
+    {% endif %}
+
+    <div class="card-color-swatch--wrapper swiper">
+      <div class="swiper-wrapper">
+        {% for i in (1..12) %}
+          {% # theme-check-disable TranslationKeyExists %}
+          {% assign number_label = 'general.numbers.number_' | append: forloop.index | t | downcase %}
+          {% # theme-check-enable TranslationKeyExists %}
+          {% assign numbered_color_label = color_label | append: ' ' | append: number_label %}
+          <div 
+            class="card-color-swatch--inner swiper-slide {% if forloop.first %} active{% endif %}"
+            data-color-value="{{ numbered_color_label }}"
+          >
+            {% if show_color_label %}
+              <div class="card-color-swatch-color-label"></div>
+            {% endif %}
+      
+            <div class="card-color-swatch-input--wrapper">
+              <button
+                data-product-card-swatch-button
+                aria-label="{{ numbered_color_label }}"
+                id="{{ section.id }}-swatch-{{ variant.id }}-{{ color | escape }}"
+                class="card-color-swatch-input{% if forloop.first %} swatch-selected{% endif %} card-color-swatch-input--placeholder"
+              >
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swatch-swiper-button--next">
+        {% render 'theme-icon', icon: 'chevron_right' %}
+      </div>
+      <div class="swatch-swiper-button--prev">
+        {% render 'theme-icon', icon: 'chevron_left' %}
+      </div>
+    </div>
+  </div>
+{% endunless %}

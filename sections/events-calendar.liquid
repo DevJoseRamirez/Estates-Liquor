@@ -1,0 +1,423 @@
+{{ 'section-events-calendar.min.css' | asset_url | stylesheet_tag }}
+
+<section 
+  class="wrapper-spacing--v wrapper-spacing--h content-align--{{ section.settings.section_header_alignment }} color-scheme--{{ section.settings.colors }} events-calendar{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="events-calendar" 
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  <div class="{% if section.settings.layout == 'grid' %}width--content{% else %}width--narrow{% endif %}">
+
+    {% comment %} Section title and description {% endcomment %}
+    {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, alignment: section.settings.section_header_alignment %}
+
+    <div class="events-calendar--inner">
+
+      {% if section.blocks.size > 0 %}
+        {% if section.settings.override_button_colors %}
+          {% render 'button-color-overrides',
+            id: section.id,
+            style: section.settings.buttons_style,
+            text_color: section.settings.button_text_color,
+            background_color: section.settings.button_background_color
+          %}
+        {% endif %}
+        <ul class="events-layout--{{ section.settings.layout }}{% if section.settings.layout == 'grid' %} events-cols--{{ section.settings.cards_per_row }}{% if section.settings.expand_card %} event-card--expand{% endif %}{% endif %}">
+          {% for block in section.blocks %}
+            <li
+              class="event"
+              {{ block.shopify_attributes }}
+              data-animate
+              data-animate-order="{% render 'block-animation-offset', 
+                title: section.settings.title, 
+                description: section.settings.description, 
+                base: forloop.index 
+              %}"
+            >
+              {% liquid
+
+                if section.settings.layout == 'grid'
+                  assign event_image = block.settings.grid_image
+                  assign event_image_aspect_ratio = block.settings.grid_image_size
+                  capture placeholder_number
+                    cycle 1, 2, 3, 4, 5, 6 
+                  endcapture
+                endif
+                assign day = block.settings.day
+                assign month = block.settings.month
+                assign tbc = block.settings.tbc
+                assign day_time = block.settings.day_time
+                assign price = ''
+                if block.settings.price != blank
+                  assign price = block.settings.price
+                endif
+                assign heading = block.settings.event_heading
+                assign event_location = block.settings.event_location
+                assign cta_link = block.settings.url
+                assign cta_text = block.settings.btn_text
+                assign cta_style = section.settings.buttons_style
+
+                if section.settings.layout == 'grid'
+                  render 'events-calendar--grid', day: day, month: month, tbc: tbc, day_time: day_time, price: price, heading: heading, event_location: event_location, cta_link: cta_link, cta_text: cta_text, cta_style: cta_style, section_id: section.id, event_image: event_image, event_image_aspect_ratio: event_image_aspect_ratio, placeholder_number: placeholder_number
+                else
+                  render 'events-calendar--list', day: day, month: month, tbc: tbc, day_time: day_time, price: price, heading: heading, event_location: event_location, cta_link: cta_link, cta_text: cta_text, cta_style: cta_style, section_id: section.id
+                endif
+              %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="placeholder-noblocks">
+          {{ 'general.onboarding.no_content' | t }}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.events-calendar.name",
+  "class": "section--events-calendar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "t:all.Style",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:all.Grid"
+        },
+        {
+          "value": "list",
+          "label": "t:sections.events-calendar.settings.layout.options.list"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "cards_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:sections.events-calendar.settings.cards_per_row.label",
+      "default": 4,
+      "visible_if": "{{ section.settings.layout == 'grid' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "expand_card",
+      "default": false,
+      "label": "t:sections.events-calendar.settings.expand_card.label",
+      "visible_if": "{{ section.settings.layout == 'grid' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Buttons"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "filled",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#ffffff",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "event",
+      "name": "t:sections.events-calendar.blocks.event.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "grid_image",
+          "label": "t:all.Image",
+          "visible_if": "{{ section.settings.layout == 'grid' }}"
+        },
+        {
+          "type": "select",
+          "id": "grid_image_size",
+          "label": "t:all.Image_size",
+          "default": "square",
+          "options": [
+            {
+              "value": "natural",
+              "label": "t:all.Original"
+            },
+            {
+              "value": "square",
+              "label": "t:all.Square_1_1"
+            },
+            {
+              "value": "tall",
+              "label": "t:all.Tall_2_3"
+            },
+            {
+              "value": "wide",
+              "label": "t:all.Wide_4_3"
+            }
+          ],
+          "visible_if": "{{ section.settings.layout == 'grid' }}"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.events-calendar.blocks.event.settings.details.label"
+        },
+        {
+          "type": "range",
+          "id": "day",
+          "label": "t:sections.events-calendar.blocks.event.settings.day.label",
+          "min": 1,
+          "max": 31,
+          "default": 10
+        },
+        {
+          "type": "select",
+          "id": "month",
+          "label": "t:sections.events-calendar.blocks.event.settings.month.label",
+          "default": "Jan",
+          "options": [
+            {
+              "value": "Jan",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Jan"
+            },
+            {
+              "value": "Feb",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Feb"
+            },
+            {
+              "value": "Mar",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Mar"
+            },
+            {
+              "value": "Apr",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Apr"
+            },
+            {
+              "value": "May",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.May"
+            },
+            {
+              "value": "Jun",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Jun"
+            },
+            {
+              "value": "Jul",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Jul"
+            },
+            {
+              "value": "Aug",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Aug"
+            },
+            {
+              "value": "Sep",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Sep"
+            },
+            {
+              "value": "Oct",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Oct"
+            },
+            {
+              "value": "Nov",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Nov"
+            },
+            {
+              "value": "Dec",
+              "label": "t:sections.events-calendar.blocks.event.settings.month.options.Dec"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "tbc",
+          "label": "t:sections.events-calendar.blocks.event.settings.tbc.label",
+          "info": "t:sections.events-calendar.blocks.event.settings.tbc.info",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "day_time",
+          "label": "t:sections.events-calendar.blocks.event.settings.day_time.label",
+          "default": "Saturday, 7:30pm",
+          "info": "t:sections.events-calendar.blocks.event.settings.day_time.info"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "t:all.Price",
+          "info": "t:sections.events-calendar.blocks.event.settings.price.info",
+          "default": "USD:10, EUR:9, GBP:8"
+        },
+        {
+          "type": "text",
+          "id": "event_heading",
+          "label": "t:all.Heading",
+          "default": "Event name"
+        },
+        {
+          "type": "text",
+          "id": "event_location",
+          "label": "t:sections.events-calendar.blocks.event.settings.event_location.label",
+          "default": "Location"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Links"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:all.Link"
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "t:all.Button_label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.events-calendar.presets.name",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "event"
+        },
+        {
+          "type": "event"
+        },
+        {
+          "type": "event"
+        },
+        {
+          "type": "event"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

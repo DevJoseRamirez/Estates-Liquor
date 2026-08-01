@@ -1,0 +1,432 @@
+{{ 'section-offers-drawer.min.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign button_class = 'dynamic-section-button--drawer-' | append: section.settings.buttons_style
+-%}
+
+{% capture empty_state_content %}
+  <div class="offers-drawer__empty-state">
+    {% if section.settings.empty_message != blank %}
+      <div class="offers-drawer__empty-message">{{ section.settings.empty_message }}</div>
+    {% endif %}
+
+    {% if section.settings.suggested_collections != blank %}
+      {% assign empty_state_button_class = button_class | append: ' offers-drawer__empty-btn' %}
+      <div class="offers-drawer__empty-btn-container">
+        {% for suggested_collection in section.settings.suggested_collections %}
+          {% render 'dynamic-section-button',
+            id: 'offers-drawer-empty-state',
+            link: suggested_collection.url,
+            label: suggested_collection.title,
+            style: section.settings.buttons_style,
+            a_classes: empty_state_button_class
+          %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endcapture %}
+
+<div
+  data-wetheme-section-type="offers-drawer"
+  data-wetheme-section-id="{{ section.id }}"
+>
+  <offers-drawer
+    id="OffersDrawer"
+    aria-modal="true"
+    role="dialog"
+    aria-hidden="true"
+    class="global-drawer"
+    data-drawer-position="right"
+    data-section-id="{{ section.id }}"
+    data-show-icon="{{ section.settings.show_icon }}"
+    {% if section.settings.override_heading_font_size %}
+      {% render 'heading-font-overrides', base_size: section.settings.heading_font_size %}
+    {% endif %}
+  >
+    <span data-drawer-close class="global-drawer__overlay"></span>
+    <div class="global-drawer__content">
+      <header class="global-drawer__sticky-header">
+        <button
+          data-drawer-close
+          type="button"
+          aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+          class="global-drawer__close"
+        >
+          <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
+          {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+        </button>
+        {% if section.settings.show_icon or section.settings.title != blank %}
+          <h3 class="offers-drawer__heading" data-offers-drawer-heading>
+            {% if section.settings.title != blank %}
+              <span class="text-link-animated">{{ section.settings.title }}</span>
+            {% endif %}
+          </h3>
+        {% endif %}
+      </header>
+      <div class="global-drawer__body global-drawer__body--with-padding" tabindex="0">
+        <div class="global-drawer__body--content offers-drawer__content{% if section.blocks.size == 0 %} offers-drawer__content--empty{% endif %}">
+          {% if section.settings.description != blank %}
+            <div class="offers-drawer__description text-link-animated">{{ section.settings.description }}</div>
+          {% endif %}
+          {% if section.blocks.size > 0 %}
+            {% assign has_hidden_content = false %}
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'offer' %}
+                  {%- liquid
+                    assign has_content = false
+                    if block.settings.image != blank or block.settings.title != blank or block.settings.description != blank or block.settings.discount_code != blank or block.settings.button_label != blank
+                      assign has_content = true
+                    endif
+
+                    if block.settings.show_countdown and block.settings.timer_expiry_action == 'hide_offer'
+                      assign has_hidden_content = true
+                    endif
+
+                    assign has_image_above = false
+                    if block.settings.image_position == 'above' and block.settings.image != blank
+                      assign has_image_above = true
+                    endif
+                  -%}
+                  {% if has_content %}
+                    <div
+                      class="offers-drawer__block offers-drawer__offer offers-drawer__offer--{{ block.settings.image_position }} block-radius"
+                      data-animate
+                      data-animate-order="{{ forloop.index }}"
+                      {% if block.settings.show_countdown and block.settings.timer_expiry_action == 'hide_offer' %}
+                        data-timer-complete-content
+                        data-timer-id="{{ block.id }}"
+                      {% endif %}
+                    >
+                      {% if block.settings.image != blank %}
+                        <div class="offers-drawer__offer-image">
+                          {% if block.settings.link != blank %}
+                            <a href="{{ block.settings.link }}" data-animate-hover-zoom>
+                          {% endif %}
+                            {% render 'responsive-image', image: block.settings.image, allow_stretch: true %}
+                          {% if block.settings.link != blank %}
+                            </a>
+                          {% endif %}
+
+                          {% if block.settings.show_countdown and has_image_above %}
+                            <div class="offers-drawer__countdown--over-image">
+                              {% render 'countdown-timer-badge',
+                                timer_id: block.id,
+                                end_date_setting: block.settings.end_date,
+                                end_time_setting: block.settings.end_time,
+                                hide_when_complete: false,
+                                time_labels: block.settings.show_timer_labels
+                              %}
+                            </div>
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                      <div class="offers-drawer__text-content nav-link-animated">
+                        {% if block.settings.show_countdown and has_image_above == false %}
+                          <div>
+                            {% render 'countdown-timer-badge',
+                              timer_id: block.id,
+                              end_date_setting: block.settings.end_date,
+                              end_time_setting: block.settings.end_time,
+                              hide_when_complete: false,
+                              time_labels: block.settings.show_timer_labels
+                            %}
+                          </div>
+                        {% endif %}
+
+                        {% if block.settings.title != blank %}
+                          <div class="offers-drawer__offer-title-container">
+                            {% if block.settings.link != blank %}
+                              <a href="{{ block.settings.link }}">
+                            {% endif %}
+                              <h4 class="offers-drawer__offer-title text-link-animated"><span class="animated-underline">{{ block.settings.title }}</span></h4>
+                            {% if block.settings.link != blank %}
+                              </a>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                        {% if block.settings.description != blank %}
+                          <div class="offers-drawer__offer-description text-link-animated">{{ block.settings.description }}</div>
+                        {% endif %}
+                        {% if block.settings.discount_code != blank %}
+                          <copy-code class="offers-drawer__offer-discount-code">
+                            <div data-offers-drawer-code class="offers-drawer__offer-discount-code--code" tabindex="0">{{ block.settings.discount_code }}</div>
+                            <button data-offers-drawer-copy-btn class="offers-drawer__offer-discount-code--btn" aria-label="{{ 'general.accessibility.copy' | t }}">
+                              <span data-offers-drawer-copy-icon>{% render 'theme-icon', icon: 'copy', iconSize: 24 %}</span>
+                              <span data-offers-drawer-check-icon class="hide-icon">{% render 'theme-icon', icon: 'checkmark', iconSize: 24 %}</span>
+                            </button>
+                          </copy-code>
+                          <safe-load-scripts class="hidden">
+                            <script src="{{ 'component-copy-code.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-copy-code"></script>
+                          </safe-load-scripts>
+                        {% endif %}
+                        {% if block.settings.button_label != blank %}
+                          {% render 'dynamic-section-button',
+                              id: block.id,
+                              link: block.settings.link,
+                              label: block.settings.button_label,
+                              style: section.settings.buttons_style,
+                              a_classes: button_class
+                            %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+
+                {% when 'product' %}
+                  <div class="offers-drawer__block offers-drawer__product" data-animate data-animate-order="{{ forloop.index }}">
+                    {% if block.settings.product != blank %}
+                      {% render 'product-card-basic', card_product: block.settings.product, show_vendor: false, enable_quick_add: true %}
+                    {% else %}
+                      {% render 'product-card-basic-placeholder' %}
+                    {% endif %}
+                  </div>
+              {% endcase %}
+            {% endfor %}
+
+            {% if has_hidden_content %}
+              <div class="offers-drawer__empty-state--hidden-content">
+                {{ empty_state_content }}
+              </div>
+            {% endif %}
+          {% else %}
+            {{ empty_state_content }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </offers-drawer>
+
+  <safe-load-scripts class="hidden">
+    <script src="{{ 'component-offers-drawer.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-offers-drawer"></script>
+  </safe-load-scripts>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.offers-drawer.name",
+  "class": "section--offers-drawer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.offers-drawer.settings.paragraph.content"
+    },
+    {
+      "type": "header",
+      "content": "t:all.drawer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "t:sections.offers-drawer.settings.show_icon.label",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "t:sections.offers-drawer.settings.title.default"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_heading_font_size",
+      "label": "t:all.Heading_font_override",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "t:all.Base_size_headings",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "t:all.px",
+      "default": 24,
+      "visible_if": "{{ section.settings.override_heading_font_size }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.empty_state"
+    },
+    {
+      "type": "textarea",
+      "id": "empty_message",
+      "label": "t:all.message",
+      "default": "There are currently no active offers, but check back soon for new deals!"
+    },
+    {
+      "type": "collection_list",
+      "id": "suggested_collections",
+      "label": "t:all.suggested_collections",
+      "limit": 4
+    },
+    {
+      "type": "header",
+      "content": "t:all.Buttons"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "filled",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "t:all.offer",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:all.Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:all.Image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:all.Position",
+          "default": "above",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:all.Left"
+            },
+            {
+              "value": "above",
+              "label": "t:all.Above"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "t:all.Text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "t:all.Heading",
+          "default": "t:all.offer"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:all.Description",
+          "default": "<p>Provide additional details about the offer you're running.</p>"
+        },
+        {
+          "type": "header",
+          "content": "t:all.discount_code"
+        },
+        {
+          "type": "text",
+          "id": "discount_code",
+          "label": "t:all.code",
+          "info": "t:all.code_info"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Countdown"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_countdown",
+          "label": "t:sections.offers-drawer.settings.show_countdown.label",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "t:all.Countdown_end_date",
+          "info": "t:all.Use_the_format_mm_dd_yyyy_eg__01_31_2024",
+          "visible_if": "{{ block.settings.show_countdown }}"
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "t:all.Countdown_end_time",
+          "info": "t:all.Use_the_format_hh_mm_ss_eg__23_59_59__Use_the_timezone_specified_in_your_Shopify_admin",
+          "visible_if": "{{ block.settings.show_countdown }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_timer_labels",
+          "label": "t:all.Show_timer_labels",
+          "default": true,
+          "visible_if": "{{ block.settings.show_countdown }}"
+        },
+        {
+          "type": "radio",
+          "id": "timer_expiry_action",
+          "label": "t:sections.offers-drawer.settings.timer_expiry_action.label",
+          "default": "leave_at_zero",
+          "visible_if": "{{ block.settings.show_countdown }}",
+          "options": [
+            {
+              "value": "hide_offer",
+              "label": "t:sections.offers-drawer.settings.timer_expiry_action.options.hide_offer"
+            },
+            {
+              "value": "leave_at_zero",
+              "label": "t:sections.offers-drawer.settings.timer_expiry_action.options.leave_at_zero"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "t:all.Link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:all.Link"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:all.Button_label",
+          "default": "Shop now"
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "t:all.Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:all.Product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

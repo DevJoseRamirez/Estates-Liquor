@@ -1,0 +1,135 @@
+{% if settings.enable_verification_popup or settings.verification-pop-up__test-mode %}
+  {% liquid 
+    assign background_opacity = 100 | minus: settings.verification_background_opacity
+    assign verification_popup_background_color = 'rgba(' | append: settings.verification-popup--background-color.rgba | append: ')'
+    assign verification_popup_background_color_opaque = 'color-mix(in srgb, ' | append: verification_popup_background_color | append: ', transparent ' | append: background_opacity | append: '%)'
+  %}
+
+  {% if settings.verification-popup--override_button_colors %}
+    {% render 'button-color-overrides',
+      id: 'verification-popup',
+      style: 'filled',
+      text_color: settings.verification-popup--button_text_color,
+      background_color: settings.verification-popup--button_background_color
+    %}
+  {% endif %}
+
+  <div class="verification-popup-container" style="display: none" data-age-test-mode="{{ settings.verification-pop-up__test-mode }}" tabindex="-1">
+    <div id="prompt__background">
+      <div id="verification__prompt" class="modal__prompt popup-shadow color-scheme--{{ settings.verification_popup_color_scheme }} block-radius" role="dialog">
+
+        {% capture logo-image %}
+          <div class="verification-popup-logo__container" itemscope itemtype="http://schema.org/Organization">
+            {% capture props %}itemprop="logo"{% endcapture %}
+
+            {% if settings.verification-popup__logo %}
+              <div class="verification-popup-logo__image">
+                {% capture alt %}{{ settings.verification-popup__logo.alt | default: shop.name }}{% endcapture %}
+                {% render 'responsive-image', image: settings.verification-popup__logo, alt: alt, blur: false, props: props %}
+              </div>
+            {% endif %}
+          </div>
+        {% endcapture %}
+
+        <div class="modal-initial-content">
+          {{ logo-image }}
+          <div class="modal-content__wrapper">
+            {% if settings.verification-pop-up__header != '' %}
+              <h2>
+                {{ settings.verification-pop-up__header }}
+              </h2>
+            {% endif %}
+            {% if settings.verification-pop-up__description != '' %}
+              <div class="rte text-link-animated">
+                {{ settings.verification-pop-up__description }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="modal-button-container">
+            {% if settings.exit-button__text != '' %}
+              <button
+                role="button"
+                id="button__exit"
+                class="btn__exit btn secondary-button styled-submit dynamic-section-button--verification-popup"
+                tabindex="1"
+              >
+                {{ settings.exit-button__text }}
+              </button>
+            {% endif %}
+
+            {% if settings.confirm-button__text != '' %}
+              <button
+                role="button"
+                class="btn__enter btn dynamic-section-button--verification-popup"
+                id="button__enter"
+                tabindex="1"
+              >
+                {{ settings.confirm-button__text }}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="modal-deny-content hidden">
+          {{ logo-image }}
+          <div class="modal-content__wrapper">
+            {% if settings.deny__header != '' %}
+              <h2>
+                {{ settings.deny__header }}
+              </h2>
+            {% endif %}
+            {% if settings.deny__description != '' %}
+              <div class="rte text-link-animated">
+                {{ settings.deny__description }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="modal-button-container">
+              <button role="button" id="button__return" class="btn__return btn dynamic-section-button--verification-popup">
+                {% if settings.deny-button__text != '' %}
+                  {{ settings.deny-button__text }}
+                {% else %}
+                  {{ 'general.verification_popup.return_text' | t }}
+                {% endif %}
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+<style>
+
+.verification-popup-logo__image img {
+  width: {{ settings.verification-popup-logo--max-width }}px;
+  max-width: {{ settings.verification-popup-logo--max-width }}px !important;
+}
+
+@media (max-width: 991px) {
+  .verification-popup-logo__image img {
+    max-width: 220px !important;
+  }
+}
+
+
+
+{% if settings.verification-popup--background-image %}
+  {% render 'responsive-background-image', image: settings.verification-popup--background-image, selector: '#prompt__background', sizes: '600, 1200, 2000', scale: 1 %}
+
+  body {
+    min-height: 100%;
+  }
+{% endif %}
+
+#prompt__background:after {
+  {% if settings.verification-popup--background-color == 'rgba(0,0,0,0)' %}
+    background-color: transparent;
+  {% else %}
+    background-color: {{ verification_popup_background_color_opaque }};
+  {% endif %}
+}
+</style>

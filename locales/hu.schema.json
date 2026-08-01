@@ -1,0 +1,3697 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "settings_schema": {
+    "Colors": {
+      "name": "Színek",
+      "settings": {
+        "header-0": {
+          "content": "Alapértelmezett"
+        },
+        "color_primary": {
+          "label": "Linkek"
+        },
+        "color_body_bg_secondary": {
+          "label": "Másodlagos háttér",
+          "info": "A kezdőlapon és a termékoldalakon hátterekhez használják."
+        },
+        "sale_price_color": {
+          "label": "Akciós ár"
+        },
+        "star_rating_color": {
+          "label": "Csillagos értékelés"
+        },
+        "header-6": {
+          "content": "Jelvények"
+        },
+        "sale_badge_color": {
+          "label": "Akciós jelvény"
+        },
+        "sold_out_badge_color": {
+          "label": "Kifogyott jelvény"
+        },
+        "preorder_badge_color": {
+          "label": "\"Előrendelés\" jelvény háttér"
+        },
+        "countdown_badge_color": {
+          "label": "Visszaszámlálás jelvény háttér"
+        },
+        "custom_badge_color": {
+          "label": "Egyéni jelvény háttérszín"
+        },
+        "header-border-color": {
+          "label": "Alsó szegély"
+        },
+        "header-transparent-text": {
+          "label": "Átfedés szöveg"
+        },
+        "header-transparent-background": {
+          "label": "Átfedés háttér",
+          "info": "A fedvénykosár számlálására és akkor használatos, ha a „Fedvény háttér átlátszatlansága” 0%-nál nagyobb."
+        },
+        "header-35": {
+          "content": "Fiókok"
+        },
+        "header-38": {
+          "content": "Lábléc"
+        },
+        "first_color_scheme": {
+          "label": "Első színséma"
+        },
+        "second_color_scheme": {
+          "label": "Második színséma"
+        },
+        "third_color_scheme": {
+          "label": "Harmadik színséma"
+        },
+        "scheme_group": {
+          "content": "Színsémák",
+          "info": "Opcionális, sémánkénti felülírások. A beállítatlanul hagyott színek öröklik az alattuk lévő meglévő színeket, így semmi sem változik, amíg ezeket nem használod."
+        },
+        "legacy": {
+          "content": "Régi színek",
+          "info": "Ezek továbbra is működtetik az üzletedet, és a fenti színsémák tartalékaiként szolgálnak."
+        },
+        "scheme_bg": {
+          "label": "Háttér"
+        },
+        "scheme_text": {
+          "label": "Szöveg"
+        },
+        "scheme_btn_bg": {
+          "label": "Gomb háttere"
+        },
+        "scheme_btn_text": {
+          "label": "Gomb szövege"
+        },
+        "scheme_link": {
+          "label": "Linkek és ékezetek"
+        },
+        "status": {
+          "content": "Státusz színek"
+        },
+        "success": {
+          "label": "Siker"
+        },
+        "error": {
+          "label": "Hiba"
+        },
+        "warning": {
+          "label": "Figyelmeztetés"
+        }
+      }
+    },
+    "Typography": {
+      "name": "Tipográfia",
+      "settings": {
+        "header-0": {
+          "content": "Címek"
+        },
+        "nav_font_case": {
+          "label": "Navigáció nagybetűs"
+        },
+        "button_style": {
+          "label": "Gombszegélyek",
+          "options": {
+            "circle": "Ívelt",
+            "rounded": "Kerek",
+            "square": "Négyzet",
+            "subtle": "Apró"
+          }
+        },
+        "header-18": {
+          "content": "Címkék"
+        },
+        "header-22": {
+          "content": "Logó szöveg"
+        },
+        "header-24": {
+          "content": "Értesítési sáv"
+        }
+      }
+    },
+    "Heading_alignment": {
+      "Heading_alignment_info": "„Sablon” címsorok hatásai, pl. Kosár, Blogbejegyzések. A legtöbb szakasz egyedi igazítási kezeléssel rendelkezik a nagyobb rugalmasság érdekében."
+    },
+    "Cart": {
+      "name": "Kosár",
+      "settings": {
+        "cart_type": {
+          "label": "Kosár típusa",
+          "options": {
+            "drawer": "Fiók",
+            "page": "Oldal"
+          }
+        },
+        "add_to_cart_action": {
+          "label": "Amikor egy terméket teszel a kosárba…",
+          "options": {
+            "show_added_message": "'Hozzáadva' üzenet megjelenítése",
+            "go_to_or_open_cart": "Menj a/nyisd meg a kosarat"
+          }
+        },
+        "cart_notes_enable": {
+          "label": "Megrendelési megjegyzés megjelenítése"
+        },
+        "giftwrap_gift_note": {
+          "label": "Ajándéküzenet engedélyezése"
+        },
+        "enable-additional-checkout-buttons": {
+          "label": "Dinamikus fizetési gombok megjelenítése",
+          "info": "[További információ](https://help.shopify.com/en/manual/sell-online/online-store/dynamic-checkout)"
+        },
+        "cart_show_price_in_checkout_button": {
+          "label": "Kosár összegének megjelenítése a pénztár gombon"
+        },
+        "free_shipping_bar": {
+          "header": "Ingyenes szállítás bár",
+          "cart_free_shipping_bar_enable": {
+            "label": "Ingyenes szállítás folyamatjelző sávjának megjelenítése"
+          },
+          "cart_free_shipping_threshold": {
+            "label": "Ingyenes szállítás minimális összegért",
+            "info": "Add meg az összeget az üzleted fő pénznemében, pénznemkód nélkül. Ha piaconként eltérő összeget szeretnél beállítani, használd a Translate & Adapt alkalmazást. Győződj meg róla, hogy a [szállítási beállítások](/admin/settings/shipping) részben be van állítva egy megfelelő ingyenes szállítási díj."
+          }
+        },
+        "product_recommendations": {
+          "header": "Termékajánlatok",
+          "show_cart_recommendations": {
+            "label": "Termékajánlatok megjelenítése",
+            "info": "Az ajánlások a kosárban lévő termékeken alapulnak. Rendelési és termékinformációkat használnak fel, hogy idővel változzanak és fejlődjenek. [További információ](https://support.eightthemes.com/article/734-product-recommendations)"
+          }
+        },
+        "empty_cart": {
+          "header": "Üres kosár",
+          "empty_cart_message": "Üzenet",
+          "empty_cart_products": "Üres kosár ajánlások"
+        }
+      }
+    },
+    "Products": {
+      "name": "Termékek",
+      "settings": {
+        "header-0": {
+          "content": "Ajándékcsomagolás"
+        },
+        "giftwrap_product_selector": {
+          "label": "Ajándékcsomagolás kiválasztása"
+        },
+        "giftwrap_label_text": {
+          "label": "Ajándékcsomagolás címkéje"
+        }
+      }
+    },
+    "Product_card": {
+      "name": "Termékkártyák",
+      "settings": {
+        "hover-effect": {
+          "label": "A második kép megjelenítése az egérrel"
+        },
+        "badges": {
+          "info": "Adjon hozzá egyéni jelvényeket a termék címkék segítségével. [Tudjon meg többet](https://support.eightthemes.com/article/696-how-to-add-custom-badges-to-products)",
+          "label": "Jelvények",
+          "show_badges": "Jelvények megjelenítése"
+        },
+        "discount_badge_type": {
+          "label": "Akciós jelzés megjelenítése",
+          "options": {
+            "percentage": "Százalék",
+            "value": "Érték",
+            "hide": "'Eladás' szöveg"
+          }
+        },
+        "price": {
+          "sale_price_color": "Akciós ár színe",
+          "when_price_varies": {
+            "label": "Amikor az ár változik...",
+            "options": {
+              "show_from_price": "'Tól' ár megjelenítése",
+              "show_max_price": "Max ár megjelenítése"
+            }
+          }
+        },
+        "show_rating": {
+          "label": "Csillagos értékelés megjelenítése",
+          "no_rating": "Nincs értékelés",
+          "show_if_no_reviews": "Megjelenítés, ha nincs értékelés",
+          "info": "Értékelés megjelenítéséhez adjon hozzá egy termékértékelő alkalmazást. [További információ](https://support.eightthemes.com/article/687-how-to-set-up-star-ratingsreviews)"
+        },
+        "show_product_rating_as": {
+          "label": "Csillagos értékelés megjelenítése mint...",
+          "options": {
+            "count": "Darabszám (pl. \"3\" értékelés)",
+            "average": "Átlagos értékelés (pl. \"4.5\")",
+            "stars_only": "Csak csillagok"
+          }
+        },
+        "product_card_swatches": {
+          "label": "Színminták",
+          "color_swatch_info": {
+            "content": "Színtárak létrehozásához lépjen a „Témabeállítások > Színtárak” menüpontra."
+          },
+          "show_color_swatches": {
+            "label": "Színminták megjelenítése"
+          },
+          "card_color_swatch_size": {
+            "label": "Színminta mérete"
+          },
+          "show_color_label": {
+            "label": "Címkék megjelenítése"
+          }
+        },
+        "quick_shop_button": {
+          "label": "Gyors megtekintés/Kosárba tétel gomb",
+          "display_style": {
+            "label": "Megjelenítési stílus",
+            "info": "Ha 'kép felett' van beállítva, a gomb ikonként jelenik meg kisebb képernyőkön és hoverkor nagyobb képernyőkön.",
+            "options": {
+              "over_image": "A kép felett",
+              "below_image": "A kép alatt"
+            }
+          }
+        },
+        "below_image_style": {
+          "label": "\"A kép alatti\" stílus"
+        },
+        "show_app_blocks_in_quick_view": {
+          "label": "Alkalmazásblokkok megjelenítése gyorsnézetben",
+          "info": "Az alkalmazásnak a terméksablonon kívül kell működnie."
+        },
+        "hover_navigation_desktop": {
+          "label": "Csúszka navigációs stílusa (asztalon)",
+          "info": "Az „Ajánlott termékek”, a „Nemrég megtekintett” és a „Kiemelt kollekció” szakaszokban használatos.",
+          "options": {
+            "left_and_right": "Balra és jobbra lebegéskor",
+            "right": "Jobbra lebegéskor",
+            "above": "Fölötte",
+            "none": "Egyik sem"
+          }
+        }
+      }
+    },
+    "swatches": {
+      "name": "Színminták",
+      "info": "Színtárak hozhatók létre kategória metamezők vagy Variant képek használatával. [További információ](https://support.eightthemes.com/article/704-how-to-set-up-swatches-for-versions-after-6th-sept)",
+      "settings": {
+        "swatch_style": {
+          "name": "Swatch határok",
+          "options": {
+            "circle": "Kerek",
+            "square": "Négyzet"
+          }
+        },
+        "show_variant_image_for_options": {
+          "label": "Használjon változatos képeket",
+          "info": "Változatos képek színmintákhoz való használatához vesszővel elválasztott listát kell használnia az opciók nevével, amelyekhez színmintákat szeretne létrehozni (pl. „Anyag,Szín,Íz,Lánchossz”)."
+        }
+      }
+    },
+    "B2B": {
+      "name": "B2B",
+      "settings": {
+        "login_to_order": {
+          "label": "Árak elrejtése, amíg a felhasználó be nem jelentkezik",
+          "info": "Adj hozzá „B2B” vagy „nagykereskedelmi” címkét azokhoz a termékekhez, amelyek csak akkor jelenítik meg az árakat, ha a felhasználó be van jelentkezve. Ha a felhasználó kijelentkezett, az árak rejtve maradnak, és a kosárba helyezés gomb helyett egy „Bejelentkezés a megrendeléshez” gomb jelenik meg. [További információ](https://support.eightthemes.com/article/771-hide-price-and-add-to-cart-for-b2b-tagged-products-until-customer-login)"
+        }
+      }
+    },
+    "Back_to_top_button": {
+      "name": "Vissza a tetejére gomb",
+      "settings": {
+        "paragraph-0": {
+          "content": "Mobil eszközökön a 'Vissza a tetejére' gomb csak görgetéskor jelenik meg"
+        },
+        "back_to_top_homepage": {
+          "label": "Megjelenítés a kezdőoldalon"
+        },
+        "back_to_top_collection": {
+          "label": "Megjelenítés a gyűjtemény sablonokon"
+        },
+        "back_to_top_product": {
+          "label": "Megjelenítés a termék sablonokon"
+        },
+        "back_to_top_all": {
+          "label": "Megjelenítés minden sablonon"
+        }
+      }
+    },
+    "Search": {
+      "name": "Keresés",
+      "settings": {
+        "header-0": {
+          "content": "Keresési eredmények - termékek"
+        },
+        "header-1": {
+          "content": "Keresési eredmények - gyűjtemények"
+        },
+        "header-2": {
+          "content": "Üres állapot keresése"
+        },
+        "search_input_label": {
+          "label": "Keresőmező címke"
+        },
+        "predictive_search_enabled": {
+          "label": "Előrejelző keresés engedélyezése"
+        },
+        "predictive_search_show_price": {
+          "label": "Ár megjelenítése"
+        },
+        "predictive_search_collections_image_type": {
+          "label": "Kép típusa",
+          "options": {
+            "first_product": "Első termék",
+            "collection": "Gyűjtemény kép"
+          }
+        },
+        "predictive_search_empty_state": {
+          "paragraph": "Menühivatkozások és termékek megjelenítése a keresési lekérdezés megadása előtt."
+        },
+        "predictive_search_menu_heading": {
+          "label": "Menüfejléc"
+        },
+        "predictive_search_products_heading": {
+          "label": "Termékek rovat"
+        }
+      }
+    },
+    "Social_media": {
+      "name": "Közösségi média",
+      "settings": {
+        "header-0": {
+          "content": "Fiókok"
+        },
+        "sm_tiktok_link": {
+          "label": "TikTok",
+          "info": "https://www.tiktok.com/@shopify"
+        },
+        "sm_instagram_link": {
+          "label": "Instagram",
+          "info": "https://instagram.com/shopify"
+        },
+        "sm_snapchat_link": {
+          "label": "Snapchat",
+          "info": "https://www.snapchat.com/add/shopify"
+        },
+        "sm_x_link": {
+          "label": "X",
+          "info": "https://x.com/shopify"
+        },
+        "sm_facebook_link": {
+          "label": "Facebook",
+          "info": "https://www.facebook.com/shopify"
+        },
+        "sm_youtube_link": {
+          "label": "YouTube",
+          "info": "https://www.youtube.com/user/shopify"
+        },
+        "sm_vimeo_link": {
+          "label": "Vimeo",
+          "info": "https://www.vimeo.com/shopify"
+        },
+        "sm_pinterest_link": {
+          "label": "Pinterest",
+          "info": "https://www.pinterest.com/shopify"
+        },
+        "sm_linkedin_link": {
+          "label": "LinkedIn",
+          "info": "https://linkedin.com/company/shopify"
+        },
+        "sm_tumblr_link": {
+          "label": "Tumblr",
+          "info": "https://shopify.tumblr.com/"
+        },
+        "sm_flickr_link": {
+          "label": "Flickr",
+          "info": "https://www.flickr.com/photos/shopify"
+        },
+        "sm_houzz_link": {
+          "label": "Houzz",
+          "info": "https://www.houzz.com/shopify"
+        },
+        "header-13": {
+          "content": "Megosztás"
+        },
+        "social_sharing_blog": {
+          "label": "Blog bejegyzés megosztásának engedélyezése"
+        },
+        "share_facebook": {
+          "label": "Megosztás Facebookon"
+        },
+        "share_x": {
+          "label": "Megosztás X-en"
+        },
+        "share_pinterest": {
+          "label": "Pin küldése Pinteresten"
+        }
+      }
+    },
+    "Styling": {
+      "name": "Styling",
+      "settings": {
+        "grid_spacing": {
+          "label": "Rácstávolság",
+          "options": {
+            "extra_small": "Extra kicsi",
+            "small": "Kicsi",
+            "medium": "Közepes",
+            "large": "Nagy",
+            "extra_large": "Extra nagy"
+          }
+        },
+        "border_radius": {
+          "label": "Határok",
+          "options": {
+            "square": "Négyzet",
+            "subtle": "Apró",
+            "curved": "Ívelt",
+            "round": "Kerek"
+          }
+        }
+      }
+    },
+    "price": {
+      "name": "Ár",
+      "settings": {
+        "show_currency_codes": {
+          "label": "Pénznemkódok megjelenítése"
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "name": "Morzsák",
+      "settings": {
+        "enable_breadcrumbs": {
+          "label": "Morzsák engedélyezése",
+          "info": "Jelenítse meg a navigációs navigációt a fejléc alatt termékeken, blogokon és oldalakon."
+        }
+      }
+    },
+    "Popup": {
+      "name": "E-mail felugró ablak",
+      "settings": {
+        "triggers": {
+          "label": "Kiváltók"
+        },
+        "popup--enable": {
+          "label": "Felugró ablak engedélyezése"
+        },
+        "pop-up-time": {
+          "label": "Frekvencia",
+          "info": "Az elvetett előugró ablak ismételt megjelenése előtt eltelt napok száma.",
+          "options": {
+            "7": "Egy hét",
+            "14": "Két hét",
+            "21": "Három hét",
+            "28": "Négy hét"
+          }
+        },
+        "popup--show-social-icons": {
+          "label": "Közösségi média ikonok megjelenítése",
+          "info": "A megjelenítendő ikonok kiválasztásához lépjen a „Témabeállítások > Közösségi média” menüpontba."
+        },
+        "popup--show-newsletter": {
+          "label": "Hírlevél feliratkozás megjelenítése"
+        },
+        "pop-up-delay": {
+          "label": "Mutasd utána",
+          "info": "A késleltetés le van tiltva a témaszerkesztőben a láthatóság érdekében."
+        },
+        "popup--test-mode": {
+          "label": "Teszt mód engedélyezése",
+          "info": "Kényszeríti az előugró ablak megjelenítését minden frissítéskor, és csak az előugró ablak szerkesztésére használható. Ügyeljen arra, hogy ez a beállítás le legyen tiltva az üzlet megnyitásakor."
+        },
+        "desktop-popup-style": {
+          "center_screen": "Középső képernyő",
+          "bottom_right": "Jobbra lent"
+        }
+      }
+    },
+    "Verification_pop_up": {
+      "name": "Ellenőrző felugró ablak",
+      "settings": {
+        "enable_verification_popup": {
+          "label": "Ellenőrző felugró ablak engedélyezése"
+        },
+        "verification-pop-up__test-mode": {
+          "label": "Teszt mód engedélyezése",
+          "info": "Kényszeríti az ellenőrzést, hogy minden frissítéskor megjelenjen, és csak az előugró ablak szerkesztésére használható. Ügyeljen arra, hogy ez a beállítás le legyen tiltva az üzlet megnyitásakor."
+        },
+        "verification_background_opacity": {
+          "label": "Háttér átlátszatlansága"
+        },
+        "verification-popup__logo": {
+          "info": "250 x 133 képpont ajánlott."
+        },
+        "exit-button__text": {
+          "label": "Elutasítás gomb címke"
+        },
+        "confirm-button__text": {
+          "label": "Jóváhagyja a gombcímkét"
+        },
+        "header-15": {
+          "content": "Elutasítva",
+          "info": "Ez a tartalom akkor jelenik meg, ha a felhasználó nem felel meg az ellenőrzési követelményeknek."
+        },
+        "deny-button__text": {
+          "label": "Visszatérés gomb címke"
+        },
+        "background-info": {
+          "content": "Akkor jelenik meg, ha nem használ képet."
+        }
+      }
+    },
+    "Favicon": {
+      "name": "Favicon",
+      "settings": {
+        "favicon": {
+          "label": "Favicon",
+          "info": "32 x 32 képpontra lesz kicsinyítve."
+        }
+      }
+    },
+    "Animations": {
+      "name": "Animációk",
+      "info": "Az animációk engedélyezése befolyásolhatja az oldal sebességét.",
+      "settings": {
+        "animations_enabled": {
+          "label": "Animációk engedélyezése betöltéskor",
+          "info": "A kiválasztott tartalom elhalványul, a kiválasztott képek pedig kicsinyítenek a szakasz betöltésekor."
+        },
+        "page_fade_enabled": {
+          "label": "Oldal be- és kifakulásának engedélyezése",
+          "info": "Hagyja, hogy az oldalak betöltéskor be- és kifakuljanak."
+        },
+        "ken_burns_enabled": {
+          "label": "Kapcsolt képanimációk engedélyezése",
+          "info": "Ha egy kép egy oldalhoz kapcsolódik, akkor a kép nagyításra kerül."
+        }
+      }
+    }
+  },
+  "blocks": {
+    "service-column": {
+      "name": "Szolgáltatási kategória"
+    },
+    "service-item": {
+      "name": "Szolgáltatás"
+    }
+  },
+  "sections": {
+    "nutrition-ingredients": {
+      "name": "Tápanyagtartalom és összetevők",
+      "paragraph_info": "Kinyeri az összetevőket, az étrendi címkéket és az előnyöket a termék metaobjektumaiból/metamezőiből. Állítsa be ezeket, hogy kitöltsék ezt a részt. [További információ](https://help.shopify.com/en/manual/custom-data/metaobjects)",
+      "ingredients_heading_group": "Hozzávalók",
+      "dietary_heading_group": "Étrendi címkék",
+      "benefits_heading_group": "Hogyan segít",
+      "settings": {
+        "show_ingredients": {
+          "label": "Hozzávalók sorának megjelenítése"
+        },
+        "full_list_label": {
+          "label": "Teljes összetevők linkcímkéje"
+        },
+        "show_dietary": {
+          "label": "Diétás chips megjelenítése"
+        },
+        "show_benefits": {
+          "label": "Juttatások sorának megjelenítése"
+        },
+        "source_product": {
+          "label": "Forrástermék",
+          "info": "Csak akkor szükséges, ha ez a rész nem egy termékoldalon található (pl. főoldal vagy blog). Válaszd ki azt a terméket, amelynek az összetevői, előnyei és tápértékei megjelenjenek. A termékoldalon automatikusan ezt a terméket használja."
+        }
+      },
+      "no_setup_title": "Tápanyagtartalom és összetevők",
+      "no_setup_description": "Adj hozzá összetevő és előny metaobjektumokat, valamint étrendi metamezőket ehhez a termékhez a szakasz feltöltéséhez.",
+      "learn_more": "Ismerje meg a metaobjektumokat"
+    },
+    "product-hero": {
+      "name": "Termékhős",
+      "feature_icons": {
+        "heading": "Funkcióikonok"
+      },
+      "settings": {
+        "content_width": {
+          "label": "Tartalom szélessége"
+        },
+        "content_background": {
+          "label": "Tartalom háttere"
+        },
+        "content_offset_x": {
+          "label": "Vízszintes elhelyezés",
+          "info": "50 = középre igazítva (nincs eltolás). Az alsó érték balra, a felső érték jobbra mozgatja a tartalmat."
+        },
+        "content_offset_y": {
+          "label": "Függőleges elhelyezés",
+          "info": "50 = középre igazítva (nincs eltolás). Alacsonyabb érték esetén felfelé, magasabb érték esetén lefelé mozgatja a tartalmat."
+        },
+        "feature_icon_size": {
+          "label": "Ikonméret",
+          "info": "Az ikon méretét és a hozzá tartozó felirat szövegét szabályozza."
+        },
+        "feature_show_dividers": {
+          "label": "Elválasztók megjelenítése az ikonok között"
+        },
+        "feature_full_width": {
+          "label": "Teljes szélességű illesztés",
+          "info": "Kikapcsolt állapotban az ikonok körülölelik a tartalmukat, és követik a tartalom igazítását."
+        },
+        "feature_gap": {
+          "label": "Ikonok közötti térköz"
+        },
+        "animation_style": {
+          "fade_zoom": "Beúsztatás és nagyítás"
+        }
+      },
+      "blocks": {
+        "heading": {
+          "settings": {
+            "highlight_text": {
+              "label": "Szöveg kiemelése",
+              "info": "Írd be a fenti címsorból pontosan a megfelelő szót/szavakat a kiemeléshez. A többszörös szavakat vesszővel válaszd el (pl. \"100%, növény\")."
+            },
+            "highlight_effect": {
+              "label": "Kiemelési effektus",
+              "option_color": "Szín",
+              "option_circle": "Kézzel rajzolt kör",
+              "option_underline": "Kézzel rajzolt aláhúzás"
+            },
+            "heading_highlight_color": {
+              "label": "Kiemelő szín"
+            },
+            "highlight_bold": {
+              "label": "Bátor"
+            },
+            "highlight_italic": {
+              "label": "Dőlt betűs"
+            }
+          }
+        },
+        "subheading": {
+          "name": "Alcím",
+          "settings": {
+            "uppercase": {
+              "label": "Nagybetűs"
+            }
+          }
+        },
+        "button": {
+          "settings": {
+            "show_arrow": {
+              "label": "Nyíl megjelenítése"
+            },
+            "buttons_font_weight": {
+              "label": "Szöveg vastagsága",
+              "option_default": "Téma alapértelmezett",
+              "option_regular": "Szabályos",
+              "option_medium": "Közepes",
+              "option_semibold": "Félkövér",
+              "option_bold": "Bátor"
+            },
+            "buttons_font_size": {
+              "label": "Betűméret",
+              "info": "0 = alapértelmezett téma"
+            }
+          }
+        },
+        "feature_icon": {
+          "name": "Funkció ikon"
+        },
+        "pill": {
+          "name": "Címke",
+          "settings": {
+            "uppercase": {
+              "label": "Nagybetűs"
+            },
+            "bg_color": {
+              "label": "Háttér"
+            },
+            "text_color": {
+              "label": "Szöveg színe"
+            }
+          }
+        },
+        "reviews": {
+          "name": "Vélemények",
+          "settings": {
+            "show_stars": {
+              "label": "Csillagok megjelenítése"
+            },
+            "rating": {
+              "label": "Értékelés (5-ből)",
+              "info": "Kitölti a csillagokat, pl. 4.8"
+            },
+            "star_color": {
+              "label": "Csillag színe"
+            }
+          }
+        },
+        "hotspot": {
+          "name": "Termék hotspot",
+          "settings": {
+            "hotspot_horizontal_position": {
+              "label": "Vízszintes helyzet"
+            },
+            "hotspot_vertical_position": {
+              "label": "Függőleges pozíció"
+            },
+            "hotspot_color": {
+              "label": "Pont színe"
+            }
+          }
+        }
+      }
+    },
+    "animated-counter": {
+      "name": "Animált számláló",
+      "blocks": {
+        "number": {
+          "name": "Szám"
+        }
+      },
+      "settings": {
+        "number_size_desktop": "Számméret (asztali)",
+        "number_size_mobile": "Szám mérete (mobil)",
+        "animation_style": {
+          "fast_stop": "Gyors megállás",
+          "slow_stop": "Lassú megállás",
+          "sequence": "Sorrend"
+        }
+      }
+    },
+    "bundled-products": {
+      "name": "Csomagolt termékek",
+      "settings": {
+        "add_to_cart_button_label": {
+          "label": "Kosárba gomb felirata"
+        }
+      }
+    },
+    "accordion": {
+      "label": "Szöveg",
+      "name": "Harmonika/GYIK",
+      "blocks": {
+        "tab_content": {
+          "name": "Tab"
+        }
+      },
+      "presets": {
+        "name": "Harmonika/GYIK"
+      }
+    },
+    "focused-product-gallery": {
+      "name": "Fókuszált termékgaléria",
+      "settings": {
+        "product_info_header": {
+          "content": "Termékinformációk"
+        }
+      },
+      "blocks": {
+        "product": {
+          "settings": {
+            "focus_image": {
+              "label": "Kép fókuszálása",
+              "info": "Opcionális. Alapértelmezés szerint a második termékképet használja."
+            },
+            "description": {
+              "info": "Opcionális. Alapértelmezés szerint a termékleírást használja."
+            }
+          }
+        }
+      }
+    },
+    "product-slideshow": {
+      "name": "Termék diavetítés",
+      "image_info": {
+        "content": "A legjobb eredmény elérése érdekében átlátszó PNG formátumú és álló tájolású (pl. 800 x 1200 képpontos) termékképek használatát javasoljuk."
+      },
+      "settings": {
+        "product_info_header": {
+          "content": "Termékinformációk"
+        },
+        "background_text_header": {
+          "content": "Háttér szöveg"
+        },
+        "background_text_styling": {
+          "label": "Stílus",
+          "options": {
+            "none": "Egyik sem",
+            "soft_shadow": "Lágy árnyék",
+            "hard_shadow": "Kemény árnyék",
+            "outline_shadow": "Körvonal árnyék",
+            "outline": "Vázlat"
+          }
+        },
+        "background_text_font_size": {
+          "label": "Háttérszöveg betűmérete"
+        }
+      },
+      "blocks": {
+        "image_and_text": {
+          "name": "Kép és szöveg",
+          "settings": {
+            "image_info": {
+              "info": "800 x 1200 képpontos felbontás ajánlott."
+            }
+          }
+        },
+        "product": {
+          "settings": {
+            "description": {
+              "info": "Opcionális. Alapértelmezés szerint a termékleírást használja."
+            }
+          }
+        }
+      }
+    },
+    "advanced-layout--custom-html": {
+      "label": "Tartály szélessége",
+      "name": "Egyedi HTML",
+      "settings": {},
+      "blocks": {
+        "html": {
+          "settings": {
+            "width": {
+              "label": "Tartály szélessége",
+              "options": {
+                "25_percentage": "25%",
+                "33_percentage": "33%",
+                "50_percentage": "50%",
+                "66_percentage": "66%",
+                "75_percentage": "75%",
+                "100_percentage": "100%"
+              }
+            }
+          }
+        }
+      }
+    },
+    "advanced-layout--custom-liquid": {
+      "name": "Egyedi Liquid",
+      "blocks": {}
+    },
+    "advanced-layout--hero": {
+      "label": "Lebegő kép",
+      "name": "Hős",
+      "settings": {
+        "header-0": {
+          "content": "Kiemelt tartalom"
+        },
+        "header-2": {
+          "content": "Kép beállítások"
+        },
+        "header-10": {
+          "content": "Videó beállítások"
+        }
+      },
+      "blocks": {
+        "text": {
+          "settings": {
+            "featured_image": {
+              "info": "1000 x 750 képpont ajánlott."
+            },
+            "featured_image_size": {
+              "label": "Kép magassága"
+            },
+            "hero-menu-image": {
+              "label": "Lebegő kép",
+              "info": "1000 x 750 képpont ajánlott."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Hős"
+      }
+    },
+    "animated-text": {
+      "label": "Gomb háttér hover",
+      "name": "Animált szöveg",
+      "settings": {
+        "colors": {
+          "info": "Akkor jelenik meg, ha nem használ képet."
+        }
+      },
+      "blocks": {
+        "text_static": {
+          "name": "Statikus szöveg",
+          "settings": {
+            "max_width_desktop": {
+              "label": "Maximális szélesség (asztali)"
+            },
+            "max_width_mobile": {
+              "label": "Maximális szélesség (mobil)"
+            }
+          }
+        },
+        "text_dynamic": {
+          "name": "Dinamikus szöveg",
+          "settings": {
+            "text_dynamic": {
+              "info": "Több szó hozzáadásához használjon vesszővel elválasztott listát."
+            },
+            "animation_timing": {
+              "label": "Animáció időzítése"
+            },
+            "rotation_interval": {
+              "label": "Forgás időköze"
+            }
+          }
+        },
+        "button": {
+          "settings": {
+            "header-2": {
+              "content": "Gomb színek"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Animált szöveg"
+      }
+    },
+    "blog-posts": {
+      "name": "Blogbejegyzések",
+      "settings": {
+        "show_reading_time": {
+          "label": "Olvasási idő megjelenítése"
+        },
+        "show_comment_count": {
+          "label": "Hozzászólások számának megjelenítése"
+        },
+        "post_limit": {
+          "label": "Megjelenítendő bejegyzések"
+        },
+        "posts_per_row": {
+          "label": "Bejegyzések soronként"
+        }
+      },
+      "blocks": {
+        "article": {
+          "settings": {
+            "header-0": {
+              "info": "Válaszd ki a kiemelni kívánt blogbejegyzéseket."
+            },
+            "blog_post_1": {
+              "label": "Első blogbejegyzés"
+            },
+            "blog_post_2": {
+              "label": "Második blogbejegyzés"
+            },
+            "blog_post_3": {
+              "label": "Harmadik blogbejegyzés"
+            },
+            "blog_post_4": {
+              "label": "Negyedik blogbejegyzés"
+            },
+            "blog_post_5": {
+              "label": "Ötödik blogbejegyzés"
+            },
+            "blog_post_6": {
+              "label": "Hatodik blogbejegyzés"
+            },
+            "blog_post_7": {
+              "label": "Hetedik blogbejegyzés"
+            },
+            "blog_post_8": {
+              "label": "Nyolcadik blogbejegyzés"
+            }
+          }
+        },
+        "blog": {
+          "settings": {
+            "header-0": {
+              "info": "Válaszd ki a kiemelni kívánt blogot."
+            },
+            "blog": {
+              "label": "Blog"
+            }
+          }
+        }
+      }
+    },
+    "announcement-bar": {
+      "label": "Szöveg",
+      "name": "Hirdetési sáv",
+      "settings": {
+        "desktop_social_icons": {
+          "label": "Közösségi média ikonok megjelenítése"
+        }
+      },
+      "blocks": {
+        "announcement": {
+          "name": "Hirdetés"
+        }
+      },
+      "presets": {
+        "name": "Hirdetési sáv"
+      }
+    },
+    "apps": {
+      "name": "Alkalmazások",
+      "settings": {
+        "include_margins": {
+          "label": "Az abszolút margókat azonosan hagyja, mint a téma"
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Alkalmazások"
+      }
+    },
+    "before-after-slider": {
+      "name": "Csúszka előtt/után",
+      "slider_handle_button": {
+        "label": "Csúszka fogantyú gomb"
+      },
+      "settings": {
+        "button_style": {
+          "options": {
+            "simple": "Egyszerű"
+          }
+        },
+        "width": {
+          "info": "Nem vonatkozik asztali számítógépen, ha a szakasz címsora a csúszka bal vagy jobb oldalán található."
+        }
+      },
+      "blocks": {
+        "image": {
+          "settings": {
+            "image_desktop": {
+              "info": "2000 x 900 képpontos felbontás ajánlott."
+            },
+            "image_mobile": {
+              "info": "1600 x 1600 képpontos felbontás ajánlott."
+            }
+          }
+        }
+      }
+    },
+    "blog--navigation-banner": {
+      "name": "Navigációs sáv",
+      "settings": {
+        "navigation": {
+          "paragraph": "Menü megjelenítése (szerkesztve: Online áruház > Navigáció > Menük) vagy gyűjteménylista. A metamezők használatával konkrét gyűjteménylistákat jeleníthet meg a hely alapján. [További információ](https://support.eightthemes.com/article/703-how-to-use-metafields-in-the-navigation-banner-sec)"
+        },
+        "navigation_position": {
+          "label": "Navigáció igazítása",
+          "info": "Ha a Stílus beállítása „Rács”."
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Navigációs sáv"
+      }
+    },
+    "collage-builder": {
+      "label": "Szöveg",
+      "name": "Kollázs szerkesztő",
+      "settings": {
+        "width_1": {
+          "label": "Első blokk szélessége"
+        },
+        "height_1": {
+          "label": "Első blokk magassága"
+        },
+        "width_2": {
+          "label": "Második blokk szélessége"
+        },
+        "height_2": {
+          "label": "Második blokk magassága"
+        },
+        "width_3": {
+          "label": "Harmadik blokk szélessége"
+        },
+        "height_3": {
+          "label": "Harmadik blokk magassága"
+        },
+        "width_4": {
+          "label": "Negyedik blokk szélessége"
+        },
+        "height_4": {
+          "label": "Negyedik blokk magassága"
+        },
+        "width_5": {
+          "label": "Ötödik blokk szélessége"
+        },
+        "height_5": {
+          "label": "Ötödik blokk magassága"
+        },
+        "width_6": {
+          "label": "Hatodik blokk szélessége"
+        },
+        "height_6": {
+          "label": "Hatodik blokk magassága"
+        },
+        "block_alignment": {
+          "label": "Blokk igazítás",
+          "info": "Csak akkor látható, ha a sorban lévő blokkok különböző magasságúak."
+        }
+      },
+      "blocks": {
+        "background_video": {
+          "name": "Háttérvideó"
+        },
+        "video": {
+          "settings": {
+            "mobile_video_url": {
+              "label": "Ágyazza be a videót URL-ről (opcionális)"
+            },
+            "button_icon_color": {
+              "label": "Gomb ikonja"
+            },
+            "button_icon_hover_color": {
+              "label": "Gomb ikon hover"
+            }
+          }
+        },
+        "countdown_timer": {
+          "settings": {
+            "timer_complete_message": {
+              "info": "Ez az üzenet lecseréli a szöveget, amikor az időzítő eléri a nullát."
+            },
+            "timer_font_size_desktop": {
+              "label": "Időzítő betűmérete (asztali)"
+            },
+            "timer_font_size_mobile": {
+              "label": "Időzítő betűmérete (mobil)"
+            }
+          }
+        },
+        "html": {
+          "code": {
+            "label": "Kód"
+          }
+        }
+      },
+      "presets": {
+        "name": "Kollázs szerkesztő"
+      }
+    },
+    "collection-header": {
+      "name": "Kollekció fejléc",
+      "settings": {
+        "show_breadcrumbs": "Panírmorzsa megjelenítése",
+        "show_title": "Gyűjtemény címének megjelenítése",
+        "show_description": "Gyűjtemény leírásának megjelenítése",
+        "description_info": "Tipp: Hosszabb leírások esetén adja hozzá a „Gyűjtemény leírása” részt a sablon alján, hogy a keresőoptimalizálási előnyökhöz jusson anélkül, hogy ügyfeleit el kellene görgetnie.",
+        "content_position": "Tartalmi pozíció",
+        "min_height": "Minimális magasság",
+        "show_image": "Gyűjtemény képének megjelenítése",
+        "desktop_image_info": "Választható. Ez felülírja a gyűjtemény képét. 2000 x 900 képpont ajánlott.",
+        "mobile_image_info": "Választható. Ez felülírja a gyűjtemény képét. 3000 x 1000 képpont ajánlott.",
+        "parallax_info": "A parallaxis nem aktiválódik, ha a szakasz magassága „Eredeti”-re van állítva.",
+        "enable_fade": "A tartalom elhalványításának engedélyezése görgetéskor",
+        "image_only_settings": "A következő beállítások csak kép hozzáadásakor érvényesek."
+      }
+    },
+    "collection--collection-list": {
+      "label": "Átlátszó szín",
+      "name": "Gyűjteménylista",
+      "settings": {
+        "items-per-row": {
+          "label": "Soronkénti gyűjtemények (asztali számítógépen)"
+        },
+        "fill-the-area": {
+          "label": "Gyűjtemények kiterjesztése a hely kitöltéséhez"
+        }
+      },
+      "blocks": {
+        "featured_collection": {
+          "settings": {
+            "collection_img": {
+              "info": "1600 x 1600 képpont ajánlott. Választható. Felülbírálja a gyűjtemény képét."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Gyűjteménylista"
+      }
+    },
+    "collection--featured-collection": {
+      "label": "Betűtípus",
+      "name": "Kiemelt gyűjtemény",
+      "settings": {
+        "view_all_button": "Összes megtekintése gomb",
+        "view_all_button_info": "A „Gyors megtekintés/Kosárba” gombok módosításához lépjen a „Témabeállítások > Termékkártyák” menüpontra.",
+        "show_view_all": {
+          "label": "Megjelenít 'Az összes megtekintése' gombot"
+        },
+        "buttons_style": {
+          "info": "A „Gyors vásárlás” gomb módosításához lépjen a „Téma beállítások” > „Termékkártyák” > „Gyorsvásárlás gomb” menüpontra."
+        },
+        "highlight_position_info": "A „Gyorsnézet gomb alatt” beállítás akkor érvényes, ha a gyorsnézet gomb pozíciója (Témabeállítások > Termékkártyák) „Kép alatt” értékre van állítva. Ha a gomb a kép felett van, ez a pozíció úgy viselkedik, mint a „Tartalom alatt” beállítás."
+      },
+      "presets": {
+        "name": "Kiemelt gyűjtemény"
+      }
+    },
+    "countdown": {
+      "label": "Üzenet",
+      "name": "Visszaszámláló",
+      "settings": {
+        "image": {
+          "info": "Legalább 1000 x 750 képpont ajánlott. Választható."
+        },
+        "overlay_color": {
+          "label": "Fedvény (asztali)"
+        },
+        "text_color": {
+          "info": "Mobil eszközön kép használatakor nem látható."
+        },
+        "override_button_colors": {
+          "info": "Engedélyezze a gombok színbeállításainak megjelenítését (nem alkalmazható mobilon kép használata esetén)."
+        },
+        "image_only_settings": {
+          "info": "A következő beállítások csak kép hozzáadásakor érvényesek."
+        }
+      },
+      "blocks": {
+        "countdown_timer": {
+          "settings": {
+            "when_timer_reaches_zero": {
+              "label": "Amikor az időzítő eléri a nullát"
+            },
+            "hide_when_complete": {
+              "label": "Elrejtés, amikor az időzítő eléri a nullát"
+            },
+            "countdown": {
+              "label": "Visszaszámlálás"
+            }
+          }
+        },
+        "timer_complete_message": {
+          "settings": {
+            "paragraph-0": {
+              "content": "Adja hozzá ezt a blokkot, hogy üzenetet jelenítsen meg, amikor az időzítő eléri a nullát."
+            },
+            "text": {
+              "label": "Üzenet"
+            }
+          }
+        }
+      }
+    },
+    "cross-sells": {
+      "name": "Keresztértékesítés",
+      "settings": {
+        "add_all_to_cart_button": {
+          "label": "„Összes kosárba” gomb"
+        },
+        "show_product_count": {
+          "label": "Termékszám megjelenítése"
+        },
+        "products_to_show": {
+          "label": "Megjelenítendő termékek"
+        }
+      }
+    },
+    "customer-account": {
+      "name": "Fiók",
+      "settings": {},
+      "blocks": {}
+    },
+    "customer-activate-account": {
+      "name": "Fiók aktiválása",
+      "settings": {},
+      "blocks": {}
+    },
+    "customer-addresses": {
+      "name": "Címek",
+      "settings": {},
+      "blocks": {}
+    },
+    "customer-login": {
+      "name": "Bejelentkezés",
+      "settings": {
+        "enable_shop_login_button": "Engedélyezze a bejelentkezést a Shop segítségével"
+      },
+      "blocks": {}
+    },
+    "customer-order": {
+      "name": "Rendelés",
+      "settings": {},
+      "blocks": {}
+    },
+    "customer-register": {
+      "name": "Regisztráció",
+      "settings": {},
+      "blocks": {}
+    },
+    "customer-reset-password": {
+      "name": "Jelszó visszaállítás",
+      "settings": {},
+      "blocks": {}
+    },
+    "events-calendar": {
+      "label": "Szöveg",
+      "name": "Események naptára",
+      "settings": {
+        "layout": {
+          "label": "Elrendezés",
+          "options": {
+            "list": "Lista"
+          }
+        },
+        "cards_per_row": {
+          "label": "Események soronként"
+        },
+        "expand_card": {
+          "label": "Bővítse az eseménykártyákat az utolsó sor kitöltéséhez"
+        }
+      },
+      "blocks": {
+        "event": {
+          "name": "Esemény",
+          "settings": {
+            "details": {
+              "label": "Részletek"
+            },
+            "day": {
+              "label": "Dátum"
+            },
+            "month": {
+              "label": "Hónap",
+              "options": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Már",
+                "Apr": "Ápr",
+                "May": "Máj",
+                "Jun": "Jún",
+                "Jul": "Júl",
+                "Aug": "Aug",
+                "Sep": "Szept",
+                "Oct": "Okt",
+                "Nov": "Nov",
+                "Dec": "Dec"
+              }
+            },
+            "tbc": {
+              "label": "Felülírja a dátumot a 'Később megadandó' értékkel",
+              "info": "Ez a beállítás elrejti a dátum- és időbeállításokat, és a helyére egy 'Később megadandó' üzenetet jelenít meg."
+            },
+            "day_time": {
+              "label": "Dátum és idő",
+              "info": "Például. szombat, 19:30."
+            },
+            "price": {
+              "info": "Használjon számértéket az ár megjelenítéséhez az üzlet pénznemében (pl. „10”). Ha több pénznemet használ, használjon vesszővel elválasztott listát a pénznemkódokkal. (pl. \"USD:10, EUR:9, GBP:8\")"
+            },
+            "event_location": {
+              "label": "Helyszín"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Események naptára"
+      }
+    },
+    "faq-by-category": {
+      "name": "GYIK kategóriánként",
+      "blocks": {
+        "category": {
+          "name": "Kategória"
+        },
+        "question": {
+          "name": "Kérdés"
+        }
+      },
+      "settings": {
+        "categories_per_row_desktop": {
+          "label": "Kategóriák soronként (asztali verzió)"
+        },
+        "question_content_hidden": {
+          "content": "A kérdés rejtve van, ha a „Szöveg” vagy az „Oldal” üres. Dinamikusabb tartalomhoz, például táblázatokhoz és listákhoz használja az „Oldal” mezőt."
+        },
+        "open_by_default": {
+          "label": "Alapértelmezés szerint megnyitva"
+        }
+      }
+    },
+    "image-with-content": {
+      "name": "Kép tartalommal",
+      "blocks": {
+        "collection": {
+          "info": "Válasszon egy kollekciót vagy a kiválasztott termékeket.",
+          "products_info": "Felülírja a gyűjteményt és a termékeket a fenti beállítások megjelenítéséhez."
+        }
+      }
+    },
+    "interactive-menu": {
+      "name": "Kiemelt menü",
+      "settings": {
+        "menu_position": {
+          "label": "Menü pozíciója"
+        },
+        "menu_items_color": {
+          "label": "Menüpontok"
+        },
+        "color": {
+          "info": "Akkor jelenik meg, ha nem használ képet."
+        }
+      },
+      "blocks": {
+        "menu_item": {
+          "settings": {
+            "menu_item": {
+              "label": "Menüpont"
+            },
+            "hover_effects": {
+              "label": "Lebegő effektusok",
+              "info": "Ezek a beállítások akkor jelennek meg, amikor a felhasználók rámutatnak erre a menüpontra."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Kiemelt menü"
+      }
+    },
+    "footer-bottom": {
+      "name": "Alsó lábléc",
+      "settings": {
+        "show_methods_of_payment": {
+          "label": "Fizetési ikonok megjelenítése"
+        },
+        "center_content_on_desktop": {
+          "label": "Tartalom középre igazítása asztali gépen"
+        }
+      },
+      "blocks": {}
+    },
+    "footer-main": {
+      "label": "Cím",
+      "name": "Lábléc",
+      "settings": {
+        "alignment": {
+          "label": "Igazítás"
+        }
+      },
+      "blocks": {
+        "menu": {
+          "settings": {
+            "footer_linklist": {
+              "label": "Lábléc menü",
+              "info": "Ez a menü csak elsődleges és másodlagos szintű menüelemeket jeleníthet meg."
+            }
+          }
+        },
+        "newsletter": {
+          "settings": {
+            "footer_newsletter_description": {
+              "label": "Hírlevél leírása"
+            }
+          }
+        },
+        "social": {
+          "name": "Közösségi ikonok",
+          "settings": {
+            "paragraph-1": {
+              "content": "Szerkessze közösségi beállításait és fiókjait a Témabeállításokban."
+            }
+          }
+        },
+        "follow_on_shop": {
+          "name": "Követés az Áruházban",
+          "settings": {
+            "paragraph-0": {
+              "content": "Az Áruház alkalmazásban az Ön áruházához való követés gombjának megjelenítése. [További információ](https://help.shopify.com/en/manual/online-store/themes/customizing-themes/follow-on-shop)"
+            }
+          }
+        }
+      }
+    },
+    "gift-card": {
+      "name": "Ajándékkártya",
+      "settings": {
+        "gift_card_preview": "Ajándékkártya előnézet",
+        "show_gift_card_preview": {
+          "label": "Az ajándékutalvány előnézetének megjelenítése"
+        },
+        "show_qr_code": {
+          "label": "QR-kód megjelenítése",
+          "info": "Személyes használatra. Ez beolvasható annak az eszköznek az előlapi kamerájával, amelyen a Shopify POS alkalmazást használja, vagy használhat egy támogatott 2D vonalkód-leolvasót."
+        },
+        "images": {
+          "header_image": {
+            "label": "Fejléc kép"
+          },
+          "paragraph": "Ezt a képet az „Ajándékkártya nyugta” és az „Új ajándékkártya” e-mail-értesítéseken is megjelenítheti.",
+          "gift_card_image": {
+            "label": "Ajándékkártya kép",
+            "info": "900 x 600 képpont ajánlott."
+          },
+          "background_image_desktop": {
+            "label": "Háttérkép (asztali)"
+          },
+          "background_image_mobile": {
+            "label": "Háttérkép (mobil)"
+          }
+        },
+        "color": {
+          "info": "Akkor jelenik meg, ha nem használ képet."
+        }
+      }
+    },
+    "header": {
+      "label": "Mobil fiókban való megjelenítés",
+      "name": "Fejléc",
+      "settings": {
+        "sticky_header": {
+          "name": "Ragadós fejléc",
+          "label": "Ragadós fejléc engedélyezése"
+        },
+        "logo-placement": {
+          "label": "Embléma pozíciója (asztalon)",
+          "options": {
+            "above": "Felett"
+          }
+        },
+        "cart-style": {
+          "label": "Kosár ikon",
+          "options": {
+            "shopping_bag": "Táska",
+            "shopping_cart": "Kosár"
+          }
+        },
+        "enable_search": {
+          "label": "Keresés megjelenítése",
+          "info": "A keresési beállítások szerkesztése a „Témabeállítások” > „Keresés” menüpontban lehetséges."
+        },
+        "customer_account_menu": {
+          "label": "Ügyfélfiók menü",
+          "info": "A fiók komponensben megjelenő menü. Nem támogatott a korábbi ügyfélfiókokkal. [További információ](https://help.shopify.com/en/manual/customers/customer-accounts/upgrade)"
+        },
+        "overlay_header_homepage": {
+          "label": "Engedélyezés a főoldalon"
+        },
+        "overlay_header_collection": {
+          "label": "Engedélyezés a gyűjteményen"
+        },
+        "overlay_header_list_collection": {
+          "label": "Engedélyezés a gyűjteménylistán"
+        },
+        "overlay_header_contact": {
+          "label": "Engedélyezés a kapcsolat oldalon",
+          "info": "Kapcsolja ki a navigációs útvonalat, amikor engedélyezi a kapcsolatfelvételi oldalon."
+        },
+        "overlay_header_article": {
+          "label": "Engedélyezés a blogbejegyzés oldalán"
+        },
+        "logo": {
+          "label": "Logó"
+        },
+        "overlay_logo": {
+          "label": "Átlátszó logo",
+          "info": "A fedvényfejléc megjelenítéséhez adjon hozzá egy kompatibilis szakaszt első szakaszként."
+        },
+        "overlay_opacity": {
+          "label": "Fedvény háttér átlátszatlansága",
+          "info": "Állítsa be úgy, hogy a menüje olvasható legyen."
+        },
+        "main_linklist": {
+          "label": "Menü"
+        },
+        "dropdown_alignment": {
+          "label": "Legördülő menü igazítása (asztali)"
+        },
+        "show_social_media_icons": {
+          "label": "Közösségi média ikonok megjelenítése (mobilon)"
+        },
+        "logo_max_width_mobile": {
+          "info": "A méret a szabad hely függvényében módosítható."
+        },
+        "header-14": {
+          "content": "Átlátszó fejléc",
+          "info": "Ha az első szakasz kompatibilis, fedje le a fejlécet. [Tanul továbbiak](https://support.eightthemes.com/hc/en-us/articles/25730695541649/preview/eyJhbGciOiJIUzI1NiJ 9.eyJpZCI6MjU3MzA2OTU1NDE2NDksImV4cCI6MTcxNzc2NjQxNn0.MmKVeR8OEFbCgvCcjDNeHIf6poddcQR7JYu0t-TUVLo)"
+        },
+        "show_icons": {
+          "label": "Ikonok megjelenítése az asztalon",
+          "info": "A Fiók, Keresés és Kosár hivatkozásokat ikonokra váltja."
+        },
+        "header-10": {
+          "content": "Ikonok"
+        },
+        "cart_count": {
+          "label": "Mutasd a kosár mennyiségét"
+        },
+        "header-11": {
+          "content": "Fiók ikont kínál",
+          "info": "A fiók szerkesztéséhez és ajánlatok hozzáadásához nyissa meg a „Fedvény > Ajánlatok fiók” menüpontot."
+        },
+        "show_offers_drawer": {
+          "label": "Az ajánlatok fiók ikonjának megjelenítése"
+        },
+        "offers_drawer_color_override": {
+          "label": "Ikonszín alkalmazása a fejléc ikonra",
+          "info": "Ha le van tiltva, az ikon színe csak az ajánlatok fiókjában lévő ikonra lesz alkalmazva."
+        },
+        "offers_drawer_show_tooltip": {
+          "paragraph": "Az eszköztipp 5 másodpercig jelenik meg a webhely első betöltésekor, majd naponta egyszer.",
+          "label": "Elemleírás megjelenítése"
+        },
+        "offers_drawer_tooltip_test_mode": {
+          "label": "Teszt mód engedélyezése",
+          "info": "Kényszeríti az eszköztipp megjelenését minden frissítéskor, és csak az elemleírás szerkesztésére használható. Ügyeljen arra, hogy ez a beállítás le legyen tiltva az üzlet megnyitásakor."
+        },
+        "logo_padding": {
+          "label": "Logó távolság az asztali nézeten"
+        }
+      },
+      "blocks": {
+        "content": {
+          "name": "Mega menü",
+          "settings": {
+            "mega-menu": {
+              "info": "Írjon be egy meglévő menüelemet a mega menü legördülő menüjének alkalmazásához. [További információ](https://support.eightthemes.com/article/697-how-to-set-up-a-mega-menu)"
+            },
+            "header-1": {
+              "content": "Akció egy"
+            },
+            "header-10": {
+              "content": "Akció kettő"
+            }
+          }
+        }
+      }
+    },
+    "image--gallery": {
+      "label": "Átlátszó szín",
+      "name": "Galéria",
+      "settings": {
+        "full-width": {
+          "label": "Egy kép soronként mobil eszközökön"
+        },
+        "content-position": {
+          "label": "Tartalom pozíciója"
+        }
+      },
+      "presets": {
+        "name": "Galéria"
+      }
+    },
+    "gallery-slideshow": {
+      "name": "Galéria diavetítés",
+      "settings": {
+        "images_per_row": {
+          "label": "Képek soronként"
+        },
+        "peek_desktop": {
+          "label": "Nézd meg a következő képet"
+        },
+        "slider_navigation_style": {
+          "label": "Csúszka navigációs stílus"
+        },
+        "show_on_hover": {
+          "label": "Megjelenítés az egérrel",
+          "info": "Nem vonatkozik a „Kép alatti képre”."
+        },
+        "navigation_mobile": {
+          "options": {
+            "peek": "Kandikál",
+            "dots": "Pontok"
+          }
+        }
+      },
+      "blocks": {
+        "paragraph": "A következő beállítások érvényesek, ha szöveg fedi a képet"
+      }
+    },
+    "image--image-with-text-overlay": {
+      "name": "Kép szöveges átlátszó réteggel",
+      "settings": {
+        "parallax": {
+          "info": "A parallaxis nem lesz látható, ha a 'Metszet magassága' értéke 'Eredeti'."
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Kép szöveges átlátszó réteggel"
+      }
+    },
+    "image--image-with-text": {
+      "name": "Kép szöveggel",
+      "settings": {
+        "image": {
+          "info": "1000 x 750 képpont ajánlott."
+        },
+        "text_overlapping_image": {
+          "label": "Tartalom fedvény a képen (asztali)"
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Kép szöveggel"
+      }
+    },
+    "image--logo-list": {
+      "label": "Hivatkozás",
+      "name": "Kiemelt logók",
+      "settings": {
+        "colors": {
+          "info": "Az egyes 'sémák' színei az adminisztrátor 'Általános beállítások' > 'Színek' szakaszában módosíthatók.",
+          "options": {
+            "white": "Fehér"
+          }
+        }
+      },
+      "blocks": {
+        "settings": {
+          "logo": {
+            "info": "250 x 133 képpont ajánlott."
+          }
+        }
+      },
+      "presets": {
+        "name": "Kiemelt logók"
+      }
+    },
+    "image--slideshow": {
+      "label": "Gomb háttér hover",
+      "name": "Diavetítés",
+      "settings": {
+        "slide_navigation_style": {
+          "label": "Diavetítési navigációs stílus",
+          "options": {
+            "arrows": "Nyilak",
+            "bars": "Sávok",
+            "dots": "Pontok"
+          }
+        },
+        "slide_transition_delay": {
+          "label": "Minden alkalommal cserélje ki a diákat"
+        },
+        "slides": {
+          "label": "Diák"
+        },
+        "background_color": {
+          "info": "Látható diaátmenetek és betöltés közben"
+        }
+      },
+      "blocks": {
+        "image": {
+          "name": "Slide",
+          "settings": {
+            "first_button_label": {
+              "label": "Első gomb felirata",
+              "info": "A teljes diavetítés működik linkként, ha a címke üres marad."
+            },
+            "first_button_link": {
+              "label": "Első gomb hivatkozása"
+            },
+            "second_button_label": {
+              "label": "Második gomb felirata"
+            },
+            "second_button_link": {
+              "label": "Második gomb hivatkozása"
+            },
+            "image_overlay": {
+              "label": "Fedvény"
+            },
+            "image_overlay_opacity": {
+              "label": "Fedvény átlátszatlansága"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Diavetítés"
+      }
+    },
+    "featured-blog-posts": {
+      "name": "Kiemelt blogbejegyzések",
+      "settings": {
+        "image": {
+          "info": "Választható. Ez felülírja az alapértelmezett blogbejegyzés képét, amelyet a „Tartalom > Blogbejegyzések > [Válassza ki a bejegyzést] > Kép” menüpontban."
+        }
+      }
+    },
+    "newsletter--newsletter": {
+      "name": "Hírlevél",
+      "blocks": {}
+    },
+    "product--accordion-with-image": {
+      "label": "Akkordion tartalom",
+      "name": "Akkordion képpel",
+      "settings": {
+        "image--background-color": {
+          "label": "Kép háttér"
+        },
+        "image--text-color": {
+          "label": "Kép szövege"
+        }
+      },
+      "blocks": {
+        "accordion": {
+          "name": "Akkordion elem"
+        }
+      },
+      "presets": {
+        "name": "Akkordion képpel"
+      }
+    },
+    "products--featured-product": {
+      "label": "Készleten kívüli üzenet",
+      "name": "Kiemelt termék",
+      "settings": {
+        "title_font": {
+          "label": "Cím mérete"
+        },
+        "price_font": {
+          "label": "Ár mérete"
+        },
+        "show-giftwrap": {
+          "label": "Ajándékcsomagolás megjelenítése",
+          "info": "[További információ](https://support.eightthemes.com/article/689-how-to-set-up-product-gift-wrapping) az ajándékcsomagolásról."
+        },
+        "paragraph-8": {
+          "content": "Válasszon egy ajándékcsomag terméket a Téma beállítások > Termék menüpontban"
+        },
+        "show_product_description": {
+          "label": "Termékleírás megjelenítése"
+        },
+        "show_quantity_selector": {
+          "label": "Mennyiség kiválasztása megjelenítése"
+        },
+        "show_add_to_cart": {
+          "label": "Kosárba helyezés gomb megjelenítése"
+        },
+        "image-placement": {
+          "label": "Elhelyezés"
+        }
+      },
+      "presets": {
+        "name": "Kiemelt termék"
+      }
+    },
+    "scrolling-banner": {
+      "name": "Gördülő banner"
+    },
+    "section--contact-form": {
+      "label": "Beviteli szélesség",
+      "name": "Kapcsolatfelvételi űrlap",
+      "settings": {
+        "paragraph-0": {
+          "content": "A kapcsolatfelvételi űrlap minden beadványt elküld az üzlete Feladó e-mail címére. Ezt az e-mailt a Shopify adminisztrátori beállításaiban > Bolt részletei > Kapcsolatfelvételi adatok menüpontban szerkesztheti."
+        }
+      },
+      "blocks": {
+        "name_input": {
+          "name": "Név mező"
+        },
+        "email_input": {
+          "name": "E-mail mező"
+        },
+        "tel_input": {
+          "name": "Telefon mező"
+        },
+        "message_input": {
+          "name": "Szövegmező"
+        },
+        "custom_input": {
+          "name": "Egyéni mező",
+          "settings": {
+            "placeholder": {
+              "label": "Adja meg a nevet"
+            }
+          }
+        },
+        "checkbox": {
+          "name": "Jelölőnégyzet"
+        },
+        "radio_buttons": {
+          "name": "Választógombok"
+        },
+        "dropdown": {
+          "name": "Legördülő menü"
+        }
+      },
+      "presets": {
+        "name": "Kapcsolatfelvételi űrlap"
+      }
+    },
+    "shop-the-look": {
+      "name": "Vásárolja meg a megjelenést",
+      "blocks": {
+        "look": {
+          "name": "Megjelenés",
+          "settings": {
+            "image": {
+              "info": "1000 x 750 képpont ajánlott."
+            },
+            "header": {
+              "product_one": "Termék egy",
+              "product_two": "Termék kettő",
+              "product_three": "Termék három",
+              "product_four": "Termék négy"
+            },
+            "hotspot_color": {
+              "label": "Hotspot színe"
+            },
+            "hotspot_horizontal_position": {
+              "label": "Hotspot vízszintes pozíciója"
+            },
+            "hotspot_vertical_position": {
+              "label": "Hotspot függőleges pozíciója"
+            }
+          }
+        }
+      }
+    },
+    "image-with-text-slideshow": {
+      "name": "Kép szöveges diavetítéssel",
+      "settings": {
+        "navigation_button_color": {
+          "label": "Navigációs gomb színe",
+          "info": "A diagombok színeit az egyes dia beállításoknál is frissítheti.",
+          "settings": {
+            "override_navigation_button_colors": {
+              "label": "A navigációs gomb színeinek felülírása",
+              "info": "Engedélyezze a gombok színbeállításainak megjelenítését."
+            },
+            "primary_color": {
+              "label": "Elsődleges szín"
+            },
+            "secondary_color": {
+              "label": "Másodlagos szín",
+              "info": "Csak a szövegre vonatkozik, ha a gombstílus „Kitöltött”."
+            }
+          }
+        },
+        "minimum_image_height": "Minimális képmagasság",
+        "image_info": "1000 x 750 képpont ajánlott"
+      }
+    },
+    "multi-collections": {
+      "name": "Többszörös gyűjtemények",
+      "settings": {
+        "peek_next": {
+          "label": "Tekintse meg a következő terméket"
+        },
+        "products_per_row": {
+          "label": "Termékek soronként"
+        },
+        "view_all_button_header": {
+          "content": "Gyűjtemény gombok"
+        },
+        "alignment": {
+          "info": "A termékkártyák szövegének igazításához lépjen a „Témabeállítások > Termékkártyák” menüpontra."
+        },
+        "navigation_text_size": {
+          "label": "Tabulátor szövegmérete"
+        }
+      },
+      "blocks": {
+        "collection": {
+          "name": "Gyűjtemény",
+          "settings": {
+            "tab_header": {
+              "content": "Fül"
+            },
+            "heading": {
+              "info": "Hagyja üresen, ha az alapértelmezett gyűjteménynevet szeretné használni"
+            },
+            "link": {
+              "info": "Hagyja üresen a gyűjtemény URL-címére való ugráshoz"
+            }
+          }
+        }
+      }
+    },
+    "offers-drawer": {
+      "name": "Fiókot kínál",
+      "settings": {
+        "title": {
+          "default": "Mai ajánlatok"
+        },
+        "paragraph": {
+          "content": "Ha hozzá szeretné adni az ajánlatok fiókját a fejléchez, nyissa meg a „Fejléc > Ajánlatok fiók ikonja” lehetőséget."
+        },
+        "show_icon": {
+          "label": "Ikon megjelenítése"
+        },
+        "show_countdown": {
+          "label": "Visszaszámlálás megjelenítése"
+        },
+        "timer_expiry_action": {
+          "label": "Amikor az időzítő eléri a nullát",
+          "options": {
+            "hide_offer": "Ajánlat elrejtése",
+            "leave_at_zero": "Hagyja az időzítőt nullán"
+          }
+        }
+      }
+    },
+    "store-information--map": {
+      "name": "Térkép",
+      "settings": {
+        "address": {
+          "label": "Cím és óra"
+        },
+        "map_address": {
+          "label": "Térképi cím",
+          "info": "A Google Térkép megtalálja a pontos helyet."
+        },
+        "api_key": {
+          "label": "Google Maps API kulcs",
+          "info": "A térkép megjelenítéséhez [regisztrálnia kell egy Google Térkép API-kulcsot](https://developers.google.com/maps/get-started#create-project)."
+        },
+        "button_text": {
+          "label": "Térképlink címke"
+        },
+        "layout": {
+          "options": {
+            "left": "Balra",
+            "right": "Jobbra"
+          }
+        },
+        "background_image": {
+          "label": "Tartalék kép"
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Térkép"
+      }
+    },
+    "template--article": {
+      "name": "Blogbejegyzés",
+      "settings": {
+        "show_recent_posts": {
+          "label": "\"Legutóbbi cikkek\" megjelenítése"
+        },
+        "blog_show_date": {
+          "label": "Dátum megjelenítése"
+        },
+        "comments": {
+          "label": "Megjegyzések",
+          "info": "A megjegyzések engedélyezéséhez/letiltásához lépjen a \"Tartalom > Blogbejegyzések > Blogok kezelése > Válassza ki a blogot > Megjegyzések\" menüpontot."
+        },
+        "next_previous": {
+          "label": "Következő és előző blogbejegyzések",
+          "info": "Az alábbi beállítások csak asztali számítógépre vonatkoznak."
+        },
+        "related_posts": {
+          "label": "Kapcsolódó bejegyzések",
+          "info": "A kapcsolódó bejegyzések a blogbejegyzés címkéi alapján generálódnak. Egyéni blogbejegyzések megjelenítéséhez adj hozzá egy „Blogbejegyzések” részt."
+        }
+      },
+      "blocks": {}
+    },
+    "template--blog": {
+      "name": "Blog oldalak",
+      "settings": {
+        "blog_post_card": {
+          "header": "Blog képeslap"
+        },
+        "show_image": {
+          "label": "Kép megjelenítése"
+        },
+        "show_tags": {
+          "label": "Címkék megjelenítése"
+        },
+        "show_author_name": {
+          "label": "A szerző nevének megjelenítése"
+        },
+        "show_excerpt": {
+          "label": "Kivonat/részlet megjelenítése"
+        },
+        "show_read_more": {
+          "label": "További információ gomb megjelenítése"
+        },
+        "heading_font": {
+          "label": "Címsor betűtípus",
+          "options": {
+            "heading": {
+              "label": "Cím"
+            },
+            "body": {
+              "label": "Test"
+            }
+          }
+        },
+        "show_sidebar": {
+          "label": "Oldalsáv megjelenítése"
+        },
+        "show_sidebar_newsletter": {
+          "label": "Hírlevél megjelenítése"
+        },
+        "sidebar_newsletter": {
+          "header": "Oldalsáv – hírlevél"
+        },
+        "newsletter_heading": {
+          "label": "Hírlevél címe"
+        },
+        "newsletter_description": {
+          "label": "Hírlevél leírása"
+        },
+        "sidebar_popular_articles": {
+          "header": "Oldalsáv – népszerű cikkek"
+        },
+        "show_recent_posts": {
+          "label": "Népszerű cikkek megjelenítése"
+        },
+        "popular_article_1": {
+          "label": "Az első népszerű cikk"
+        },
+        "popular_article_2": {
+          "label": "Második népszerű cikk"
+        },
+        "sidebar_image": {
+          "header": "Oldalsáv - kép"
+        },
+        "sidebar_extras": {
+          "header": "Oldalsáv – extrák"
+        },
+        "blog-sidebar-description": {
+          "info": "Jelvényszerű stílusban"
+        },
+        "show_social_icons": {
+          "label": "Közösségi média ikonok megjelenítése",
+          "info": "A megjelenítendő ikonok kiválasztásához lépjen a „Témabeállítások > Közösségi média” menüpontra."
+        },
+        "posts_to_show": {
+          "label": "Megmutatandó cikkek"
+        },
+        "posts_per_row": {
+          "label": "Cikkek soronként (asztali számítógépen)"
+        }
+      },
+      "blocks": {
+        "tag_navigation": {
+          "name": "Címke navigáció",
+          "settings": {
+            "button_text_color": {
+              "info": "Csak a szövegre vonatkozik, ha a gombstílus „Töltött” vagy „Jelvények”."
+            }
+          }
+        }
+      }
+    },
+    "blog-header": {
+      "name": "Blog címe"
+    },
+    "template--collection": {
+      "label": "Betűtípus",
+      "name": "Gyűjtemény rács",
+      "settings": {
+        "pagination_options": {
+          "label": "Lapozás típusa",
+          "options": {
+            "pagination_default": "Lapozott navigáció",
+            "pagination_infinite_scrolling": "Végtelen görgetés",
+            "pagination_load_more": "További betöltése gomb"
+          }
+        },
+        "header-5": {
+          "content": "Szűrés/rendezés"
+        },
+        "enable_collection_title": {
+          "label": "Gyűjtemény címének engedélyezése"
+        },
+        "enable_collection_description": {
+          "label": "Gyűjtemény leírásának engedélyezése"
+        },
+        "show_swatch_filter_labels": {
+          "label": "Színminta-szűrőcímkék megjelenítése"
+        }
+      }
+    },
+    "template--collections-list": {
+      "label": "Betűtípus",
+      "name": "Gyűjteménylista",
+      "settings": {
+        "banner_image": {
+          "info": "Javasolt 2000 x 300 képpont."
+        },
+        "parallax": {
+          "info": "A parallaxis nem látható, ha a „Képméret” beállítása „Eredeti”."
+        },
+        "show_title": {
+          "label": "Oldalcím megjelenítése"
+        },
+        "layout": {
+          "label": "Elrendezési stílus",
+          "options": {
+            "preview": "Előnézet"
+          }
+        },
+        "items_per_row": {
+          "label": "Elemek soronként (asztali)"
+        },
+        "header-8": {
+          "content": "Válassz gyűjteményeket"
+        },
+        "paragraph-9": {
+          "content": "Alapértelmezés szerint az összes gyűjteményed szerepel a listában. A lista testreszabásához válassza a „Kiválasztva” lehetőséget, és adjon hozzá gyűjteményeket alább."
+        },
+        "show_options": {
+          "label": "Megjelenítendő gyűjtemények",
+          "options": {
+            "all": "Minden",
+            "selected": "Kiválasztott"
+          }
+        },
+        "selected_collections": {
+          "label": "Válassza ki a gyűjteményeket"
+        }
+      }
+    },
+    "template--page": {
+      "name": "oldal",
+      "settings": {
+        "show_page_title": {
+          "label": "Oldalcím megjelenítése"
+        }
+      },
+      "blocks": {
+        "text": {
+          "name": "Oldalsáv fejléce"
+        },
+        "richtext": {
+          "name": "Oldalsáv szövege"
+        },
+        "menu": {
+          "name": "Oldalsáv menü"
+        },
+        "image_picker": {
+          "name": "Oldalsáv kép",
+          "settings": {
+            "image_title": {
+              "label": "Kép címe"
+            }
+          }
+        }
+      }
+    },
+    "template--password": {
+      "name": "Jelszó oldal",
+      "settings": {
+        "logo": {
+          "info": "250 x 133 képpont ajánlott."
+        },
+        "paragraph-13": {
+          "content": "[Szerkessze jelszóoldal üzenetét a Shopify beállításaiban](http://www.shopify.com/admin/online_store/preferences)."
+        },
+        "social_media_icons": {
+          "info": "A megjelenítendő ikonok kiválasztásához lépjen a „Témabeállítások > Közösségi média” menüpontra."
+        },
+        "newsletter_enable": {
+          "label": "Hírlevél feliratkozás megjelenítése"
+        }
+      }
+    },
+    "template--product--description": {
+      "name": "Termék részletei",
+      "settings": {
+        "enable_readmore": {
+          "label": "\"További információ\" engedélyezése a leíráshoz (elavult)"
+        }
+      },
+      "blocks": {}
+    },
+    "template--product--info-columns": {
+      "label": "Gomb hivatkozás",
+      "name": "Információs oszlopok",
+      "settings": {
+        "columns_per_row": {
+          "label": "Oszlopok soronként"
+        },
+        "slider_navigation_style": {
+          "label": "Csúszka navigációs stílus"
+        },
+        "image_or_video": {
+          "label": "Kép/videó",
+          "maximum_width": "Maximális szélesség"
+        }
+      },
+      "blocks": {
+        "image_and_text": {
+          "name": "Kép és szöveg"
+        },
+        "video_and_text": {
+          "name": "Videó és szöveg",
+          "settings": {
+            "grid_video_size": {
+              "options": {
+                "tall": "Magas (9:16)",
+                "wide": "Széles (16:9)"
+              }
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Információs oszlopok"
+      }
+    },
+    "template--product--recently-viewed": {
+      "label": "Betűtípus",
+      "name": "Nemrég megtekintett",
+      "presets": {
+        "name": "Nemrég megtekintett"
+      }
+    },
+    "template--product--recommendations": {
+      "label": "Betűtípus",
+      "name": "Termékajánlatok",
+      "settings": {
+        "paragraph-0": {
+          "content": "A dinamikus ajánlások a rendelési és termékinformációkat használják az idő múlásával történő változás és fejlesztés érdekében. [További információ](https://support.eightthemes.com/article/734-product-recommendations)"
+        }
+      },
+      "presets": {
+        "name": "Termékajánlatok"
+      }
+    },
+    "template--product": {
+      "label": "Alsó margó",
+      "name": "Termék",
+      "settings": {
+        "enable_sticky": {
+          "label": "Ragadós tartalom engedélyezése (asztali)"
+        },
+        "image_size": {
+          "info": "Javasolt minimális szélesség 950 képpont. [További információ](https://support.eightthemes.com/article/678-images)"
+        },
+        "show_only_variant_media": {
+          "label": "Csak a kiválasztott változat médiatartalmainak megjelenítése",
+          "info": "Pl. amikor egy vásárló egy „Piros” változatot választ. Csak a piros változat képei jelennek meg. [További információ](https://support.eightthemes.com/article/748-how-to-show-only-the-selected-variant-s-media-on-your-product-page)"
+        },
+        "image-display": {
+          "label": "Másodlagos média kijelző",
+          "options": {
+            "grid": "Rács",
+            "thumbnails": "Miniatűrök",
+            "paginated": "Lapozva"
+          }
+        },
+        "image_display_mobile": {
+          "label": "Másodlagos média kijelző",
+          "options": {
+            "slider": "Csúszka",
+            "thumbnails_below": "Miniatűrök lent",
+            "paginated": "Lapozva"
+          }
+        },
+        "thumbnail_position": {
+          "label": "Miniatűr pozíció",
+          "options": {
+            "below": "A fő média alatt",
+            "left": "A fő médiától balra",
+            "right": "A fő média joga"
+          }
+        },
+        "header-8": {
+          "content": "Alkalmazásblokk-távolság"
+        },
+        "preorder": {
+          "preorder": "Előrendelés",
+          "info_text": "Adja hozzá az „Előrendelés” címkét bármely termékhez, hogy a Vásárlás gomb szövegét „Előrendelés”-re állítsa. [További információ](https://support.eightthemes.com/article/698-how-to-set-up-a-preorder-product)"
+        },
+        "app_margin_bottom": {
+          "info": "Szabályozza a termékűrlapon megjelenő alkalmazásblokkok alatti térközt."
+        }
+      },
+      "blocks": {
+        "out_of_stock_email_form": {
+          "name": "Elfogyott email űrlap"
+        },
+        "price": {
+          "settings": {
+            "shipping_policy": {
+              "label": "Szállítási szabályzat linkjének megjelenítése"
+            },
+            "tax_included": {
+              "label": "Az \"adót tartalmazza\" üzenet megjelenítése"
+            }
+          }
+        },
+        "vendor": {
+          "name": "Eladó"
+        },
+        "options": {
+          "name": "Változatválasztó",
+          "settings": {
+            "variant_style": {
+              "info": "Színtárak létrehozásához lépjen a „Témabeállítások > Színtárak” menüpontra.",
+              "swatch_info": "Vizuális színminták hozhatók létre kategória metamezők vagy Variant képek használatával. [További információ](https://support.eightthemes.com/article/704-how-to-set-up-swatches-for-versions-after-6th-sept)"
+            },
+            "thumbnail_changes_variant": {
+              "label": "Változat módosítása az indexkép alapján"
+            },
+            "size_guide_page": {
+              "label": "Méret útmutató oldal"
+            },
+            "size_option_name": {
+              "label": "Megjelenítés egy adott opciónál",
+              "info": "Például. Méret."
+            },
+            "size_guide": {
+              "content": "Méret útmutató",
+              "info": "Például. Méret."
+            }
+          }
+        },
+        "linked-products": {
+          "name": "Kapcsolt termékek",
+          "settings": {
+            "info": {
+              "content": "Ha Ön Plusz kereskedő, javasoljuk, hogy ehhez a funkcióhoz használja a Kombinált listák alkalmazást. [További információ](https://www.shopify.com/enterprise/blog/combined-listings)"
+            },
+            "swatches_size": {
+              "label": "Színminták mérete"
+            },
+            "paragraph-4": {
+              "content": "Javasoljuk a metamezők használatát. [További információ](https://support.eightthemes.com/article/693-how-to-set-up-linked-products)"
+            },
+            "sold_out_products_info": {
+              "content": "Az elfogyott termékek nem jelennek meg."
+            }
+          }
+        },
+        "product-description": {
+          "name": "Termékleírás"
+        },
+        "sku": {
+          "name": "SKU"
+        },
+        "separator": {
+          "name": "Szétválasztó"
+        },
+        "collapsible-tab": {
+          "settings": {
+            "open_by_default": {
+              "label": "Lap megnyitása alapértelmezés szerint"
+            },
+            "tab_heading": {
+              "label": "Lapfejléc"
+            },
+            "info": {
+              "content": "A lap el van rejtve, ha a \"Szöveg\" vagy az \"Oldal\" üres. Használja az „Oldalt” dinamikusabb tartalomhoz, például táblázatokhoz és listákhoz."
+            }
+          }
+        },
+        "giftwrap": {
+          "name": "Ajándékcsomagolás",
+          "settings": {
+            "paragraph-0": {
+              "content": "Válasszon ajándékcsomagolási terméket a Témabeállítások > Termékek menüpontban. [További információ](https://support.eightthemes.com/article/689-how-to-set-up-product-gift-wrapping)."
+            }
+          }
+        },
+        "buy_buttons": {
+          "name": "Vásárlás gombok",
+          "settings": {
+            "enable_gift_card_recipient_form": {
+              "label": "Az ajándékutalványos termékek címzett információs űrlapjának megjelenítése",
+              "info": "Az ajándékutalványos termékek opcionálisan személyes üzenettel közvetlenül is elküldhetők a címzettnek. [További információ](https://help.shopify.com/manual/online-store/themes/customizing-themes/add-gift-card-recipient-fields)"
+            }
+          }
+        },
+        "local_pickup": {
+          "name": "Helyi átvétel",
+          "settings": {
+            "paragraph-0": {
+              "content": "A megjelenítés engedélyezéséhez be kell állítani a helyeket. [További információ](https://help.shopify.com/en/manual/locations)"
+            }
+          }
+        },
+        "trust_badges": {
+          "name": "Bizalmi jelvények",
+          "settings": {
+            "trust-badge": {
+              "label": "Bizalom jelvény",
+              "info": "100 x 300 képpont ajánlott. [További információ](https://support.eightthemes.com/article/735-trust-badges)"
+            }
+          }
+        },
+        "product_meta": {
+          "name": "Termék meta",
+          "settings": {
+            "paragraph-0": {
+              "content": "Mutassa meg a termékcímkéket, a kollekció(ka)t és típusát"
+            }
+          }
+        },
+        "complementary-products": {
+          "name": "Kiegészítő termékek",
+          "settings": {
+            "paragraph-0": {
+              "content": "Kiegészítő termékek kiválasztásához adja hozzá a Search & Discovery alkalmazást. Ha a termékek elfogytak, nem jelennek meg. [További információ](https://help.shopify.com/en/manual/online-store/storefront-search/search-and-discovery-recommendations#complementary)"
+            },
+            "products_limit": {
+              "label": "Megmutatandó termékek"
+            }
+          }
+        },
+        "cross-sells": {
+          "name": "Keresztes termékek értékesítése",
+          "settings": {
+            "cross_sell_product_1": {
+              "label": "Első termék"
+            },
+            "cross_sell_product_2": {
+              "label": "Második termék"
+            },
+            "cross_sell_product_3": {
+              "label": "Harmadik termék"
+            }
+          }
+        },
+        "social_sharing": {
+          "name": "Oszd meg a közösségi oldalon",
+          "info": "Szerkessze közösségi média beállításait a „Témabeállítások > Közösségi média” részben."
+        },
+        "star_rating": {
+          "name": "Csillagok értékelése",
+          "settings": {
+            "star_size": {
+              "label": "Csillagméret"
+            },
+            "no_reviews_label": {
+              "label": "Nincs minősítő címke"
+            }
+          }
+        },
+        "product_rating": {
+          "settings": {
+            "label": "Beállítások elemre",
+            "paragraph": {
+              "content": "Használja ezt a blokkot termék tulajdonságainak értékelésére, pl. „Fűszerszint” vagy „Anyagvastagság”."
+            }
+          }
+        },
+        "custom_checkbox": {
+          "label": "Testreszabás – jelölőnégyzet",
+          "settings": {
+            "label": "Jelölőnégyzet",
+            "paragraph": {
+              "content": "Gyűjtsön testreszabási információkat a kosárba helyezett tételhez. [További információ](https://support.eightthemes.com/hc/en-us/articles/25697916845841-How-to-Add-Custom-Fields-to-Product-Pages-Text-Fields-Radio-Buttons-Uploads - Jelölőnégyzet és legördülő menük)"
+            },
+            "required": {
+              "label": "Kívánt",
+              "info": "Ha be van jelölve, a vásárlónak ki kell töltenie ezt a mezőt, mielőtt kosárba helyezheti."
+            }
+          }
+        },
+        "custom_dropdown": {
+          "label": "Testreszabás – legördülő menü",
+          "settings": {
+            "label": "Legördülő menü",
+            "paragraph": {
+              "content": "Gyűjtsön testreszabási információkat a kosárba helyezett tételhez. [További információ](https://support.eightthemes.com/hc/en-us/articles/25697916845841-How-to-Add-Custom-Fields-to-Product-Pages-Text-Fields-Radio-Buttons-Uploads - Jelölőnégyzet és legördülő menük)"
+            },
+            "required": {
+              "label": "Kívánt",
+              "info": "Ha be van jelölve, a vásárlónak ki kell töltenie ezt a mezőt, mielőtt kosárba helyezheti."
+            },
+            "options": {
+              "label": "Opciók",
+              "info": "A lehetőségeket vesszővel válassza el (pl. 1. lehetőség, 2. lehetőség, 3. lehetőség).",
+              "default": "Igen, Nem"
+            }
+          }
+        },
+        "custom_file_upload": {
+          "label": "Testreszabás – Fájlfeltöltés",
+          "settings": {
+            "label": "Fájl feltöltése",
+            "paragraph": {
+              "content": "Gyűjtsön testreszabási információkat a kosárba helyezett tételhez. [További információ](https://support.eightthemes.com/hc/en-us/articles/25697916845841-How-to-Add-Custom-Fields-to-Product-Pages-Text-Fields-Radio-Buttons-Uploads - Jelölőnégyzet és legördülő menük)"
+            },
+            "required": {
+              "label": "Kívánt",
+              "info": "Ha be van jelölve, a vásárlónak ki kell töltenie ezt a mezőt, mielőtt kosárba helyezheti."
+            }
+          }
+        },
+        "custom_radio_button": {
+          "label": "Testreszabás - Rádió",
+          "settings": {
+            "label": "Rádiógombok",
+            "paragraph": {
+              "content": "Gyűjtsön testreszabási információkat a kosárba helyezett tételhez. [További információ](https://support.eightthemes.com/hc/en-us/articles/25697916845841-How-to-Add-Custom-Fields-to-Product-Pages-Text-Fields-Radio-Buttons-Uploads - Jelölőnégyzet és legördülő menük)"
+            },
+            "required": {
+              "label": "Kívánt",
+              "info": "Ha be van jelölve, a vásárlónak ki kell töltenie ezt a mezőt, mielőtt kosárba helyezheti."
+            },
+            "options": {
+              "label": "Opciók",
+              "info": "A lehetőségeket vesszővel válassza el (pl. 1. lehetőség, 2. lehetőség, 3. lehetőség).",
+              "default": "Igen, Nem"
+            }
+          }
+        },
+        "custom_text_field": {
+          "label": "Testreszabás – Szövegmező",
+          "settings": {
+            "label": "Szövegmező",
+            "paragraph": {
+              "content": "Gyűjtsön testreszabási információkat a kosárba helyezett tételhez. [További információ](https://support.eightthemes.com/hc/en-us/articles/25697916845841-How-to-Add-Custom-Fields-to-Product-Pages-Text-Fields-Radio-Buttons-Uploads - Jelölőnégyzet és legördülő menük)"
+            },
+            "required": {
+              "label": "Kívánt",
+              "info": "Ha be van jelölve, a vásárlónak ki kell töltenie ezt a mezőt, mielőtt kosárba helyezheti."
+            },
+            "field_size": {
+              "label": "A mező mérete",
+              "options": {
+                "single_line": "Egysoros",
+                "multi_line": "Több vonal"
+              }
+            },
+            "character_limit": {
+              "label": "Karakterkorlát",
+              "info": "Választható. Például. A „200” 200-as karakterkorlátot ad."
+            }
+          }
+        },
+        "text": {
+          "name": "Szöveg",
+          "label_default": "Tartalom megosztása vagy forrásra mutató hivatkozás."
+        },
+        "product_resources": {
+          "name": "Termékforrások",
+          "info": "Ez a blokk legfeljebb öt ikonnal ellátott gombot csoportosít. Minden gomb megnyithat egy linket (belső/külső), vagy egy címsorral és szöveggel ellátott modális ablakot, esetleg egy oldalról húzott tartalmat. Ideális mérettáblázatokhoz, szállításhoz és visszaküldéshez, termékgondozáshoz, specifikációkhoz, eszközök letöltéséhez, GYIK-hez vagy kapcsolatfelvételi lehetőségekhez.",
+          "button_modal_page_info": "Akkor érvényes, ha a „Tartalomtípus” „modális”."
+        }
+      }
+    },
+    "template--search": {
+      "name": "Keresés oldal",
+      "settings": {
+        "header-0": {
+          "content": "Termékszűrő/válogatás"
+        },
+        "show_swatch_filter_labels": {
+          "label": "Színminta-szűrőcímkék megjelenítése"
+        }
+      },
+      "blocks": {}
+    },
+    "text--product-testimonials": {
+      "label": "Szerző",
+      "name": "Termékismertetők",
+      "blocks": {
+        "textarea": {
+          "settings": {
+            "image": {
+              "info": "200 x 200 képpont ajánlott."
+            },
+            "author": {
+              "label": "Szerző"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Termékismertetők"
+      }
+    },
+    "text--rich-text": {
+      "name": "Gazdag szöveg",
+      "blocks": {
+        "page": {
+          "name": "oldal"
+        }
+      },
+      "presets": {
+        "name": "Gazdag szöveg"
+      }
+    },
+    "text--testimonials": {
+      "label": "Sztárok értékelése",
+      "name": "Beszámolók",
+      "settings": {
+        "circle_images": {
+          "label": "Kör alakú képek"
+        }
+      },
+      "blocks": {
+        "text": {
+          "settings": {
+            "customer_name": {
+              "label": "Ügyfél neve"
+            },
+            "review": {
+              "label": "Tekintse át"
+            },
+            "stars": {
+              "label": "Sztárok értékelése"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Beszámolók"
+      }
+    },
+    "social_proof": {
+      "name": "Társadalmi bizonyíték",
+      "settings": {
+        "rating_image": {
+          "label": "Értékelő kép",
+          "info": "Javasoljuk a Trustpilot vagy a Google Reviews hivatalos csillagos értékelési logójának használatát.",
+          "settings": {
+            "image_max_width": {
+              "label": "Kép maximális szélessége (px)"
+            }
+          }
+        },
+        "scroller_position": {
+          "label": "Görgető pozíciója"
+        }
+      },
+      "blocks": {
+        "text_review": {
+          "name": "Véleményezés",
+          "settings": {
+            "review_text": {
+              "label": "Szöveg áttekintése"
+            },
+            "author": {
+              "label": "Szerző"
+            },
+            "verified": {
+              "label": "Ellenőrzött",
+              "verified_color": {
+                "label": "Ellenőrzött szín"
+              }
+            },
+            "date": {
+              "label": "Dátum"
+            }
+          }
+        },
+        "video_block": {
+          "name": "Videó blokk",
+          "settings": {
+            "social_media_handle": {
+              "label": "A közösségi média fogantyúja"
+            },
+            "social_media_link": {
+              "label": "Közösségi média link"
+            }
+          }
+        }
+      }
+    },
+    "text--text-adverts": {
+      "label": "Link",
+      "name": "Szöveges hirdetések",
+      "blocks": {
+        "text": {
+          "name": "Advert"
+        }
+      },
+      "presets": {
+        "name": "Szöveges hirdetések"
+      }
+    },
+    "text-adverts-with-icon": {
+      "name": "Szöveges hirdetések ikonnal",
+      "settings": {
+        "icon_size": {
+          "label": "Ikonméret"
+        },
+        "show_dividers": {
+          "label": "Elválasztók megjelenítése"
+        }
+      },
+      "blocks": {
+        "text-advert": {
+          "name": "Szöveges hirdetés"
+        }
+      }
+    },
+    "text--text-slideshow": {
+      "label": "Gomb címke",
+      "name": "Szöveges diavetítés",
+      "presets": {
+        "name": "Szöveges diavetítés"
+      }
+    },
+    "video--video-hero": {
+      "name": "Videó szöveges fedéssel",
+      "settings": {
+        "mobileHeight": {
+          "options": {
+            "fit": "A képernyő szélességéhez igazodik"
+          }
+        },
+        "textShadow": {
+          "label": "Szöveg árnyéka"
+        },
+        "subheading--text-size": {
+          "label": "Alcím mérete"
+        }
+      },
+      "blocks": {},
+      "presets": {
+        "name": "Videó szöveges fedéssel"
+      }
+    },
+    "video--video": {
+      "name": "Videó",
+      "settings": {
+        "image": {
+          "info": "Nem jelenik meg, ha az automatikus lejátszás engedélyezve van."
+        }
+      },
+      "blocks": {}
+    },
+    "visual-navigation-banner": {
+      "label": "Szöveg",
+      "name": "Vizuális navigációs banner",
+      "blocks": {
+        "navigation_link": {
+          "name": "Navigációs elem",
+          "settings": {
+            "link_image": {
+              "info": "100 x 100 képpont ajánlott."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Vizuális navigációs banner"
+      }
+    },
+    "template--cart": {
+      "name": "Kosár",
+      "info": "Az összes kosárbeállításhoz nyissa meg lent a „Témabeállítások” részt."
+    },
+    "parallax": {
+      "name": "Parallaxis",
+      "blocks": {
+        "overlay_image": {
+          "label": "Fedvénykép",
+          "info": "Javasoljuk, hogy átlátszó png-t használjon a legjobb eredmény érdekében. 1600 x 1600 képpont ajánlott.",
+          "settings": {
+            "image_horizontal_position_mobile": {
+              "label": "Vízszintes helyzet (mobil)"
+            },
+            "image_horizontal_position_desktop": {
+              "label": "Vízszintes helyzet (asztalon)"
+            }
+          }
+        }
+      }
+    },
+    "shoppable-videos": {
+      "name": "Vásárolható videók",
+      "settings": {
+        "product_preview": {
+          "header": "Termék előnézet"
+        },
+        "hover_style": {
+          "label": "Hover stílus",
+          "options": {
+            "show_text_on_hover": "Szöveg megjelenítése az egérrel",
+            "show_on_hover": "Megjelenítés az egérrel"
+          }
+        },
+        "slider_nav_style": {
+          "label": "Csúszka navigációs stílus"
+        },
+        "peek_next": {
+          "label": "Nézd meg a következő videót"
+        },
+        "videos_per_row": {
+          "label": "Videók soronként"
+        },
+        "slider_nav_style_mobile": {
+          "options": {
+            "peek": "Kandikál",
+            "dots": "Pontok"
+          }
+        }
+      }
+    },
+    "video_popup": {
+      "name": "Videó előugró ablak",
+      "settings": {
+        "widget": {
+          "label": "Widget",
+          "settings": {
+            "image": {
+              "info": "Választható. Kép megjelenítése a videó automatikus lejátszása helyett a widgetben."
+            }
+          }
+        },
+        "expanded_video": {
+          "label": "Kibővített videó"
+        },
+        "controls": {
+          "label": "Vezérlők"
+        },
+        "triggers": {
+          "label": "Kiváltók",
+          "settings": {
+            "show_on": {
+              "label": "Megjelenítés...",
+              "options": {
+                "all_pages": "Minden oldal",
+                "homepage_only": "Csak a kezdőlap"
+              }
+            },
+            "show_on_exit_intent": {
+              "label": "Megjelenítés kilépési szándéknál (asztali)",
+              "info": "A felugró ablak csak akkor jelenik meg, ha a felhasználó elmozdítja a kurzort az áruháztól."
+            },
+            "show_after": {
+              "label": "Mutasd utána",
+              "info": "A késleltetés le van tiltva a témaszerkesztőben a láthatóság érdekében. Nem vonatkozik a „Kilépési szándékra”."
+            },
+            "frequency": {
+              "label": "Frekvencia",
+              "info": "Az elvetett előugró ablak ismételt megjelenése előtt eltelt napok száma."
+            },
+            "disable_for_account_holders": {
+              "label": "Tiltsa le a számlatulajdonosok számára",
+              "info": "Nem jelenik meg azoknak az ügyfeleknek, akik fiókot hoztak létre."
+            }
+          }
+        },
+        "end_of_video": {
+          "label": "Videó vége",
+          "settings": {
+            "description": "Adjon hozzá egy gombot, amellyel ügyfeleit a legfontosabb oldalakra irányíthatja.",
+            "enable_test_mode": {
+              "label": "Teszt mód engedélyezése",
+              "info": "Kényszeríti a záróképernyő megjelenítését minden frissítéskor, és csak szerkesztésre használható. Ügyeljen arra, hogy ez a beállítás le legyen tiltva az üzlet megnyitásakor."
+            }
+          }
+        },
+        "layout": {
+          "position_desktop": {
+            "label": "Pozíció (asztali)",
+            "options": {
+              "bottom_left": "Balra lent",
+              "bottom_right": "Jobbra lent"
+            }
+          }
+        },
+        "color": {
+          "end_screen_color_scheme": {
+            "label": "Záróképernyő színséma"
+          }
+        }
+      }
+    },
+    "service_list": {
+      "name": "Szolgáltatáslista",
+      "blocks": {
+        "list_item": {
+          "name": "Szolgáltatási tétel"
+        }
+      }
+    },
+    "delivery-partners": {
+      "name": "Szállítási partnerek",
+      "blocks": {
+        "partner_logo": {
+          "name": "Partner logó"
+        }
+      },
+      "settings": {
+        "delivery_partner": "Szállítási partner",
+        "logo_max_width": "Logó maximális szélessége",
+        "apply_text_color_to_logos": "Szövegszín alkalmazása a partnerlogókra",
+        "custom_logo": "Egyedi logó"
+      }
+    },
+    "specification-table": {
+      "name": "Specifikációs táblázat",
+      "paragraph_info": "Ennek a szakasznak a használatához hozzon létre termék metamezőket „specifikációk” névtérrel. Használjon bármilyen nevet kulcsnak, ezt fogjuk használni a címkéjéhez. Támogatjuk az összes „Mérés”, „Szöveg” és „Értékelés” tartalomtípust.",
+      "keys_label": "Metamező kulcsok",
+      "keys_info": "Adja meg a specifikációs metamező kulcsokat vesszővel elválasztva (pl. magasság, szélesség, mélység).",
+      "nutrition_group": "Táplálkozási lehetőségek",
+      "settings": {
+        "enable_serving_toggle": {
+          "label": "Kiszerelésenkénti váltás engedélyezése",
+          "info": "Hozzáad egy 100 ml-enkénti / Adagonkénti kapcsolót. Minden értékhez megfelelő '<key>_serving' metamező szükséges."
+        },
+        "per_100ml_label": {
+          "label": "Alap oszlopcímke"
+        },
+        "per_serving_label": {
+          "label": "Adagonkénti oszlopcímke"
+        },
+        "show_ri": {
+          "label": "%RI oszlop megjelenítése",
+          "info": "A referencia beviteli érték %-át mutatja. Minden értékhez szükséges egy '<key>_ri' metamező."
+        },
+        "macro_keys": {
+          "label": "Makróbillentyűk (sávok megjelenítése)",
+          "info": "Vesszővel elválasztott billentyűk a kitöltősáv megjelenítéséhez (pl. fehérje, szénhidrát, zsír, cukor, rost). A %RI értéket használja."
+        }
+      }
+    },
+    "quiz": {
+      "name": "Kvíz",
+      "settings": {
+        "paragraph-0": {
+          "content": "Hozz létre egy kvízt, hogy a válaszaik alapján ajánlott termékeket mutass az ügyfeleknek."
+        },
+        "header-0": {
+          "content": "Kvízkérdések"
+        },
+        "paragraph-1": {
+          "content": "Rendeljen termékeket az egyes kvízválaszokhoz egy gyűjtemény vagy termékek kiválasztásával, vagy egy termékcímke megadásával."
+        },
+        "source_type": {
+          "label": "Termékek hozzárendelése a következő szerint:",
+          "options": {
+            "settings": "Kollekció vagy termékek kiválasztása",
+            "tags": "Termékcímke használata"
+          }
+        },
+        "options_style": {
+          "label": "Opciók stílusa",
+          "options": {
+            "text": "Szöveg",
+            "image": "Kép és szöveg"
+          }
+        },
+        "header-1": {
+          "content": "Kvíz eredményei"
+        },
+        "paragraph-2": {
+          "content": "A kvíz azokat a termékeket ajánlja, amelyek a leggyakrabban szerepelnek az ügyfél által kiválasztott válaszokban."
+        },
+        "header-2": {
+          "content": "Kvíz bevezető"
+        },
+        "image_overlay_color": {
+          "label": "Háttérkép átfedés"
+        },
+        "image_overlay_opacity": {
+          "label": "Háttérkép átfedésének átlátszósága"
+        }
+      },
+      "blocks": {
+        "question": {
+          "name": "Kérdés",
+          "settings": {
+            "paragraph-0": {
+              "content": "Tegyél fel egy kérdést, és rendelj hozzá egy gyűjteményt, terméket vagy termékcímkét minden lehetőséghez, hogy irányítsd a kvízajánlásokat."
+            },
+            "paragraph-1": {
+              "content": "Tegyél fel egy kérdést, és rendelj hozzá egy termékcímkét minden lehetőséghez, hogy irányítsd a kvízajánlásokat."
+            },
+            "header-0": {
+              "content": "Kérdés"
+            },
+            "header-1": {
+              "content": "Első lehetőség"
+            },
+            "option_image": {
+              "label": "Opció képe"
+            },
+            "option": {
+              "label": "Opciócímke"
+            },
+            "selection_type": {
+              "label": "Kijelölés típusa"
+            },
+            "tag": {
+              "label": "Címke"
+            },
+            "header-2": {
+              "content": "Második lehetőség"
+            },
+            "header-3": {
+              "content": "Harmadik lehetőség"
+            },
+            "header-4": {
+              "content": "Negyedik lehetőség"
+            }
+          }
+        }
+      }
+    },
+    "layered_showcase": {
+      "name": "Réteges kirakat",
+      "blocks": {
+        "background": {
+          "heading": "Háttér",
+          "color_label": "Háttérszín",
+          "image_label": "Háttérkép",
+          "overlay_label": "Képátfedés"
+        },
+        "content_colors": {
+          "heading": "Tartalom színei",
+          "heading_label": "Címsor színe",
+          "info": "Felülírja a jelenet szakaszszövegének színét. Hagyja üresen az alapértelmezett érték megtartásához."
+        }
+      }
+    },
+    "spotlight-image-with-text": {
+      "name": "Kiemelt kép szöveggel",
+      "spotlight_image": "Kiemelt kép",
+      "settings": {
+        "image_background_header": {
+          "content": "Kép háttere"
+        },
+        "image_frame": {
+          "label": "Képkeret (asztali)"
+        },
+        "image_frame_mobile": {
+          "label": "Képkeret (mobil)"
+        },
+        "apply_max_width": {
+          "label": "Maximális szélesség alkalmazása"
+        },
+        "max_width": {
+          "label": "Maximális szélesség"
+        },
+        "background_image_opacity": {
+          "label": "Kép átlátszósága"
+        },
+        "enable_fade": {
+          "label": "Elhalványulási effektus megjelenítése"
+        }
+      }
+    },
+    "color_swatch_grid": {
+      "name": "Színminta rács",
+      "settings": {
+        "info": "Használjon vizuális szűrőket a rendelkezésre álló termékszínek megjelenítéséhez ebben a rácsban. Állítson be vizuális szűrőket a Keresés és felderítés alkalmazásban, hogy az ügyfelek böngészhessenek és választhassanak az itt látható színminták közül. [További információ](https://support.eightthemes.com/article/770-how-to-set-up-the-colour-swatch-grid)",
+        "show_color_code": "Színkód megjelenítése",
+        "exclude_visual_filters": "Vizuális szűrők kizárása",
+        "exclude_visual_filters_info": "Írd be azoknak a vizuális szűrőknek a nevét, amelyeket el szeretnél rejteni a színminta rácsból, vesszővel elválasztva (pl. „Anyag, Alakzat”)."
+      }
+    },
+    "collection_grid_banner": {
+      "name": "Gyűjteményrács banner",
+      "info_first": "Ennek a szakasznak a használatához hozzon létre egy gyűjtemény metamező definíciót „Kategóriaszűrő” néven. Ez automatikusan hozzárendeli a custom.category_filter kulcsot. Győződjön meg arról, hogy a tartalomtípus „Egysoros szöveg” értékre van állítva, és válassza az „Egy érték” lehetőséget.",
+      "info_second": "Miután beállítottad a metamezőt, navigálj a gyűjteményedhez, és add meg egy vizuális szűrő nevét értékként. Ez a szűrő ezután megjelenik egy csúszkában a gyűjtemény oldalán, így az ügyfelek könnyen böngészhetnek kategóriák szerint. [További információ](https://support.eightthemes.com/article/773-how-to-set-up-a-collection-grid-banner)",
+      "category_filters": "Kategóriaszűrők"
+    }
+  },
+  "all": {
+    "1": "1",
+    "2": "2",
+    "Color_scheme": "Színválasztás",
+    "color_scheme_width_info": "Csak akkor látható, ha a „szélesség” kisebb, mint 100%.",
+    "Caption_color": "Felirat színe",
+    "Caption_color_scheme": "Felirat színválasztás",
+    "General": "Általános",
+    "Default": "Alapértelmezett",
+    "First": "Első",
+    "Second": "Második",
+    "Third": "Harmadik",
+    "Heading": "Cím",
+    "Images": "Képek",
+    "Plus_minus": "Plusz/Mínusz",
+    "Caret": "Nyíl",
+    "Text": "Szöveg",
+    "Custom_HTML": "Egyéni HTML",
+    "HTML": "HTML",
+    "Liquid": "Folyékony",
+    "Custom_Liquid": "Egyedi folyadék",
+    "Content": "Tartalom",
+    "Video": "Videó",
+    "Image": "Kép",
+    "Shape": "Alak",
+    "Image_shape": "Image shape",
+    "Shape_options": {
+      "original": "Eredeti",
+      "square": "Négyzet",
+      "curved_square": "Ívelt négyzet",
+      "tall": "Magas",
+      "wide": "Széles",
+      "circle": "Kör",
+      "organic": "Szerves",
+      "adapt_to_first_image": "Alkalmazkodjon az első képhez"
+    },
+    "Image_width": "Kép szélessége",
+    "Image_height": "Kép magassága",
+    "Overlay_opacity": "Fedvény átlátszatlansága",
+    "Overlay_opacity_deprecated": "Fedvény átlátszatlansága (elavult).",
+    "percentage": "%",
+    "Description": "Leírás",
+    "Overlay_text_color": "Átlátszóság szöveg színe",
+    "Button_label": "Gomb felirat",
+    "Link": "Hivatkozás",
+    "Links": "Linkek",
+    "Video_URL": "URL",
+    "Autoplay": "Automatikus lejátszás",
+    "Autoplay_info": "A videók el vannak némítva az automatikus lejátszás engedélyezéséhez.",
+    "Videos_are_muted": "A videók automatikusan elnémulnak, ha „Automatikus lejátszás”-ra van állítva.",
+    "Videos_are_muted_in_the_editor": "A hang nem játszik le a szerkesztőben. Lépjen a „••• > Előnézet” menüpontra a videó előnézetének megtekintéséhez hanggal a mentés után.",
+    "Video_will_be_muted_and_some_devices_may_prevent_autoplay_": "A videó némítva lesz, és néhány eszközön az automatikus lejátszás megakadályozható.",
+    "Loop": "Videó hurkolásának engedélyezése",
+    "Mute": "Némítás",
+    "Show_video_controls": "Videóvezérlők megjelenítése",
+    "Menu_item": "Menüelem",
+    "Subheading": "Alcím",
+    "Featured_image": "Kiemelt kép",
+    "Small": "Kicsi",
+    "Medium": "Közepes",
+    "Large": "Nagy",
+    "Extra_Large": "Extra nagy",
+    "Desktop": "Asztal",
+    "Image_optional": "Kép (opcionális)",
+    "2000_x_900px_recommended": "2000 x 900 képpont ajánlott.",
+    "Optional_2000_x_900px_recommended": "Választható. 2000 x 900 képpont ajánlott.",
+    "Section_height": "Szakasz magasság",
+    "Section_height_desktop": "Metszet magassága (asztalon)",
+    "Section_height_mobile": "Szakasz magasság (mobil)",
+    "Fullscreen": "Teljes képernyős",
+    "Original": "Eredeti",
+    "Text_size": "Betűméret",
+    "px": "px",
+    "Text_position": "Szöveg pozíció",
+    "Top_left": "Bal felső",
+    "Top_center": "Felső közép",
+    "Top_right": "Jobb felső",
+    "Center_left": "Középen balra",
+    "Center": "Közép",
+    "Center_right": "Középen jobbra",
+    "Bottom_left": "Bal alsó",
+    "Bottom_center": "Alsó közép",
+    "Bottom_right": "Jobb alsó",
+    "Mobile": "Mobil",
+    "Text_color": "Szöveg szín",
+    "If_a_color_is_selected_it_will_override_the_color_scheme": "Választható. Ha kiválaszt egy színt, az felülírja a színsémát.",
+    "If_a_color_is_selected_it_will_override_the_section_colors": "Választható. Ha kiválaszt egy színt, az felülírja a szakasz színeit.",
+    "ms": "ms",
+    "Button": "Gomb",
+    "Primary": "Elsődleges",
+    "Secondary": "Másodlagos",
+    "Primary_color": "Elsődleges szín",
+    "Secondary_color": "Másodlagos szín",
+    "Secondary_button_color_info": "Csak a szövegre vonatkozik, ha a Gombstílus „Kitöltött”.",
+    "open_link_in_new_tab": "Nyissa meg a hivatkozást egy új lapon",
+    "Button_color": "Gomb színe",
+    "Button_color_info": "Választható. Ha kiválasztja a gombszíneket, felülírja a „Témabeállítások > Színek > Gombok” részben beállított színeket.",
+    "Button_color_override": "Gombszínek felülírása",
+    "Button_color_override_info": "Engedélyezze a gombok színbeállításainak megjelenítését.",
+    "Button_link": "Gomb hivatkozás",
+    "Button_text": "Gomb szöveg",
+    "Button_background": "Gomb háttér",
+    "Button_text_hover": "Gomb szöveg (hover)",
+    "Button_background_hover": "Gomb háttér (hover)",
+    "Close_icon_color": "Bezárás ikon színe",
+    "Close_icon_color_override": "Bezárás ikon színének felülbírálása",
+    "Close_icon_color_override_info": "Engedélyezze az ikon színének megjelenítését.",
+    "To_choose_which_icons_to_display_go_to_Theme_settings__Social_media_": "A megjelenítendő ikonok kiválasztásához lépjen a „Témabeállítások > Közösségi média” menüpontra.",
+    "Color": "Szín",
+    "Background": "Háttér",
+    "Caption_background": "Felirat háttér",
+    "Optional": "Választható",
+    "Options": "Opciók",
+    "Show_dates": "Dátumok megjelenítése",
+    "Selected_blog_posts": "Kiválasztott blog bejegyzések",
+    "Selected_blog": "Kiválasztott blog",
+    "Navigation": "Navigáció",
+    "Background_color": "Háttérszín",
+    "Left": "Bal",
+    "Above": "Felett",
+    "Remove_spacing": "Térköz eltávolítása",
+    "Full_width": "Teljes szélesség",
+    "Content_width": "Tartalom szélesség",
+    "1_2_width": "1/2 szélesség",
+    "1_3_width": "1/3 szélesség",
+    "2_3_width": "2/3 szélesség",
+    "1_4_width": "1/4 szélesség",
+    "3_4_width": "3/4 szélesség",
+    "Extra_small": "Extra kicsi",
+    "Extra_large": "Extra nagy",
+    "Top": "Felső",
+    "Bottom": "Alsó",
+    "Headings": "Címsorok",
+    "Heading_size": "Cím méret",
+    "Heading_font_size": "Címsor betűmérete",
+    "Heading_font_size_desktop": "Címsor betűmérete (asztali)",
+    "Heading_font_size_mobile": "Címsor betűmérete (mobil)",
+    "Heading_font_override": "Címsor betűméretének felülbírálása",
+    "Content_position": "Tartalmi pozíció",
+    "Desktop_content_position": "Tartalom pozíciója (asztali)",
+    "Right": "Jobb",
+    "Mobile_content_position": "Tartalom pozíciója (mobil)",
+    "Colors": "Színek",
+    "Overlay": "Fedvény",
+    "A_Shopify_hosted_video": "Egy Shopify által hostolt videó",
+    "Embed_video_from_URL": "Videó beágyazása URL-ről",
+    "Accepts_YouTube_and_Vimeo__Video_will_be_muted_and_some_devices_may_prevent_autoplay__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2": "Elfogadja a YouTube és Vimeo videókat. A videó némítva lesz, és néhány eszközön az automatikus lejátszás megakadályozható. [További információ](https://support.eightthemes.com/article/718-should-i-enable-video-autoplay)",
+    "Mobile_video": "Mobil videó",
+    "A_Shopify_hosted_video_optional": "Egy Shopify által hostolt videó (opcionális)",
+    "Accepts_YouTube_and_Vimeo__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2": "Elfogadja a YouTube és Vimeo videókat. [További információ](https://support.eightthemes.com/article/681-how-to-add-videos)",
+    "Text_alignment": "Szöveg igazítás",
+    "Alignment": "Igazítás",
+    "Alignment_desktop": "Igazítás (asztali)",
+    "Alignment_mobile": "Igazítás (mobil)",
+    "Heading_alignment": "Címsor igazítása",
+    "Content_alignment": "Tartalom igazítása",
+    "Countdown_timer": "Visszaszámláló időzítő",
+    "Countdown_end_date": "Visszaszámláló végdátum",
+    "Use_the_format_mm_dd_yyyy_eg__01_31_2024": "Használja a hh-nn-ééé formátumot, pl. 2024-01-31.",
+    "Countdown_end_time": "Visszaszámláló végidő",
+    "Use_the_format_hh_mm_ss_eg__23_59_59__Use_the_timezone_specified_in_your_Shopify_admin": "Használja az óó:pp:ss formátumot, pl. 23:59:59. Használja a Shopify adminisztrátorban megadott időzónát.",
+    "Show_timer_labels": "Időzítő címkék megjelenítése",
+    "Out_of_time_message": "Lejárt üzenet",
+    "Width": "Szélesség",
+    "Width_desktop": "Szélesség (asztali)",
+    "On_hover": "Egérmutatóval való megjelenítéskor",
+    "Below_image": "Kép alatt",
+    "Collection": "Gyűjtemény",
+    "Collection_list": "Gyűjteménylista",
+    "Image_Optional": "Kép (Opcionális)",
+    "Enable_overlay_gradient": "Átlátszóság gradiens engedélyezése",
+    "Overlay_color": "Átlátszóság színe",
+    "Rows_per_load_desktop": "Sorok terhelésenként (asztali) ",
+    "Products_per_row_on_desktop": "Termékek soronként (asztali)",
+    "Products_per_row_on_mobile": "Termékek soronként (mobil)",
+    "Results_per_row_on_desktop": "Eredmények soronként (asztali)",
+    "Results_per_row_on_mobile": "Soronkénti találatok (mobilon)",
+    "Columns_per_row_desktop": "Oszlopok soronként (asztali)",
+    "Columns_per_row_mobile": "Oszlopok soronként (mobil)",
+    "Enable": "Engedélyezés",
+    "Product_image": "Termék kép",
+    "Product_form_blocks": "Termékűrlap blokkok",
+    "Labels_font_override": "Címke betűméretének felülbírálása",
+    "Title": "Cím",
+    "Font": "Betűtípus",
+    "Body": "Szöveg",
+    "Price": "Ár",
+    "text_position_on_desktop": "Szöveg pozíció asztali nézetben",
+    "Centered": "Középen",
+    "Grid": "Rács",
+    "Image_size": "Kép méret",
+    "Natural": "Természetes",
+    "Square_1_1": "Négyzet (1:1)",
+    "Tall_2_3": "Magas (2:3)",
+    "Wide_4_3": "Széles (4:3)",
+    "Minimum_section_height": "Minimális szakaszmagasság",
+    "1400_x_1400px_recommended": "1400 x 1400 képpont ajánlott.",
+    "Menu": "Menü",
+    "Footer_text": "Lábléc szöveg",
+    "Country_region_selector": "Ország/terület választó",
+    "To_add_a_country_region_go_to_your_market_settings__admin_settings_markets": "Ország/terület hozzáadásához látogasson el a [piaci beállításokhoz](/admin/settings/markets).",
+    "Enable_country_region_selector": "Ország/régió választó megjelenítése",
+    "Language_selector": "Nyelv választó",
+    "To_add_a_language_go_to_your_language_settings__admin_settings_languages": "Nyelv hozzáadásához látogasson el a [nyelvi beállításokhoz](/admin/settings/languages).",
+    "Enable_language_selector": "Nyelvválasztó megjelenítése",
+    "Newsletter": "Hírlevél",
+    "Header": "Fejléc",
+    "Preferred_width": "Kívánt szélesség",
+    "Logo": "Logó",
+    "Logo_width": "Logó szélessége",
+    "Logo_width_on_desktop": "Szélesség (asztali)",
+    "Logo_width_on_mobile": "Szélesség (mobil)",
+    "Mobile_navigation": "Mobil navigáció",
+    "Show_social_media_icons": "Közösségi média ikonok megjelenítése",
+    "Quantity": "Mennyiség",
+    "None": "Nincs",
+    "Aspect_ratio": "Képarány",
+    "Image_aspect_ratio": "Kép arány",
+    "Overlay_text_on_image": "Szöveg átfedése a képen",
+    "Show_in_mobile_drawer": "Megjelenítés mobil fiókban",
+    "Hide": "Elrejtés",
+    "Media_position": "A média pozíciója",
+    "Background_image": "Háttérkép",
+    "Enable_parallax_effect": "Parallaxis hatás engedélyezése",
+    "Full_screen": "Teljes képernyő",
+    "sec": "mp",
+    "Body_text": "Szöveg",
+    "Body_text_size": "Szöveg mérete",
+    "Font_size": "Betűméret",
+    "Image_link": "Kép hivatkozás",
+    "Product": "Termék",
+    "Variant_style": "Variáns stílus",
+    "Dropdowns": "Legördülő menük",
+    "Pills": "Tabletták",
+    "Hide_out_of_stock_variants": "Készleten kívüli variánsok elrejtése",
+    "Show_vendor": "Szállító megjelenítése",
+    "Show_dynamic_checkout_button": "Dinamikus pénztár gomb megjelenítése",
+    "Lets_customers_check_out_directly_using_a_familiar_payment_method__Learn_morehttps___help_shopify_com_manual_using_themes_change_the_layout_dynamic_checkout": "Lehetővé teszi a vásárlók számára, hogy közvetlenül fizessenek egy ismerős fizetési móddal. [További információ](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+    "Media": "Média",
+    "Learn_more_about_media_typeshttps___help_shopify_com_en_manual_products_product_media": "További információ a [médiatípusokról](https://help.shopify.com/en/manual/products/product-media).",
+    "Enable_video_looping": "Videó ismétlődés engedélyezése",
+    "Product_rating": "Termék értékelés",
+    "Label": "Címke",
+    "Number": "Szám",
+    "Rating": "Értékelés",
+    "To_display_a_rating_add_a_product_rating_metafield_admin_metafields_product": "Az értékelés megjelenítéséhez adjon hozzá egy [termékértékelési metamezőt](/admin/metafields/product). Például. '10'",
+    "Full_icon": "Teljes ikon",
+    "Empty_icon": "Üres ikon",
+    "Maximum": "Maximum",
+    "Select_a_maximum_equal_to_the_rating_metafields_scale_maximum_admin_metafields_product": "Válasszon egy maximumot, amely megegyezik az értékelési metamező [skálás maximumával](/admin/metafields/product).",
+    "Link_hover_border_color": "Link felugró keret színe",
+    "Override_text_and_icon_size": "Szöveg- és ikonméret felülbírálása",
+    "Text_and_icon_size": "Szöveg- és ikonméret",
+    "Text_with_icon": "Szöveg ikonnal",
+    "Text_with_icon_group": "Szöveg ikoncsoporttal",
+    "First_text_with_icon": "Első szöveg ikonnal",
+    "Second_text_with_icon": "Második szöveg ikonnal",
+    "Third_text_with_icon": "Harmadik szöveg ikonnal",
+    "Icon": "Ikon",
+    "Icon_color": "Ikon színe",
+    "Home_with_smile": "Otthon mosolygal",
+    "Store": "Áruház",
+    "Flag": "Zászló",
+    "Customer_service": "Ügyfélszolgálat",
+    "Chat_bubble": "Csevegő buborék",
+    "Chat_bubble_with_smile": "Csevegő buborék mosollyal",
+    "Question_and_answer": "Kérdés és válasz",
+    "Wallet": "Pénztárca",
+    "Price_tag": "Ár címke",
+    "Crown": "Korona",
+    "Exchange": "Csere",
+    "Arrow_circle": "Nyíl kör",
+    "Book": "Könyv",
+    "Chat": "Csevegés",
+    "Check_circle": "Ellenőrizze a kört",
+    "Cross": "Kereszt",
+    "Delivery": "Szállítás",
+    "Eco": "Eco",
+    "Email": "Email",
+    "Fire": "Tűz",
+    "Gift": "Ajándék",
+    "Globe": "Földgolyó",
+    "Clock": "Óra",
+    "Truck": "Teherautó",
+    "Measuring_tape": "Mért szalag",
+    "Info": "Információ",
+    "Heart": "Szív",
+    "Help_circle": "Segítő kör",
+    "Map_pin": "Térkép tűje",
+    "Car": "Autó",
+    "Phone": "Telefon",
+    "Plus_circle": "Plusz kör",
+    "Quote": "Idézet",
+    "Smiley": "Smiley",
+    "Sparks": "Sparks",
+    "Takeaway": "Elviteles",
+    "Restaurant": "Étterem",
+    "Cup": "Pohár",
+    "Trophy": "Trófea",
+    "Warning_circle": "Figyelmeztető kör",
+    "Star": "Csillag",
+    "Sun": "Nap",
+    "Moon": "Hold",
+    "Cake": "Sütemény",
+    "Handbag": "Kézitáska",
+    "Umbrella": "Ezüst ernyő",
+    "Recycle": "Újrahasznosítás",
+    "Highlights": "Főbb jellemzők",
+    "Show_highlights": "Kiemelt elemek megjelenítése",
+    "Highlight_position_below_image": "A kép alatt",
+    "Highlight_position_below_price": "Ár alatt",
+    "Highlight_position_below_content": "Színminták/vélemények alatt",
+    "Highlight_position_below_quick_view": "A gyorsnézet gomb alatt",
+    "Highlight_info": "Jelenítse meg a legfontosabb értékesítési pontokat a termékkártyákon metamezők segítségével. [További információ](https://support.eightthemes.com/article/769-how-to-set-up-the-product-highlight-feature)",
+    "Highlight_reference": "Metamező-hivatkozás",
+    "Highlight_show_border": "Szegély megjelenítése",
+    "Highlight_button_borders": "Gombszegély stílusának alkalmazása",
+    "Highlight_button_borders_info": "A „Témabeállítások” > „Stílus” menüpontban konfigurált gombszegély-stílus beállítást alkalmazza a kiemelések szegélyére.",
+    "Stock_level_indicator": "Készlet szint jelző",
+    "Product_inventory_must_be_tracked_to_use_this_functionality_": "A termék készlet követésének engedélyezése szükséges ehhez a funkciónalitáshoz.",
+    "Style": "Stílus",
+    "Out_of_stock_products_show_Classic_count": "Az elfogyott termékeken a „Classic count” felirat látható.",
+    "Classic_count": "Classic count",
+    "Bar_count": "Sorok száma",
+    "Bar_indicator_color": "Sorok száma jelző színe",
+    "Standard": "Alapértelmezett",
+    "Enable_animation": "Animáció engedélyezése",
+    "Low_stock_threshold": "Alacsony tőzsdei küszöb",
+    "Show_stock_level_count": "Készlet szint számláló megjelenítése",
+    "Stock_level_count_info": "Például. 20 maradt.",
+    "Show_stock_level_indicator": "Készletszint jelző megjelenítése",
+    "Always": "Mindig",
+    "When_stock_level_is_lower_than_low_stock_threshold": "Amikor a készlet az alacsony készletküszöb alatt van",
+    "In_stock_message": "Raktáron üzenet",
+    "Low_stock_message": "Kis készlet üzenet",
+    "Out_of_stock_message": "Nincs készlet üzenet",
+    "preorder_message": "Előrendelési üzenet",
+    "Narrow": "Szűk",
+    "Required": "Kötelező",
+    "Input_width": "Bemenet szélessége",
+    "Partial": "Részleges",
+    "Full": "Teljes",
+    "Show_tags": "Címkék megjelenítése",
+    "Sidebar": "Oldalsáv",
+    "The_title_of_the_collection_": "A gyűjtemény címe.",
+    "Desktop_position": "Asztali pozíció",
+    "Position_desktop": "Pozíció (asztali)",
+    "Top_bar": "Felső sáv",
+    "Enable_filtering": "Szűrés engedélyezése",
+    "Customize_filters_admin_menus": "A szűrők testreszabásához nyissa meg a Keresés és felfedezés alkalmazást.",
+    "Enable_sorting": "Rendezés engedélyezése",
+    "Required_to_show_the_button": "A gomb megjelenítéséhez szükséges.",
+    "Shopify_hosted_video": "Shopify által tárolt videó",
+    "Or_embed_video_from_URL": "Vagy ágyazza be a videót az URL cím alapján",
+    "Embedded_video_info": "Akkor jelenik meg, ha nincs Shopify által tárolt videó kiválasztva.",
+    "Size": "Méret",
+    "Base_size": "Alap betűméret (asztali)",
+    "Base_size_mobile": "Alap betűméret (mobil)",
+    "Base_size_headings": "Alap betűméret (címsorok)",
+    "Size_desktop": "Méret (asztali)",
+    "Bottom_margin": "Alsó margó",
+    "Grid_image_size": "Rács kép mérete",
+    "Product_card_settings_reference": "A termékkártya beállításainak módosításához lépjen a „Témabeállítások > Termékkártyák” menüpontra.",
+    "Products": "Termékek",
+    "Collections": "Gyűjtemények",
+    "Enable_collapsible_tab": "Összecsukható lap engedélyezése",
+    "Collapsible_tab": "Összecsukható lap",
+    "Collapsible_tabs": "Összecsukható fülek",
+    "Collapsible_tab_info": "Csak akkor látható, ha a tartalom elérhető.",
+    "Custom_icon": "Egyéni ikon",
+    "Aspect_ratio_of_1_1_recommended": "1:1 oldalarány ajánlott.",
+    "Open_Close_icon_style": "Megnyitás/Zárás ikon stílusa",
+    "Page": "oldal",
+    "Image_style": "Kép stílus",
+    "Circle": "Kör",
+    "Square": "Négyzet",
+    "Tall": "Magas",
+    "Wide": "Széles",
+    "Testimonial": "Ajánlás",
+    "Text_hover": "Szöveg hover",
+    "Borders": "Keretek",
+    "Buttons": "Gombok",
+    "Letter_spacing": "Betűköz",
+    "Normal_case": "Normál eset",
+    "Lowercase": "Kisbetűs",
+    "Uppercase": "Nagybetűs",
+    "Case": "Ügy",
+    "Verification_question": "Ellenőrző kérdés",
+    "Spacing_top": "Felső térköz",
+    "Spacing_bottom": "Alsó térköz",
+    "Settings": "Beállítások",
+    "Video_settings": "Videó beállítások",
+    "Vendor": "Szállító",
+    "Show_title": "Cím megjelenítése",
+    "Maximum_lines": "Maximális sorok",
+    "Maximum_lines_info": "Állítsa 0-ra, hogy soha ne rövidítse.",
+    "Show_price": "Ár megjelenítése",
+    "Show_description": "Leírás megjelenítése",
+    "Enable_desktop": "Engedélyezés (asztali)",
+    "Enable_mobile": "Engedélyezés (mobil)",
+    "Products_to_show": "Megjelenítendő termékek",
+    "Product_per_row_desktop": "Termék soronként (asztali)",
+    "Product_per_row_mobile": "Termék soronként (mobil)",
+    "Layout": "Elrendezés",
+    "Slider": "Csúszka",
+    "Slider_height": "Csúszka magassága",
+    "Slider_height_info": "Az „Automatikus” beállítás diánként méretez. A „Fix” beállítás végig állandó magasságot tart.",
+    "Slider_height_options": {
+      "auto": "Automatikus",
+      "fixed": "Rögzített"
+    },
+    "Filled": "Kitöltött",
+    "Outlined": "Körvonalazott",
+    "Position": "Pozíció",
+    "animation": "Animáció",
+    "show_fade": "Halványítás megjelenítése",
+    "opacity": "Átlátszatlanság",
+    "Animation_direction": "Animációs irány",
+    "speed": "Sebesség",
+    "space_between_blocks_desktop": "Hely a blokkok között (asztali)",
+    "space_between_blocks_mobile": "Hely a blokkok között (mobil)",
+    "rotate": "Forgat",
+    "enable_borders": "Keretek engedélyezése",
+    "fill": "Kitöltés",
+    "outline": "Körvonal",
+    "font_size_desktop": "Betűméret (asztali)",
+    "font_size_mobile": "Betűméret (mobil)",
+    "height_desktop": "Magasság (asztali)",
+    "height_mobile": "Magasság (mobil)",
+    "section_link": "Szakasz hivatkozás",
+    "optional_link_removed_when_block_link_is_added": "Opcionális. A hivatkozás eltávolításra kerül, ha hozzáadnak egy blokkot linkkel.",
+    "optional_link_removed_when_button_is_added": "Választható. A link eltávolításra kerül, ha hozzáad egy gombot.",
+    "parallax": "Parallax",
+    "sticky_content": "Ragadós tartalom",
+    "image_overlay": "Kép felülvonása",
+    "image_overlay_opacity": "Kép felülvonásának átlátszatlansága",
+    "bottom_spacing": "Alsó térköz",
+    "page": "Oldal",
+    "capitalize_text": "Szöveg nagybetűsítése",
+    "first_button": "Első gomb",
+    "second_button": "Második gomb",
+    "third_button": "Harmadik gomb",
+    "fourth_button": "Negyedik gomb",
+    "fifth_button": "Ötödik gomb",
+    "first_button_link": "Első gomb linkje",
+    "first_button_label": "Első gomb felirata",
+    "second_button_link": "Második gomb linkje",
+    "second_button_label": "Második gomb felirata",
+    "underlined": "Aláhúzott",
+    "button_style": "Gomb stílusa",
+    "view_all_button_style": "Az összes megtekintése gomb stílusa",
+    "parallax_info": "A parallax nem aktiválódik, amikor a 'Szakasz magassága' 'Eredeti' beállításra van állítva.",
+    "Caption_max_width": "Felirat maximális szélessége",
+    "heading_font_size": "Címsor betűmérete",
+    "text_font_size": "Szöveg betűmérete",
+    "slides": "Diák",
+    "slide_link": "Csúsztassa a hivatkozást",
+    "image_position": "A kép helyzete",
+    "image_position_desktop": "A kép helyzete (asztalon)",
+    "image_position_mobile": "A kép helyzete (mobilon)",
+    "video_position": "Videó pozíciója",
+    "modal": "Modal",
+    "hint_text": "Tipp szöveg",
+    "Cover_image": "Borítókép",
+    "Video_alt_text": "Videó alternatív szövege",
+    "Video_alt_text_info": "Ismertesse a videót a képernyőolvasókat használó ügyfelek számára.",
+    "Position_on_desktop": "Pozíció (asztali)",
+    "Image_on_desktop": "Kép (asztali)",
+    "Image_on_mobile": "Kép (mobil)",
+    "Maximum_width": "Maximális szélesség",
+    "Animation_style": "Animációs stílus",
+    "1600_x_1600px_recommended": "1600 x 1600 képpont ajánlott.",
+    "offer": "Ajánlat",
+    "discount_code": "Kedvezmény kód",
+    "code": "Kód",
+    "code_info": "A kód nem másolódik a témaszerkesztőben.",
+    "drawer": "Fiók",
+    "empty_state": "Üres állapot",
+    "message": "Üzenet",
+    "suggested_collections": "Javasolt gyűjtemények",
+    "blog_post": "Blogbejegyzés",
+    "Countdown": "Visszaszámlálás",
+    "badges": "Jelvények",
+    "override_border_radius": "Globális szegélystílus felülbírálása",
+    "override_border_radius_info": "Térjen vissza a négyzet alakú szegélyekhez ennél a résznél, figyelmen kívül hagyva a „Témabeállítások > Stílus > szegélyek” beállítást. Hasznos logók megjelenítésekor.",
+    "Caption": "Felirat",
+    "Show_label": "Címke megjelenítése",
+    "Show_product_count": "Termékszám megjelenítése",
+    "Swatch_shape": "Színminta alakja",
+    "content_type": "Tartalomtípus",
+    "1000_x_1000px_recommended": "1000 x 1000 képpontos méret ajánlott."
+  }
+}

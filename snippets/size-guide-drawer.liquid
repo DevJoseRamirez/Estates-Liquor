@@ -1,0 +1,50 @@
+{% style %}
+  size-guide-drawer .main-page-content .large--two-thirds {
+    width: 100%;
+  }
+
+  size-guide-drawer .template-title--wrapper {
+    display: none;
+  }
+
+  size-guide-drawer .main-page-content [data-sidebar-content] {
+    display: none;
+  }
+{% endstyle %}
+
+<size-guide-drawer
+  id="SizeGuideDrawer"
+  aria-modal="true"
+  role="dialog"
+  aria-hidden="true"
+  class="global-drawer"
+  data-drawer-position="right"
+>
+  <span data-drawer-close class="global-drawer__overlay"></span>
+  <div class="global-drawer__content">
+    <header class="global-drawer__sticky-header">
+      <button
+        data-drawer-close
+        type="button"
+        aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+        class="global-drawer__close"
+      >
+        <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
+        {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+      </button>
+      <div data-size-guide-dynamic-content="size-guide-header">
+        <h3 class="size-guide-drawer__heading"></h3>
+      </div>
+    </header>
+
+    <div class="global-drawer__body" tabindex="0">
+      <div class="global-drawer__body--content size-guide-drawer__content global-drawer__disable-load-in-animations" data-size-guide-content>
+        <!-- Content will be loaded dynamically -->
+      </div>
+    </div>
+  </div>
+</size-guide-drawer>
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-size-guide-drawer.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-size-guide-drawer"></script>
+</safe-load-scripts>

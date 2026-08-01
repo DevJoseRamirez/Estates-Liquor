@@ -1,0 +1,32 @@
+{% liquid 
+  if settings.show_currency_code
+    assign variant_unit_price = variant.unit_price | money_with_currency
+  else
+    assign variant_unit_price = variant.unit_price | money
+  endif
+%}
+
+{% if variant and variant.unit_price_measurement %}
+  <div class="unit-price{% unless variant.unit_price_measurement %} hide{% endunless %}">
+    (<span class="unit-price__price"><span class="money">{{ variant_unit_price }}</span></span>
+    <span> / </span>
+
+    {% assign hide = true %}
+    {%- if variant.unit_price_measurement -%}
+      {%- if variant.unit_price_measurement.reference_value != 1 -%}
+        {% assign hide = false %}
+      {%- endif -%}
+    {%- endif -%}
+
+    {% if variant.unit_price_measurement.reference_value != 1 %}
+      <span class="unit-price__ref-value{% if hide %} js{% endif %}">
+        {%- if variant.unit_price_measurement -%}
+          {{ variant.unit_price_measurement.reference_value }}
+        {%- endif %}
+      </span>
+    {% endif %}
+    <span class="unit-price__ref-unit">
+      {%- if variant.unit_price_measurement -%}{{ variant.unit_price_measurement.reference_unit }}{%- endif -%}
+    </span>)
+  </div>
+{% endif %}

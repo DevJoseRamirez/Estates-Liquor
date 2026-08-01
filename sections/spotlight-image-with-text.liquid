@@ -1,0 +1,363 @@
+{{ 'section-spotlight-image-with-text.min.css' | asset_url | stylesheet_tag }}
+
+{% assign animation_offset = 2 %}
+{% assign animation_order = 1 %}
+
+<div
+  class="{{ section.id }} spotlight-image-with-text wrapper-spacing--v{% if section.settings.section_width == 'content' %} wrapper-spacing--h{% endif %} color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="spotlight-image-with-text"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  {% if section.settings.section_width == 'content' %}
+    <div class="width--content">
+  {% endif %}
+
+    <div class="spotlight-image-with-text__container spotlight-image-with-text__text-position--{{ section.settings.layout }} spotlight-image-with-text__text-alignment--{{ section.settings.text_alignment }}">
+      
+      <div class="spotlight-image-with-text__image{% if section.settings.section_width == 'content' %} block-radius{% endif %}{% if settings.animations_enabled %} kb-enabled{% endif %}{% if section.settings.background_image != blank %} spotlight-image-with-text__image--has-bg{% endif %}{% if section.settings.enable_fade %} spotlight-image-with-text__image--fade{% endif %}" style="--bg-color: {{ section.settings.background_color }};{% if section.settings.background_image != blank %} --bg-opacity: {{ section.settings.background_image_opacity | divided_by: 100.0 }};{% endif %}">
+        {% if section.settings.background_image != blank %}
+          <style>
+            {% capture selector %}.{{ section.id }} .spotlight-image-with-text__image--has-bg::before{% endcapture %}
+            {% render 'responsive-background-image', image: section.settings.background_image, selector: selector, sizes: '2000, 4000' %}
+          </style>
+        {% endif %}
+        <div class="spotlight-image-with-text__spotlight-image" style="--frame: {{ section.settings.image_frame }}%; --frame-mobile: {{ section.settings.image_frame_mobile }}%;">
+          {%- liquid
+            assign image_classes = ''
+            assign placeholder_classes = 'icon icon--placeholder'
+            if section.settings.image_frame > 0
+              assign image_classes = 'block-radius'
+              assign placeholder_classes = placeholder_classes | append: ' block-radius'
+            endif
+          -%}
+          <div class="spotlight-image-with-text__spotlight-image-inner" style="--max-width: {% if section.settings.apply_max_width %}{{ section.settings.max_width }}px{% else %}100%{% endif %};">
+            {% if section.settings.image != blank %}
+              {% render 'responsive-image', image: section.settings.image, allow_stretch: true, class: image_classes %}
+            {% else %}
+              {{ 'product-3' | placeholder_svg_tag: placeholder_classes | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="spotlight-image-with-text__content">
+        <div class="spotlight-image-with-text__content-inner">
+        {% if section.settings.title != blank %}
+          <h2 class="homepage-sections--title" data-animate data-animate-order="{{ animation_order | plus: animation_offset }}">{{ section.settings.title | escape }}</h2>
+          {% assign animation_order = animation_order | plus: 1 %}
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order | plus: animation_offset }}">
+            {{ section.settings.text }}
+          </div>
+          {% assign animation_order = animation_order | plus: 1 %}
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          {% if section.settings.override_button_colors %}
+            {% render 'button-color-overrides',
+              id: section.id,
+              style: section.settings.buttons_style,
+              text_color: section.settings.button_text_color,
+              background_color: section.settings.button_background_color
+            %}
+          {% endif %}
+
+          {% capture button_attr %}
+            data-animate
+            data-animate-order="{{ animation_order | plus: animation_offset }}"
+          {% endcapture %}
+          
+          {% render 'dynamic-section-button',
+            id: section.id,
+            link: section.settings.button_link,
+            label: section.settings.button_label,
+            style: section.settings.buttons_style,
+            div_classes: 'spotlight-image-with-text__button',
+            attributes: button_attr
+          %}
+        {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+  {% if section.settings.section_width == 'content' %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.spotlight-image-with-text.name",
+  "class": "section--spotlight-image-with-text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.spotlight-image-with-text.spotlight_image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "range",
+      "id": "image_frame",
+      "label": "t:sections.spotlight-image-with-text.settings.image_frame.label",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "unit": "t:all.percentage",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "image_frame_mobile",
+      "label": "t:sections.spotlight-image-with-text.settings.image_frame_mobile.label",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "unit": "t:all.percentage",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "apply_max_width",
+      "label": "t:sections.spotlight-image-with-text.settings.apply_max_width.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "t:all.Maximum_width",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "unit": "t:all.px",
+      "default": 400,
+      "visible_if": "{{ section.settings.apply_max_width }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.spotlight-image-with-text.settings.image_background_header.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:all.Color",
+      "default": "#EDECEB"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "range",
+      "id": "background_image_opacity",
+      "label": "t:sections.spotlight-image-with-text.settings.background_image_opacity.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "t:all.percentage",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fade",
+      "label": "t:sections.spotlight-image-with-text.settings.enable_fade.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Spotlight image with text"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:all.Text",
+      "default": "<p>Draw attention to a product, collection or blog post with a spotlight image paired with text. Set the scene with a background image for extra impact.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:all.Alignment_desktop",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Centered"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "t:all.Position_desktop",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Button"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:all.Button_link"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:all.Button_label"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "filled",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#ffffff",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "default": "full",
+      "options": [
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Full_width"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.spotlight-image-with-text.name"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

@@ -1,0 +1,235 @@
+{%-  liquid
+  assign full_width = false
+  if section.settings.section_width == 'full-width'
+    assign full_width = true
+  endif
+
+  assign header_width_class = ''
+  if full_width
+    assign header_width_class = 'wrapper-spacing--h'
+  endif
+-%}
+<style>
+  .custom-html img {
+    max-width: 100%;
+  }
+</style>
+<div
+  class="custom-html wrapper-spacing--v{% unless full_width %} wrapper-spacing--h{% endunless %} color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="advanced-layout--custom-html"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+	<div {% unless full_width %}class="width--{{ section.settings.section_width }}"{% endunless %}>
+    {% comment %} Section title and description {% endcomment %}
+    {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description, alignment: section.settings.section_header_alignment, wrapper_classes: header_width_class %}
+
+    {% for block in section.blocks %}
+      {% case block.settings.width %}
+        {% when '25%' %}
+          {%- assign block_width = 'small--one-whole one-quarter' -%}
+        {% when '33%' %}
+          {%- assign block_width = 'small--one-whole one-third' -%}
+        {% when '50%' %}
+          {%- assign block_width = 'small--one-whole one-half' -%}
+        {% when '66%' %}
+          {%- assign block_width = 'small--one-whole two-thirds' -%}
+        {% when '75%' %}
+          {%- assign block_width = 'small--one-whole three-quarters' -%}
+        {% when '100%' %}
+          {%- assign block_width = 'one-whole' -%}
+      {% endcase %}
+
+      <div
+        class="centered {{ block_width }}"
+        data-animate
+        data-animate-order="{% render 'block-animation-offset', 
+          title: section.settings.title, 
+          description: section.settings.description, 
+          base: forloop.index 
+        %}"
+        {{ block.shopify_attributes }}
+        style="margin-bottom: {{ block.settings.margin_bottom }}px;"
+      >
+        <div class="text-link-animated">
+          {{ block.settings.code }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.advanced-layout--custom-html.name",
+  "tag": "section",
+  "class": "index-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "t:sections.advanced-layout--custom-html.name"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_header_alignment",
+      "label": "t:all.Alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:all.Narrow"
+        },
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full-width",
+          "label": "t:all.Full_width"
+        }
+      ],
+      "default": "content"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "html",
+      "name": "t:all.Custom_HTML",
+      "settings": [
+        {
+          "type": "html",
+          "id": "code",
+          "label": "t:all.HTML",
+          "default": "<p style='text-align:center;margin:0;'>Add custom html, support custom content or third party widgets like external forms, maps, calendar or iframe content.</p>"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.label",
+          "default": "100%",
+          "options": [
+            {
+              "value": "25%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.25_percentage"
+            },
+            {
+              "value": "33%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.33_percentage"
+            },
+            {
+              "value": "50%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.50_percentage"
+            },
+            {
+              "value": "66%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.66_percentage"
+            },
+            {
+              "value": "75%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.75_percentage"
+            },
+            {
+              "value": "100%",
+              "label": "t:sections.advanced-layout--custom-html.blocks.html.settings.width.options.100_percentage"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "t:all.Bottom_margin",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "t:all.px",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:all.Custom_HTML",
+      "blocks": [
+        {
+          "type": "html"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

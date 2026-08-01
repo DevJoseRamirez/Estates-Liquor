@@ -1,0 +1,621 @@
+{{ 'section-video.min.css' | asset_url | stylesheet_tag }}
+{{ 'section-advanced-layout-hero.min.css' | asset_url | stylesheet_tag }}
+
+{% assign animation_offset = 2 %}
+{% assign animation_order = 1 %}
+
+<div 
+  class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="advanced-layout--hero" 
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+	<div class="width--content">
+		<div class="homepage-indiv-section-wrapper grid--full homepage-hero-wrapper">
+
+      <div class="grid__item large--{% if section.blocks.size > 0 %}two-thirds{% else %}one-whole{% endif %}">
+
+        <div class="block-radius-clip{% if section.settings.homepage-hero-featured-content != 'homepage-hero-video-selection' %} homepage-hero-content-overlay-wrapper homepage-hero-content-overlay-wrapper-{{ section.id }}{% else %} homepage-hero-content-overlay-wrapper--video homepage-hero-content-overlay-wrapper-{{ section.id }}{% endif %}{% if section.settings.home-page-hero-image == blank %} onboarding{% endif %}">
+
+          {% if section.settings.homepage-hero-featured-content == 'homepage-hero-image-selection' %}
+
+            {% if section.settings.homepage-hero-featured-content.size > 0 %}
+
+              {% if section.settings.homepage-hero-image-link != blank and section.settings.homepage-hero-image-button-label == blank %}
+                <a href="{{ section.settings.homepage-hero-image-link }}" class="homepage-hero-image--link-wrapper">
+              {% endif %}
+
+              {% liquid 
+                assign has_content = false
+
+                if section.settings.homepage-hero-image-button-label != blank or section.settings.homepage-hero-image-heading != blank or section.settings.homepage-hero-image-description != blank
+                  assign has_content = true
+                endif
+              %}
+
+              <div class="homepage-hero-content-link-wrapper">
+                <div class="advanced-layout--hero__text-block{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}">
+                  {% if section.settings.homepage-hero-image-heading != empty %}
+                    <h2 class="hero-header homepage-sections--title" data-animate data-animate-order="{{ animation_order | plus: animation_offset }}">{{ section.settings.homepage-hero-image-heading | escape }}</h2>
+                    {% assign animation_order = animation_order | plus: 1 %}
+                  {% endif %}
+
+                  {% if section.settings.homepage-hero-image-description != empty %}
+                    <p class="hero-paragraph" data-animate data-animate-order="{{ animation_order | plus: animation_offset }}">{{ section.settings.homepage-hero-image-description | escape }}</p>
+                    {% assign animation_order = animation_order | plus: 1 %}
+                  {% endif %}
+
+                  {% if section.settings.homepage-hero-image-button-label != empty %}
+                    {% capture button_attr %}
+                      data-animate
+                      data-animate-order="{{ animation_order | plus: animation_offset }}"
+                    {% endcapture %}
+
+                    {% render 'dynamic-section-button',
+                      id: section.id,
+                      link: section.settings.homepage-hero-image-link,
+                      label: section.settings.homepage-hero-image-button-label,
+                      style: section.settings.buttons_style,
+                      wrapper: false,
+                      attributes: button_attr
+                    %}
+                    {% if section.settings.override_button_colors %}
+                      {% render 'button-color-overrides',
+                        id: section.id,
+                        style: section.settings.buttons_style,
+                        text_color: section.settings.button_text_color,
+                        background_color: section.settings.button_background_color
+                      %}
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="{% if settings.animations_enabled %}kb-enabled{% endif %}">
+                {% if section.settings.home-page-hero-image == blank %}
+                  <div class="onboarding">
+                  {% if has_content %}
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder--subdued' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+                  {% else %}
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+                  {% endif %}
+                  </div>
+                {% else %}
+                  {% render 'responsive-image', image: section.settings.home-page-hero-image %}
+                {% endif %}
+              </div>
+
+              {% if section.settings.homepage-hero-image-link != blank and section.settings.homepage-hero-image-button-label == blank %}
+                </a>
+              {% endif %}
+
+            {% endif %}
+
+          {% endif %}
+
+          {% for block in section.blocks %}
+            {% if block.settings.hero-menu-image != blank %}
+              {% capture id %}overlay-block-{{ block.id }}{% endcapture %}
+              {% capture selector %}#{{ id }}{% endcapture %}
+              <style>
+              {% render 'responsive-background-image', image: block.settings.hero-menu-image, selector: selector %}
+              </style>
+
+              <div class="homepage-hero-content-overlay homepage-hero-content-overlay-menu-item" id="{{ id }}" role="img" aria-label="{{ block.settings.hero-menu-image.alt | escape }}"></div>
+            {% endif %}
+          {% endfor %}
+
+          {% if section.settings.homepage-hero-featured-content == 'homepage-hero-video-selection' %}
+            <div class="embed-container">
+              {% liquid 
+                if section.settings.video != blank
+                  assign video = section.settings.video
+                elsif section.settings.video_url != blank
+                  assign video = section.settings.video_url
+                endif
+        
+                assign image = null
+                if section.settings.image != blank
+                  assign image = section.settings.image
+                endif
+        
+                assign loop = false
+                if section.settings.homepage-hero-video-loop == true
+                  assign loop = true
+                endif
+        
+                assign autoplay = false
+                if section.settings.homepage-hero-video-autoplay == true
+                  assign autoplay = true
+                endif
+        
+                assign mute = false
+                if section.settings.homepage-hero-video-mute == true
+                  assign mute = true
+                endif
+        
+                assign show_controls = section.settings.show_controls
+              %}
+
+              {% if video %}
+                <safe-load-scripts class="hidden">
+                  <script src="{{ 'component-deferred-media.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="deferred-media"></script>
+                </safe-load-scripts>
+                
+                {% render 'deferred-media', 
+                  delayed_media: video, 
+                  section_id: section.id, 
+                  enable_video_loop: loop, 
+                  enable_autoplay: autoplay, 
+                  mute: mute, 
+                  show_controls: show_controls, 
+                  media_poster_image: image, 
+                  is_product_media: false,
+                  aspect_ratio: 'original',
+                  media_type: 'grid',
+                  video_alt_text: section.settings.video_alt_text
+                %}
+              {% else %}
+                <div class="homepage-video-content__placeholder">
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder' }}
+                  <div class="homepage-video-content__placeholder-overlay" aria-hidden="true">
+                    <button class="round-icon-btn-lg btn dynamic-section-button--{{ section.id }}">
+                      {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+                    </button>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% liquid 
+          assign has_content = false
+          if section.settings.homepage-hero-image-heading != empty or section.settings.homepage-hero-image-description != empty or section.settings.homepage-hero-image-button-label != empty
+            assign has_content = true
+          endif
+        %}
+
+        <div class="advanced-layout--hero__text-block advanced-layout--hero__text-block--mobile{% if section.settings.buttons_style == 'underlined' %} text-link-animated{% endif %}{% if has_content %} has-content{% endif %}">
+          {% if section.settings.homepage-hero-image-heading != empty %}
+            <h2 class="hero-header-fit homepage-sections--title">{{ section.settings.homepage-hero-image-heading | escape }}</h2>
+          {% endif %}
+
+          {% if section.settings.homepage-hero-image-description != empty %}
+            <p>{{ section.settings.homepage-hero-image-description | escape }}</p>
+          {% endif %}
+
+          {% if section.settings.homepage-hero-image-button-label != empty %}
+            {% render 'dynamic-section-button',
+              id: section.id,
+              link: section.settings.homepage-hero-image-link,
+              label: section.settings.homepage-hero-image-button-label,
+              style: section.settings.buttons_style,
+              wrapper: false
+            %}
+            {% if section.settings.override_button_colors %}
+              {% render 'button-color-overrides',
+                id: section.id,
+                style: section.settings.buttons_style,
+                text_color: section.settings.button_text_color,
+                background_color: section.settings.button_background_color
+              %}
+            {% endif %}
+          {% endif %}
+        </div>
+
+      </div>
+
+			{% if section.blocks.size > 0 %}
+        <div class="grid__item large--one-third">
+          <div class="homepage-hero-menu-wrapper{% if section.blocks.size == 0 %} no-menu-mobile{% endif %}">
+            <div class="homepage-hero-menu">
+              <ul>
+                {% for block in section.blocks %}
+                  <li
+                    data-overlay-id="overlay-block-{{ block.id }}"
+                    {% unless block.settings.hero-menu-link %}class="no-link"{% endunless %}
+                    data-animate
+                    data-animate-order="{{ forloop.index }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {% if block.settings.hero-menu-link %}
+                      <a href="{{ block.settings.hero-menu-link }}" class="homepage-hero-menu-link">
+                    {% endif %}
+
+                      {% if block.settings.featured_image %}
+                        {% case block.settings.featured_image_size %}
+                          {% when 'x-small' %}
+                              {% assign height = 50 %}
+                          {% when 'small' %}
+                              {% assign height = 100 %}
+                          {% when 'medium' %}
+                              {% assign height = 150 %}
+                          {% when 'large' %}
+                              {% assign height = 200 %}
+                          {% when 'x-large' %}
+                              {% assign height = 250 %}
+                          {% when 'original' %}
+                              {% assign height = block.settings.featured_image.height %}
+                        {% endcase %}
+
+                        <div class="homepage-hero-menu-indiv-image block-radius-clip">
+                          {% capture styles %}max-height: {{ height }}px; max-width: {{ block.settings.featured_image.width }}px;{% endcapture %}
+                          {% render 'responsive-image', image: block.settings.featured_image, props: props, allow_stretch: true, styles: styles %}
+                        </div>
+                      {% endif %}
+                      <div class="homepage-hero-menu--indiv-text">
+                        <span class="h4">{{ block.settings.hero-menu-heading | escape }}</span>
+                        <p>{{ block.settings.hero-menu-subheading | escape }}</p>
+                      </div>
+
+                      {% if block.settings.hero-menu-link %}
+                        </a>
+                      {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+
+
+
+<style>
+	{% if section.settings.homepage-hero-featured-content != 'homepage-hero-video-selection' %}
+		.homepage-hero-content-overlay-wrapper-{{ section.id }}:before {
+			opacity: 0.{{ section.settings.image_overlay_opacity }} !important;
+		}
+  {% else %}
+    .homepage-video-content-overlay-wrapper-{{ section.id }}:before {
+      opacity: 0 !important;
+    }
+	{% endif %}
+
+  .homepage-hero-content-overlay-wrapper-{{ section.id }} {
+    .advanced-layout--hero__text-block {
+      .hero-header,
+      .hero-paragraph {
+        color: rgba({{ section.settings.text-color.rgba }});
+      }
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.advanced-layout--hero.name",
+  "class": "hero",
+  "settings": [
+    {
+      "type": "select",
+      "id": "homepage-hero-featured-content",
+      "label": "t:all.Content",
+      "options": [
+        {
+          "value": "homepage-hero-video-selection",
+          "label": "t:all.Video"
+        },
+        {
+          "value": "homepage-hero-image-selection",
+          "label": "t:all.Image"
+        }
+      ],
+      "default": "homepage-hero-image-selection"
+    },
+    {
+      "type": "image_picker",
+      "id": "home-page-hero-image",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Shopify_hosted_video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:all.Video"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Or_embed_video_from_URL"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:all.Embedded_video_info"
+    },
+    {
+      "id": "video_url",
+      "type": "video_url",
+      "label": "t:all.Video_URL",
+      "info": "t:all.Accepts_YouTube_and_Vimeo__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:all.Cover_image",
+      "info": "t:sections.video--video.settings.image.info"
+    },
+    {
+      "type": "text",
+      "id": "video_alt_text",
+      "label": "t:all.Video_alt_text",
+      "info": "t:all.Video_alt_text_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.advanced-layout--hero.settings.header-10.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage-hero-video-loop",
+      "label": "t:all.Loop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage-hero-video-autoplay",
+      "label": "t:all.Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage-hero-video-mute",
+      "label": "t:all.Mute",
+      "info": "t:all.Videos_are_muted",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "t:all.Show_video_controls",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "text",
+      "id": "homepage-hero-image-heading",
+      "label": "t:all.Heading"
+    },
+    {
+      "type": "text",
+      "id": "homepage-hero-image-description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Link"
+    },
+    {
+      "type": "url",
+      "id": "homepage-hero-image-link",
+      "label": "t:all.Link"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Button"
+    },
+    {
+      "type": "text",
+      "id": "homepage-hero-image-button-label",
+      "label": "t:all.Button_label"
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "label": "t:all.button_style",
+      "default": "filled",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:all.Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "t:all.Outlined"
+        },
+        {
+          "value": "underlined",
+          "label": "t:all.underlined"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "t:all.Primary_color",
+      "default": "#E68819",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:all.Secondary_color",
+      "default": "#FFFFFF",
+      "info": "t:all.Secondary_button_color_info",
+      "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "text-color",
+      "label": "t:all.Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 95,
+      "step": 5,
+      "unit": "t:all.percentage",
+      "label": "t:all.Overlay",
+      "default": 0
+    }
+  ],
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:all.Menu_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "hero-menu-heading",
+          "label": "t:all.Heading",
+          "default": "Highlight your best sellers"
+        },
+        {
+          "type": "text",
+          "id": "hero-menu-subheading",
+          "label": "t:all.Subheading",
+          "default": "Link to any collection, product or page"
+        },
+        {
+          "type": "url",
+          "id": "hero-menu-link",
+          "label": "t:all.Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "featured_image",
+          "label": "t:all.Featured_image",
+          "info": "t:sections.advanced-layout--hero.blocks.text.settings.featured_image.info"
+        },
+        {
+          "type": "select",
+          "id": "featured_image_size",
+          "label": "t:sections.advanced-layout--hero.blocks.text.settings.featured_image_size.label",
+          "default": "original",
+          "options": [
+            {
+              "label": "t:all.Small",
+              "value": "small"
+            },
+            {
+              "label": "t:all.Medium",
+              "value": "medium"
+            },
+            {
+              "label": "t:all.Large",
+              "value": "large"
+            },
+            {
+              "label": "t:all.Extra_Large",
+              "value": "x-large"
+            },
+            {
+              "label": "t:all.Original",
+              "value": "original"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "hero-menu-image",
+          "label": "t:sections.advanced-layout--hero.blocks.text.settings.hero-menu-image.label",
+          "info": "t:sections.advanced-layout--hero.blocks.text.settings.hero-menu-image.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.advanced-layout--hero.presets.name",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "hero-menu-heading": "Highlight your best sellers",
+            "hero-menu-subheading": "Link to any collection, product or page"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "hero-menu-heading": "Promote a new collection",
+            "hero-menu-subheading": "Link to any collection, product or page"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+<div class="product-card-basic">
+  <div class="product-card-basic__image">
+    <a href="/admin/products" tabindex="-1" aria-hidden="true">
+      <div class="{% unless settings.product-grid == 'natural' %}aspect-ratio aspect-ratio--{{ settings.product-grid }}{% endunless %}">
+        {{ 'product-1' | placeholder_svg_tag: 'icon icon--placeholder thumbnail-radius' }}
+      </div>
+    </a>
+  </div>
+
+  <div class="product-card-basic--info">
+    <div class="product-card-basic--info--body">
+      <div>
+        {% assign title_font = 'product-grid--title-font-' | append: settings.type_card_title_font %}
+        <div class="product-card-basic__title {{ title_font }}">
+          <a href="/admin/products">{{ 'homepage.onboarding.product_title' | t }}</a>
+        </div>
+      </div>
+
+      <div class="product-card-basic__price">
+        <a href="/admin/products">
+          <span class="money">
+            {% if settings.show_currency_code %}
+              {{ 1999 | money_with_currency }}
+            {% else %}
+              {{ 1999 | money }}
+            {% endif %}
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="product-card-basic--info--footer">
+      <div class="text-link-animated">
+        <button class="btn--underlined btn--underlined-with-icon">
+          {% render 'theme-icon', icon: 'shopping-bag', iconSize: 14, iconClasses: 'btn--underlined-with-icon__icon' %}
+          <span>{{ 'products.product.add_to_cart' | t }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

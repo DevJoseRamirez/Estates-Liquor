@@ -1,0 +1,79 @@
+{% comment %}
+    Use this snippet to add a responsive image to page.
+
+    Specify Shopify image you want to make responsive in the "with" parameter (see examples below).
+
+    You can use following variables to customize the image
+    * default_size: size of placeholder image until full image is loaded (default: '150x')
+    * sizes: string of media queries and image size definitions
+    * class: additional classes to be applied to an image
+    * alt: alt text for the image
+    * props: additional properties for the <img /> tag (data-, id, etc.)
+    * styles: additional styles (will go into `style="..."` property)
+    * crop: use crop to specify how the image should be cropped when it's too big
+    * force_height: number of pixels the image should have vertically, without stretching
+    * allow_stretch: allow upscaling the image to fit container (disabled by default)
+    * loading: lazy loading of the image (enabled by default)
+    * adaptive_ratio: aspect ratio of the image (e.g. 56%)
+
+    Usage:
+    {% render 'responsive-image', image: product.image, class: 'product-image', alt: 'A simple product', default_size: '300x', props: 'data-id="1"' %}
+{% endcomment %}
+
+{% if default_size == blank %}
+  {% assign default_size = '550x' %}
+{% endif %}
+
+{% if sizes == blank %}
+  {% assign sizes = '(min-width: 2000px) 1000px, (min-width: 1445px) calc(100vw / 2), (min-width: 1200px) calc(100vw / 1.75), (min-width: 1000px) calc(100vw / 1.5), (min-width: 750px) calc(100vw / 3), 100vw' %}
+{% endif %}
+
+{% if loading == blank %}
+  {% assign loading = 'lazy' %}
+{% endif %}
+
+{%- capture divStyle -%}
+  {%- if force_height %}height: {{ force_height }}px; {% endif -%}
+  {%- if adaptive_ratio -%}padding-bottom: {{ adaptive_ratio }}%;{% endif -%}
+{%- endcapture -%}
+
+{% assign focal_point = image.presentation.focal_point %}
+
+{% if allow_stretch %}
+  {% unless focal_point %}
+    {% assign focal_point = '50% 50%' %}
+  {% endunless %}
+{% endif %}
+
+{% if focal_point %}
+  {% capture focal_point_styles %}object-fit:cover;object-position:{{ focal_point }}!important;{% endcapture %}
+{% endif %}
+
+<div class="responsive-image-wrapper{% if wrapper_class %} {{ wrapper_class }}{% endif %}" style="{{ divStyle }}">
+
+<img
+  loading="{{ loading }}"
+  class="theme-img {{ class }} js"
+  style="{% unless allow_stretch %}max-width: {{ image.width }}px; max-height: {{ image.height }}px; {% endunless %}{{ styles }} {{ focal_point_styles }}"
+  {% if alt %}
+    alt="{{ alt | escape }}"
+  {% else %}
+    alt="{{ image.alt | escape }}"
+  {% endif %}
+  {{ props }}
+  width="{{ image.width }}"
+  height="{{ image.height }}"
+  srcset="{%- if image.width >= 550 -%}{{ image | image_url: width: 550 }} 550w,{%- endif -%}
+          {%- if image.width >= 750 -%}{{ image | image_url: width: 750 }} 750w,{%- endif -%}
+          {%- if image.width >= 1100 -%}{{ image | image_url: width: 1100 }} 1100w,{%- endif -%}
+          {%- if image.width >= 1445 -%}{{ image | image_url: width: 1445 }} 1445w,{%- endif -%}
+          {%- if image.width >= 1680 -%}{{ image | image_url: width: 1680 }} 1680w,{%- endif -%}
+          {%- if image.width >= 2048 -%}{{ image | image_url: width: 2048 }} 2048w,{%- endif -%}
+          {%- if image.width >= 2200 -%}{{ image | image_url: width: 2200 }} 2200w,{%- endif -%}
+          {%- if image.width >= 2890 -%}{{ image | image_url: width: 2890 }} 2890w,{%- endif -%}
+          {{ image | image_url: width: image.width }} {{ image.width }}w"
+  sizes="{{ sizes }}"
+  src="{{ image | image_url: width: 1445 }}"
+/>
+
+</div>

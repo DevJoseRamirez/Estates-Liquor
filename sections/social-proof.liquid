@@ -1,0 +1,546 @@
+{% liquid 
+  assign has_content = false
+
+  for block in section.blocks
+    if block.type == 'text_review' and block.settings.image != blank or block.settings.review_title != blank or block.settings.review_text != blank or block.settings.author != blank or block.settings.verified == true or block.settings.date != blank
+      assign has_content = true
+    elsif block.type == 'video_block' and block.settings.video != blank or block.settings.video_url != blank or block.settings.image != blank or block.settings.text != blank or block.settings.social_media_handle != blank or block.settings.date != blank
+      assign has_content = true
+    endif
+  endfor
+%}
+
+{{ 'social-proof.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="text--social-proof" 
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+>
+  <div class="width--content social-proof-grid-container{% if section.settings.scroller_position == 'left' %} content-position--right{% endif %}">
+    <!-- Left Side Content -->
+    <div class="social-proof-content">
+      {% if section.settings.rating_image != blank or section.settings.additional_text != blank %}
+        <div class="social-proof-caption">
+          {% if section.settings.rating_image != blank %}
+            <div class="social-proof-caption-image" style="--caption-image-max-width: {{ section.settings.image_max_width }}px;">
+              {% render 'responsive-image', image: section.settings.rating_image, alt: section.settings.rating_image.alt %}
+            </div>
+          {% endif %}
+
+          {% if section.settings.additional_text != blank %}
+            <div class="social-proof-caption-text">
+              {{ section.settings.additional_text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    
+      {% if section.settings.title != blank %}
+        <h2 class="social-proof-title text-link-animated">{{ section.settings.title }}</h2>
+      {% endif %}
+    
+      {% if section.settings.description != blank %}
+        <div class="social-proof-description text-link-animated">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+    
+    <!-- Right Side Testimonials Block -->
+    <div class="social-proof-reviews testimonials-block">
+      {% if section.blocks.size > 0 and has_content %}
+        <div class="social-proof-section">
+          <social-proof-reviews data-section-id="{{ section.id }}">
+            <div class="vertical-banner-wrapper">
+              <ol class="vertical-banner">
+                {%- for block in section.blocks -%}
+                    {%- case block.type -%}
+                      {%- when 'text_review' -%}
+                        {% if block.settings.image != blank or block.settings.review_title != blank or block.settings.review_text != blank or block.settings.author != blank or block.settings.verified == true or block.settings.date != blank %}
+                          <li data-block-id="{{ block.id }}" class="vertical-banner-item {{ block.id }}" {{ block.shopify_attributes }}>
+                            <div class="social-proof-block text-review-block">
+                              {% if block.settings.image != blank %}
+                                <div class="review-image-container{% if block.settings.review_title != blank or block.settings.review_text != blank or block.settings.author != blank or block.settings.verified == true or block.settings.date != blank %} has-margin-bottom{% endif %}">
+                                  {% render 'responsive-image', image: block.settings.image %}
+                                </div>
+                              {% endif %}
+
+                              {% if block.settings.review_title != blank %}
+                                <h3 class="review-title{% if block.settings.review_text != blank or block.settings.author != blank or block.settings.verified == true or block.settings.date != blank %} has-margin-bottom{% endif %}">{{ block.settings.review_title }}</h3>
+                              {% endif %}
+                
+                              {% if block.settings.review_text != blank %}
+                                <div class="review-text text-link-animated{% if block.settings.author != blank or block.settings.verified == true or block.settings.date != blank %} has-margin-bottom{% endif %}">
+                                  {{ block.settings.review_text }}
+                                </div>
+                              {% endif %}
+                
+                              <div class="review-meta">
+                                {% if block.settings.author != blank %}
+                                  <span class="review-author">{{ block.settings.author }}</span>
+                                {% endif %}
+                
+                                {% if block.settings.verified == true %}
+                                  <span class="review-verified" style="--verified-color: {{ block.settings.verified_color }};">Verified</span>
+                                {% endif %}
+                
+                                {% if block.settings.date != blank %}
+                                  <span class="review-date">{{ block.settings.date }}</span>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </li>
+                        {% endif %}
+                      {%- when 'video_block' -%}
+                        {% if block.settings.video != blank or block.settings.video_url != blank or block.settings.image != blank or block.settings.text != blank or block.settings.social_media_handle != blank or block.settings.date != blank %}
+                          <li data-block-id="{{ block.id }}" class="vertical-banner-item {{ block.id }}" {{ block.shopify_attributes }}>
+                            <div class="social-proof-block video-block">
+                              <safe-load-scripts class="hidden">
+                                <script src="{{ 'component-theme-modal.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="theme-modal"></script>
+                              </safe-load-scripts>
+
+                              <theme-modal data-focus-on-close="true" data-section-id="{{ section.id }}" data-block-id="{{ block.id }}">
+                                <div data-modal-button class="video-thumbnail-container{% if block.settings.text != blank or block.settings.social_media_handle != blank or block.settings.date != blank %} has-margin-bottom{% endif %}">
+                                  {% if block.settings.video != blank or block.settings.video_url != blank %}
+                                    <safe-load-scripts class="hidden">
+                                      <script src="{{ 'component-deferred-media.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="deferred-media"></script>
+                                    </safe-load-scripts>
+
+                                    {% liquid 
+                                      if block.settings.video != blank
+                                        assign video = block.settings.video
+                                      elsif block.settings.video_url != blank
+                                        assign video = block.settings.video_url
+                                      endif
+      
+                                      assign loop = block.settings.loop
+                                      assign autoplay = block.settings.autoplay
+                                      assign mute = block.settings.mute
+                                      assign show_controls = block.settings.show_controls
+
+                                      assign image = null
+                                      if block.settings.image != blank
+                                        assign image = block.settings.image
+                                      endif
+                                    %}
+
+                                    {% render 'deferred-media', 
+                                      delayed_media: video, 
+                                      section_id: section.id,
+                                      media_poster_image: image,
+                                      is_product_media: false,
+                                      aspect_ratio: 'original',
+                                      media_type: 'grid',
+                                      mute: true,
+                                      show_controls: false,
+                                      enable_video_loop: false,
+                                      enable_autoplay: false,
+                                      video_alt_text: block.settings.video_alt_text,
+                                      is_modal_trigger: true
+                                    %}
+                                  {% else %}
+                                    <div class="social-proof-video-placeholder">
+                                      {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+                                      <button class="round-icon-btn-lg btn" aria-hidden="true">
+                                        {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+                                      </button>
+                                    </div>
+                                  {% endif %}
+                                </div>
+
+                                <template data-theme-modal-content>
+                                  <div 
+                                    data-modal-content 
+                                    class="theme-modal-content popup-shadow"
+                                  >
+                                    {% comment %} Close icon {% endcomment %}
+                                    <button type="button" data-close class="button-unstyled icon-fallback-text standalone-icon--wrapper" aria-label="{{ 'general.accessibility.dismiss.close' | t }}">
+                                      <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
+                                      {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+                                    </button>
+      
+                                    <div class="theme-modal--inner">
+      
+                                      {% comment %} Modal Content {% endcomment %}
+                                      <div data-modal-body data-muted="{{ mute }}" class="modal-content social-proof-modal-content">
+                                        {% if block.settings.video != blank or block.settings.video_url != blank %}
+                                          {% liquid 
+                                            if block.settings.video != blank
+                                              assign video = block.settings.video
+                                            elsif block.settings.video_url != blank
+                                              assign video = block.settings.video_url
+                                            endif
+            
+                                            assign loop = block.settings.loop
+                                            assign autoplay = block.settings.autoplay
+                                            assign mute = block.settings.mute
+                                            assign show_controls = block.settings.show_controls
+                                          %}
+
+                                          {% render 'deferred-media', 
+                                            delayed_media: video, 
+                                            section_id: section.id,
+                                            is_product_media: false,
+                                            aspect_ratio: 'original',
+                                            media_type: 'grid',
+                                            mute: mute,
+                                            show_controls: show_controls,
+                                            enable_video_loop: loop,
+                                            enable_autoplay: true,
+                                            video_alt_text: block.settings.video_alt_text,
+                                            use_js_api: true
+                                          %}
+                                        {% else %}
+                                          <div class="social-proof-video-placeholder">
+                                            {{ 'lifestyle-1' | placeholder_svg_tag: 'icon icon--placeholder icon--placeholder' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+                                            <button class="round-icon-btn-lg btn" aria-hidden="true">
+                                              {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+                                            </button>
+                                          </div>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </template>
+                              </theme-modal>
+                
+                              {% if block.settings.text != blank %}
+                                <div class="video-caption text-link-animated{% if block.settings.social_media_handle != blank or block.settings.date != blank %} has-margin-bottom{% endif %}">{{ block.settings.text }}</div>
+                              {% endif %}
+                
+                              {% if block.settings.social_media_handle != blank or block.settings.date != blank %}
+                                <div class="video-meta">
+                                  {% if block.settings.social_media_handle != blank %}
+                                    <span class="social-handle">
+                                      {% if block.settings.social_media_link != blank %}
+                                        <a href="{{ block.settings.social_media_link }}" target="_blank">
+                                          {{ block.settings.social_media_handle }}
+                                        </a>
+                                      {% else %}
+                                        {{ block.settings.social_media_handle }}
+                                      {% endif %}
+                                    </span>
+                                  {% endif %}
+                        
+                                  {% if block.settings.date != blank %}
+                                    <span class="video-date">
+                                      {% if block.settings.social_media_handle != blank %}
+                                        <span class="icon-date-separator">|</span> 
+                                      {% endif %}
+                                      {{ block.settings.date }}
+                                    </span>
+                                  {% endif %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </li>
+                        {% endif %}
+                    {%- endcase -%}
+                {%- endfor -%}
+              </ol>
+            </div>
+          </social-proof-reviews>
+          
+          <safe-load-scripts class="hidden">
+            <script src="{{ 'component-social-proof.js' | asset_url }}" type="module" defer="defer" data-internal-script data-flow-load-key="component-social-proof"></script>
+          </safe-load-scripts>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.social_proof.name",
+  "class": "section--social-proof-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.social_proof.settings.rating_image.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.social_proof.settings.rating_image.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "rating_image",
+      "label": "t:all.Image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "label": "t:sections.social_proof.settings.rating_image.settings.image_max_width.label",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "default": 200
+    },
+    {
+      "type": "header",
+      "content": "t:all.Content"
+    },
+    {
+      "type": "text",
+      "id": "additional_text",
+      "label": "t:all.Subheading",
+      "default": "Thousands of Happy Customers"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Showcase Your Success Stories"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description",
+      "default": "<p>Visualize the impact of social proof on your site. Update these examples with your own customer feedback to build credibility and inspire confidence in new buyers.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "scroller_position",
+      "label": "t:sections.social_proof.settings.scroller_position.label",
+      "default": "right",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_review",
+      "name": "t:sections.social_proof.blocks.text_review.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:all.Image"
+        },
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "t:all.Title",
+          "default": "Product review"
+        },
+        {
+          "type": "richtext",
+          "id": "review_text",
+          "label": "t:sections.social_proof.blocks.text_review.settings.review_text.label",
+          "default": "<p>Share a specific detail about their positive experience with your product or service. What problem did it solve for them? What did they love most?</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "t:sections.social_proof.blocks.text_review.settings.author.label",
+          "info": "t:all.Optional",
+          "default": "John Doe"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "t:sections.social_proof.blocks.text_review.settings.verified.label",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "verified_color",
+          "label": "t:sections.social_proof.blocks.text_review.settings.verified.verified_color.label",
+          "default": "#3c9af7"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "t:sections.social_proof.blocks.text_review.settings.date.label",
+          "info": "t:all.Optional",
+          "default": "2027-01-01"
+        }
+      ]
+    },
+    {
+      "type": "video_block",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:all.Videos_are_muted_in_the_editor"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Shopify_hosted_video"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:all.Video"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Or_embed_video_from_URL"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:all.Embedded_video_info"
+        },
+        {
+          "id": "video_url",
+          "type": "video_url",
+          "label": "t:all.Video_URL",
+          "info": "t:all.Accepts_YouTube_and_Vimeo__Learn_morehttps___support_eightthemes_com_hc_en_us_articles_360020109497_Product_Mediaheading_2",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:all.Cover_image"
+        },
+        {
+          "type": "text",
+          "id": "video_alt_text",
+          "label": "t:all.Video_alt_text",
+          "info": "t:all.Video_alt_text_info"
+        },
+        {
+          "type": "header",
+          "content": "t:all.Video_settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "loop",
+          "label": "t:all.Loop",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "mute",
+          "label": "t:all.Mute",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_controls",
+          "label": "t:all.Show_video_controls",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:all.Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:all.Text",
+          "info": "t:all.Optional",
+          "default": "<p>Use a video to share your brand's unique story and values. This helps customers connect with you on a deeper level.</p>"
+        },
+        {
+          "type": "text",
+          "id": "social_media_handle",
+          "label": "t:sections.social_proof.blocks.video_block.settings.social_media_handle.label",
+          "info": "t:all.Optional",
+          "default": "@OurBrandJourney"
+        },
+        {
+          "type": "text",
+          "id": "social_media_link",
+          "label": "t:sections.social_proof.blocks.video_block.settings.social_media_link.label",
+          "info": "t:all.Optional"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "t:sections.social_proof.blocks.text_review.settings.date.label",
+          "info": "t:all.Optional",
+          "default": "2027-01-01"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "t:sections.social_proof.name",
+      "category": "Testimonials",
+      "blocks": [
+        {
+          "type": "text_review"
+        },
+        {
+          "type": "video_block"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

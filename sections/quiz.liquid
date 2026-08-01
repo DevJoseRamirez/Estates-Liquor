@@ -1,0 +1,938 @@
+{{ 'section-quiz.min.css' | asset_url | stylesheet_tag }}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-quiz.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="quiz"></script>
+  <script src="{{ 'component-quiz-modal.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="quiz-modal"></script>
+</safe-load-scripts>
+
+{%- liquid
+  assign overlay_opacity = 100 | minus: section.settings.image_overlay_opacity
+  assign overlay_color = 'color-mix(in srgb, rgba(' | append: section.settings.image_overlay_color.rgba | append: '), transparent ' | append: overlay_opacity | append: '%)'
+  assign background_color = 'rgba(' | append: section.settings.background_color.rgba | append: ')'
+  assign intro_color = 'rgba(' | append: section.settings.intro_text_color.rgba | append: ')'
+  assign intro_link_border_color = 'color-mix(in srgb, ' | append: intro_color | append: ', transparent 50%)'
+  assign text_color = 'rgba(' | append: section.settings.questions_text_color.rgba | append: ')'
+  assign button_border_color = 'color-mix(in srgb, ' | append: text_color | append: ', transparent 75%)'
+-%}
+
+{% if section.settings.override_button_colors %}
+  {% render 'button-color-overrides',
+    id: section.id,
+    style: 'filled',
+    text_color: section.settings.button_text_color,
+    background_color: section.settings.button_background_color
+  %}
+  {% liquid 
+    assign button_text_color = 'rgba(' | append: section.settings.button_text_color.rgba | append: ')'
+    assign button_background_color = 'rgba(' | append: section.settings.button_background_color.rgba | append: ')'
+    assign button_link_border_color = 'color-mix(in srgb, ' | append: button_background_color | append: ', transparent 50%)'
+  %}
+  <style>
+    {% if settings.quick_shop_button_style == 'filled' %}
+      [data-section-id="{{ section.id }}"] .quiz__product-cards .dynamic-section-button--grid-item--quiz-section {
+        color: {{ button_text_color }} !important;
+        background-color: {{ button_background_color }} !important;
+      }
+    {% elsif settings.quick_shop_button_style == 'outlined' or style == 'outline' %}
+      [data-section-id="{{ section.id }}"] .quiz__product-cards .dynamic-section-button--grid-item--quiz-section {
+        color: {{ button_background_color }} !important;
+        border: 1px solid {{ button_background_color }} !important;
+      }
+    {% elsif settings.quick_shop_button_style == 'underlined' %}
+      [data-section-id="{{ section.id }}"] .quiz__product-cards .dynamic-section-button--grid-item--quiz-section {
+        color: {{ button_background_color }} !important;
+        --link-border-color: {{ button_link_border_color }};
+      }
+    {% endif %}
+  </style>
+{% endif %}
+
+<div
+  class="quiz wrapper-spacing--v{% if section.settings.section_width == 'content' %} wrapper-spacing--h{% endif %}{% if request.visual_preview_mode %} section-preview{% else %} show-on-scroll{% endif %}"
+  data-wetheme-section-type="quiz"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--margin-section-top: {{ section.settings.section_margin_top }}px; --margin-section-bottom: {{ section.settings.section_margin_bottom }}px; --background-color: {{ background_color }}; --intro-color: {{ intro_color }}; --intro-link-border-color: {{ intro_link_border_color }}; --text-color: {{ text_color }}; --height-desktop: {{ section.settings.height_desktop }}; --height-mobile: {{ section.settings.height_mobile }};"
+>
+  <div class="quiz__grid {{ section.id }}{% if section.settings.section_width == 'content' %} width--content block-radius-clip{% endif %}">
+    <div class="quiz__grid--background{% if section.settings.image_desktop == blank %} quiz__grid--background--desktop-has-color{% endif %}{% if section.settings.image_mobile == blank %} quiz__grid--background--mobile-has-color{% endif %}{% if settings.animations_enabled %} kb-enabled{% endif %}" style="--overlay-color: {{ overlay_color }};">
+      {% for i in (1..2) %}
+        {%- liquid
+          capture device
+            cycle 'desktop', 'mobile'
+          endcapture
+      
+          assign image_setting = 'image_' | append: device
+          assign height_setting = 'height_' | append: device
+          assign original_image_class = 'quiz__' | append: device | append: '-image--original'
+          assign cropped_image_class = 'quiz__' | append: device | append: '-image--cropped'
+          assign background_image = section.settings[image_setting]
+        -%}
+
+        {% if background_image %}
+          {% if section.settings[height_setting] == 'original' %}
+            <div class="{{ original_image_class }}">
+              {% render 'responsive-image', image: background_image, sizes: '100vw', loading: 'eager', allow_stretch: true %}
+            </div>
+          {% else %}
+            <style>
+              {% capture selector %}.{{ section.id }} .{{ cropped_image_class }} .quiz__cropped-image{% endcapture %}
+              {% render 'responsive-background-image', image: background_image, selector: selector, sizes: '2000, 4000' %}
+            </style>
+            <div class="{{ cropped_image_class }}">
+              <div class="quiz__cropped-image" role="img" aria-label="{{ background_image.alt | escape }}"></div>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="quiz__grid--foreground quiz__content--position-mobile-{{ section.settings.content_position_mobile }} quiz__content--position-desktop-{{ section.settings.content_position_desktop }}">
+      {%- liquid
+        case section.settings.content_position_mobile
+          when 'top_left' or 'left' or 'bottom_left'
+            assign alignment_mobile = 'left'
+          when 'top_center' or 'center' or 'bottom_center'
+            assign alignment_mobile = 'center'
+          when 'top_right' or 'right' or 'bottom_right'
+            assign alignment_mobile = 'right'
+        endcase
+
+        case section.settings.content_position_desktop
+          when 'top_left' or 'left' or 'bottom_left'
+            assign alignment_desktop = 'left'
+          when 'top_center' or 'center' or 'bottom_center'
+            assign alignment_desktop = 'center'
+          when 'top_right' or 'right' or 'bottom_right'
+            assign alignment_desktop = 'right'
+        endcase
+      -%}
+      
+      <div class="quiz__content quiz__content--align-mobile-{{ alignment_mobile }} quiz__content--align-desktop-{{ alignment_desktop }}">
+        {% assign animation_order = 1 %}
+        
+        {% if section.settings.heading != blank %}
+          <h2 class="quiz__heading text-link-animated" data-animate data-animate-order="{{ animation_order }}">{{ section.settings.heading }}</h2>
+          {% assign animation_order = animation_order | plus: 1 %}
+        {% endif %}
+        
+        {% if section.settings.text != blank %}
+          <div class="quiz__text text-link-animated richtext-block" data-animate data-animate-order="{{ animation_order }}">{{ section.settings.text }}</div>
+          {% assign animation_order = animation_order | plus: 1 %}
+        {% endif %}
+
+        {% if request.design_mode %}
+          {% for block in section.blocks %}
+            <span class="visually-hidden" aria-hidden="true" data-block-id="{{ block.id }}" data-index="{{ forloop.index }}" {{ block.shopify_attributes }}></span>
+          {% endfor %}
+        {% endif %}
+        
+        <quiz-modal data-focus-on-close="true" data-section-id="{{ section.id }}" data-background-color-override="{{ background_color }}" data-text-color-override="{{ text_color }}">
+          <button class="btn dynamic-section-button--{{ section.id }}" data-modal-button data-animate data-animate-order="{{ animation_order }}">
+            {% assign start = 'sections.quiz.start' | t %}
+            {{ section.settings.start_button_label | default: start }}
+          </button>
+          <template data-quiz-modal-content>
+            <div
+              data-modal-content
+              class="popup-shadow"
+            >
+              {% comment %} Close icon {% endcomment %}
+              <button type="button" data-close class="button-unstyled icon-fallback-text standalone-icon--wrapper" aria-label="{{ 'general.accessibility.dismiss.close' | t }}">
+                <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
+                {% render 'theme-icon', icon: 'close', iconSize: 20 %}
+              </button>
+
+              <div class="quiz-modal--inner">
+                {% comment %} Modal Content {% endcomment %}
+                <div data-modal-body class="modal-content">
+                  <div class="quiz__modal" style="--background-color: {{ background_color }}; --text-color: {{ text_color }}; --button-border-color: {{ button_border_color }};">
+                    <quiz-section
+                      data-section-id="{{ section.id }}"
+                      data-products-to-show="{{ section.settings.products_to_show }}"
+                    >
+                      <div class="quiz__loading-overlay" data-quiz-loading>
+                        <div class="quiz__loading-shine"></div>
+                      </div>
+                      {% assign has_settings_inputs = false %}
+                      {% for block in section.blocks %}
+
+                        {%- liquid
+                          assign has_tag_inputs = false
+                          if block.settings.tag_1 != blank or block.settings.tag_2 != blank or block.settings.tag_3 != blank or block.settings.tag_4 != blank
+                            assign has_tag_inputs = true
+                            assign has_settings_inputs = true
+                          endif
+
+                          if has_tag_inputs
+                            assign option_1_handles = ''
+                            assign option_2_handles = ''
+                            assign option_3_handles = ''
+                            assign option_4_handles = ''
+
+                            paginate collections.all.products by 1000
+                              for p in collections.all.products
+                                assign lowercase_tags = p.tags | join: ',' | downcase | split: ','
+
+                                assign tag_1 = block.settings.tag_1 | downcase
+                                if p.available and lowercase_tags contains tag_1
+                                  assign option_1_handles = option_1_handles | append: p.handle | append: ','
+                                endif
+
+                                assign tag_2 = block.settings.tag_2 | downcase
+                                if p.available and lowercase_tags contains tag_2
+                                  assign option_2_handles = option_2_handles | append: p.handle | append: ','
+                                endif
+
+                                assign tag_3 = block.settings.tag_3 | downcase
+                                if p.available and lowercase_tags contains tag_3
+                                  assign option_3_handles = option_3_handles | append: p.handle | append: ','
+                                endif
+
+                                assign tag_4 = block.settings.tag_4 | downcase
+                                if p.available and lowercase_tags contains tag_4
+                                  assign option_4_handles = option_4_handles | append: p.handle | append: ','
+                                endif
+                              endfor
+                            endpaginate
+                          endif
+                        -%}
+
+                        {% assign is_last_question = forloop.last %}
+                        <div class="quiz__question shown-on-scroll" data-quiz-question {{ block.shopify_attributes }}>
+                          {% if block.settings.question != blank %}
+                            <h3 class="quiz__question-heading" data-animate data-animate-order="1">{{ block.settings.question }}</h3>
+                          {% endif %}
+                          <div class="quiz__buttons{% if section.settings.options_style == 'image' %} quiz__buttons--image{% else %} quiz__buttons--text{% endif %}">
+                            {% for i in (1..4) %}
+                              {%- liquid
+                                assign product_handles = ''
+                                assign option_key = 'option_' | append: i
+                                assign option_text = block.settings[option_key]
+
+                                if section.settings.options_style == 'image'
+                                  assign show_image = true
+                                  assign option_image_key = 'option_image_' | append: i
+                                  assign option_image = block.settings[option_image_key]
+                                endif
+
+                                if has_tag_inputs
+                                  case i
+                                    when 1
+                                      assign product_handles = option_1_handles
+                                    when 2
+                                      assign product_handles = option_2_handles
+                                    when 3
+                                      assign product_handles = option_3_handles
+                                    when 4
+                                      assign product_handles = option_4_handles
+                                  endcase
+                                endif
+
+                                assign product_list_key = 'product_list_' | append: i
+                                assign collection_key = 'collection_' | append: i
+
+
+                                if block.settings[collection_key] != blank
+                                  assign has_settings_inputs = true
+                                  assign collection_product_list = block.settings[collection_key].products
+                                  for option_product in collection_product_list
+                                    if option_product.available
+                                      assign product_handles = product_handles | append: option_product.handle | append: ','
+                                    endif
+                                  endfor
+                                endif
+
+                                if block.settings[product_list_key] != blank
+                                  assign has_settings_inputs = true
+                                  assign product_product_list = block.settings[product_list_key]
+                                  for option_product in product_product_list
+                                    if option_product.available
+                                      assign product_handles = product_handles | append: option_product.handle | append: ','
+                                    endif
+                                  endfor
+                                endif
+
+                                assign clean_product_handles = product_handles | split: ',' | uniq | join: ','
+                              -%}
+                              
+                              {% if option_text != blank or option_image != blank %}
+                                <button
+                                  class="quiz__button{% if show_image %} quiz__button--has-image{% endif %}{% if option_text != blank %} quiz__button--has-text{% endif %}"
+                                  data-animate
+                                  data-animate-order="{{ forloop.index | plus: 1 }}"
+                                  {% if show_image %}
+                                    data-animate-hover-zoom
+                                  {% endif %}
+                                  data-quiz-button
+                                  data-product-handles="{{ clean_product_handles }}"
+                                  {% if is_last_question %}data-last-question{% endif %}
+                                >
+                                  {% if show_image %}
+                                    <span class="quiz__button-image {% if section.settings.image_aspect_ratio != 'original' %}quiz__button-image__aspect-ratio--{{ section.settings.image_aspect_ratio }}{% endif %}">
+                                      {% if option_image != blank %}
+                                        {% render 'responsive-image', image: option_image, allow_stretch: true %}
+                                      {% else %}
+                                        {{ 'image' | placeholder_svg_tag: 'icon icon--placeholder' }}
+                                      {% endif %}
+                                    </span>
+                                  {% endif %}
+                                  {% if option_text != blank %}
+                                    <span class="quiz__button-text">{{ option_text }}</span>
+                                  {% endif %}
+                                  <span class="quiz__button-loading">{% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin flex-full', iconSize: '20' %}</span>
+                                </button>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                      
+                      <div class="quiz__results shown-on-scroll" data-quiz-product-cards>
+                        {% assign animation_base = 0 %}
+                        {% if section.settings.results_heading != blank %}
+                          <h3 class="quiz__results-heading" data-animate data-animate-order="1">{{ section.settings.results_heading }}</h3>
+                          {% assign animation_base = 1 %}
+                        {% endif %}
+                        <div class="quiz__product-cards">
+                          {% for i in (1..section.settings.products_to_show) %}
+                            <div
+                              data-animate-order="{{ forloop.index | plus: animation_base }}"
+                              data-quiz-product-card
+                              class="quiz__product-card"
+                            ></div>
+                          {% endfor %}
+                        </div>
+                        {% if section.settings.button_label != blank %}
+                          <div class="quiz__results-button" data-animate data-animate-order="{{ section.settings.products_to_show | plus: animation_base | plus: 4 }}">
+                            <a href="{{ section.settings.button_link | default: '#' }}" class="btn dynamic-section-button--{{ section.id }}">{{ section.settings.button_label }}</a>
+                          </div>
+                        {% endif %}
+                      </div>
+
+                      <div class="quiz__results is-hidden shown-on-scroll{% if has_settings_inputs %} quiz__results--no-products{% endif %}" data-quiz-product-card-placeholders>
+                        {% if has_settings_inputs %}
+                          <h3 class="quiz__results-heading quiz__results-heading--no-products" data-animate data-animate-order="1">{{ 'sections.quiz.no_results_heading' | t }}</h3>
+                          <p class="quiz__results-text" data-animate data-animate-order="2">{{ 'sections.quiz.no_results_text' | t }}</p>
+                        {% else %}
+                          {% if section.settings.results_heading != blank %}
+                            <h3 class="quiz__results-heading" data-animate data-animate-order="1">{{ section.settings.results_heading }}</h3>
+                          {% endif %}
+                          <div class="quiz__product-cards">
+                            {% for i in (1..section.settings.products_to_show) %}
+                              {% assign svg_index = forloop.index %}
+                              {% assign svg_index_reversed = 6 | plus: 1 | minus: forloop.index %}
+                              <div
+                                data-animate
+                                data-animate-order="{{ forloop.index | plus: animation_base }}"
+                                class="quiz__product-card"
+                              >
+                                {% render 'grid-view-item-placeholder', svg_index: svg_index, svg_index_reversed: svg_index_reversed, section_id: 'quiz-section' %}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        {% if section.settings.button_label != blank %}
+                          <div class="quiz__results-button" data-animate data-animate-order="{{ section.settings.products_to_show | plus: animation_base | plus: 1 }}">
+                            <a href="{{ section.settings.button_link | default: '#' }}" class="btn dynamic-section-button--{{ section.id }}">{{ section.settings.button_label }}</a>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </quiz-section>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </quiz-modal>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.quiz.name",
+  "class": "section--quiz",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.quiz.settings.paragraph-0.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.quiz.settings.paragraph-1.content"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.quiz.settings.header-0.content"
+    },
+    {
+      "type": "select",
+      "id": "options_style",
+      "label": "t:sections.quiz.settings.options_style.label",
+      "default": "text",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:all.Text"
+        },
+        {
+          "value": "image",
+          "label": "t:sections.quiz.settings.options_style.options.image"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:all.Image_aspect_ratio",
+      "default": "square",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "square",
+          "label": "t:all.Square"
+        },
+        {
+          "value": "tall",
+          "label": "t:all.Tall"
+        },
+        {
+          "value": "wide",
+          "label": "t:all.Wide"
+        }
+      ],
+      "visible_if": "{{ section.settings.options_style == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "questions_text_color",
+      "label": "t:all.Text_color",
+      "default": "#242424"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.quiz.settings.header-1.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.quiz.settings.paragraph-2.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "results_heading",
+      "label": "t:all.Heading",
+      "default": "We think you'll love..."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:all.Products_to_show",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "paragraph",
+      "content": "t:all.Product_card_settings_reference"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:all.Button_label",
+      "default": "Discover more styles"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:all.Button_link"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.quiz.settings.header-2.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:all.Heading",
+      "default": "Need inspiration?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:all.Text",
+      "default": "<p>Take the quiz to find styles we think you'll love.</p>"
+    },
+    {
+      "type": "text",
+      "id": "start_button_label",
+      "label": "t:all.Button_label",
+      "default": "Start"
+    },
+    {
+      "type": "color",
+      "id": "intro_text_color",
+      "label": "t:all.Text_color",
+      "default": "#242424"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "t:all.Image_optional"
+    },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "t:all.Section_height",
+      "default": "450px",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "450px",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "550px",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "650px",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "750px",
+          "label": "t:all.Extra_Large"
+        },
+        {
+          "value": "100vh",
+          "label": "t:all.Fullscreen"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_position_desktop",
+      "label": "t:all.Content_position",
+      "default": "center",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:all.Top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:all.Top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:all.Top_right"
+        },
+        {
+          "value": "left",
+          "label": "t:all.Center_left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:all.Bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:all.Bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:all.Bottom_right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:all.Image_optional"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "t:all.Section_height",
+      "default": "300px",
+      "options": [
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        },
+        {
+          "value": "250px",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "300px",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "400px",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "500px",
+          "label": "t:all.Extra_Large"
+        },
+        {
+          "value": "100vh",
+          "label": "t:all.Fullscreen"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_position_mobile",
+      "label": "t:all.Content_position",
+      "default": "center",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:all.Top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:all.Top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:all.Top_right"
+        },
+        {
+          "value": "left",
+          "label": "t:all.Center_left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:all.Bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:all.Bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:all.Bottom_right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:all.Width",
+      "default": "full",
+      "options": [
+        {
+          "value": "content",
+          "label": "t:all.Content_width"
+        },
+        {
+          "value": "full",
+          "label": "t:all.Full_width"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:all.Background",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_button_colors",
+      "label": "t:all.Button_color_override",
+      "default": false,
+      "info": "t:all.Button_color_override_info"
+    },
+    {
+        "type": "color",
+        "id": "button_background_color",
+        "label": "t:all.Primary_color",
+        "default": "#E68819",
+        "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+        "type": "color",
+        "id": "button_text_color",
+        "label": "t:all.Secondary_color",
+        "default": "#ffffff",
+        "info": "t:all.Secondary_button_color_info",
+        "visible_if": "{{ section.settings.override_button_colors }}"
+    },
+    {
+      "type": "color",
+      "id": "image_overlay_color",
+      "label": "t:sections.quiz.settings.image_overlay_color.label",
+      "default": "#242424",
+      "visible_if": "{{ section.settings.image_desktop != blank or section.settings.image_mobile != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "t:all.percentage",
+      "label": "t:sections.quiz.settings.image_overlay_opacity.label",
+      "default": 0,
+      "visible_if": "{{ section.settings.image_desktop != blank or section.settings.image_mobile != blank }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "t:sections.quiz.blocks.question.name",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.quiz.blocks.question.settings.paragraph-0.content"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.quiz.blocks.question.settings.header-0.content"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:all.Text",
+          "default": "Ask a question"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.quiz.blocks.question.settings.header-1.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_image_1",
+          "label": "t:sections.quiz.blocks.question.settings.option_image.label",
+          "visible_if": "{{ section.settings.options_style == 'image' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "t:sections.quiz.blocks.question.settings.option.label",
+          "default": "Option"
+        },
+        {
+          "type": "collection",
+          "id": "collection_1",
+          "label": "t:all.Collection"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list_1",
+          "label": "t:all.Products",
+          "limit": 10
+        },
+        {
+          "type": "text",
+          "id": "tag_1",
+          "label": "t:sections.quiz.blocks.question.settings.tag.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.quiz.blocks.question.settings.header-2.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_image_2",
+          "label": "t:sections.quiz.blocks.question.settings.option_image.label",
+          "visible_if": "{{ section.settings.options_style == 'image' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "t:sections.quiz.blocks.question.settings.option.label",
+          "default": "Option"
+        },
+        {
+          "type": "collection",
+          "id": "collection_2",
+          "label": "t:all.Collection"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list_2",
+          "label": "t:all.Products",
+          "limit": 10
+        },
+        {
+          "type": "text",
+          "id": "tag_2",
+          "label": "t:sections.quiz.blocks.question.settings.tag.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.quiz.blocks.question.settings.header-3.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_image_3",
+          "label": "t:sections.quiz.blocks.question.settings.option_image.label",
+          "visible_if": "{{ section.settings.options_style == 'image' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "t:sections.quiz.blocks.question.settings.option.label",
+          "default": "Option"
+        },
+        {
+          "type": "collection",
+          "id": "collection_3",
+          "label": "t:all.Collection"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list_3",
+          "label": "t:all.Products",
+          "limit": 10
+        },
+        {
+          "type": "text",
+          "id": "tag_3",
+          "label": "t:sections.quiz.blocks.question.settings.tag.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.quiz.blocks.question.settings.header-4.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_image_4",
+          "label": "t:sections.quiz.blocks.question.settings.option_image.label",
+          "visible_if": "{{ section.settings.options_style == 'image' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "t:sections.quiz.blocks.question.settings.option.label",
+          "default": "Option"
+        },
+        {
+          "type": "collection",
+          "id": "collection_4",
+          "label": "t:all.Collection"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list_4",
+          "label": "t:all.Products",
+          "limit": 10
+        },
+        {
+          "type": "text",
+          "id": "tag_4",
+          "label": "t:sections.quiz.blocks.question.settings.tag.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.quiz.name",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "How would you describe your personal style?",
+            "option_1": "Minimal and modern",
+            "option_2": "Bold and expressive",
+            "option_3": "Classic and timeless",
+            "option_4": "Casual and relaxed"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What do you usually look for when shopping?",
+            "option_1": "Everyday essentials",
+            "option_2": "Standout statement pieces",
+            "option_3": "Seasonal trends",
+            "option_4": "Comfortable must-haves"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which color palette speaks to you most?",
+            "option_1": "Neutrals",
+            "option_2": "Earth tones",
+            "option_3": "Bold and bright",
+            "option_4": "Soft and pastel"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

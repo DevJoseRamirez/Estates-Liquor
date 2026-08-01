@@ -1,0 +1,635 @@
+{{ 'section-specification-table.min.css' | asset_url | stylesheet_tag }}
+
+
+{% liquid
+  if product.metafields.specifications != blank or product.metafields.specification != blank
+    assign has_specification_metafields = true
+  endif
+  if has_specification_metafields and section.settings.keys != blank
+    assign show_specifications = true
+  endif
+
+  assign key_list = section.settings.keys | remove: ' ' | split: ','
+  assign macro_keys = section.settings.macro_keys | remove: ' ' | downcase | split: ','
+
+  assign has_serving = false
+  if section.settings.enable_serving_toggle
+    for k in key_list
+      assign serving_lookup = k | strip | downcase | append: '_serving'
+      for pair in product.metafields.specifications
+        assign pair_key = pair[0] | downcase
+        if pair_key == serving_lookup
+          assign has_serving = true
+          break
+        endif
+      endfor
+      if has_serving
+        break
+      endif
+    endfor
+  endif
+%}
+
+{% comment %} Capture reusable section container attributes {% endcomment %}
+{% capture section_classes %}specification-table wrapper-spacing--v wrapper-spacing--h color-scheme--{{ section.settings.colors }} text-align-desktop--{{ section.settings.desktop_heading_alignment }} text-align-mobile--{{ section.settings.mobile_heading_alignment }} content-align--{{ section.settings.desktop_content_alignment }} content-align-mobile--{{ section.settings.mobile_content_alignment }}{% endcapture %}
+
+{% capture section_attributes %}data-wetheme-section-type="specification-table" data-wetheme-section-id="{{ section.id }}" style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"{% endcapture %}
+
+{% comment %} Capture specification table rows logic {% endcomment %}
+{% capture specification_table_rows %}
+  {% for key in key_list %}
+    {% assign key = key | strip | downcase %}
+    {% assign heading = key | replace: '_', ' ' | capitalize %}
+    {% assign serving_lookup = key | append: '_serving' %}
+    {% assign ri_lookup = key | append: '_ri' %}
+    {% assign serving_ri_lookup = key | append: '_serving_ri' %}
+    {% assign spec_metafield = blank %}
+    {% assign serving_metafield = blank %}
+    {% assign ri_metafield = blank %}
+    {% assign serving_ri_metafield = blank %}
+
+    {% comment %} Find base / per-serving / %RI metafields by lowercase key comparison {% endcomment %}
+    {% for metafield_pair in product.metafields.specifications %}
+      {% assign metafield_key = metafield_pair[0] | downcase %}
+      {% if metafield_key == key %}
+        {% assign spec_metafield = metafield_pair[1] %}
+      {% elsif metafield_key == serving_lookup %}
+        {% assign serving_metafield = metafield_pair[1] %}
+      {% elsif metafield_key == ri_lookup %}
+        {% assign ri_metafield = metafield_pair[1] %}
+      {% elsif metafield_key == serving_ri_lookup %}
+        {% assign serving_ri_metafield = metafield_pair[1] %}
+      {% endif %}
+    {% endfor %}
+
+    {% for metafield_pair in product.metafields.specification %}
+      {% assign metafield_key = metafield_pair[0] | downcase %}
+      {% if metafield_key == key %}
+        {% assign spec_metafield = metafield_pair[1] %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if spec_metafield != blank %}
+      {%- liquid
+        assign is_macro = false
+        if macro_keys contains key
+          assign is_macro = true
+        endif
+        assign show_bar = false
+        if is_macro and ri_metafield != blank
+          assign show_bar = true
+          assign ri_bar = ri_metafield.value | plus: 0
+          if ri_bar > 100
+            assign ri_bar = 100
+          endif
+          if ri_bar < 0
+            assign ri_bar = 0
+          endif
+          if serving_ri_metafield != blank
+            assign serving_ri_bar = serving_ri_metafield.value | plus: 0
+            if serving_ri_bar > 100
+              assign serving_ri_bar = 100
+            endif
+            if serving_ri_bar < 0
+              assign serving_ri_bar = 0
+            endif
+          endif
+        endif
+      -%}
+      <div class="specification-table__row{% if show_bar %} specification-table__row--macro{% endif %}" data-animate data-animate-order="{{ forloop.index }}">
+        <div class="specification-table__label">
+          {{ heading }}
+          {% if show_bar %}
+            <div class="specification-table__bar" aria-hidden="true">
+              {%- if serving_ri_metafield != blank -%}
+                <span class="specification-table__bar-fill specification-table__bar-fill--base" style="width: {{ ri_bar }}%;"></span>
+                <span class="specification-table__bar-fill specification-table__bar-fill--serving" style="width: {{ serving_ri_bar }}%;"></span>
+              {%- else -%}
+                <span class="specification-table__bar-fill" style="width: {{ ri_bar }}%;"></span>
+              {%- endif -%}
+            </div>
+          {% endif %}
+        </div>
+        <div class="specification-table__value">
+          {% if spec_metafield.type == 'rating' %}
+            {% render 'reviews-star-rating',
+              rating_product: product,
+              spec_metafield: spec_metafield,
+              classes: 'specification-table__rating'
+            %}
+          {% else %}
+            <span class="specification-table__amount specification-table__amount--base">{{ spec_metafield | metafield_tag }}</span>
+            {% if serving_metafield != blank %}
+              <span class="specification-table__amount specification-table__amount--serving">{{ serving_metafield | metafield_tag }}</span>
+            {% endif %}
+          {% endif %}
+        </div>
+        {% if section.settings.show_ri and ri_metafield != blank %}
+          <div class="specification-table__ri">
+            {%- if serving_ri_metafield != blank -%}
+              <span class="specification-table__amount--base">{{ ri_metafield.value }}%</span>
+              <span class="specification-table__amount--serving">{{ serving_ri_metafield.value }}%</span>
+            {%- else -%}
+              {{ ri_metafield.value }}%
+            {%- endif -%}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% if show_specifications %}
+  <div
+    class="{{ section_classes }} show-on-scroll"
+    {{ section_attributes }}
+  >
+    {% liquid
+      assign image_position = section.settings.desktop_image_position
+      assign has_images = false
+      if section.settings.desktop_image or section.settings.mobile_image
+        assign has_images = true
+      endif
+    %}
+
+    {% comment %} Capture image renders to avoid duplication {% endcomment %}
+    {% capture desktop_image_content %}
+      {% if section.settings.desktop_image %}
+        {% render 'responsive-image', image: section.settings.desktop_image, class: 'specification-table__image-element', allow_stretch: true %}
+      {% endif %}
+    {% endcapture %}
+
+    {% capture mobile_image_content %}
+      {% if section.settings.mobile_image %}
+        {% render 'responsive-image', image: section.settings.mobile_image, class: 'specification-table__image-element', allow_stretch: true %}
+      {% endif %}
+    {% endcapture %}
+
+    <div class="width--content">
+      <div class="specification-table__header">
+        {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description %}
+      </div>
+
+      {% if section.settings.enable_serving_toggle and has_serving %}
+        <div class="specification-table__toggle-wrap">
+          <input type="checkbox" class="specification-table__toggle-input visually-hidden" id="specToggle-{{ section.id }}">
+          <label class="specification-table__toggle" for="specToggle-{{ section.id }}">
+            <span class="specification-table__toggle-opt specification-table__toggle-opt--base">{{ section.settings.per_100ml_label }}</span>
+            <span class="specification-table__toggle-opt specification-table__toggle-opt--serving">{{ section.settings.per_serving_label }}</span>
+          </label>
+        </div>
+      {% endif %}
+
+      {% comment %} Render above positioned images {% endcomment %}
+      {% liquid
+        assign show_images_above_table = false
+        
+        # Desktop image shows above only when position is set to above
+        if image_position == 'above' and section.settings.desktop_image
+          assign show_images_above_table = true
+        endif
+        
+        # Mobile always shows above (regardless of desktop position)
+        if section.settings.mobile_image or section.settings.desktop_image
+          assign show_images_above_table = true
+        endif
+      %}
+      
+      {% if show_images_above_table %}
+        <div class="specification-table__image-container specification-table__image-container--above">
+          {% comment %} Desktop image (only when position is above) {% endcomment %}
+          {% if image_position == 'above' and section.settings.desktop_image %}
+            <div class="specification-table__image small-hide desktop-height--{{ section.settings.desktop_image_height }} mobile-height--{{ section.settings.mobile_image_height }}">
+              {{ desktop_image_content }}
+            </div>
+          {% endif %}
+          
+          {% comment %} Mobile image (always above) - use mobile image if available, fallback to desktop {% endcomment %}
+          {% if section.settings.mobile_image %}
+            <div class="specification-table__image large-hide desktop-height--{{ section.settings.desktop_image_height }} mobile-height--{{ section.settings.mobile_image_height }}">
+              {{ mobile_image_content }}
+            </div>
+          {% elsif section.settings.desktop_image %}
+            <div class="specification-table__image large-hide desktop-height--{{ section.settings.desktop_image_height }} mobile-height--{{ section.settings.mobile_image_height }}">
+              {{ desktop_image_content }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.keys != blank %}
+        {% if section.settings.desktop_image and image_position != 'above' %}
+          <div class="specification-table__content-wrapper specification-table__content-wrapper--{{ image_position }}">
+            {% if image_position == 'left' %}
+              <div class="specification-table__image-container specification-table__image-container--side">
+                {% comment %} Desktop image on desktop only (mobile always shows above) {% endcomment %}
+                {% if section.settings.desktop_image %}
+                  <div class="specification-table__image small-hide desktop-height--{{ section.settings.desktop_image_height }} mobile-height--{{ section.settings.mobile_image_height }}">
+                    {{ desktop_image_content }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+            
+            <div class="specification-table__table-container">
+              <div class="specification-table__table">
+                {{ specification_table_rows }}
+              </div>
+            </div>
+            
+            {% if image_position == 'right' %}
+              <div class="specification-table__image-container specification-table__image-container--side">
+                {% comment %} Desktop image on desktop only (mobile always shows above) {% endcomment %}
+                {% if section.settings.desktop_image %}
+                  <div class="specification-table__image small-hide desktop-height--{{ section.settings.desktop_image_height }} mobile-height--{{ section.settings.mobile_image_height }}">
+                    {{ desktop_image_content }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="specification-table__table">
+            {{ specification_table_rows }}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% elsif request.visual_preview_mode %}
+  <div
+    class="{{ section_classes }} section-preview"
+    {{ section_attributes }}
+  >
+    <div class="width--content">
+      <div class="specification-table__header">
+        {% render 'dynamic-section-header', section_title: section.settings.title, section_description: section.settings.description %}
+      </div>
+      
+      <div class="specification-table__table">
+        <div class="specification-table__row" data-animate data-animate-order="1">
+          <div class="specification-table__label">
+            {{ 'sections.specification-table.preview.width' | t }}
+          </div>
+          <div class="specification-table__value">
+            225/60R16
+          </div>
+        </div>
+        <div class="specification-table__row" data-animate data-animate-order="2">
+          <div class="specification-table__label">
+            {{ 'sections.specification-table.preview.treadwear' | t }}
+          </div>
+          <div class="specification-table__value">
+            500
+          </div>
+        </div>
+        <div class="specification-table__row" data-animate data-animate-order="3">
+          <div class="specification-table__label">
+            {{ 'sections.specification-table.preview.rating' | t }}
+          </div>
+          <div class="specification-table__value">
+            {% render 'reviews-star-rating',
+              classes: 'specification-table__rating'
+            %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% elsif request.design_mode %}
+  {{ 'section-specification-table.min.css' | asset_url | stylesheet_tag }}
+  
+  <div
+    class="{{ section_classes }} show-on-scroll"
+    {{ section_attributes }}
+  >
+    <div class="width--content">
+      <div class="specification-table__design-mode-notice" data-animate data-animate-order="1">
+        <div class="specification-table__notice-content">
+          <h3 class="specification-table__notice-title">{{ 'sections.specification-table.no_setup_title' | t }}</h3>
+          <p class="specification-table__notice-subtitle">{{ 'sections.specification-table.no_setup_subtitle' | t }}</p>
+          <p class="specification-table__notice-description text-link-animated">
+            {{ 'sections.specification-table.no_setup_description_html' | t }}
+            <a href="https://help.shopify.com/en/manual/metafields" target="_blank" rel="noopener noreferrer" class="specification-table__notice-link">{{ 'sections.specification-table.learn_more' | t }}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.specification-table.name",
+  "class": "section--specification-table",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.specification-table.paragraph_info"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Specification table"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description",
+      "default": "<p>Neatly display your product specifications in a table layout.</p>"
+    },
+    {
+      "type": "text",
+      "id": "keys",
+      "label": "t:sections.specification-table.keys_label",
+      "info": "t:sections.specification-table.keys_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.specification-table.nutrition_group"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_serving_toggle",
+      "label": "t:sections.specification-table.settings.enable_serving_toggle.label",
+      "info": "t:sections.specification-table.settings.enable_serving_toggle.info",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "per_100ml_label",
+      "label": "t:sections.specification-table.settings.per_100ml_label.label",
+      "default": "Per 100ml"
+    },
+    {
+      "type": "text",
+      "id": "per_serving_label",
+      "label": "t:sections.specification-table.settings.per_serving_label.label",
+      "default": "Per serving"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ri",
+      "label": "t:sections.specification-table.settings.show_ri.label",
+      "info": "t:sections.specification-table.settings.show_ri.info",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "macro_keys",
+      "label": "t:sections.specification-table.settings.macro_keys.label",
+      "info": "t:sections.specification-table.settings.macro_keys.info"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "t:all.Image_Optional"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_height",
+      "label": "t:all.Image_height",
+      "options": [
+        {
+          "value": "extra_small",
+          "label": "t:all.Extra_small"
+        },
+        {
+          "value": "small",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "medium",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "large",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "extra_large",
+          "label": "t:all.Extra_large"
+        },
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "t:all.image_position",
+      "options": [
+        {
+          "value": "above",
+          "label": "t:all.Above"
+        },
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "desktop_heading_alignment",
+      "label": "t:all.Heading_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_alignment",
+      "label": "t:all.Content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:all.Image_Optional"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_height",
+      "label": "t:all.Image_height",
+      "options": [
+        {
+          "value": "extra_small",
+          "label": "t:all.Extra_small"
+        },
+        {
+          "value": "small",
+          "label": "t:all.Small"
+        },
+        {
+          "value": "medium",
+          "label": "t:all.Medium"
+        },
+        {
+          "value": "large",
+          "label": "t:all.Large"
+        },
+        {
+          "value": "extra_large",
+          "label": "t:all.Extra_large"
+        },
+        {
+          "value": "original",
+          "label": "t:all.Original"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "type": "select",
+      "id": "mobile_heading_alignment",
+      "label": "t:all.Heading_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_alignment",
+      "label": "t:all.Content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:all.Left"
+        },
+        {
+          "value": "center",
+          "label": "t:all.Center"
+        },
+        {
+          "value": "right",
+          "label": "t:all.Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "select",
+      "id": "colors",
+      "label": "t:all.Color_scheme",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "t:all.Default"
+        },
+        {
+          "value": "light",
+          "label": "t:all.First"
+        },
+        {
+          "value": "accent",
+          "label": "t:all.Second"
+        },
+        {
+          "value": "dark",
+          "label": "t:all.Third"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.specification-table.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  }
+}
+{% endschema %}

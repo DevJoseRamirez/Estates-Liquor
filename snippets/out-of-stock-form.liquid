@@ -1,0 +1,57 @@
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-out-of-stock-form.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="out-of-stock-form"></script>
+</safe-load-scripts>
+
+{% liquid 
+  assign current_variant = product.selected_or_first_available_variant
+  assign variant_title = current_variant.title
+
+  if product.has_only_default_variant
+    assign variant_title = ''
+  endif
+%}
+
+<transition name="fade">
+  <out-of-stock-form class="out-of-stock-form out-of-stock-form--active text-link-animated">
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+          <div class="accent-text posted-successfully">{{ 'products.product.out_of_stock_success' | t }}</div>
+      {% else %}
+          <div data-form-reveal-link id="notify-me">
+            {% unless product.has_only_default_variant %}
+              {{ 'products.product.out_of_stock_html' | t: product: product.title, variant: variant_title }}
+            {% else %}
+              {{ 'products.product.out_of_stock_html' | t: product: product.title, variant: variant_title | remove: ' - ' }}
+            {% endunless %}
+          </div>
+      {% endif %}
+      {% if form.errors %}
+        <div class="error feedback accent-text">
+          <div class="accent-text">{{ 'products.product.wrong_email' | t }}</div>
+        </div>
+      {% endif %}
+      {% unless form.posted_successfully? %}
+        <div data-form-input-wrapper id="notify-me-wrapper" class="clearfix show-form" style="display:none;">
+          <input
+            required="required"
+            type="email"
+            name="contact[email]"
+            placeholder="{{ 'general.newsletter_form_section.newsletter_text' | t }}"
+            class="styled-input{% if form.errors contains 'email' %} error{% endif %}" 
+            value="{% if customer %}{{ customer.email }}{% else %}{{ contact.fields.email }}{% endif %}"
+            pattern=".+@.+\..+"
+            title="{{ 'general.forms.email_must_be_formatted_as_an_email' | t }}"
+            data-input-ignore
+          />
+          <div>
+            <input type="hidden" name="contact[body]" value="Please notify me when {{ product.title }} - {{ variant_title }} becomes available." />
+          </div>
+          <button class="standalone-icon--wrapper" type="submit">
+            {% render 'theme-icon', icon: 'chevron_right', iconSize: 20 %}
+          </button>
+          {{ 'shopify.online_store.spam_detection.disclaimer_html' | t }}
+        </div>
+      {% endunless %}
+    {% endform %}
+  </out-of-stock-form>
+</transition>

@@ -1,0 +1,66 @@
+<div
+  class="wrapper-spacing--v{% if section.settings.include_margins %} wrapper-spacing--h{% endif %}"
+  data-wetheme-section-id="{{ section.id }}"
+  style="--padding-section-top: {{ section.settings.section_padding_top }}px; --padding-section-bottom: {{ section.settings.section_padding_bottom }}px;"
+  >
+	{% if section.settings.include_margins %}
+        <div class="width--content">
+    {% endif %}
+        
+        {%- for block in section.blocks -%}
+            {% render block %}
+        {%- endfor -%}
+
+    {% if section.settings.include_margins %}
+        </div>
+    {% endif %}
+</div>
+  
+{% schema %}
+{
+  "name": "t:sections.apps.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "t:all.Spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "t:all.Spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "t:all.px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "include_margins",
+      "default": true,
+      "label": "t:sections.apps.settings.include_margins.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.apps.presets.name"
+    }
+  ]
+}
+{% endschema %}

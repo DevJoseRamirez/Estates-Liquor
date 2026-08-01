@@ -1,0 +1,71 @@
+{% comment %}
+	Renders a set of inputs for a gift card recipient
+
+	Usage:
+	{% form 'product' %}
+			{%- render 'ship-gift-card-recipient-form' -%}
+	{% endform %}
+{% endcomment %}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-gift-card-recipient-form.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="recipient-form"></script>
+</safe-load-scripts>
+
+<recipient-form
+	class="product__meta--gift-card-recipient" 
+	data-section-id="{{ section.id }}"
+>
+	{%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+	{%- assign checkbox_label = 'gift_cards.recipient.checkbox' | t -%}
+
+	{% comment %} ===== Send as gift - checkbox ===== {% endcomment %}
+	<div class="product__send-as-gift">
+		{% assign field_name = gift_card_recipient_control_flag %}
+
+		{% render 'form-input--checkbox', id: 'show_gift_card_recipient_checkbox', name: field_name, label_text: checkbox_label, attributes: 'data-recipient-form-trigger' %}
+	</div>
+
+	{% liquid
+		assign emailInputString = 'gift_cards.recipient.email_label' | t
+		assign emailInputName = 'properties[Recipient email]'
+		assign nameInputString = 'gift_cards.recipient.name_label' | t
+		assign nameInputName = 'properties[Recipient name]'
+		assign msgInputString = 'gift_cards.recipient.message_label' | t
+		assign msgInputName = 'properties[Message]'
+	%}
+
+	<div 
+		data-recipient-form-wrapper 
+		class="gift-card--recipient-form-wrapper"
+		style="display: none;"
+	>
+		{% comment %} ===== Email input ===== {% endcomment %}
+		<div class="gift-card--recipient-form-input-container">
+			{% liquid
+				assign formId = 'form_' | append: emailInputString | downcase | handleize
+				assign input_attr = 'aria-labelledby="' | append: formId | append: '" data-aid="email-input"'
+			%}
+			{% render 'form-input', type: 'email', has_label: true, animate_label: false, label_text: emailInputString, id: formId, name: emailInputName, required: true, attributes: input_attr, disabled: true, classes: 'input-radius' %}
+		</div>
+		
+		{% comment %} ===== Name input ===== {% endcomment %}
+		<div class="gift-card--recipient-form-input-container">
+			{% liquid
+					assign formId = 'form_' | append: nameInputString | downcase | handleize
+					assign input_attr = 'aria-labelledby="' | append: formId | append: '" data-aid="name-input"'
+			%}
+			{% render 'form-input', type: 'text', has_label: true, animate_label: false, label_text: nameInputString, id: formId, name: nameInputName, required: false, attributes: input_attr, disabled: true, classes: 'input-radius' %}
+		</div>
+
+		{% comment %} ===== Message input ===== {% endcomment %}
+		<div class="gift-card--recipient-form-input-container">
+			{% liquid
+			assign formId = 'form_' | append: msgInputString | downcase | handleize
+			assign input_attr = 'aria-labelledby="' | append: formId | append: '" data-aid="message-input"'
+			assign max_characters = 200
+			assign max_characters_message = 'gift_cards.recipient.max_characters' | t: max: max_characters
+			%}
+			{% render 'form-input--textarea', has_label: true, animate_label: false, label_text: msgInputString, max_characters: max_characters, secondary_label: max_characters_message, id: formId, name: msgInputName, required: false, attributes: input_attr, disabled: true, container_classes: 'recipient-form-textarea-container', classes: 'block-radius' %}
+		</div>
+	</div>
+</recipient-form>

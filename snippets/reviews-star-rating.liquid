@@ -1,0 +1,179 @@
+{% comment %}
+  Renders a visual star rating for a given product.
+
+  Accepts:
+    - rating_product: The product object (required)
+    - show_product_rating_if_no_reviews: The setting value (boolean) that determines whether to show the star rating if a product has no rating
+    - show_rating_as: The setting value that determines how the star rating should display
+    - star_color: The setting value containing the color for the star rating stars
+    - star_size: The setting value that determines the size of the star icons
+    - no_reviews_label: The setting value containing the text to display in the case where there are no ratings
+    - classes: Any custom classes for the star rating block
+    - spec_metafield: A specification metafield with rating type (optional)
+
+  Usage:
+    {% render 'reviews-star-rating',
+      rating_product: product,
+      show_product_rating_if_no_reviews: block.settings.show_product_rating_if_no_reviews,
+      show_rating_as: block.settings.show_rating_as,
+      star_color: settings.star_rating_color,
+      star_size: block.settings.star_size,
+      no_reviews_label: block.settings.no_reviews_label,
+      classes: spacing_classes,
+      spec_metafield: spec_metafield
+    %}
+{% endcomment %}
+
+{% liquid
+  comment
+    Check for visual preview mode first - if enabled, use mock rating values
+  endcomment
+  if request.visual_preview_mode
+    assign rating_value = 4.5
+    assign rating_max = 5
+    assign show_rating_as = 'rating_with_scale'
+  endif
+  
+  comment
+    Check for specification metafield with rating type first
+  endcomment
+  if rating_value == blank and spec_metafield.type == 'rating'
+    assign rating_value = spec_metafield.value.rating
+    assign rating_max = spec_metafield.value.scale_max
+    assign show_rating_as = 'rating_with_scale'
+  endif
+  
+  comment
+    Find out which review app the store is using, default to the 'standard' metafield if no app is specified
+  endcomment
+  if rating_value == blank
+    if rating_product.metafields.loox.avg_rating != blank
+      assign rating_value = rating_product.metafields.loox.avg_rating
+      assign reviews_count = rating_product.metafields.loox.num_reviews
+    elsif rating_product.metafields.yotpo.reviews_average != blank
+      assign rating_value = rating_product.metafields.yotpo.reviews_average
+      assign reviews_count = rating_product.metafields.yotpo.reviews_count
+    elsif product.metafields.stamped.reviews_average != blank
+      assign rating_value = product.metafields.stamped.reviews_average
+      assign reviews_count = product.metafields.stamped.reviews_count
+    elsif rating_product.metafields.reviews.rating.value != blank
+      assign rating_value = rating_product.metafields.reviews.rating.value.rating
+      assign reviews_count = rating_product.metafields.reviews.rating_count
+    endif
+    assign rating_max = rating_product.metafields.reviews.rating.value.scale_max | default: 5
+  endif
+
+  comment
+    Determine whether to show the star rating widget if the product has no ratings
+  endcomment
+  if rating_value == blank
+    assign no_reviews = true
+  endif
+  
+  assign show_empty_reviews = false
+  if rating_value == blank and show_product_rating_if_no_reviews == true
+    assign show_empty_reviews = true
+  endif
+  
+  comment
+    Determine which color scheme to apply to the star rating widget
+  endcomment
+  case color_scheme
+    when 'light'
+      assign star_rating_color = 'rgba(' | append: settings.colorSchemeLightText.rgba | append: ')'
+    when 'accent'
+      assign star_rating_color = 'rgba(' | append: settings.homepage-sections-accent-secondary-color.rgba | append: ')'
+    when 'dark'
+      assign star_rating_color = 'rgba(' | append: settings.colorSchemeDarkText.rgba | append: ')'
+    else
+      assign star_rating_color = 'rgba(' | append: settings.star_rating_color.rgba | append: ')'
+  endcase
+  
+  assign empty_star_color = 'color-mix(in srgb, ' | append: star_rating_color | append: ', transparent 85%)'
+  assign empty_star_stroke_color = 'color-mix(in srgb, ' | append: star_rating_color | append: ', transparent 50%)'
+
+  comment
+    Prepare the star rating value for visual representation
+  endcomment
+  assign rating_value_rounded = rating_value | round: 1
+  if rating_max == blank
+    assign rating_max = rating_product.metafields.reviews.rating.value.scale_max | default: 5
+  endif
+  assign rating_decimal = 0
+  assign decimal = rating_value | modulo: 1
+  if decimal >= 0.3 and decimal <= 0.7
+    assign rating_decimal = 0.5
+  elsif decimal > 0.7
+    assign rating_decimal = 1
+  endif
+
+  assign full_stars = rating_value | floor | plus: rating_decimal | floor
+  assign empty_stars = rating_max | round | minus: full_stars
+  if rating_decimal == 0.5
+    assign empty_stars = empty_stars | minus: 1
+  endif
+%}
+
+{% if no_reviews %}
+  {% unless show_empty_reviews == false %}
+    {% if wrapper_class %}
+      <div class="{{ wrapper_class }}">
+    {% endif %}
+      <div class="reviews-star-rating no-rating{% if classes %} {{ classes }}{% endif %}">
+        <div class="reviews-star-rating__stars" role="img" aria-label="{{ 'products.product.no_reviews' | t }}">
+          {% for i in (1..5) %}
+            {% render 'theme-icon', icon: 'star-filled', iconColor: empty_star_color, iconStroke: empty_star_stroke_color, iconSize: star_size %}
+          {% endfor %}
+        </div>
+        <span>
+          {{ no_reviews_label }}
+        </span>
+      </div>
+    {% if wrapper_class %}
+      </div>
+    {% endif %}
+  {% endunless %}
+{% else %}
+  {% if wrapper_class %}
+    <div class="{{ wrapper_class }}">
+  {% endif %}
+    <div class="reviews-star-rating has-rating{% if classes %} {{ classes }}{% endif %}">
+      <div class="reviews-star-rating__stars" role="img" aria-label="{{ 'products.product.reviews_rating' | t: value: rating_value_rounded, max: rating_max }}">
+        {% if full_stars > 0 %}
+          {% for i in (1..full_stars) %}
+            {% render 'theme-icon', icon: 'star-filled', iconColor: star_rating_color, iconSize: star_size %}
+          {% endfor %}
+        {% endif %}
+
+        {% if rating_decimal == 0.5 %}
+          {% render 'theme-icon', icon: 'star-half-filled', iconColor: star_rating_color, iconSize: star_size, id: section.id %}
+        {% endif %}
+
+        {% if empty_stars > 0 %}
+          {% for i in (1..empty_stars) %}
+            {% render 'theme-icon', icon: 'star-filled', iconColor: empty_star_color, iconStroke: empty_star_stroke_color, iconSize: star_size %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {% if show_rating_as == 'count' or show_rating_as == 'average_rating' or show_rating_as == 'rating_with_scale' %}
+        <span class="reviews-star-rating__value-reviews">
+          {% if show_rating_as == 'count' %}
+            {{ reviews_count }}
+            {% if reviews_count == 1 %}
+              {{ 'products.product.review' | t }}
+            {% else %}
+              {{ 'products.product.reviews' | t }}
+            {% endif %}
+          {% elsif show_rating_as == 'average_rating' %}
+            ({{ rating_value_rounded }})
+          {% elsif show_rating_as == 'rating_with_scale' %}
+            ({{ rating_value_rounded }}/{{ rating_max }})
+          {% endif %}
+        </span>
+      {% endif %}
+    </div>
+  {% if wrapper_class %}
+    </div>
+  {% endif %}
+{% endif %}

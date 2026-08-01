@@ -1,0 +1,63 @@
+{%
+  ###############################
+  # Free shipping progress bar
+  #
+  # Pure Liquid, no JS required - in the cart drawer it renders inside the
+  # "cart-body" dynamic region, which is re-rendered on every cart mutation.
+  # On the cart page updates are full-page form submits, so it is always fresh.
+  #
+  # Eligible total (Prestige parity):
+  #   - only lines that require shipping count towards progress
+  #   - cart-level discounts are subtracted in full (a mixed cart with an
+  #     order-level discount slightly understates progress - accepted approximation)
+  #   - the threshold is a raw number in the store's main currency and is NOT
+  #     currency-converted; per-market amounts via the Translate & Adapt app
+  ###############################
+%}
+
+{%- liquid
+  assign free_shipping_threshold = settings.cart_free_shipping_threshold | plus: 0
+-%}
+
+{%- if settings.cart_free_shipping_bar_enable and free_shipping_threshold > 0 and cart.item_count > 0 and cart.requires_shipping -%}
+  {%- liquid
+    assign free_shipping_threshold_cents = free_shipping_threshold | times: 100
+
+    assign free_shipping_total = 0
+    for free_shipping_item in cart.items
+      if free_shipping_item.requires_shipping
+        assign free_shipping_total = free_shipping_total | plus: free_shipping_item.final_line_price
+      endif
+    endfor
+    for free_shipping_discount in cart.cart_level_discount_applications
+      assign free_shipping_total = free_shipping_total | minus: free_shipping_discount.total_allocated_amount
+    endfor
+    if free_shipping_total < 0
+      assign free_shipping_total = 0
+    endif
+
+    assign free_shipping_progress = free_shipping_total | times: 100 | divided_by: free_shipping_threshold_cents | at_most: 100
+    assign free_shipping_remaining = free_shipping_threshold_cents | minus: free_shipping_total
+    if settings.show_currency_code
+      assign free_shipping_remaining_money = free_shipping_remaining | money_with_currency
+    else
+      assign free_shipping_remaining_money = free_shipping_remaining | money
+    endif
+  -%}
+
+  <div
+    class="cart-free-shipping-bar{% if free_shipping_total >= free_shipping_threshold_cents %} cart-free-shipping-bar--reached{% endif %}"
+    aria-live="polite"
+  >
+    <p class="cart-free-shipping-bar__message">
+      {%- if free_shipping_total >= free_shipping_threshold_cents -%}
+        {{ 'cart.general.free_shipping_reached' | t }}
+      {%- else -%}
+        {{ 'cart.general.free_shipping_remaining_html' | t: remaining: free_shipping_remaining_money }}
+      {%- endif -%}
+    </p>
+    <div class="cart-free-shipping-bar__track">
+      <span class="cart-free-shipping-bar__fill" style="width: {{ free_shipping_progress }}%"></span>
+    </div>
+  </div>
+{%- endif -%}

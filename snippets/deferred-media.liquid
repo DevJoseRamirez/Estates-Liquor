@@ -1,0 +1,283 @@
+{% comment %}
+  Renders a deferred media object with a poster image and a media player.
+
+  Accepts:
+  - delayed_media: Video object (required)
+  - section_id: ID of the section containing the media (required)
+  - media_poster_image: Image object to use as the poster image (optional)
+  - media_poster_classes: Additional classes to apply to the poster image (optional)
+  - enable_video_loop: Whether to loop the video (required)
+  - show_controls: Whether to show video controls (required)
+  - enable_autoplay: Whether to autoplay the video (required)
+  - mute: Whether to mute the video (optional)
+  - media_wrapper_classes: Additional classes to apply to the media wrapper (optional)
+  - active_media_class: Class to apply to the active media element (optional),
+  - button_classes: Additional classes to apply to the play button (optional)
+  - aspect_ratio: Aspect ratio to apply to the media wrapper (optional)
+  - media_product: Product object (optional)
+  - media_type: Type of media eg. 'grid' or 'slider' (required for autoplay)
+  - is_product_media: Whether the media is within a slider (optional)
+  - video_alt_text: Text to use as the alt text for the video (optional)
+  - is_background_media: Whether the media is a background media (optional)
+  - remove_media_padding: Whether to remove the media padding (optional)
+  - click_to_play: Whether to click to play the media (optional)
+  - use_js_api: Whether to use the JS API (optional)
+  - container_classes: Additional classes to apply to the container (optional)
+  - is_modal_trigger: Whether the media is a modal trigger (optional)
+  
+  Usage:
+    {% render 'delayed_media', delayed_media: media, enable_video_loop: enable_video_loop, media_wrapper_classes: 'product-single__media__wrapper' %}
+{% endcomment %}
+
+{% liquid 
+  if aspect_ratio == 'adapt_to_first_image' and media_product != blank
+    assign first_image_ratio = media_product.media.first.preview_image.aspect_ratio
+    assign adapt_ratio = 1 | divided_by: first_image_ratio | times: 100
+  endif
+
+  if aspect_ratio
+    assign ratio_class = 'external-media-ratio--' | append: aspect_ratio
+  endif
+
+  if delayed_media.media_type != null
+    assign delayed_media_type = delayed_media.media_type
+  else
+    assign delayed_media_type = delayed_media.type
+  endif
+
+  if is_product_media == true or is_product_media == false
+    assign is_product_media = is_product_media
+  else
+    assign is_product_media = true
+  endif
+
+  if is_product_media == true and media_type == 'slider' and delayed_media_type == 'model'
+    assign enable_autoplay = false
+  endif
+
+  if is_background_media == true
+    assign is_background_media = true
+  else
+    assign is_background_media = false
+  endif
+
+  assign muted = false
+  if enable_autoplay or mute == true
+    assign muted = true
+  endif
+
+  assign poster_image = delayed_media.preview_image
+  if media_poster_image
+    assign poster_image = media_poster_image
+  endif
+
+  assign video_id = delayed_media.id
+  assign loop = ''
+  if enable_video_loop
+    assign loop = '&loop=1&playlist=' | append: video_id
+  endif
+
+  assign controls = ''
+  if show_controls
+    assign controls = '&controls=1'
+  else
+    assign controls = '&controls=0'
+  endif
+
+  if remove_media_padding == true
+    assign remove_media_padding = true
+  else
+    assign remove_media_padding = false
+  endif
+
+  if video_alt_text != blank
+    assign alt_text = video_alt_text | escape
+  elsif delayed_media.alt != blank
+    assign alt_text = delayed_media.alt | escape
+  endif
+
+  if is_modal_trigger == true
+    assign is_modal_trigger = true
+  else
+    assign is_modal_trigger = false
+  endif
+%}
+
+{{ 'component-deferred-media.min.css' | asset_url | stylesheet_tag }}
+
+{% if aspect_ratio == 'original' %}
+  {% if delayed_media.aspect_ratio %}
+    {% capture padding_style %}style="padding-top: {{ 1 | divided_by: delayed_media.aspect_ratio | times: 100 }}%"{% endcapture %}
+  {% else %}
+    {% if poster_image != null %}
+      {% capture padding_style %}style="padding-top: {{ 1 | divided_by: poster_image.aspect_ratio | times: 100 }}%"{% endcapture %}
+    {% else %}
+      {% capture padding_style %}style="padding-top: 56.25%"{% endcapture %}
+    {% endif %}
+  {% endif %}
+{% elsif aspect_ratio == 'adapt_to_first_image' %}
+  {% capture padding_style %}style="padding-top: {{ adapt_ratio }}%"{% endcapture %}
+{% endif %}
+
+{% if delayed_media %}
+  <deferred-media
+    data-media-id="{{ delayed_media.id }}"
+    data-section-id="{{ section_id }}"
+    data-auto-play="{{ enable_autoplay }}"
+    data-media-layout="{{ media_type }}"
+    data-show-controls="{{ show_controls }}"
+    data-media-count="{{ product.media.size }}"
+    data-is-product-media="{{ is_product_media }}"
+    data-click-to-play="{{ click_to_play | default: false }}"
+    data-use-js-api="{{ use_js_api | default: false }}"
+    data-is-background-media="{{ is_background_media }}"
+    data-is-modal-trigger="{{ is_modal_trigger }}"
+    {% if active_media_class %}data-active-media-class="{{ active_media_class }}"{% endif %}
+    {% if container_classes %}class="{{ container_classes }}"{% endif %}
+  >
+    {% unless is_background_media %}
+      <div class="deferred-media-poster-image"{% unless remove_media_padding %}{{ padding_style }}{% endunless %}>
+        {% if poster_image != null %}
+          <img
+            data-media-poster
+            class="{% if media_poster_classes %}{{ media_poster_classes }}{% endif %}{% if aspect_ratio %} media-ratio--{{ aspect_ratio }}{% endif %}"
+            src="{{ poster_image | image_url: width: 1445 }}"
+            alt="{{ alt_text }}"
+            width="{{ poster_image.width }}"
+            height="{{ poster_image.height }}"
+            sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+            loading="eager"
+          />
+        {% else %}
+          {% liquid 
+            assign placeholder_class = 'icon icon--placeholder icon--placeholder--subdued'
+            if aspect_ratio
+              assign placeholder_class = placeholder_class | append: ' media-ratio--' | append: aspect_ratio
+            endif
+          %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: placeholder_class | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' }}
+        {% endif %}
+      </div>
+    {% endunless %}
+
+    <template>
+      {%- case delayed_media_type -%}
+        {%- when 'external_video' -%}
+          {%- liquid
+            assign video_class = 'js-' | append: delayed_media.host
+          -%}
+          {%- if delayed_media.host == 'youtube' -%}
+            <div data-media-wrapper class="type-{{ delayed_media.host }}{% if media_wrapper_classes %} {{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+              <div class="media-buffer--left"></div>
+              {{ delayed_media | external_video_url: autoplay: true, mute: muted, loop: enable_video_loop, controls: show_controls, playlist: delayed_media.external_id | external_video_tag: class: video_class, loading: "lazy", title: alt_text }}
+              <div class="media-buffer--right"></div>
+              {% comment %} Loading icon {% endcomment %}
+              <div class="hidden" data-media-loading-icon>
+                {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x', iconSize: '1.6em' %}
+              </div>
+            </div>
+          {%- else -%}
+            <div data-media-wrapper class="type-{{ delayed_media.host }}{% if media_wrapper_classes %} {{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+              <div class="media-buffer--left"></div>
+              {{ delayed_media | external_video_url: autoplay: true, muted: muted, loop: enable_video_loop, controls: show_controls | external_video_tag: class: video_class, loading: "lazy", title: alt_text }}
+              <div class="media-buffer--right"></div>
+              {% comment %} Loading icon {% endcomment %}
+              <div class="hidden" data-media-loading-icon>
+                {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x', iconSize: '1.6em' %}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- when 'youtube' -%}
+          {% liquid 
+            assign mute = ''
+            if muted
+              assign mute = '&mute=1'
+            endif
+          %}
+          <div data-media-wrapper class="type-youtube{% if media_wrapper_classes %} {{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&playsinline=1{{ loop }}{{ controls }}{{ mute }}&rel=0"
+              class="js-youtube{% if is_background_media %} is-background-media{% endif %}"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ alt_text }}"
+            ></iframe>
+            {% comment %} Loading icon {% endcomment %}
+            <div class="hidden" data-media-loading-icon>
+              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x', iconSize: '1.6em' %}
+            </div>
+          </div>
+        {%-  when 'vimeo' -%}
+          {% liquid 
+            assign mute = ''
+            if muted
+              assign mute = '&muted=1'
+            endif
+          %}
+          <div data-media-wrapper class="type-vimeo{% if media_wrapper_classes %} {{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}?enablejsapi&autoplay=1&playsinline=1{{ loop }}{{ controls }}{{ mute }}"
+              class="js-vimeo{% if is_background_media %} is-background-media{% endif %}"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ alt_text }}"
+            ></iframe>
+            {% comment %} Loading icon {% endcomment %}
+            <div class="hidden" data-media-loading-icon>
+              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x', iconSize: '1.6em' %}
+            </div>
+          </div>
+        {%- when 'video' -%}
+          {% liquid 
+            assign video_class = 'plyr'
+            if is_background_media
+              assign video_class = video_class | append: ' is-background-media'
+            endif
+          %}
+          <div data-media-wrapper class="{% if media_wrapper_classes %}{{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+            {{ 'plyr.min.css' | asset_url | stylesheet_tag }}
+            {{ delayed_media | media_tag: image_size: "2048x", class: video_class, autoplay: true, loop: enable_video_loop, controls: show_controls, muted: muted, preload: "none", title: alt_text }}
+            {% comment %} Loading icon {% endcomment %}
+            <div class="hidden" data-media-loading-icon>
+              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x', iconSize: '1.6em' %}
+            </div>
+          </div>
+        {%- when 'model' -%}
+          <div data-media-wrapper class="{% if media_wrapper_classes %}{{ media_wrapper_classes }}{% endif %} {{ ratio_class }}">
+            <div class="media-buffer--left"></div>
+            {{ 'shopify-model-viewer-ui.min.css' | asset_url | stylesheet_tag }}
+            {{ delayed_media | media_tag: image_size: "2048x", toggleable: true }}
+            <div class="media-buffer--right"></div>
+          </div>
+      {%- endcase -%}
+    </template>
+
+    {% unless is_background_media %}
+      {% if delayed_media_type == 'video' or delayed_media_type == 'external_video' or delayed_media_type == 'youtube' or delayed_media_type == 'vimeo' %}
+        <button
+          type="button"
+          class="round-icon-btn-lg btn-colors-primary btn-hover-default icon-btn-focus {{ button_classes }}"
+          tabindex="0"
+          data-media-id="{{ delayed_media.id }}"
+          data-media-play-button
+          aria-label="{{ 'general.accessibility.play_icon.play_media' | t | append: ' ' | append: alt_text }}"
+        >
+          {% render 'theme-icon', icon: 'play', iconSize: 20 %}
+        </button>
+      {% endif %}
+    {% endunless %}
+
+    {% if delayed_media_type == 'model' %}
+      <button
+        type="button"
+        class="round-icon-btn-lg btn-colors-primary btn-hover-default icon-btn-focus {{ button_classes }}"
+        tabindex="0"
+        data-media-id="{{ delayed_media.id }}"
+        data-media-play-button
+        aria-label="{{ 'general.accessibility.3d_model.load_3d_model' | t }}"
+      >
+        {% render 'theme-icon', icon: 'cube', iconSize: 20 %}
+      </button>
+    {% endif %}
+  </deferred-media>
+{% endif %}

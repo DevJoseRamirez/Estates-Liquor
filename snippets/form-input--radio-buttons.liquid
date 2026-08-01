@@ -1,0 +1,68 @@
+{% comment %}
+    Renders a set of radio buttons
+
+    Accepts:
+    - options: The options to render as radio buttons (required)
+    - hint_text: {String} the text to display as a hint (optional)
+    - label_text: {String} the text to display as the label
+    - label_class: {String} any custom classes for the label element
+    - container_classes: {String} add custom classes to the container
+    - id: {String} ID to be applied to the input
+    - classes: {String} custom classes to be applied to the input (optional)
+    - name: {String} the name attribute of the input
+    - attributes: {String} add custom element attributes (data-* or aria)
+    - data_aid: {String} data aid for the textarea
+    - form_id: {String} the form id to be used for the form attribute (optional)
+    - label_is_body_font: {Boolean} whether to use body font instead of label-font (optional, defaults to false)
+    - preselect_first_option: {Boolean} whether to preselect the first option (optional, defaults to false)
+    - required: {Boolean} whether the input is required (optional, defaults to false)
+    Usage:
+      {% render 'form-input--radio-buttons', id: 'contact-form--radio', name: 'properties[radio]', attributes: 'aria-label="Accept terms"', options: 'yes, no', required: false, preselect_first_option: true  %}
+{% endcomment %}
+
+{% liquid
+  assign radio_options = options | split: ','
+  
+  if label_is_body_font == blank
+    assign label_is_body_font = false
+  endif
+%}
+
+{{ 'component-radio-buttons.min.css' | asset_url | stylesheet_tag }}
+
+{% capture label %}
+  <div class="radio-label{% unless label_is_body_font %} label-font{% endunless %}{% if label_class %} {{ label_class }}{% endif %}">{{ label_text }}</div>
+{% endcapture %}
+
+<div class="product-block-radio-buttons input-wrapper text-link-animated">
+  {{ label }}
+
+  {% if hint_text != blank %}
+    <div class="form-input-hint">{{ hint_text }}</div>
+  {% endif %}
+
+  <div class="form-input-options">
+    {% for option in radio_options %}
+      {% assign radio_id = id | append: '-' | append: forloop.index %}
+      <div class="form-input-wrapper{% if container_classes %} {{ container_classes }}{% endif %}">
+        <input
+          type="radio"
+          name="{{ name }}"
+          value="{{ option | escape }}"
+          class="radio-input{% if classes %} {{ classes }}{% endif %}"
+          id="{{ radio_id }}"
+          {% if attributes %} {{ attributes }}{% endif %}
+          {% if data_aid %}data-aid="{{ data_aid }}"{% else %}data-aid="radio-button"{% endif %}
+          {% if form_id %}form="{{ form_id }}"{% endif %}
+          {% if forloop.first and preselect_first_option %}checked{% endif %}
+          {% if required %}required aria-required="true"{% endif %}
+        />
+
+        <div class="radio-circle--inner"></div>
+        <div class="radio-circle--outer custom-input"></div>
+
+        <label class="radio-text" for="{{ radio_id }}">{{ option }}</label>
+      </div>
+    {% endfor %}
+  </div>
+</div>

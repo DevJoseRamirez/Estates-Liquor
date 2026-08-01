@@ -1,0 +1,277 @@
+{% liquid
+  assign crop_setting = settings.product-grid
+
+  if crop_setting == "square" or crop_setting == "tall" or crop_setting == "wide"
+    assign image_crop = "aspect-ratio--" | append: crop_setting
+  else
+    assign image_crop = false
+  endif
+
+  assign alignment_class = 'text-align--' | append: settings.product_card_text_alignment
+
+  assign quick_shop_desktop_enabled = settings.enable_quick_shop_desktop
+  assign quick_shop_mobile_enabled = settings.enable_quick_shop_mobile
+
+  if quick_shop_desktop_enabled == false and quick_shop_mobile_enabled
+    assign quick_shop_mobile_only = true
+  endif
+
+  if quick_shop_desktop_enabled and quick_shop_mobile_enabled == false
+    assign quick_shop_desktop_only = true
+  endif
+
+  if settings.show_product_card_vendor
+    assign vendor_font = 'product-grid--vendor-font-' | append: settings.type_card_vendor_font
+  endif
+
+  if settings.show_product_card_title
+    assign title_font = 'product-grid--title-font-' | append: settings.type_card_title_font
+  endif
+
+  if settings.show_product_card_price
+    assign price_font = 'product-grid--price-font-' | append: settings.type_card_price_font
+  endif
+
+  if settings.show_card_color_swatches
+    assign show_color_label = settings.show_card_color_swatch_label
+  endif
+
+  assign svg_index = svg_index | plus: 0 | default: 1
+
+  if settings.product_card_max_lines > 0
+    if settings.product_card_max_lines == 1
+      assign truncate_value = 20
+    elsif settings.product_card_max_lines == 2
+      assign truncate_value = 40
+    elsif settings.product_card_max_lines == 3
+      assign truncate_value = 60
+    elsif settings.product_card_max_lines == 4
+      assign truncate_value = 80
+    endif
+  endif
+%}
+
+{% if settings.show_badges and badge_anim_order %}
+  {% capture badge_attributes %}
+    data-animate
+    data-animate-left
+    data-animate-order="{% render 'block-animation-offset', 
+      title: section.settings.title, 
+      description: section.settings.description, 
+      base: badge_anim_order
+    %}"
+  {% endcapture %}
+{% endif %}
+
+<safe-load-scripts class="hidden">
+  <script src="{{ 'component-product-card.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-product-card"></script>
+</safe-load-scripts>
+
+<product-card class="grid-view-item {{ alignment_class }}">
+  <div>
+    <div class="grid-view-item-image block-radius-clip">
+
+      {% if settings.show_badges %}
+        {%- if svg_index == 1 -%}
+          {%- render 'badge', badge: 'sold-out', attributes: badge_attributes -%}
+        {%- endif -%}
+      {% endif %}
+
+      <a href="/admin/products" aria-label="{{ 'homepage.onboarding.product_title' | t }}" class="grid-view-item__link" tabindex="-1">
+        {% if image_crop %}<div class="aspect-ratio {{ image_crop }}">{% endif %}
+          <div class="grid-view-item__image grid-view-item--placeholder{% unless image_crop %} ratio-natural{% endunless %}">
+              {{ 'product-' | append: svg_index | placeholder_svg_tag: 'icon icon--placeholder grid__image primary-placeholder-image block-radius' }}
+
+              {% if settings.hover-effect %}
+                  {{ 'product-' | append: svg_index_reversed | placeholder_svg_tag: 'icon icon--placeholder grid__image secondary-placeholder-image block-radius' }}
+              {% endif %}
+          </div>
+        {% if image_crop %}</div>{% endif %}
+      </a>
+
+      {% if quick_shop_desktop_enabled or quick_shop_mobile_enabled %}
+        {% if settings.quick_shop_button_display == 'over_image' %}
+          <div class="product-card-image--bottom-wrapper">
+            <div class="quick-add-wrapper">
+              {% if quick_shop_desktop_enabled %}
+                <a class="btn quick-add-button-onboarding quick-add-button-onboarding-desktop" tabindex="0" href="{{ product.url | within: collection }}">{{ 'products.product.add_to_cart' | t }}</a>
+              {% endif %}
+
+              {% if quick_shop_mobile_enabled %}
+                <a class="quick-add-button-onboarding quick-add-button-onboarding-mobile btn-hover-default-inner icon-btn-focus-inner" tabindex="0" href="{{ product.url | within: collection }}"><span class="btn-colors-primary round-icon-btn-sm">{% render 'theme-icon', icon: 'shopping-bag', iconClasses: 'quick-view-mobile-icon', iconSize: 16 %}</span></a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+    </div>
+
+    {% liquid
+      assign has_highlight = false
+      if show_highlight
+        assign has_highlight = true
+      endif
+
+      assign has_highlight_below_image = false
+      if has_highlight and highlight_position == 'below_image'
+        assign has_highlight_below_image = true
+      endif
+    %}
+
+    {% capture highlight_html %}
+      {% liquid
+        if highlight_custom_icon
+          assign highlight_icon_ref = highlight_custom_icon
+          assign highlight_has_custom_icon = true
+        else
+          assign highlight_icon_ref = highlight_icon
+          assign highlight_has_custom_icon = false
+          assign highlight_custom_icon = false
+        endif
+
+        assign has_text_color = false
+        if highlight_text_color != 'rgba(0,0,0,0)'
+          assign has_text_color = true
+          assign highlight_text_color_rgba = 'rgba(' | append: highlight_text_color.rgba | append: ')'
+          assign highlight_link_color = 'rgba(' | append: highlight_text_color.rgba | append: ')'
+          assign highlight_link_border_color = 'color-mix(in srgb, ' | append: highlight_text_color_rgba | append: ', transparent 50%)'
+        endif
+
+        assign highlight_content = 'general.onboarding.highlight_content' | t
+      %}
+      <div
+        class="product-grid--highlight product-grid--highlight--{{ highlight_alignment }} product-grid--highlight--font-size--{{ highlight_font_size }}{% if highlight_background_color != 'rgba(0,0,0,0)' %} product-grid--highlight--has-background{% endif %}{% if highlight_show_border %} product-grid--highlight--has-border{% endif %}{% if highlight_collapsible_tab %}{% if highlight_button_borders %} product-grid--highlight--button-borders{% endif %}{% else %} block-radius{% endif %}{% if has_text_color %} product-grid--highlight--text-color{% endif %}"
+        style="{% if has_text_color %}color: {{ highlight_text_color }}; --link-color: {{ highlight_link_color }}; --link-border-color: {{ highlight_link_border_color }}; --highlight-border-color: {{ highlight_text_color | color_modify: 'alpha', 0.25 }};{% endif %} background-color: {{ highlight_background_color }};"
+      >
+        {% if highlight_collapsible_tab %}
+          {% render 'collapsible-tab', icon: highlight_icon_ref, custom_icon: highlight_has_custom_icon, heading: highlight_heading, content: highlight_content, open_close_icon: highlight_open_close_icon, open_by_default: false, heading_classes: 'header-font text-link-animated' %}
+        {% else %}
+          <div class="product-grid--highlight--no-tab">
+            <div>
+            {% unless highlight_icon_ref == 'none' and highlight_has_custom_icon == false and highlight_heading == blank %}
+              {% render 'text-with-icon', icon: highlight_icon_ref, custom_icon: highlight_has_custom_icon, text: highlight_heading, text_classes: 'header-font text-link-animated' %}
+            {% endunless %}
+            <div class="text-link-animated">
+              {{ highlight_content }}
+            </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endcapture %}
+
+    {% if has_highlight_below_image %}
+      {{ highlight_html }}
+    {% endif %}
+
+    {% if settings.show_product_card_vendor %}
+      <div class="product-grid--vendor {{ vendor_font }}">{{ 'homepage.onboarding.product_vendor' | t }}</div>
+    {% endif %}
+
+    {% if settings.show_product_card_title %}
+      <div class="product-grid--title {{ title_font }}">
+        <a{% unless settings.product_card_text_alignment == 'right' %} class="text-truncate--line"{% endunless %} href="/admin/products">{% if settings.product_card_max_lines > 0 and settings.product_card_text_alignment == 'right' %}{{ 'homepage.onboarding.product_title' | t | truncate: truncate_value }}{% else %}{{ 'homepage.onboarding.product_title' | t }}{% endif %}</a>
+      </div>
+    {% endif %}
+
+    {% if settings.show_product_card_price %}
+      <div class="product-grid--price {{ price_font }}">
+        <a href="/admin/products" tabindex="-1">
+          <span class="money">
+            {% if settings.show_currency_code %}
+              {{ 1999 | money_with_currency }}
+            {% else %}
+              {{ 1999 | money }}
+            {% endif %}
+          </span>
+        </a>
+      </div>
+    {% endif %}
+
+    {% liquid
+      assign has_highlight_below_price = false
+      if has_highlight and highlight_position == 'below_price'
+        assign has_highlight_below_price = true
+      endif
+    %}
+
+    {% if has_highlight_below_price %}
+      {{ highlight_html }}
+    {% endif %}
+
+    {% if settings.show_product_rating %}
+      {% render 'reviews-star-rating',
+        rating_product: product,
+        star_color: settings.star_rating_color,
+        classes: alignment_class,
+        star_size: settings.star_size,
+        no_reviews_label: settings.no_reviews_label,
+        show_rating_as: settings.show_rating_as,
+        show_product_rating_if_no_reviews: settings.show_product_rating_if_no_reviews,
+        color_scheme: section_color_scheme,
+        wrapper_class: 'product-grid--rating'
+      %}
+    {% endif %}
+
+    {% if settings.show_card_color_swatches %}
+      {% render 'card-color-swatch', swatch_product: null, swatch_option: '', hide_out_of_stock_variants: false, show_color_label: show_color_label %}
+    {% endif %}
+  </div>
+
+  {% liquid
+    assign has_highlight_below_swatches = false
+    if has_highlight and highlight_position == 'bottom'
+      assign has_highlight_below_swatches = true
+    endif
+
+    assign has_highlight_below_quick_view = false
+    if has_highlight and highlight_position == 'below_quick_view'
+      assign has_highlight_below_quick_view = true
+    endif
+
+    assign has_highlight_bottom = false
+    if has_highlight_below_swatches or has_highlight_below_quick_view
+      assign has_highlight_bottom = true
+    endif
+
+    assign has_quick_shop_block = false
+    if settings.quick_shop_button_display == 'below_image' and quick_shop_desktop_enabled or quick_shop_mobile_enabled
+      assign has_quick_shop_block = true
+    endif
+  %}
+
+  {% if has_highlight_bottom or has_quick_shop_block %}
+    <div class="product-grid--footer">
+
+      {% if has_highlight_below_swatches %}
+        {{ highlight_html }}
+      {% endif %}
+
+      {% if quick_shop_desktop_enabled or quick_shop_mobile_enabled %}
+        {% if settings.quick_shop_button_display == 'below_image' %}
+          {% liquid
+            case settings.quick_shop_button_style
+              when 'filled'
+                assign button_classes = 'btn'
+              when 'outline'
+                assign button_classes = 'btn btn--secondary'
+              when 'underlined'
+                assign button_classes = 'btn--underlined'
+            endcase
+            if section_id
+              assign button_classes = 'dynamic-section-button--grid-item--' | append: section_id | append: ' ' | append: button_classes
+            endif
+          %}
+          <div class="product-grid--quick-shop quick-shop--block{% if quick_shop_mobile_only %} large-hide{% elsif quick_shop_desktop_only %} small-hide{% endif %}{% if settings.quick_shop_button_style == 'underlined' %} text-link-animated{% endif %}">
+            <button data-quick-add-button class="{{ button_classes }} quick-add-button quick-add-button-desktop" type="submit" tabindex="0">{{ 'products.product.add_to_cart' | t }}</button>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if has_highlight_below_quick_view %}
+        {{ highlight_html }}
+      {% endif %}
+    </div>
+  {% endif %}
+</product-card>

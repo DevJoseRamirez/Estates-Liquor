@@ -1,0 +1,119 @@
+{% comment %}
+  Renders a sale badge or sold-out badge for a product
+
+  Accepts:
+	- badge: {string} The type of badge to render. Can be 'sale' or 'sold-out'
+  - badge_product: {product} The product to render the badge for
+  - use_variant: {boolean} Whether to use the variant or the product for the badge
+
+  Usage:
+    {%- render 'badge', badge: 'sale', badge_product: product -%}
+{% endcomment %}
+
+{% liquid 
+  assign current_variant = badge_product.selected_or_first_available_variant
+  assign current_variant_on_sale = false
+  assign target = badge_product
+
+  unless use_variant
+    if badge_product.price_varies
+      for option in badge_product.options_with_values
+        for option_value in option.values
+          if settings.when_card_price_varies == 'show_from_price'
+            if option_value.variant.price == badge_product.price_min and option_value.variant.compare_at_price == badge_product.compare_at_price_min
+              if option_value.variant.compare_at_price > option_value.variant.price
+                comment
+                  The current variant in the loop is the cheapest and it's on sale - use it as the 'from' price target
+                endcomment
+                assign current_variant_on_sale = true
+                assign target = option_value.variant
+              endif
+            elsif option_value.variant.price == badge_product.price_min
+              comment 
+                The current variant in the loop is the cheapest but not on sale - use it as the 'from' price target
+              endcomment
+              assign target = option_value.variant
+            endif
+          elsif settings.when_card_price_varies == 'show_max_price'
+            if option_value.variant.price == badge_product.price_max and option_value.variant.compare_at_price == badge_product.compare_at_price_max
+              if option_value.variant.compare_at_price > option_value.variant.price
+                comment
+                  The current variant in the loop is the most expensive and it's on sale - use it as the 'max' price target
+                endcomment
+                assign current_variant_on_sale = true
+                assign target = option_value.variant
+              endif
+            elsif option_value.variant.price == badge_product.price_max
+              comment 
+                The current variant in the loop is the most expensive but not on sale - use it as the target 'max' price target
+              endcomment
+              assign target = option_value.variant
+            endif
+          endif
+        endfor
+      endfor
+    else
+      if badge_product.compare_at_price > badge_product.price
+        comment 
+          The product is on sale and there's only one variant - use the product as the target
+        endcomment
+        assign current_variant_on_sale = true
+        assign target = badge_product
+      endif
+    endif
+
+    if badge_product.price_varies and target.compare_at_price > target.price
+      assign product_on_sale = true
+    elsif badge_product.compare_at_price_max > badge_product.price
+      assign product_on_sale = true
+    else
+      assign product_on_sale = false
+    endif
+  else
+    if current_variant.compare_at_price > current_variant.price
+      comment 
+        The current variant is on sale - use it as the target
+      endcomment
+      assign current_variant_on_sale = true
+      assign target = current_variant
+      assign product_on_sale = true
+    endif
+  endunless
+
+	assign discount_percentage = target.compare_at_price | minus: target.price | times: 100.0 | divided_by: target.compare_at_price | round | prepend: '-' | append: '%'
+
+  if settings.show_currency_code
+    assign discount_value = target.compare_at_price | minus: target.price | money_with_currency | prepend: "-"
+  else
+    assign discount_value = target.compare_at_price | minus: target.price | money | prepend: "-"
+	endif
+%}
+
+{%- if badge == 'sale' -%}
+	{% if product_on_sale == true %}
+		{% case settings.discount_badge_type %}
+			{% when 'hide' %}
+				<div class="sale-badge badge" {{ attributes }}>{{ 'products.product.sale' | t }}</div>
+
+			{% when 'percentage' %}
+				{% if current_variant_on_sale and discount_percentage != '-0%' and discount_percentage != blank %}
+					<div class="sale-badge badge" {{ attributes }}>{{ discount_percentage }}</div>
+				{% else %}
+					<div class="sale-badge badge" {{ attributes }}>{{ 'products.product.sale' | t }}</div>
+				{% endif %}
+
+			{% when 'value' %}
+				{% if current_variant_on_sale and target.compare_at_price %}
+					<div class="sale-badge badge" {{ attributes }}>{{ discount_value }}</div>
+				{% else %}
+					<div class="sale-badge badge" {{ attributes }}>{{ 'products.product.sale' | t }}</div>
+				{% endif %}
+		{% endcase %}
+	{% endif %}
+{%- elsif badge == 'sold-out' -%}
+	<div class="sold-out-badge badge" {{ attributes }}>{{ 'products.product.sold_out' | t }}</div>
+{%- elsif badge == 'preorder' -%}
+  <div class="preorder-badge badge" {{ attributes }}>{{ preorder_badge }}</div>
+{%- elsif badge == 'custom' -%}
+  <div class="custom-badge badge" {{ attributes }}>{{ custom_badge }}</div>
+{%- endif -%}
