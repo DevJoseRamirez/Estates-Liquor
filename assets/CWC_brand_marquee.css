@@ -1,0 +1,164 @@
+/* ==============================
+   CWC Brand Marquee
+   ============================== */
+
+/* === Section Wrapper === */
+/* Full-bleed by design — the pinned label sits flush to the viewport edge,
+   so this section intentionally has no 1300px container. */
+.cwc_brand-marquee {
+  font-size: 16px;
+  /* section anchor — all type below is em relative to this */
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+}
+
+.cwc_brand-marquee--bordered {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cwc_brand-marquee__inner {
+  display: flex;
+  align-items: stretch;
+}
+
+/* === Fixed Label === */
+.cwc_brand-marquee__label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: var(--padding-top) 20px var(--padding-bottom);
+  background-color: var(--label-bg);
+  color: var(--label-text-color);
+  font-size: 0.625em;
+  /* 10px */
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* === Viewport (clips the track and fades both edges) === */
+.cwc_brand-marquee__viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_brand-marquee--scroll .cwc_brand-marquee__viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%);
+}
+
+/* === Track === */
+.cwc_brand-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: var(--item-gap);
+}
+
+.cwc_brand-marquee--scroll .cwc_brand-marquee__track {
+  width: max-content;
+  padding-left: var(--item-gap);
+  animation: cwc_brand-marquee-scroll var(--scroll-duration) linear infinite;
+}
+
+.cwc_brand-marquee--reverse .cwc_brand-marquee__track {
+  animation-direction: reverse;
+}
+
+.cwc_brand-marquee--pause:hover .cwc_brand-marquee__track,
+.cwc_brand-marquee--pause:focus-within .cwc_brand-marquee__track {
+  animation-play-state: paused;
+}
+
+.cwc_brand-marquee--static .cwc_brand-marquee__track {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0.5rem;
+}
+
+@keyframes cwc_brand-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* the track holds 4 copies of the block set — half of it is a seamless wrap */
+    transform: translateX(-50%);
+  }
+}
+
+/* === Brand Item === */
+.cwc_brand-marquee__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 0.9375em;
+  /* 15px */
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* gold dot sits centred in the gap that follows each brand */
+.cwc_brand-marquee__item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: calc(var(--item-gap) / -2);
+  transform: translate(50%, -50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--highlight-color);
+}
+
+.cwc_brand-marquee--static .cwc_brand-marquee__item:last-child::after {
+  display: none;
+}
+
+a.cwc_brand-marquee__item:hover {
+  color: var(--highlight-color);
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  .cwc_brand-marquee--scroll .cwc_brand-marquee__track {
+    animation: none;
+    width: 100%;
+    padding-left: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 767px) {
+  /* rescale the whole section from one anchor */
+  .cwc_brand-marquee {
+    font-size: 14px;
+  }
+
+  .cwc_brand-marquee__label {
+    display: none;
+  }
+
+  .cwc_brand-marquee__viewport {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_brand-marquee--scroll .cwc_brand-marquee__viewport {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+  }
+}

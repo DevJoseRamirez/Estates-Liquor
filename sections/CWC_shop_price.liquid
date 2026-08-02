@@ -1,0 +1,299 @@
+{% style %}
+  #cwc_shop-price-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-bg-dark: {{ section.settings.card_bg_dark_color | default: '#0A1F12' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_shop_price.css' | asset_url | stylesheet_tag }}
+
+<section
+  id="cwc_shop-price-{{ section.id }}"
+  class="cwc_shop-price cwc_shop-price--align-{{ section.settings.heading_alignment }}"
+>
+  <div class="cwc_shop-price__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_shop-price__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_shop-price__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_shop-price__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_shop-price__rule" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_shop-price__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Price Tiles {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_shop-price__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'tile' %}
+              {% liquid
+                assign tile_collection = block.settings.collection
+
+                if block.settings.link != blank
+                  assign tile_link = block.settings.link
+                elsif tile_collection != blank
+                  assign tile_link = tile_collection.url
+                else
+                  assign tile_link = nil
+                endif
+              %}
+
+              {% if tile_link %}
+                <a href="{{ tile_link }}" class="cwc_shop-price__card{% if block.settings.dark_style %} cwc_shop-price__card--dark{% endif %}" {{ block.shopify_attributes }}>
+              {% else %}
+                <div class="cwc_shop-price__card{% if block.settings.dark_style %} cwc_shop-price__card--dark{% endif %}" {{ block.shopify_attributes }}>
+              {% endif %}
+
+              {% if block.settings.amount != blank %}
+                <span class="cwc_shop-price__card-amount">{{ block.settings.amount }}</span>
+              {% endif %}
+
+              {% if block.settings.label != blank %}
+                <span class="cwc_shop-price__card-title">{{ block.settings.label }}</span>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <span class="cwc_shop-price__card-text">{{ block.settings.description }}</span>
+              {% endif %}
+
+              {% if tile_link %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Shop By Price",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Find Something for Every Occasion"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Shop by Price</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_dark_color",
+      "label": "Dark Card Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Amount Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Description Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Price Tile",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Clicking the tile routes to this collection."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        },
+        {
+          "type": "text",
+          "id": "amount",
+          "label": "Amount",
+          "default": "$100"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Under"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Everyday pours and reliable gifts worth giving."
+        },
+        {
+          "type": "checkbox",
+          "id": "dark_style",
+          "label": "Dark Style",
+          "default": false,
+          "info": "Inverts the tile — use for the top price tier."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Price",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}

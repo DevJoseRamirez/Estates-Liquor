@@ -1,0 +1,13 @@
+/* ==============================
+   CWC Fonts
+   Shared font tokens for all CWC_ sections.
+   Maps the theme's font stacks to cwc_ namespaced variables so
+   sections never reference theme internals directly.
+   ============================== */
+
+:root {
+  --cwc-font-body: var(--body-font-stack, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  --cwc-font-heading: var(--header-font-stack, var(--cwc-font-body));
+  --cwc-font-weight-normal: var(--body-font-weight, 400);
+  --cwc-font-weight-bold: var(--font-weight-bold, 700);
+}

@@ -1,0 +1,265 @@
+{% style %}
+  #cwc_brand-marquee-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F2EFE8' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --label-bg: {{ section.settings.label_bg_color | default: '#0A1F12' }};
+    --label-text-color: {{ section.settings.label_text_color | default: '#C4933F' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --item-gap: {{ section.settings.item_gap | default: 52 }}px;
+    --scroll-duration: {{ section.settings.scroll_duration | default: 44 }}s;
+    --padding-top: {{ section.settings.padding_top | default: 15 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 15 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_brand_marquee.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  # The track holds 4 copies of the block set and animates by -50%, so the second
+  # half lands exactly where the first started — a seamless loop. Four copies also
+  # keep the track wider than the viewport when only a few brands are added.
+  assign repeat_count = 4
+  unless section.settings.enable_scroll
+    assign repeat_count = 1
+  endunless
+%}
+
+{% if section.blocks.size > 0 %}
+  <section
+    id="cwc_brand-marquee-{{ section.id }}"
+    class="cwc_brand-marquee{% if section.settings.enable_scroll %} cwc_brand-marquee--scroll{% else %} cwc_brand-marquee--static{% endif %}{% if section.settings.scroll_direction == 'right' %} cwc_brand-marquee--reverse{% endif %}{% if section.settings.pause_on_hover %} cwc_brand-marquee--pause{% endif %}{% if section.settings.show_border %} cwc_brand-marquee--bordered{% endif %}"
+    aria-label="{{ section.settings.label | escape | default: 'Brands we carry' }}"
+  >
+    <div class="cwc_brand-marquee__inner">
+      {% if section.settings.show_label and section.settings.label != blank %}
+        <span class="cwc_brand-marquee__label">{{ section.settings.label }}</span>
+      {% endif %}
+
+      <div class="cwc_brand-marquee__viewport">
+        <div class="cwc_brand-marquee__track">
+          {% for i in (1..repeat_count) %}
+            {% assign is_original = forloop.first %}
+
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'brand' %}
+                  {% if block.settings.name != blank %}
+                    {% if block.settings.link != blank %}
+                      <a
+                        href="{{ block.settings.link }}"
+                        class="cwc_brand-marquee__item"
+                        {% if is_original %}
+                          {{ block.shopify_attributes }}
+                        {% else %}
+                          aria-hidden="true" tabindex="-1"
+                        {% endif %}
+                      >
+                        {{ block.settings.name }}
+                      </a>
+                    {% else %}
+                      <span
+                        class="cwc_brand-marquee__item"
+                        {% if is_original %}
+                          {{ block.shopify_attributes }}
+                        {% else %}
+                          aria-hidden="true"
+                        {% endif %}
+                      >
+                        {{ block.settings.name }}
+                      </span>
+                    {% endif %}
+                  {% endif %}
+              {% endcase %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Brand Marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "Show Fixed Label",
+      "default": true,
+      "info": "Pinned block on the left. Hidden on mobile."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label Text",
+      "default": "In Stock Now"
+    },
+    {
+      "type": "header",
+      "content": "Scrolling"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll",
+      "label": "Auto-Scroll Brands",
+      "default": true,
+      "info": "Uncheck to show a static centered row instead."
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll Direction",
+      "options": [
+        { "value": "left", "label": "Right to Left" },
+        { "value": "right", "label": "Left to Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "scroll_duration",
+      "label": "Scroll Duration",
+      "min": 10,
+      "max": 120,
+      "step": 2,
+      "unit": "s",
+      "default": 44,
+      "info": "Time for one full loop. Lower = faster."
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause On Hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Separator Dot Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "label_bg_color",
+      "label": "Label Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "label_text_color",
+      "label": "Label Text Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Border",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Space Between Brands",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand Name",
+          "default": "Buffalo Trace"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Marquee",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,229 @@
+/* ==============================
+   CWC FAQ
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_faq {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_faq__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* === Section Header === */
+.cwc_faq__content {
+  max-width: 900px;
+  margin: 0 auto 3rem;
+  width: 100%;
+  text-align: center;
+}
+
+.cwc_faq__content-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.625rem;
+}
+
+.cwc_faq__content-heading p {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(1.625rem, 3vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: inherit;
+}
+
+.cwc_faq__content-heading > * strong {
+  color: var(--highlight-color);
+}
+
+.cwc_faq__rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 1rem auto 0;
+  background-color: var(--highlight-color);
+}
+
+.cwc_faq__content-subtext {
+  max-width: 700px;
+  margin: 1rem auto 0;
+}
+
+.cwc_faq__content-subtext p {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #343434;
+}
+
+/* === List === */
+.cwc_faq__list {
+  max-width: 820px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border-color);
+}
+
+/* === Item === */
+.cwc_faq__card {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cwc_faq__card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 22px 4px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--cwc-font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--card-title-color);
+}
+
+/* strip the native disclosure marker in both engines */
+.cwc_faq__card-title::-webkit-details-marker {
+  display: none;
+}
+
+.cwc_faq__card-title::marker {
+  content: '';
+}
+
+.cwc_faq__card-title:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: -2px;
+}
+
+/* plus sign drawn from two bars so it can rotate into an x */
+.cwc_faq__card-sign {
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.cwc_faq__card-sign::before,
+.cwc_faq__card-sign::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: var(--highlight-color);
+  transform: translate(-50%, -50%);
+}
+
+.cwc_faq__card-sign::before {
+  width: 16px;
+  height: 1.5px;
+}
+
+.cwc_faq__card-sign::after {
+  width: 1.5px;
+  height: 16px;
+}
+
+.cwc_faq__card[open] .cwc_faq__card-sign {
+  transform: rotate(45deg);
+}
+
+.cwc_faq__card-text p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0 4px 24px;
+  color: var(--card-text-color);
+}
+
+/* === Footer Button === */
+.cwc_faq__button {
+  text-align: center;
+  margin-top: 2.25rem;
+}
+
+.cwc_faq__button-link {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--button-text-color);
+  background: transparent;
+  border: 1.5px solid var(--button-text-color);
+  border-radius: 3px;
+  padding: 13px 30px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.cwc_faq__button-link:hover {
+  background-color: var(--button-text-color);
+  color: var(--section-bg);
+}
+
+.cwc_faq__button-link:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_faq__container {
+    padding: 0 1.75rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_faq__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_faq {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_faq__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_faq__content {
+    margin-bottom: 2rem;
+  }
+
+  .cwc_faq__content-subtext p {
+    font-size: 1rem;
+  }
+
+  .cwc_faq__card-title {
+    font-size: 1rem;
+    padding: 18px 2px;
+  }
+
+  .cwc_faq__button-link {
+    width: 100%;
+    text-align: center;
+  }
+}

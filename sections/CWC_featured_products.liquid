@@ -1,0 +1,380 @@
+{% style %}
+  #cwc_featured-products-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#9A9A9A' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_featured_products.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_featured-products-{{ section.id }}" class="cwc_featured-products" data-section-id="{{ section.id }}">
+  <div class="cwc_featured-products__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_featured-products__content">
+      <div class="cwc_featured-products__content-main">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_featured-products__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_featured-products__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.link_label != blank %}
+        <a href="{{ section.settings.link_url | default: '#' }}" class="cwc_featured-products__view-all">
+          {{ section.settings.link_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      {% comment %} Tab rail {% endcomment %}
+      <div class="cwc_featured-products__tabs" role="tablist">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'tab' %}
+              {% liquid
+                assign tab_collection = block.settings.collection
+
+                if block.settings.title != blank
+                  assign tab_title = block.settings.title
+                elsif tab_collection != blank
+                  assign tab_title = tab_collection.title
+                else
+                  assign tab_title = 'Tab'
+                endif
+              %}
+
+              <button
+                type="button"
+                class="cwc_featured-products__tab{% if forloop.first %} cwc_featured-products__tab--active{% endif %}"
+                role="tab"
+                id="cwc_tab-{{ section.id }}-{{ block.id }}"
+                aria-controls="cwc_panel-{{ section.id }}-{{ block.id }}"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                {{ tab_title }}
+              </button>
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% comment %} Panels — one product grid per tab {% endcomment %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'tab' %}
+            {% assign tab_collection = block.settings.collection %}
+
+            <div
+              class="cwc_featured-products__panel{% if forloop.first %} cwc_featured-products__panel--active{% endif %}"
+              role="tabpanel"
+              id="cwc_panel-{{ section.id }}-{{ block.id }}"
+              aria-labelledby="cwc_tab-{{ section.id }}-{{ block.id }}"
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              {% if tab_collection != blank and tab_collection.products_count > 0 %}
+                <div class="cwc_featured-products__grid">
+                  {% for product in tab_collection.products limit: section.settings.products_to_show %}
+                    {% liquid
+                      assign current_variant = product.selected_or_first_available_variant
+
+                      assign badge_label = ''
+                      assign badge_style = ''
+                      if product.available == false
+                        assign badge_label = 'Sold Out'
+                        assign badge_style = 'soldout'
+                      elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
+                        assign badge_label = 'Allocated'
+                        assign badge_style = 'allocated'
+                      elsif product.tags contains 'New' or product.tags contains 'new'
+                        assign badge_label = 'New'
+                        assign badge_style = 'new'
+                      endif
+
+                      # Detail line: metafield first, product type as the fallback
+                      assign product_meta = product.metafields.custom.details
+                      if product_meta == blank
+                        assign product_meta = product.type
+                      endif
+                    %}
+
+                    <div class="cwc_featured-products__card">
+                      <a href="{{ product.url }}" class="cwc_featured-products__card-media" tabindex="-1" aria-hidden="true">
+                        {% if product.featured_image != blank %}
+                          <img
+                            src="{{ product.featured_image | image_url: width: 600 }}"
+                            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                            loading="lazy"
+                            width="600"
+                            height="800"
+                          >
+                        {% else %}
+                          <span class="cwc_featured-products__card-placeholder">
+                            <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                              <rect x="16" y="0" width="20" height="6" rx="2" />
+                              <rect x="18" y="6" width="16" height="11" />
+                              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                            </svg>
+                          </span>
+                        {% endif %}
+
+                        {% if badge_label != blank %}
+                          <span class="cwc_featured-products__card-badge cwc_featured-products__card-badge--{{ badge_style }}">
+                            {{ badge_label }}
+                          </span>
+                        {% endif %}
+                      </a>
+
+                      <div class="cwc_featured-products__card-body">
+                        {% if product.vendor != blank %}
+                          <div class="cwc_featured-products__card-brand">{{ product.vendor }}</div>
+                        {% endif %}
+
+                        <a href="{{ product.url }}" class="cwc_featured-products__card-title">{{ product.title }}</a>
+
+                        {% if product_meta != blank %}
+                          <div class="cwc_featured-products__card-text">{{ product_meta }}</div>
+                        {% endif %}
+
+                        <div class="cwc_featured-products__card-footer">
+                          <div class="cwc_featured-products__card-price">
+                            {% if product.compare_at_price > product.price %}
+                              <span class="cwc_featured-products__card-price-was">
+                                {{ product.compare_at_price | money }}
+                              </span>
+                            {% endif %}
+                            {{ product.price | money }}
+                          </div>
+
+                          <button
+                            type="button"
+                            class="cwc_featured-products__card-button"
+                            data-variant-id="{{ current_variant.id }}"
+                            aria-label="Add {{ product.title | escape }} to cart"
+                            {% unless product.available %}disabled{% endunless %}
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                              <line x1="3" y1="6" x2="21" y2="6" />
+                              <path d="M16 10a4 4 0 0 1-8 0" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="cwc_featured-products__empty">
+                  <p>Select a collection for this tab to show products.</p>
+                </div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    {% endif %}
+
+  </div>
+</section>
+
+<script src="{{ 'CWC_featured_products.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Featured Products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Fan Favorites</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "View All Link Label",
+      "default": "View All Products"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "View All Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products Per Tab",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Meta Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Add To Cart Button Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the tab title and its products."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title Override"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Featured Products",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "tab" },
+        { "type": "tab" },
+        { "type": "tab" },
+        { "type": "tab" }
+      ]
+    }
+  ]
+}
+{% endschema %}

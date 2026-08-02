@@ -1,0 +1,250 @@
+{% style %}
+  #cwc_faq-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#0A1F12' }};
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_faq.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_faq-{{ section.id }}" class="cwc_faq">
+  <div class="cwc_faq__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_faq__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_faq__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_faq__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_faq__rule" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_faq__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Accordion — native details/summary, works with JS disabled {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_faq__list">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'item' %}
+              {% if block.settings.question != blank %}
+                <details class="cwc_faq__card" {{ block.shopify_attributes }}{% if block.settings.open_by_default %} open{% endif %}>
+                  <summary class="cwc_faq__card-title">
+                    {{ block.settings.question }}
+                    <span class="cwc_faq__card-sign" aria-hidden="true"></span>
+                  </summary>
+
+                  {% if block.settings.answer != blank %}
+                    <div class="cwc_faq__card-text cwc-rte">
+                      {{ block.settings.answer }}
+                    </div>
+                  {% endif %}
+                </details>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% comment %} Footer Button {% endcomment %}
+    {% if section.settings.button_label != blank %}
+      <div class="cwc_faq__button">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="cwc_faq__button-link">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC FAQ",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Before You Order"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Common Questions</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Read Full FAQ"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Question Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Answer Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Which states do you ship to?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We ship to most US states. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open By Default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

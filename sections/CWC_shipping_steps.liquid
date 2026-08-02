@@ -1,0 +1,345 @@
+{% style %}
+  #cwc_shipping-steps-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --icon-color: {{ section.settings.icon_color | default: '#0A1F12' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#666666' }};
+    --note-color: {{ section.settings.note_color | default: '#9A9A9A' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 3 }};
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_shipping_steps.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_shipping-steps-{{ section.id }}" class="cwc_shipping-steps">
+  <div class="cwc_shipping-steps__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_shipping-steps__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_shipping-steps__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_shipping-steps__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_shipping-steps__rule" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_shipping-steps__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Steps {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_shipping-steps__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'step' %}
+              <div class="cwc_shipping-steps__card" {{ block.shopify_attributes }}>
+                {% if section.settings.show_numbers %}
+                  <span class="cwc_shipping-steps__card-number">
+                    {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                  </span>
+                {% endif %}
+
+                {% if block.settings.custom_icon != blank %}
+                  <span class="cwc_shipping-steps__card-image">
+                    <img
+                      src="{{ block.settings.custom_icon | image_url: width: 136 }}"
+                      alt="{{ block.settings.custom_icon_alt | default: '' | escape }}"
+                      loading="lazy"
+                      width="34"
+                      height="34"
+                    >
+                  </span>
+                {% elsif block.settings.icon != 'none' %}
+                  <span class="cwc_shipping-steps__card-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      {% case block.settings.icon %}
+                        {% when 'box' %}
+                          <path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+                          <path d="M3 9l2-5h14l2 5" />
+                          <path d="M12 4v5" />
+                        {% when 'shield' %}
+                          <path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z" />
+                          <path d="M9 12l2 2 4-4" />
+                        {% when 'signature' %}
+                          <rect x="3" y="4" width="18" height="16" rx="2" />
+                          <path d="M7 9h6" />
+                          <path d="M7 13h10" />
+                          <path d="M7 17h4" />
+                        {% when 'truck' %}
+                          <rect x="1" y="4" width="15" height="12" rx="1" />
+                          <path d="M16 8h4l3 3v5h-7V8z" />
+                          <circle cx="5.5" cy="18.5" r="2.5" />
+                          <circle cx="18.5" cy="18.5" r="2.5" />
+                        {% when 'clock' %}
+                          <circle cx="12" cy="12" r="9" />
+                          <path d="M12 7v5.2l3.4 2" />
+                        {% when 'check' %}
+                          <circle cx="12" cy="12" r="9" />
+                          <path d="M8 12.4l2.6 2.6L16 9.6" />
+                        {% when 'pin' %}
+                          <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
+                          <circle cx="12" cy="10" r="2.5" />
+                        {% when 'bottle' %}
+                          <path d="M10 2.5h4V6l2 3.2V21H8V9.2L10 6V2.5z" />
+                          <path d="M8 13h8" />
+                      {% endcase %}
+                    </svg>
+                  </span>
+                {% endif %}
+
+                {% if block.settings.title != blank %}
+                  <div class="cwc_shipping-steps__card-title">{{ block.settings.title }}</div>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="cwc_shipping-steps__card-text cwc-rte">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.note != blank %}
+      <p class="cwc_shipping-steps__note">{{ section.settings.note }}</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Shipping Steps",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "No Surprises"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>How Your Order Ships</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Footnote",
+      "default": "We ship to most US states. Enter your ZIP at checkout to confirm delivery to your address."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show Step Numbers",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "note_color",
+      "label": "Footnote Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "No Icon" },
+            { "value": "box", "label": "Box" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "signature", "label": "Signature" },
+            { "value": "truck", "label": "Shipping Truck" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "check", "label": "Check Circle" },
+            { "value": "pin", "label": "Map Pin" },
+            { "value": "bottle", "label": "Bottle" }
+          ],
+          "default": "box"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom Icon Image (Optional)",
+          "info": "Overrides the icon above. Use a small square image."
+        },
+        {
+          "type": "text",
+          "id": "custom_icon_alt",
+          "label": "Custom Icon Alt Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Packed by Hand"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Every bottle is wrapped, braced, and boxed in molded inserts built for glass.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Shipping Steps",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+      ]
+    }
+  ]
+}
+{% endschema %}

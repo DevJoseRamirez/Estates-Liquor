@@ -1,0 +1,428 @@
+{% style %}
+  #cwc_shop-category-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-overlay-color: {{ section.settings.card_overlay_color | default: '#0A1F12' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#ffffff' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#0A1F12' }};
+    --card-bg-end: {{ section.settings.card_bg_end_color | default: '#163D22' }};
+    --pill-bg: {{ section.settings.pill_bg_color | default: '#ffffff' }};
+    --pill-text-color: {{ section.settings.pill_text_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --card-height: {{ section.settings.card_height | default: 208 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_shop_category.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_shop-category-{{ section.id }}" class="cwc_shop-category">
+  <div class="cwc_shop-category__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_shop-category__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_shop-category__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_shop-category__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_shop-category__rule" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_shop-category__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Region 1 — pill rail {% endcomment %}
+    {% assign pill_blocks = section.blocks | where: 'type', 'pill' %}
+    {% if pill_blocks.size > 0 %}
+      <div class="cwc_shop-category__rail">
+        {% for block in pill_blocks %}
+          {% liquid
+            assign pill_collection = block.settings.collection
+
+            if block.settings.title != blank
+              assign pill_title = block.settings.title
+            elsif pill_collection != blank
+              assign pill_title = pill_collection.title
+            else
+              assign pill_title = blank
+            endif
+
+            if block.settings.link != blank
+              assign pill_link = block.settings.link
+            elsif pill_collection != blank
+              assign pill_link = pill_collection.url
+            else
+              assign pill_link = nil
+            endif
+          %}
+
+          {% if pill_title != blank %}
+            <a
+              {% if pill_link %}href="{{ pill_link }}"{% endif %}
+              class="cwc_shop-category__pill{% if block.settings.highlight %} cwc_shop-category__pill--highlight{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {{ pill_title }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% comment %} Region 2 — category card grid {% endcomment %}
+    {% assign card_blocks = section.blocks | where: 'type', 'card' %}
+    {% if card_blocks.size > 0 %}
+      <div class="cwc_shop-category__grid">
+        {% for block in card_blocks %}
+          {% liquid
+            assign card_collection = block.settings.collection
+
+            if block.settings.image != blank
+              assign card_image = block.settings.image
+            elsif card_collection != blank and card_collection.image != blank
+              assign card_image = card_collection.image
+            else
+              assign card_image = nil
+            endif
+
+            if block.settings.title != blank
+              assign card_title = block.settings.title
+            elsif card_collection != blank
+              assign card_title = card_collection.title
+            else
+              assign card_title = blank
+            endif
+
+            if block.settings.subtext != blank
+              assign card_subtext = block.settings.subtext
+            elsif card_collection != blank
+              assign card_subtext = card_collection.products_count | append: ' bottles'
+            else
+              assign card_subtext = blank
+            endif
+
+            if block.settings.link != blank
+              assign card_link = block.settings.link
+            elsif card_collection != blank
+              assign card_link = card_collection.url
+            else
+              assign card_link = nil
+            endif
+          %}
+
+          {% if card_link %}
+            <a href="{{ card_link }}" class="cwc_shop-category__card{% unless card_image %} cwc_shop-category__card--plain{% endunless %}" {{ block.shopify_attributes }}>
+          {% else %}
+            <div class="cwc_shop-category__card{% unless card_image %} cwc_shop-category__card--plain{% endunless %}" {{ block.shopify_attributes }}>
+          {% endif %}
+
+          {% if card_image %}
+            <span class="cwc_shop-category__card-image">
+              <img
+                src="{{ card_image | image_url: width: 900 }}"
+                alt="{{ block.settings.alt_text | default: card_title | escape }}"
+                loading="lazy"
+                width="900"
+                height="600"
+              >
+            </span>
+            <span class="cwc_shop-category__card-overlay" aria-hidden="true"></span>
+          {% endif %}
+
+          <span class="cwc_shop-category__card-content">
+            {% if block.settings.eyebrow != blank %}
+              <span class="cwc_shop-category__card-eyebrow">{{ block.settings.eyebrow }}</span>
+            {% endif %}
+
+            {% if card_title != blank %}
+              <span class="cwc_shop-category__card-title">{{ card_title }}</span>
+            {% endif %}
+
+            {% if card_subtext != blank %}
+              <span class="cwc_shop-category__card-text">{{ card_subtext }}</span>
+            {% endif %}
+          </span>
+
+          {% if card_link %}
+            </a>
+          {% else %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Shop By Category",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Browse the Collection"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Shop by Category</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Pill Colors"
+    },
+    {
+      "type": "color",
+      "id": "pill_bg_color",
+      "label": "Pill Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pill_text_color",
+      "label": "Pill Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#0A1F12",
+      "info": "Used for cards with no image."
+    },
+    {
+      "type": "color",
+      "id": "card_bg_end_color",
+      "label": "Card Gradient End Color",
+      "default": "#163D22"
+    },
+    {
+      "type": "color",
+      "id": "card_overlay_color",
+      "label": "Card Image Overlay Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Subtext Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card Row Height",
+      "min": 140,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "default": 208,
+      "info": "The first card spans two columns and two rows."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Pill Link",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the title and link."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Override"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Highlight Style",
+          "default": false,
+          "info": "Gold outline — use for the \"Shop All\" pill."
+        }
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the image, title, bottle count, and link."
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow (Optional)"
+        },
+        {
+          "type": "header",
+          "content": "Overrides (Optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Background Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Card Background Image Alt Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Override"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "label": "Subtext Override",
+          "info": "Falls back to the collection's product count."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Category",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "pill" },
+        { "type": "pill" },
+        { "type": "pill" },
+        { "type": "pill" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

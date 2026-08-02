@@ -11,23 +11,20 @@
   "type": "header",
   "name": "Header",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
-      "blocks": {
-        "860cfd32-0dce-4889-8012-b7d936e80788": {
-          "type": "announcement",
-          "settings": {
-            "announcement_text": "Save up to 50% off with code: FRESH",
-            "announcement_bg_color": "#0a1f12",
-            "announcement_text_color": "#ffffff"
-          }
-        }
-      },
-      "block_order": [
-        "860cfd32-0dce-4889-8012-b7d936e80788"
-      ],
+    "cwc_announcement_yFwRzz": {
+      "type": "CWC_announcement",
+      "name": "Announcement",
       "settings": {
-        "desktop_social_icons": false
+        "text": "<p>Free shipping on orders over <strong>$150</strong> · Rare allocated drops every Friday · <strong>Shipping Protection</strong> available at checkout</p>",
+        "link": "shopify://collections/best-sellers",
+        "enable_dismiss": true,
+        "enable_gradient": false,
+        "bg_color": "#0E2119",
+        "bg_end_color": "#1C3B2A",
+        "text_color": "#ffffff",
+        "bold_color": "#C9974A",
+        "padding_top": 10,
+        "padding_bottom": 10
       }
     },
     "header": {
@@ -170,6 +167,7 @@
         "content_66MciQ",
         "content_3da8kr"
       ],
+      "disabled": true,
       "settings": {
         "sticky_header": true,
         "overlay_header_homepage": false,
@@ -177,10 +175,10 @@
         "overlay_header_list_collection": false,
         "overlay_header_article": false,
         "overlay_header_contact": false,
-        "logo": "shopify://shop_images/Estates-liquor-logo-clean.png",
+        "logo": "shopify://shop_images/Estates-liquor-new-logo_1.png",
         "logo-placement": "left",
-        "logo_max_width": 180,
-        "logo_max_width_mobile": 125,
+        "logo_max_width": 140,
+        "logo_max_width_mobile": 110,
         "logo_padding": 10,
         "main_linklist": "main-drop-down",
         "dropdown_alignment": "left",
@@ -206,7 +204,7 @@
     }
   },
   "order": [
-    "announcement-bar",
+    "cwc_announcement_yFwRzz",
     "header"
   ]
 }

@@ -1,0 +1,269 @@
+/* ==============================
+   CWC Hero
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--hero-height);
+  overflow: hidden;
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+}
+
+/* === Background === */
+.cwc_hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cwc_hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Diagonal wash — heaviest behind the copy, clearing toward the image */
+.cwc_hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    var(--overlay-color) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: var(--overlay-opacity);
+}
+
+/* === Container === */
+.cwc_hero__container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* === Content === */
+.cwc_hero__content {
+  max-width: 600px;
+}
+
+.cwc_hero__content-eyebrow {
+  font-size: 0.6875rem;
+  /* 11px */
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 1rem;
+}
+
+.cwc_hero__content-heading {
+  margin-bottom: 1.25rem;
+}
+
+.cwc_hero__content-heading p {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  color: inherit;
+}
+
+.cwc_hero__content-heading > * strong,
+.cwc_hero__content-heading > * em {
+  color: var(--highlight-color);
+}
+
+.cwc_hero__content-heading > * em {
+  font-style: italic;
+}
+
+.cwc_hero__content-subtext {
+  max-width: 480px;
+  margin-bottom: 2.25rem;
+}
+
+.cwc_hero__content-subtext p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* === Buttons === */
+.cwc_hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+}
+
+.cwc_hero__button {
+  display: inline-block;
+  font-family: var(--cwc-font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.cwc_hero__button--primary {
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  border: 1.5px solid var(--button-bg);
+  padding: 13px 32px;
+}
+
+.cwc_hero__button--primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.cwc_hero__button--outline {
+  background: transparent;
+  color: var(--text-color);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  padding: 13px 30px;
+}
+
+.cwc_hero__button--outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--text-color);
+}
+
+.cwc_hero__button:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+/* === Badge === */
+.cwc_hero__badge {
+  position: absolute;
+  right: 80px;
+  bottom: 48px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  padding: 12px;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--highlight-color);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.cwc_hero__badge-number {
+  font-family: var(--cwc-font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--highlight-color);
+}
+
+.cwc_hero__badge-text {
+  margin-top: 4px;
+  font-size: 0.5625rem;
+  /* 9px */
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_hero {
+    height: auto;
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+  }
+
+  .cwc_hero__content {
+    max-width: 100%;
+  }
+
+  .cwc_hero__container {
+    padding: 0 1.75rem;
+  }
+
+  .cwc_hero__badge {
+    right: 40px;
+    bottom: 32px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_hero__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_hero {
+    min-height: 480px;
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_hero__container {
+    padding: 0 1rem;
+  }
+
+  /* straighten the wash so the copy stays legible over a portrait crop */
+  .cwc_hero__overlay {
+    background: linear-gradient(
+      165deg,
+      var(--overlay-color) 0%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
+  }
+
+  .cwc_hero__content-heading {
+    margin-bottom: 1rem;
+  }
+
+  .cwc_hero__content-subtext {
+    margin-bottom: 1.75rem;
+  }
+
+  .cwc_hero__content-subtext p {
+    font-size: 0.9375rem;
+  }
+
+  .cwc_hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cwc_hero__button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cwc_hero__badge {
+    display: none;
+  }
+}

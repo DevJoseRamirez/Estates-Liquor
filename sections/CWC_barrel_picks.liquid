@@ -1,0 +1,299 @@
+{% style %}
+  #cwc_barrel-picks-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#F2EFE8' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F8F6F1' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#9A9A9A' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#0A1F12' }};
+    --columns: {{ section.settings.columns | default: 3 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_barrel_picks.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign feature_collection = section.settings.collection
+
+  if section.settings.button_link != blank
+    assign button_link = section.settings.button_link
+  elsif feature_collection != blank
+    assign button_link = feature_collection.url
+  else
+    assign button_link = nil
+  endif
+%}
+
+<section id="cwc_barrel-picks-{{ section.id }}" class="cwc_barrel-picks">
+  <div class="cwc_barrel-picks__container">
+    <div class="cwc_barrel-picks__wrapper">
+
+      {% comment %} Left — copy + CTA {% endcomment %}
+      <div class="cwc_barrel-picks__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_barrel-picks__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_barrel-picks__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_barrel-picks__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank and button_link %}
+          <a href="{{ button_link }}" class="cwc_barrel-picks__button">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% comment %} Right — barrel picks from the featured collection {% endcomment %}
+      <div class="cwc_barrel-picks__grid">
+        {% if feature_collection != blank and feature_collection.products_count > 0 %}
+          {% for product in feature_collection.products limit: section.settings.products_to_show %}
+            {% liquid
+              # Detail line: metafield first, product type as the fallback
+              assign product_meta = product.metafields.custom.details
+              if product_meta == blank
+                assign product_meta = product.type
+              endif
+            %}
+
+            <a href="{{ product.url }}" class="cwc_barrel-picks__card">
+              <span class="cwc_barrel-picks__card-image">
+                {% if product.featured_image != blank %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 500 }}"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    loading="lazy"
+                    width="500"
+                    height="667"
+                  >
+                {% else %}
+                  <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                    <rect x="16" y="0" width="20" height="6" rx="2" fill="currentColor" />
+                    <rect x="18" y="6" width="16" height="11" fill="currentColor" />
+                    <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" fill="currentColor" />
+                  </svg>
+                {% endif %}
+              </span>
+
+              <span class="cwc_barrel-picks__card-body">
+                <span class="cwc_barrel-picks__card-title">{{ product.title }}</span>
+
+                {% if product_meta != blank %}
+                  <span class="cwc_barrel-picks__card-text">{{ product_meta }}</span>
+                {% endif %}
+
+                <span class="cwc_barrel-picks__card-price">{{ product.price | money }}</span>
+              </span>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="cwc_barrel-picks__empty">
+            <p>Select a collection to show your barrel picks here.</p>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Barrel Picks",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Estates Barrel Program"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>We taste every<br>barrel before<br>we buy it.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Our team travels to the distillery, tastes through the barrel line-up, and buys the ones we would pour ourselves. Each pick is labeled with the barrel number, warehouse, and floor.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Featured Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Supplies the bottles shown and the button destination."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Bottles To Show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Barrel Picks"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link Override",
+      "info": "Defaults to the collection above."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Detail Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "presets": [
+    {
+      "name": "Barrel Picks",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

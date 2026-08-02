@@ -1,0 +1,245 @@
+{% style %}
+  #cwc_email-signup-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --success-bg: {{ section.settings.success_bg_color | default: '#163D22' }};
+    --success-text-color: {{ section.settings.success_text_color | default: '#ffffff' }};
+    --error-bg: {{ section.settings.error_bg_color | default: '#5A1D1D' }};
+    --error-text-color: {{ section.settings.error_text_color | default: '#FFD9D9' }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_email_signup.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_email-signup-{{ section.id }}" class="cwc_email-signup">
+  <div class="cwc_email-signup__container">
+    <div class="cwc_email-signup__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_email-signup__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_email-signup__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_email-signup__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+
+      {% form 'customer', class: 'cwc_email-signup__form-wrapper' %}
+        {% comment %}
+          Confirmation and errors sit above the field on a filled panel so they
+          stay legible against the dark section background.
+        {% endcomment %}
+        {% if form.posted_successfully? %}
+          <p class="cwc_email-signup__message cwc_email-signup__message--success" role="status">
+            {{ section.settings.success_message | default: 'You are on the list. Watch your inbox for the next drop.' }}
+          </p>
+        {% elsif form.errors %}
+          <p class="cwc_email-signup__message cwc_email-signup__message--error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </p>
+        {% endif %}
+
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        <div class="cwc_email-signup__form">
+          <label class="cwc_email-signup__label" for="cwc_email-{{ section.id }}">
+            {{ section.settings.placeholder | default: 'Your email address' }}
+          </label>
+
+          <input
+            id="cwc_email-{{ section.id }}"
+            class="cwc_email-signup__input"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            placeholder="{{ section.settings.placeholder | default: 'Your email address' | escape }}"
+            autocomplete="email"
+            required
+          >
+
+          <button type="submit" class="cwc_email-signup__button">
+            {{ section.settings.button_label | default: 'Get First Access' }}
+          </button>
+        </div>
+      {% endform %}
+
+      {% if section.settings.disclaimer != blank %}
+        <p class="cwc_email-signup__disclaimer">{{ section.settings.disclaimer }}</p>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Email Signup",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Rare Drop List"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Never miss a<br>rare drop.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Allocated bottles sell out in hours. Subscribers hear first — plus free shipping on your first order.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email Placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Get First Access"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "You are on the list. Watch your inbox for the next drop."
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Must be 21+ to subscribe. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Message Colors"
+    },
+    {
+      "type": "color",
+      "id": "success_bg_color",
+      "label": "Success Background Color",
+      "default": "#163D22"
+    },
+    {
+      "type": "color",
+      "id": "success_text_color",
+      "label": "Success Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "error_bg_color",
+      "label": "Error Background Color",
+      "default": "#5A1D1D"
+    },
+    {
+      "type": "color",
+      "id": "error_text_color",
+      "label": "Error Text Color",
+      "default": "#FFD9D9"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "presets": [
+    {
+      "name": "Email Signup",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

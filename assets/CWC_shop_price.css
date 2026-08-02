@@ -1,0 +1,218 @@
+/* ==============================
+   CWC Shop By Price
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_shop-price {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_shop-price__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* === Section Header === */
+.cwc_shop-price__content {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.cwc_shop-price--align-center .cwc_shop-price__content {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.cwc_shop-price__content-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.625rem;
+}
+
+.cwc_shop-price__content-heading p {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(1.625rem, 3vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: inherit;
+}
+
+.cwc_shop-price__content-heading > * strong {
+  color: var(--highlight-color);
+}
+
+/* rule tracks the header alignment */
+.cwc_shop-price__rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 1rem 0 0;
+  background-color: var(--highlight-color);
+}
+
+.cwc_shop-price--align-center .cwc_shop-price__rule {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cwc_shop-price__content-subtext {
+  margin-top: 1rem;
+  max-width: 700px;
+}
+
+.cwc_shop-price--align-center .cwc_shop-price__content-subtext {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cwc_shop-price__content-subtext p {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #343434;
+}
+
+/* === Grid === */
+.cwc_shop-price__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: 16px;
+}
+
+/* === Card === */
+.cwc_shop-price__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  padding: 36px 24px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cwc_shop-price__card:hover {
+  border-color: var(--highlight-color);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cwc_shop-price__card:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+.cwc_shop-price__card--dark {
+  background-color: var(--card-bg-dark);
+  border-color: var(--card-bg-dark);
+}
+
+/* === Card Content === */
+.cwc_shop-price__card-amount {
+  display: block;
+  font-family: var(--cwc-font-heading);
+  font-size: 2.125rem;
+  /* 34px */
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--card-title-color);
+}
+
+.cwc_shop-price__card--dark .cwc_shop-price__card-amount {
+  color: var(--highlight-color);
+}
+
+.cwc_shop-price__card-title {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  color: var(--highlight-color);
+}
+
+.cwc_shop-price__card--dark .cwc_shop-price__card-title {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cwc_shop-price__card-text {
+  display: block;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--card-text-color);
+}
+
+.cwc_shop-price__card--dark .cwc_shop-price__card-text {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_shop-price__container {
+    padding: 0 1.75rem;
+  }
+
+  .cwc_shop-price__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_shop-price__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_shop-price {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_shop-price__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_shop-price__content {
+    margin-bottom: 1.5rem;
+  }
+
+  .cwc_shop-price__content-subtext p {
+    font-size: 1rem;
+  }
+
+  .cwc_shop-price__grid {
+    gap: 10px;
+  }
+
+  .cwc_shop-price__card {
+    padding: 26px 14px;
+  }
+
+  .cwc_shop-price__card-amount {
+    font-size: 1.6875rem;
+  }
+
+  .cwc_shop-price__card-text {
+    font-size: 0.75rem;
+  }
+}

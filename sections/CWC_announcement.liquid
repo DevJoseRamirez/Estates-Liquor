@@ -1,0 +1,152 @@
+{% style %}
+  #cwc_announcement-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0E2119' }};
+    --section-bg-end: {{ section.settings.bg_end_color | default: '#1C3B2A' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C9974A' }};
+    --padding-top: {{ section.settings.padding_top | default: 10 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 10 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 10 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_announcement.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.text != blank %}
+  <section
+    id="cwc_announcement-{{ section.id }}"
+    class="cwc_announcement{% if section.settings.enable_gradient %} cwc_announcement--gradient{% endif %}{% if section.settings.enable_dismiss %} cwc_announcement--dismissible{% endif %}"
+    data-section-id="{{ section.id }}"
+  >
+    {% if section.settings.link != blank %}
+      <a href="{{ section.settings.link }}" class="cwc_announcement__link">
+    {% else %}
+      <div class="cwc_announcement__inner">
+    {% endif %}
+
+    <div class="cwc_announcement__container">
+      <div class="cwc_announcement__text cwc-rte">
+        {{ section.settings.text }}
+      </div>
+    </div>
+
+    {% if section.settings.link != blank %}
+      </a>
+    {% else %}
+      </div>
+    {% endif %}
+
+    {% comment %} Close button sits outside the link wrapper so it stays clickable {% endcomment %}
+    {% if section.settings.enable_dismiss %}
+      <button type="button" class="cwc_announcement__close" aria-label="Close announcement">
+        <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true" focusable="false">
+          <path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.5" fill="none" />
+        </svg>
+      </button>
+    {% endif %}
+  </section>
+
+  {% if section.settings.enable_dismiss %}
+    {{ 'CWC_announcement.js' | asset_url | script_tag }}
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Announcement",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "<p>Free shipping on orders over <strong>$150</strong> &middot; Rare allocated drops every Friday &middot; <strong>Shipping Protection</strong> available at checkout</p>",
+      "info": "Bold text uses the Bold Color below."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Bar Link (Optional)",
+      "info": "Leave empty for a plain bar. If set, the whole bar becomes clickable — don't add links inside the text above."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_dismiss",
+      "label": "Show Close Button",
+      "default": true,
+      "info": "Lets shoppers dismiss the bar. It stays hidden for the rest of their browsing session."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gradient",
+      "label": "Use Gradient Background",
+      "default": false,
+      "info": "Fades from Background Color to Gradient End Color. Uncheck for a solid background."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0E2119"
+    },
+    {
+      "type": "color",
+      "id": "bg_end_color",
+      "label": "Gradient End Color",
+      "default": "#1C3B2A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Bold Text Color",
+      "default": "#C9974A"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}
