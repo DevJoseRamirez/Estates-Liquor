@@ -1,0 +1,218 @@
+{% style %}
+  #cwc_breadcrumb-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --link-color: {{ section.settings.link_color | default: '#666666' }};
+    --separator-color: {{ section.settings.separator_color | default: '#E0DDD6' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --padding-top: {{ section.settings.padding_top | default: 15 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 15 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_breadcrumb.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  # Current crumb resolves from whatever template this section is placed on
+  case request.page_type
+    when 'collection'
+      assign current_title = collection.title
+    when 'product'
+      assign current_title = product.title
+    when 'page'
+      assign current_title = page.title
+    when 'article'
+      assign current_title = article.title
+    when 'blog'
+      assign current_title = blog.title
+    when 'search'
+      assign current_title = 'Search'
+    else
+      assign current_title = page_title
+  endcase
+
+  assign parent_collection = section.settings.parent_collection
+
+  if section.settings.parent_title != blank
+    assign parent_title = section.settings.parent_title
+  elsif parent_collection != blank
+    assign parent_title = parent_collection.title
+  else
+    assign parent_title = blank
+  endif
+
+  if section.settings.parent_link != blank
+    assign parent_url = section.settings.parent_link
+  elsif parent_collection != blank
+    assign parent_url = parent_collection.url
+  else
+    assign parent_url = nil
+  endif
+%}
+
+<section
+  id="cwc_breadcrumb-{{ section.id }}"
+  class="cwc_breadcrumb{% if section.settings.show_border %} cwc_breadcrumb--bordered{% endif %}"
+>
+  <div class="cwc_breadcrumb__container">
+    <nav class="cwc_breadcrumb__nav" aria-label="Breadcrumb">
+      <ol class="cwc_breadcrumb__list">
+        <li class="cwc_breadcrumb__item">
+          <a href="{{ routes.root_url }}" class="cwc_breadcrumb__link">
+            {{ section.settings.home_label | default: 'Home' }}
+          </a>
+        </li>
+
+        {% if parent_title != blank %}
+          <li class="cwc_breadcrumb__item" aria-hidden="true">
+            <span class="cwc_breadcrumb__separator">{{ section.settings.separator | default: '/' }}</span>
+          </li>
+          <li class="cwc_breadcrumb__item">
+            {% if parent_url %}
+              <a href="{{ parent_url }}" class="cwc_breadcrumb__link">{{ parent_title }}</a>
+            {% else %}
+              <span class="cwc_breadcrumb__link">{{ parent_title }}</span>
+            {% endif %}
+          </li>
+        {% endif %}
+
+        {% if current_title != blank %}
+          <li class="cwc_breadcrumb__item" aria-hidden="true">
+            <span class="cwc_breadcrumb__separator">{{ section.settings.separator | default: '/' }}</span>
+          </li>
+          <li class="cwc_breadcrumb__item">
+            <span class="cwc_breadcrumb__current" aria-current="page">{{ current_title }}</span>
+          </li>
+        {% endif %}
+      </ol>
+    </nav>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Breadcrumb",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home Label",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator",
+      "default": "/"
+    },
+    {
+      "type": "paragraph",
+      "content": "The last crumb is filled in automatically from the current collection, product, or page."
+    },
+    {
+      "type": "header",
+      "content": "Parent Link (Optional)"
+    },
+    {
+      "type": "collection",
+      "id": "parent_collection",
+      "label": "Parent Collection",
+      "info": "Adds a middle crumb between Home and the current page."
+    },
+    {
+      "type": "text",
+      "id": "parent_title",
+      "label": "Parent Title Override"
+    },
+    {
+      "type": "url",
+      "id": "parent_link",
+      "label": "Parent Link Override"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Current Page Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Link Hover Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Border",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

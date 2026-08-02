@@ -1,0 +1,543 @@
+{% style %}
+  #cwc_collection-body-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
+    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --off-white: {{ section.settings.muted_bg_color | default: '#F8F6F1' }};
+    --columns: {{ section.settings.columns | default: 3 }};
+    --sidebar-width: {{ section.settings.sidebar_width | default: 250 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 35 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 35 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_collection_body.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  # Current filter selections, rebuilt as a query string so sort links keep them
+  assign filter_query = ''
+  for filter in collection.filters
+    for value in filter.active_values
+      assign pair = value.param_name | append: '=' | append: value.value
+      assign filter_query = filter_query | append: '&' | append: pair
+    endfor
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil
+        assign filter_query = filter_query | append: '&' | append: filter.min_value.param_name | append: '=' | append: filter.min_value.value
+      endif
+      if filter.max_value.value != nil
+        assign filter_query = filter_query | append: '&' | append: filter.max_value.param_name | append: '=' | append: filter.max_value.value
+      endif
+    endif
+  endfor
+
+  assign active_filter_count = 0
+  for filter in collection.filters
+    assign active_filter_count = active_filter_count | plus: filter.active_values.size
+  endfor
+%}
+
+{% paginate collection.products by section.settings.products_per_page %}
+  <section
+    id="cwc_collection-body-{{ section.id }}"
+    class="cwc_collection-body"
+    data-section-id="{{ section.id }}"
+  >
+
+    {% comment %} Mobile filter / sort bar — sticky, tablet and down {% endcomment %}
+    <div class="cwc_collection-body__mobile-bar">
+      <div class="cwc_collection-body__container cwc_collection-body__mobile-bar-inner">
+        <button type="button" class="cwc_collection-body__mobile-button" data-cwc-open="filters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="10" y1="18" x2="14" y2="18" />
+          </svg>
+          {{ section.settings.filter_label | default: 'Filter' }}
+          {% if active_filter_count > 0 %}
+            <span class="cwc_collection-body__mobile-badge">{{ active_filter_count }}</span>
+          {% endif %}
+        </button>
+
+        <button type="button" class="cwc_collection-body__mobile-button" data-cwc-open="sort">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <path d="M7 4v16M7 20l-3-3M7 20l3-3" />
+            <path d="M17 20V4M17 4l-3 3M17 4l3 3" />
+          </svg>
+          {{ section.settings.sort_label | default: 'Sort' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="cwc_collection-body__container">
+      <div class="cwc_collection-body__layout">
+
+        {% comment %}
+          One filter form. Desktop: sticky sidebar. Tablet/mobile: the same
+          node becomes a bottom sheet, so filter state can never desync.
+        {% endcomment %}
+        <aside class="cwc_collection-body__sidebar" data-cwc-sheet="filters" aria-label="Filters">
+          <div class="cwc_collection-body__sheet-head">
+            <span class="cwc_collection-body__sheet-title">{{ section.settings.filter_label | default: 'Filter' }}</span>
+            <button type="button" class="cwc_collection-body__sheet-close" data-cwc-close aria-label="Close filters">&times;</button>
+          </div>
+
+          <form method="get" action="{{ collection.url }}" class="cwc_collection-body__filter-form" data-cwc-filter-form>
+            {% comment %} Keep the active sort when filters are applied {% endcomment %}
+            {% if collection.sort_by != blank %}
+              <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+            {% endif %}
+
+            <div class="cwc_collection-body__filter-head">
+              <span class="cwc_collection-body__filter-head-title">{{ section.settings.filter_label | default: 'Filter' }}</span>
+              {% if active_filter_count > 0 %}
+                <a href="{{ collection.url }}" class="cwc_collection-body__filter-clear">
+                  {{ section.settings.clear_label | default: 'Clear All' }}
+                </a>
+              {% endif %}
+            </div>
+
+            {% if collection.filters.size > 0 %}
+              {% for filter in collection.filters %}
+                <details class="cwc_collection-body__filter-group"{% if filter.active_values.size > 0 or forloop.index <= section.settings.open_filter_groups %} open{% endif %}>
+                  <summary class="cwc_collection-body__filter-toggle">
+                    {{ filter.label }}
+                    <span class="cwc_collection-body__filter-sign" aria-hidden="true"></span>
+                  </summary>
+
+                  <div class="cwc_collection-body__filter-body">
+                    {% case filter.type %}
+                      {% when 'price_range' %}
+                        <div class="cwc_collection-body__price">
+                          <input
+                            type="number"
+                            name="{{ filter.min_value.param_name }}"
+                            value="{{ filter.min_value.value }}"
+                            placeholder="{{ 0 | money_without_currency | strip_html }}"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | strip_html }}"
+                            aria-label="Minimum price"
+                          >
+                          <span>to</span>
+                          <input
+                            type="number"
+                            name="{{ filter.max_value.param_name }}"
+                            value="{{ filter.max_value.value }}"
+                            placeholder="{{ filter.range_max | money_without_currency | strip_html }}"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | strip_html }}"
+                            aria-label="Maximum price"
+                          >
+                        </div>
+
+                      {% else %}
+                        <ul class="cwc_collection-body__filter-list">
+                          {% for value in filter.values %}
+                            <li>
+                              <label class="cwc_collection-body__filter-option">
+                                <input
+                                  type="checkbox"
+                                  name="{{ value.param_name }}"
+                                  value="{{ value.value }}"
+                                  {% if value.active %}checked{% endif %}
+                                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                >
+                                <span>{{ value.label }}</span>
+                                <span class="cwc_collection-body__filter-count">{{ value.count }}</span>
+                              </label>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                    {% endcase %}
+                  </div>
+                </details>
+              {% endfor %}
+            {% else %}
+              <p class="cwc_collection-body__filter-empty">
+                No filters are set up for this collection yet. Add them in Search &amp; Discovery.
+              </p>
+            {% endif %}
+
+            <div class="cwc_collection-body__sheet-foot">
+              <a href="{{ collection.url }}" class="cwc_collection-body__button cwc_collection-body__button--outline">
+                {{ section.settings.clear_label | default: 'Clear All' }}
+              </a>
+              <button type="submit" class="cwc_collection-body__button cwc_collection-body__button--primary" data-cwc-apply>
+                {{ section.settings.apply_label | default: 'Apply Filters' }}
+              </button>
+            </div>
+          </form>
+        </aside>
+
+        {% comment %} Main column {% endcomment %}
+        <div class="cwc_collection-body__main">
+
+          <div class="cwc_collection-body__toolbar">
+            <p class="cwc_collection-body__count">
+              Showing
+              <strong>
+                {{ paginate.current_offset | plus: 1 }}–{{ paginate.current_offset | plus: paginate.page_size | at_most: paginate.items }}
+              </strong>
+              of {{ paginate.items }} {{ section.settings.item_noun | default: 'bottles' }}
+            </p>
+
+            {% if collection.sort_options.size > 0 %}
+              <form method="get" action="{{ collection.url }}" class="cwc_collection-body__sort" data-cwc-sort-form>
+                {% for filter in collection.filters %}
+                  {% for value in filter.active_values %}
+                    <input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">
+                  {% endfor %}
+                  {% if filter.type == 'price_range' %}
+                    {% if filter.min_value.value != nil %}
+                      <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">
+                    {% endif %}
+                    {% if filter.max_value.value != nil %}
+                      <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+
+                <label for="cwc_sort-{{ section.id }}">{{ section.settings.sort_label | default: 'Sort' }}</label>
+                <select id="cwc_sort-{{ section.id }}" name="sort_by" class="cwc_collection-body__sort-select">
+                  {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+                  {% for option in collection.sort_options %}
+                    <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>
+                      {{ option.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="cwc_collection-body__sort-submit" data-cwc-sort-submit>Go</button>
+              </form>
+            {% endif %}
+          </div>
+
+          {% if active_filter_count > 0 %}
+            <div class="cwc_collection-body__chips">
+              {% for filter in collection.filters %}
+                {% for value in filter.active_values %}
+                  <span class="cwc_collection-body__chip">
+                    {{ value.label }}
+                    <a href="{{ value.url_to_remove }}" aria-label="Remove filter {{ value.label | escape }}">&times;</a>
+                  </span>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if collection.products.size > 0 %}
+            <div class="cwc_collection-body__grid" data-cwc-grid>
+              {% for product in collection.products %}
+                {% render 'cwc-product-card', product: product, section_settings: section.settings %}
+              {% endfor %}
+            </div>
+
+            {% if paginate.pages > 1 %}
+              <div class="cwc_collection-body__load">
+                <p class="cwc_collection-body__load-progress">
+                  Showing {{ paginate.current_offset | plus: collection.products.size }} of {{ paginate.items }}
+                  {{ section.settings.item_noun | default: 'bottles' }}
+                </p>
+
+                {% assign shown_ratio = paginate.current_offset | plus: collection.products.size | times: 100 | divided_by: paginate.items %}
+                <div class="cwc_collection-body__load-bar" aria-hidden="true">
+                  <span style="width: {{ shown_ratio }}%;"></span>
+                </div>
+
+                {% if paginate.next %}
+                  <a
+                    href="{{ paginate.next.url }}"
+                    class="cwc_collection-body__button cwc_collection-body__button--outline"
+                    data-cwc-load-more
+                  >
+                    {{ section.settings.load_more_label | default: 'Load More' }}
+                  </a>
+                {% endif %}
+              </div>
+
+              <nav class="cwc_collection-body__pagination" aria-label="Pagination">
+                {% if paginate.previous %}
+                  <a href="{{ paginate.previous.url }}" aria-label="Previous page">&lsaquo;</a>
+                {% endif %}
+
+                {% assign current_page_label = paginate.current_page | append: '' %}
+                {% for part in paginate.parts %}
+                  {% if part.is_link %}
+                    <a href="{{ part.url }}">{{ part.title }}</a>
+                  {% elsif part.title == current_page_label %}
+                    <span class="cwc_collection-body__pagination-current" aria-current="page">{{ part.title }}</span>
+                  {% else %}
+                    {% comment %} gap marker {% endcomment %}
+                    <span class="cwc_collection-body__pagination-gap">{{ part.title }}</span>
+                  {% endif %}
+                {% endfor %}
+
+                {% if paginate.next %}
+                  <a href="{{ paginate.next.url }}" aria-label="Next page">&rsaquo;</a>
+                {% endif %}
+              </nav>
+            {% endif %}
+          {% else %}
+            <div class="cwc_collection-body__empty">
+              <p>{{ section.settings.empty_text | default: 'No bottles match these filters.' }}</p>
+              {% if active_filter_count > 0 %}
+                <a href="{{ collection.url }}" class="cwc_collection-body__button cwc_collection-body__button--outline">
+                  {{ section.settings.clear_label | default: 'Clear All' }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Mobile sort sheet — plain links, works with JS disabled {% endcomment %}
+    {% if collection.sort_options.size > 0 %}
+      <div class="cwc_collection-body__sheet" data-cwc-sheet="sort" aria-label="Sort">
+        <div class="cwc_collection-body__sheet-head">
+          <span class="cwc_collection-body__sheet-title">{{ section.settings.sort_label | default: 'Sort' }}</span>
+          <button type="button" class="cwc_collection-body__sheet-close" data-cwc-close aria-label="Close sort">&times;</button>
+        </div>
+
+        <div class="cwc_collection-body__sheet-body">
+          <ul class="cwc_collection-body__sort-list">
+            {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+            {% for option in collection.sort_options %}
+              <li>
+                <a
+                  href="{{ collection.url }}?sort_by={{ option.value }}{{ filter_query }}"
+                  class="{% if option.value == current_sort %}cwc_collection-body__sort-list-active{% endif %}"
+                  {% if option.value == current_sort %}aria-current="true"{% endif %}
+                >
+                  {{ option.name }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="cwc_collection-body__overlay" data-cwc-overlay hidden></div>
+  </section>
+{% endpaginate %}
+
+<script src="{{ 'CWC_collection_body.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Collection Body",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products Per Page",
+      "min": 6,
+      "max": 48,
+      "step": 3,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "item_noun",
+      "label": "Item Noun",
+      "default": "bottles",
+      "info": "Used in \"Showing 1–15 of 182 bottles\"."
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty Results Text",
+      "default": "No bottles match these filters."
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_width",
+      "label": "Sidebar Width",
+      "min": 200,
+      "max": 340,
+      "step": 10,
+      "unit": "px",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "open_filter_groups",
+      "label": "Filter Groups Open By Default",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "info": "Groups with an active filter always open."
+    },
+    {
+      "type": "paragraph",
+      "content": "Filters come from Shopify's Search & Discovery app. Add filters there and they appear here automatically."
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Filter Label",
+      "default": "Filter"
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sort Label",
+      "default": "Sort"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Clear Label",
+      "default": "Clear All"
+    },
+    {
+      "type": "text",
+      "id": "apply_label",
+      "label": "Apply Label",
+      "default": "Apply Filters"
+    },
+    {
+      "type": "text",
+      "id": "load_more_label",
+      "label": "Load More Label",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "notify_label",
+      "label": "Sold Out Label",
+      "default": "Notify Me When Available"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Meta Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "muted_bg_color",
+      "label": "Chip Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Add To Cart Button Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Body",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

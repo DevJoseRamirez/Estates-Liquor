@@ -1,0 +1,153 @@
+/* ==============================
+   CWC Collection Header
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_collection-header {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+}
+
+/* === Background === */
+.cwc_collection-header__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: var(--image-opacity);
+}
+
+.cwc_collection-header__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* wash is heaviest behind the copy and clears toward the right */
+.cwc_collection-header__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--overlay-color) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  opacity: var(--overlay-opacity);
+}
+
+/* === Container === */
+.cwc_collection-header__container {
+  position: relative;
+  z-index: 2;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cwc_collection-header__content {
+  max-width: 640px;
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+/* === Content === */
+.cwc_collection-header__content-eyebrow {
+  font-size: 0.6875rem;
+  /* 11px */
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.75rem;
+}
+
+.cwc_collection-header__content-heading {
+  font-family: var(--cwc-font-heading);
+  font-size: 2.75rem;
+  /* 44px */
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 0.875rem;
+  color: var(--text-color);
+}
+
+.cwc_collection-header__content-subtext {
+  margin-bottom: 1rem;
+}
+
+.cwc_collection-header__content-subtext p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cwc_collection-header__content-subtext a {
+  color: var(--highlight-color);
+}
+
+.cwc_collection-header__count {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--count-color);
+  margin: 0;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_collection-header__container {
+    padding: 0 1.75rem;
+  }
+
+  .cwc_collection-header__content {
+    max-width: 100%;
+  }
+
+  .cwc_collection-header__content-heading {
+    font-size: 2.25rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_collection-header__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_collection-header__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_collection-header__content {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_collection-header__content-heading {
+    font-size: 1.75rem;
+  }
+
+  .cwc_collection-header__content-subtext p {
+    font-size: 0.875rem;
+  }
+
+  /* straighten the wash so copy stays legible over a portrait crop */
+  .cwc_collection-header__overlay {
+    background: linear-gradient(
+      to bottom,
+      var(--overlay-color) 0%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+  }
+}

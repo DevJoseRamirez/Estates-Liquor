@@ -1,0 +1,118 @@
+/* ==============================
+   CWC Collection SEO Copy
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_collection-seo {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_collection-seo__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cwc_collection-seo__content {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+/* === Content Block === */
+.cwc_collection-seo__card + .cwc_collection-seo__card {
+  margin-top: 1.75rem;
+}
+
+.cwc_collection-seo__card-title {
+  font-family: var(--cwc-font-heading);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-color);
+  margin: 0 0 0.625rem;
+}
+
+/* size follows the chosen heading level */
+.cwc_collection-seo__card--large .cwc_collection-seo__card-title {
+  font-size: 1.625rem;
+  /* 26px */
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cwc_collection-seo__card--medium .cwc_collection-seo__card-title {
+  font-size: 1.125rem;
+  /* 18px */
+}
+
+.cwc_collection-seo__card--small .cwc_collection-seo__card-title {
+  font-size: 1rem;
+}
+
+.cwc_collection-seo__card-text p {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--body-text-color);
+  margin: 0 0 0.875rem;
+}
+
+.cwc_collection-seo__card-text p:last-child {
+  margin-bottom: 0;
+}
+
+.cwc_collection-seo__card-text strong {
+  color: var(--text-color);
+}
+
+.cwc_collection-seo__card-text a {
+  color: var(--highlight-color);
+}
+
+.cwc_collection-seo__card-text ul,
+.cwc_collection-seo__card-text ol {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--body-text-color);
+  margin: 0 0 0.875rem;
+  padding-left: 1.25rem;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_collection-seo__container {
+    padding: 0 1.75rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_collection-seo__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_collection-seo {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_collection-seo__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_collection-seo__card--large .cwc_collection-seo__card-title {
+    font-size: 1.375rem;
+  }
+
+  .cwc_collection-seo__card--medium .cwc_collection-seo__card-title {
+    font-size: 1.0625rem;
+  }
+}

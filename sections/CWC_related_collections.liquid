@@ -1,0 +1,334 @@
+{% style %}
+  #cwc_related-collections-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#0A1F12' }};
+    --card-overlay-color: {{ section.settings.card_overlay_color | default: '#0A1F12' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#ffffff' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#C4933F' }};
+    --card-image-opacity: {{ section.settings.card_image_opacity | default: 45 | divided_by: 100.0 }};
+    --card-height: {{ section.settings.card_height | default: 160 }}px;
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_related_collections.css' | asset_url | stylesheet_tag }}
+
+{% if section.blocks.size > 0 %}
+  <section id="cwc_related-collections-{{ section.id }}" class="cwc_related-collections">
+    <div class="cwc_related-collections__container">
+
+      {% comment %} Section Header {% endcomment %}
+      <div class="cwc_related-collections__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_related-collections__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_related-collections__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_rule %}
+          <span class="cwc_related-collections__rule" aria-hidden="true"></span>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_related-collections__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Cards {% endcomment %}
+      <div class="cwc_related-collections__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'card' %}
+              {% liquid
+                assign card_collection = block.settings.collection
+
+                if block.settings.image != blank
+                  assign card_image = block.settings.image
+                elsif card_collection != blank and card_collection.image != blank
+                  assign card_image = card_collection.image
+                else
+                  assign card_image = nil
+                endif
+
+                if block.settings.title != blank
+                  assign card_title = block.settings.title
+                elsif card_collection != blank
+                  assign card_title = card_collection.title
+                else
+                  assign card_title = blank
+                endif
+
+                if block.settings.subtext != blank
+                  assign card_subtext = block.settings.subtext
+                elsif card_collection != blank
+                  assign card_subtext = card_collection.products_count | append: ' bottles'
+                else
+                  assign card_subtext = blank
+                endif
+
+                if block.settings.link != blank
+                  assign card_link = block.settings.link
+                elsif card_collection != blank
+                  assign card_link = card_collection.url
+                else
+                  assign card_link = nil
+                endif
+              %}
+
+              {% if card_title != blank %}
+                {% if card_link %}
+                  <a href="{{ card_link }}" class="cwc_related-collections__card" {{ block.shopify_attributes }}>
+                {% else %}
+                  <div class="cwc_related-collections__card" {{ block.shopify_attributes }}>
+                {% endif %}
+
+                {% if card_image %}
+                  <span class="cwc_related-collections__card-image">
+                    <img
+                      src="{{ card_image | image_url: width: 700 }}"
+                      alt="{{ block.settings.alt_text | default: card_title | escape }}"
+                      loading="lazy"
+                      width="700"
+                      height="400"
+                    >
+                  </span>
+                {% endif %}
+
+                <span class="cwc_related-collections__card-content">
+                  <span class="cwc_related-collections__card-title">{{ card_title }}</span>
+                  {% if card_subtext != blank %}
+                    <span class="cwc_related-collections__card-text">{{ card_subtext }}</span>
+                  {% endif %}
+                </span>
+
+                {% if card_link %}
+                  </a>
+                {% else %}
+                  </div>
+                {% endif %}
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Related Collections",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Keep Browsing"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Related Collections</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card Height",
+      "min": 120,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "card_image_opacity",
+      "label": "Card Image Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_overlay_color",
+      "label": "Card Overlay Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Count Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the background image, title, bottle count, and link."
+        },
+        {
+          "type": "header",
+          "content": "Overrides (Optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Background Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Card Background Image Alt Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Override"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "label": "Subtext Override",
+          "info": "Falls back to the collection's product count."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Collections",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

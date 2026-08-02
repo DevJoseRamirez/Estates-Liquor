@@ -1,0 +1,235 @@
+{% style %}
+  #cwc_collection-header-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --count-color: {{ section.settings.count_color | default: '#C4933F' }};
+    --overlay-color: {{ section.settings.overlay_color | default: '#0A1F12' }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | default: 94 | divided_by: 100.0 }};
+    --image-opacity: {{ section.settings.image_opacity | default: 38 | divided_by: 100.0 }};
+    --padding-top: {{ section.settings.padding_top | default: 60 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 60 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 60 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 60 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_collection_header.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  # Every field falls back to the live collection, overrides win when set
+  if section.settings.title != blank
+    assign header_title = section.settings.title
+  else
+    assign header_title = collection.title
+  endif
+
+  if section.settings.description != blank
+    assign header_description = section.settings.description
+  else
+    assign header_description = collection.description
+  endif
+
+  if section.settings.image != blank
+    assign header_image = section.settings.image
+  elsif collection.image != blank
+    assign header_image = collection.image
+  else
+    assign header_image = nil
+  endif
+
+  if section.settings.count_text != blank
+    assign header_count = section.settings.count_text
+  elsif collection.products_count > 0
+    assign header_count = collection.products_count | append: ' bottles in stock'
+  else
+    assign header_count = blank
+  endif
+%}
+
+<section id="cwc_collection-header-{{ section.id }}" class="cwc_collection-header">
+  {% if header_image %}
+    <span class="cwc_collection-header__image" aria-hidden="true">
+      <img
+        src="{{ header_image | image_url: width: 2000 }}"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        width="2000"
+        height="800"
+      >
+    </span>
+  {% endif %}
+
+  <span class="cwc_collection-header__overlay" aria-hidden="true"></span>
+
+  <div class="cwc_collection-header__container">
+    <div class="cwc_collection-header__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_collection-header__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if header_title != blank %}
+        <h1 class="cwc_collection-header__content-heading">{{ header_title }}</h1>
+      {% endif %}
+
+      {% if header_description != blank %}
+        <div class="cwc_collection-header__content-subtext cwc-rte">
+          {{ header_description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_count and header_count != blank %}
+        <p class="cwc_collection-header__count">{{ header_count }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Collection Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (Optional)",
+      "default": "Whiskey"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title Override",
+      "info": "Leave empty to use the collection title."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description Override",
+      "info": "Leave empty to use the collection description."
+    },
+    {
+      "type": "header",
+      "content": "Bottle Count"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show Product Count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_text",
+      "label": "Count Override",
+      "info": "Leave empty to use the collection's live product count."
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image Override",
+      "info": "Leave empty to use the collection image."
+    },
+    {
+      "type": "range",
+      "id": "image_opacity",
+      "label": "Image Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Strength",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 94
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "count_color",
+      "label": "Product Count Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Header",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

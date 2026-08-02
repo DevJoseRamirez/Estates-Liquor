@@ -1,0 +1,112 @@
+{% comment %}
+  CWC Product Card
+  Shared by the collection grid. Params:
+    product          — required
+    section_settings — the calling section's settings (for labels/colours)
+{% endcomment %}
+
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+
+  assign badge_label = ''
+  assign badge_style = ''
+  if product.available == false
+    assign badge_label = 'Sold Out'
+    assign badge_style = 'soldout'
+  elsif product.compare_at_price > product.price
+    assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
+    assign badge_label = '-' | append: discount | append: '%'
+    assign badge_style = 'sale'
+  elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
+    assign badge_label = 'Allocated'
+    assign badge_style = 'allocated'
+  elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
+    assign badge_label = 'Barrel Pick'
+    assign badge_style = 'barrel'
+  elsif product.tags contains 'New' or product.tags contains 'new'
+    assign badge_label = 'New'
+    assign badge_style = 'new'
+  endif
+
+  # Detail line: metafield first, product type as the fallback
+  assign product_meta = product.metafields.custom.details
+  if product_meta == blank
+    assign product_meta = product.type
+  endif
+%}
+
+<div class="cwc_collection-body__card{% unless product.available %} cwc_collection-body__card--soldout{% endunless %}">
+  <a href="{{ product.url }}" class="cwc_collection-body__card-media" tabindex="-1" aria-hidden="true">
+    {% if product.featured_image != blank %}
+      <img
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="600"
+        height="800"
+      >
+    {% else %}
+      <span class="cwc_collection-body__card-placeholder">
+        <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+          <rect x="16" y="0" width="20" height="6" rx="2" />
+          <rect x="18" y="6" width="16" height="11" />
+          <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+        </svg>
+      </span>
+    {% endif %}
+
+    {% if badge_label != blank %}
+      <span class="cwc_collection-body__card-badge cwc_collection-body__card-badge--{{ badge_style }}">
+        {{ badge_label }}
+      </span>
+    {% endif %}
+  </a>
+
+  <div class="cwc_collection-body__card-body">
+    {% if product.vendor != blank %}
+      <div class="cwc_collection-body__card-brand">{{ product.vendor }}</div>
+    {% endif %}
+
+    <a href="{{ product.url }}" class="cwc_collection-body__card-title">{{ product.title }}</a>
+
+    {% if product_meta != blank %}
+      <div class="cwc_collection-body__card-text">{{ product_meta }}</div>
+    {% endif %}
+
+    {% if product.available %}
+      <div class="cwc_collection-body__card-footer">
+        <div class="cwc_collection-body__card-price">
+          {% if product.compare_at_price > product.price %}
+            <span class="cwc_collection-body__card-price-was">{{ product.compare_at_price | money }}</span>
+          {% endif %}
+          {{ product.price | money }}
+        </div>
+
+        <button
+          type="button"
+          class="cwc_collection-body__card-button"
+          data-variant-id="{{ current_variant.id }}"
+          aria-label="Add {{ product.title | escape }} to cart"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </button>
+      </div>
+    {% else %}
+      <div class="cwc_collection-body__card-footer cwc_collection-body__card-footer--soldout">
+        <div class="cwc_collection-body__card-price">{{ product.price | money }}</div>
+      </div>
+
+      {% comment %}
+        Links through to the product page — a back-in-stock app lives there.
+        This is deliberately a link, not a dead button.
+      {% endcomment %}
+      <a href="{{ product.url }}" class="cwc_collection-body__card-notify">
+        {{ section_settings.notify_label | default: 'Notify Me When Available' }}
+      </a>
+    {% endif %}
+  </div>
+</div>

@@ -12,6 +12,7 @@
   "sections": {
     "collection-header": {
       "type": "collection-header",
+      "disabled": true,
       "settings": {
         "show_breadcrumbs": false,
         "show_title": true,
@@ -36,6 +37,7 @@
     },
     "product-grid": {
       "type": "template--collection",
+      "disabled": true,
       "settings": {
         "products-per-page": 10,
         "desktop-products-per-row": 5,
@@ -62,98 +64,338 @@
         "highlight_button_borders": false
       }
     },
-    "4861948c-5eea-4bc1-8b1a-9880d8cbef74": {
-      "type": "collage",
+    "cwc_breadcrumb": {
+      "type": "CWC_breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "separator": "/",
+        "parent_collection": "",
+        "parent_title": "",
+        "parent_link": "",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "link_color": "#666666",
+        "bold_color": "#c4933f",
+        "separator_color": "#e0ddd6",
+        "show_border": true,
+        "border_color": "#e0ddd6",
+        "padding_top": 15,
+        "padding_bottom": 15
+      }
+    },
+    "cwc_collection_header": {
+      "type": "CWC_collection_header",
+      "settings": {
+        "eyebrow": "Whiskey",
+        "title": "",
+        "description": "",
+        "show_count": true,
+        "count_text": "",
+        "image_opacity": 38,
+        "overlay_opacity": 94,
+        "bg_color": "#0a1f12",
+        "text_color": "#ffffff",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "count_color": "#c4933f",
+        "overlay_color": "#0a1f12",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "cwc_subcategory_rail": {
+      "type": "CWC_subcategory_rail",
       "blocks": {
-        "template--14831908683846__4861948c-5eea-4bc1-8b1a-9880d8cbef74-image-1": {
-          "type": "image",
+        "cwc_subcategory_rail_b1": {
+          "type": "link",
           "settings": {
-            "desktop_position": "md-min-align-center md-min-justify-left",
-            "heading_size": 28,
-            "mobile_position": "md-max-align-center md-max-justify-left",
-            "heading_size_mobile": 22,
-            "heading": "Up to 15% off <br>Detox smoothies",
-            "url": "/",
-            "button_label": "",
-            "buttons_style": "filled",
-            "override_button_colors": false,
-            "button_background_color": "#262428",
-            "button_color": "#e6e5e7",
-            "text_color": "#262428",
-            "overlay_color": "rgba(0,0,0,0)"
+            "collection": "",
+            "title": "Rye Whiskey",
+            "link": "",
+            "highlight": false
           }
         },
-        "3dd57a50-cbbd-488c-bb2a-c1c098c0f1df": {
-          "type": "image",
+        "cwc_subcategory_rail_b2": {
+          "type": "link",
           "settings": {
-            "desktop_position": "md-min-align-center md-min-justify-left",
-            "heading_size": 28,
-            "mobile_position": "md-max-align-center md-max-justify-left",
-            "heading_size_mobile": 22,
-            "heading": "Up to 30% off <br> Energy Boosting <br>smoothies",
-            "url": "/",
-            "button_label": "",
-            "buttons_style": "filled",
-            "override_button_colors": false,
-            "button_background_color": "#262428",
-            "button_color": "#e6e5e7",
-            "text_color": "#262428",
-            "overlay_color": "rgba(0,0,0,0)"
+            "collection": "",
+            "title": "American Whiskey",
+            "link": "shopify://collections/american-whiskey",
+            "highlight": false
+          }
+        },
+        "cwc_subcategory_rail_b3": {
+          "type": "link",
+          "settings": {
+            "collection": "",
+            "title": "Japanese Whisky",
+            "link": "",
+            "highlight": false
+          }
+        },
+        "cwc_subcategory_rail_b4": {
+          "type": "link",
+          "settings": {
+            "collection": "",
+            "title": "Rare & Allocated",
+            "link": "",
+            "highlight": false
+          }
+        },
+        "cwc_subcategory_rail_b5": {
+          "type": "link",
+          "settings": {
+            "collection": "",
+            "title": "Barrel Picks",
+            "link": "",
+            "highlight": false
+          }
+        },
+        "cwc_subcategory_rail_b6": {
+          "type": "link",
+          "settings": {
+            "collection": "",
+            "title": "All Whiskey",
+            "link": "",
+            "highlight": true
           }
         }
       },
       "block_order": [
-        "template--14831908683846__4861948c-5eea-4bc1-8b1a-9880d8cbef74-image-1",
-        "3dd57a50-cbbd-488c-bb2a-c1c098c0f1df"
+        "cwc_subcategory_rail_b1",
+        "cwc_subcategory_rail_b2",
+        "cwc_subcategory_rail_b3",
+        "cwc_subcategory_rail_b4",
+        "cwc_subcategory_rail_b5",
+        "cwc_subcategory_rail_b6"
       ],
       "settings": {
-        "title": "",
-        "description": "",
-        "section_header_alignment": "center",
-        "section_width": "content",
-        "remove_spacing": false,
-        "block_alignment": "center",
-        "section_padding_top": 0,
-        "section_padding_bottom": 60,
-        "width_1": "2",
-        "height_1": "4",
-        "width_2": "2",
-        "height_2": "4",
-        "width_3": "3",
-        "height_3": "3",
-        "width_4": "2",
-        "height_4": "2",
-        "width_5": "2",
-        "height_5": "2",
-        "width_6": "1",
-        "height_6": "4",
-        "color_scheme": "white"
+        "aria_label": "Sub categories",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "pill_bg_color": "#ffffff",
+        "pill_text_color": "#0a1f12",
+        "show_border": true,
+        "border_color": "#e0ddd6",
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     },
-    "navigation_banner_hM7878": {
-      "type": "navigation-banner",
+    "cwc_collection_body": {
+      "type": "CWC_collection_body",
       "settings": {
-        "title": "Explore our other collections",
-        "description": "",
-        "section_header_alignment": "center",
-        "banner_linklist": "main-menu",
-        "collection_list": [],
-        "buttons_style": "outlined",
-        "override_button_colors": false,
-        "nav_background_color": "rgba(0,0,0,0)",
-        "nav_text_color": "rgba(0,0,0,0)",
-        "section_padding_top": 0,
-        "section_padding_bottom": 60,
-        "layout_style": "grid",
-        "navigation_position": "center",
-        "colors": "white"
+        "products_per_page": 15,
+        "columns": 3,
+        "item_noun": "bottles",
+        "empty_text": "No bottles match these filters.",
+        "sidebar_width": 250,
+        "open_filter_groups": 4,
+        "filter_label": "Filter",
+        "sort_label": "Sort",
+        "clear_label": "Clear All",
+        "apply_label": "Apply Filters",
+        "load_more_label": "Load More",
+        "notify_label": "Notify Me When Available",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "subtext_color": "#666666",
+        "meta_color": "#9a9a9a",
+        "border_color": "#e0ddd6",
+        "muted_bg_color": "#f8f6f1",
+        "card_bg_color": "#ffffff",
+        "card_media_bg_color": "#f2efe8",
+        "button_bg_color": "#0a1f12",
+        "padding_top": 35,
+        "padding_bottom": 80
+      }
+    },
+    "cwc_related_collections": {
+      "type": "CWC_related_collections",
+      "blocks": {
+        "cwc_related_collections_b1": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "alt_text": "",
+            "title": "Rye Whiskey",
+            "subtext": "64 bottles",
+            "link": ""
+          }
+        },
+        "cwc_related_collections_b2": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "alt_text": "",
+            "title": "Rare & Allocated",
+            "subtext": "40+ releases",
+            "link": ""
+          }
+        },
+        "cwc_related_collections_b3": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "alt_text": "",
+            "title": "Barrel Picks",
+            "subtext": "12 bottles",
+            "link": ""
+          }
+        },
+        "cwc_related_collections_b4": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "alt_text": "",
+            "title": "Japanese Whisky",
+            "subtext": "38 bottles",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_related_collections_b1",
+        "cwc_related_collections_b2",
+        "cwc_related_collections_b3",
+        "cwc_related_collections_b4"
+      ],
+      "settings": {
+        "eyebrow": "Keep Browsing",
+        "heading": "<p>Related Collections</p>",
+        "subtext": "",
+        "show_rule": true,
+        "columns": 4,
+        "card_height": 160,
+        "card_image_opacity": 45,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "card_bg_color": "#0a1f12",
+        "card_overlay_color": "#0a1f12",
+        "card_title_color": "#ffffff",
+        "card_text_color": "#c4933f",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
+    },
+    "cwc_collection_seo": {
+      "type": "CWC_collection_seo",
+      "blocks": {
+        "cwc_collection_seo_b1": {
+          "type": "content",
+          "settings": {
+            "size": "large",
+            "title": "About Our Bourbon Selection",
+            "text": "<p>Bourbon has to be made in the United States from a mash bill of at least 51 percent corn, aged in new charred oak, and entered into the barrel at no more than 125 proof. Everything on this page meets that standard. Most of it comes out of Kentucky.</p>"
+          }
+        },
+        "cwc_collection_seo_b2": {
+          "type": "content",
+          "settings": {
+            "size": "medium",
+            "title": "What We Carry",
+            "text": "<p>Our bourbon shelf runs from everyday pours like Elijah Craig Small Batch and Weller Special Reserve through to allocated releases such as the Buffalo Trace Antique Collection, Blanton’s, and Pappy Van Winkle. We list allocated bottles at fair retail when they land, and we do not run a lottery.</p>"
+          }
+        },
+        "cwc_collection_seo_b3": {
+          "type": "content",
+          "settings": {
+            "size": "medium",
+            "title": "Barrel Picks",
+            "text": "<p>Our team tastes through the rickhouse and selects single barrels bottled at full proof. Each pick is labeled with its barrel number, warehouse, and floor, and once it is gone we cannot reorder it.</p>"
+          }
+        },
+        "cwc_collection_seo_b4": {
+          "type": "content",
+          "settings": {
+            "size": "medium",
+            "title": "Shipping Bourbon",
+            "text": "<p>Every bottle is wrapped, braced, and boxed in molded inserts built for glass. Orders placed Monday through Thursday ship the same week, and someone 21 or older must sign on delivery. Enter your ZIP at checkout to confirm we can ship to your address.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_collection_seo_b1",
+        "cwc_collection_seo_b2",
+        "cwc_collection_seo_b3",
+        "cwc_collection_seo_b4"
+      ],
+      "settings": {
+        "content_width": 820,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "body_text_color": "#666666",
+        "bold_color": "#c4933f",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
+    },
+    "cwc_trust_strip": {
+      "type": "CWC_trust_strip",
+      "blocks": {
+        "cwc_trust_strip_b1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "custom_icon_alt": "",
+            "text": "Free shipping over $200"
+          }
+        },
+        "cwc_trust_strip_b2": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "custom_icon_alt": "",
+            "text": "Replaced if broken or lost"
+          }
+        },
+        "cwc_trust_strip_b3": {
+          "type": "item",
+          "settings": {
+            "icon": "calendar",
+            "custom_icon_alt": "",
+            "text": "Ships Mon–Thu"
+          }
+        },
+        "cwc_trust_strip_b4": {
+          "type": "item",
+          "settings": {
+            "icon": "check",
+            "custom_icon_alt": "",
+            "text": "Licensed retailer · 21+"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_trust_strip_b1",
+        "cwc_trust_strip_b2",
+        "cwc_trust_strip_b3",
+        "cwc_trust_strip_b4"
+      ],
+      "settings": {
+        "icon_size": 20,
+        "bg_color": "#f2efe8",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "icon_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     }
   },
   "order": [
     "collection-header",
     "product-grid",
-    "4861948c-5eea-4bc1-8b1a-9880d8cbef74",
-    "navigation_banner_hM7878"
+    "cwc_breadcrumb",
+    "cwc_collection_header",
+    "cwc_subcategory_rail",
+    "cwc_collection_body",
+    "cwc_related_collections",
+    "cwc_collection_seo",
+    "cwc_trust_strip"
   ]
 }

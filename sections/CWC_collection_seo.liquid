@@ -1,0 +1,164 @@
+{% style %}
+  #cwc_collection-seo-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --body-text-color: {{ section.settings.body_text_color | default: '#666666' }};
+    --content-width: {{ section.settings.content_width | default: 1000 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_collection_seo.css' | asset_url | stylesheet_tag }}
+
+{% if section.blocks.size > 0 %}
+  <section id="cwc_collection-seo-{{ section.id }}" class="cwc_collection-seo">
+    <div class="cwc_collection-seo__container">
+      <div class="cwc_collection-seo__content">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'content' %}
+              <div
+                class="cwc_collection-seo__card cwc_collection-seo__card--{{ block.settings.size }}"
+                {{ block.shopify_attributes }}
+              >
+                {% if block.settings.title != blank %}
+                  {% case block.settings.size %}
+                    {% when 'large' %}
+                      <h2 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h2>
+                    {% when 'medium' %}
+                      <h3 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h3>
+                    {% else %}
+                      <h4 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h4>
+                  {% endcase %}
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="cwc_collection-seo__card-text cwc-rte">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Collection SEO Copy",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content Width",
+      "min": 600,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content Block",
+      "settings": [
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Title Size",
+          "options": [
+            { "value": "large", "label": "Large" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "small", "label": "Small" }
+          ],
+          "default": "medium",
+          "info": "Also sets the heading level for SEO — Large is the section's main heading, Medium and Small nest under it."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "What We Carry"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Describe this part of the collection for shoppers and search engines.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection SEO Copy",
+      "category": "CWC Custom",
+      "blocks": [{ "type": "content" }, { "type": "content" }, { "type": "content" }]
+    }
+  ]
+}
+{% endschema %}

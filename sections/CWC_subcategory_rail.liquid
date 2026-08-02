@@ -1,0 +1,206 @@
+{% style %}
+  #cwc_subcategory-rail-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --pill-bg: {{ section.settings.pill_bg_color | default: '#ffffff' }};
+    --pill-text-color: {{ section.settings.pill_text_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --padding-top: {{ section.settings.padding_top | default: 20 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_subcategory_rail.css' | asset_url | stylesheet_tag }}
+
+{% if section.blocks.size > 0 %}
+  <section
+    id="cwc_subcategory-rail-{{ section.id }}"
+    class="cwc_subcategory-rail{% if section.settings.show_border %} cwc_subcategory-rail--bordered{% endif %}"
+  >
+    <div class="cwc_subcategory-rail__container">
+      <nav class="cwc_subcategory-rail__rail" aria-label="{{ section.settings.aria_label | escape | default: 'Sub categories' }}">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'link' %}
+              {% liquid
+                assign pill_collection = block.settings.collection
+
+                if block.settings.title != blank
+                  assign pill_title = block.settings.title
+                elsif pill_collection != blank
+                  assign pill_title = pill_collection.title
+                else
+                  assign pill_title = blank
+                endif
+
+                if block.settings.link != blank
+                  assign pill_link = block.settings.link
+                elsif pill_collection != blank
+                  assign pill_link = pill_collection.url
+                else
+                  assign pill_link = nil
+                endif
+
+                # The pill for the collection being viewed marks itself active
+                assign is_active = false
+                if pill_collection != blank and collection != blank and pill_collection.handle == collection.handle
+                  assign is_active = true
+                endif
+              %}
+
+              {% if pill_title != blank %}
+                <a
+                  {% if pill_link %}href="{{ pill_link }}"{% endif %}
+                  class="cwc_subcategory-rail__pill{% if is_active or block.settings.highlight %} cwc_subcategory-rail__pill--highlight{% endif %}"
+                  {% if is_active %}aria-current="page"{% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  {{ pill_title }}
+                </a>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </nav>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Subcategory Rail",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Rail"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessible Label",
+      "default": "Sub categories",
+      "info": "Describes the rail for screen readers."
+    },
+    {
+      "type": "paragraph",
+      "content": "The pill matching the collection being viewed highlights itself automatically."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Active Pill Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "pill_bg_color",
+      "label": "Pill Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pill_text_color",
+      "label": "Pill Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Border",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Pill Link",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the title and link."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Override"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Always Highlight",
+          "default": false,
+          "info": "Use for a catch-all pill such as \"All Whiskey\"."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subcategory Rail",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "link" },
+        { "type": "link" },
+        { "type": "link" },
+        { "type": "link" }
+      ]
+    }
+  ]
+}
+{% endschema %}

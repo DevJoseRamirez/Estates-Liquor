@@ -1,0 +1,529 @@
+{% style %}
+  #cwc_footer-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#060F09' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --body-text-color: {{ section.settings.body_text_color | default: 'rgba(255,255,255,0.65)' }};
+    --link-color: {{ section.settings.link_color | default: 'rgba(255,255,255,0.55)' }};
+    --heading-color: {{ section.settings.heading_color | default: '#C4933F' }};
+    --bottom-text-color: {{ section.settings.bottom_text_color | default: 'rgba(255,255,255,0.3)' }};
+    --border-color: {{ section.settings.border_color | default: 'rgba(255,255,255,0.08)' }};
+    --logo-width: {{ section.settings.logo_width | default: 180 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 65 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 50 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 65 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 50 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_footer.css' | asset_url | stylesheet_tag }}
+
+<footer id="cwc_footer-{{ section.id }}" class="cwc_footer">
+  <div class="cwc_footer__container">
+
+    <div class="cwc_footer__grid">
+
+      {% comment %} Brand column {% endcomment %}
+      <div class="cwc_footer__brand">
+        {% if section.settings.logo != blank %}
+          <a href="{{ routes.root_url }}" class="cwc_footer__logo">
+            <img
+              src="{{ section.settings.logo | image_url: width: 500 }}"
+              alt="{{ section.settings.logo_alt | default: shop.name | escape }}"
+              loading="lazy"
+              width="180"
+              height="60"
+            >
+          </a>
+        {% else %}
+          {% comment %} Wordmark lockup when no logo image is set {% endcomment %}
+          <a href="{{ routes.root_url }}" class="cwc_footer__wordmark">
+            {% if section.settings.wordmark_top != blank %}
+              <span class="cwc_footer__wordmark-top">{{ section.settings.wordmark_top }}</span>
+            {% endif %}
+            <span class="cwc_footer__wordmark-rule" aria-hidden="true"></span>
+            {% if section.settings.wordmark_bottom != blank %}
+              <span class="cwc_footer__wordmark-bottom">{{ section.settings.wordmark_bottom }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        {% if section.settings.info != blank %}
+          <div class="cwc_footer__info cwc-rte">
+            {{ section.settings.info }}
+          </div>
+        {% endif %}
+
+        {% liquid
+          assign has_social = false
+          if section.settings.instagram != blank or section.settings.facebook != blank or section.settings.youtube != blank or section.settings.tiktok != blank or section.settings.twitter != blank
+            assign has_social = true
+          endif
+        %}
+
+        {% if has_social %}
+          <div class="cwc_footer__social">
+            {% if section.settings.instagram != blank %}
+              <a href="{{ section.settings.instagram }}" class="cwc_footer__social-link" aria-label="Instagram" rel="noopener" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+            {% endif %}
+
+            {% if section.settings.facebook != blank %}
+              <a href="{{ section.settings.facebook }}" class="cwc_footer__social-link" aria-label="Facebook" rel="noopener" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
+            {% endif %}
+
+            {% if section.settings.youtube != blank %}
+              <a href="{{ section.settings.youtube }}" class="cwc_footer__social-link" aria-label="YouTube" rel="noopener" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+                  <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+                </svg>
+              </a>
+            {% endif %}
+
+            {% if section.settings.tiktok != blank %}
+              <a href="{{ section.settings.tiktok }}" class="cwc_footer__social-link" aria-label="TikTok" rel="noopener" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
+                  <path d="M14 6.5A4.5 4.5 0 0 0 18.5 11" />
+                </svg>
+              </a>
+            {% endif %}
+
+            {% if section.settings.twitter != blank %}
+              <a href="{{ section.settings.twitter }}" class="cwc_footer__social-link" aria-label="X" rel="noopener" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+                  <path d="M4 4l7.6 9.5L4.4 20" />
+                  <path d="M20 20l-7.6-9.5L19.6 4" />
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div>
+
+      {% comment %} Menu columns and the signup band, in block order {% endcomment %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'email_signup' %}
+            <div class="cwc_footer__signup" {{ block.shopify_attributes }}>
+              <div class="cwc_footer__signup-content">
+                {% if block.settings.heading != blank %}
+                  <h2 class="cwc_footer__signup-title">{{ block.settings.heading }}</h2>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <p class="cwc_footer__signup-text">{{ block.settings.text }}</p>
+                {% endif %}
+              </div>
+
+              {% form 'customer', class: 'cwc_footer__signup-form-wrapper' %}
+                {% comment %}
+                  Confirmation and errors sit on a filled panel so they stay
+                  legible against the near-black footer.
+                {% endcomment %}
+                {% if form.posted_successfully? %}
+                  <p class="cwc_footer__signup-message cwc_footer__signup-message--success" role="status">
+                    {{ block.settings.success_message | default: 'You are on the list.' }}
+                  </p>
+                {% elsif form.errors %}
+                  <p class="cwc_footer__signup-message cwc_footer__signup-message--error" role="alert">
+                    {{ form.errors.translated_fields.email | capitalize }}
+                    {{ form.errors.messages.email }}
+                  </p>
+                {% endif %}
+
+                <input type="hidden" name="contact[tags]" value="newsletter">
+
+                <div class="cwc_footer__signup-form">
+                  <label class="cwc_footer__signup-label" for="cwc_footer-email-{{ block.id }}">
+                    {{ block.settings.placeholder | default: 'Your email address' }}
+                  </label>
+
+                  <input
+                    id="cwc_footer-email-{{ block.id }}"
+                    class="cwc_footer__signup-input"
+                    type="email"
+                    name="contact[email]"
+                    value="{{ form.email }}"
+                    placeholder="{{ block.settings.placeholder | default: 'Your email address' | escape }}"
+                    autocomplete="email"
+                    required
+                  >
+
+                  <button type="submit" class="cwc_footer__signup-button">
+                    {{ block.settings.button_label | default: 'Sign Up' }}
+                  </button>
+                </div>
+
+                {% if block.settings.disclaimer != blank %}
+                  <p class="cwc_footer__signup-disclaimer">{{ block.settings.disclaimer }}</p>
+                {% endif %}
+              {% endform %}
+            </div>
+
+          {% when 'column' %}
+            {% liquid
+              assign column_menu = block.settings.menu
+
+              if block.settings.heading != blank
+                assign column_heading = block.settings.heading
+              elsif column_menu != blank
+                assign column_heading = column_menu.title
+              else
+                assign column_heading = blank
+              endif
+            %}
+
+            <div class="cwc_footer__column" {{ block.shopify_attributes }}>
+              {% if column_heading != blank %}
+                <h2 class="cwc_footer__column-title">{{ column_heading }}</h2>
+              {% endif %}
+
+              {% if column_menu != blank and column_menu.links.size > 0 %}
+                <ul class="cwc_footer__column-list">
+                  {% for link in column_menu.links %}
+                    <li>
+                      <a href="{{ link.url }}" class="cwc_footer__column-link">{{ link.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="cwc_footer__column-empty">Select a menu for this column.</p>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+
+    </div>
+
+    {% comment %} Bottom bar {% endcomment %}
+    <div class="cwc_footer__bottom">
+      <div class="cwc_footer__bottom-legal">
+        <div class="cwc_footer__bottom-legal-row">
+          {% if section.settings.copyright != blank %}
+            <span>
+              &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright }}
+            </span>
+          {% else %}
+            <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+          {% endif %}
+
+          {% if section.settings.show_age_badge and section.settings.age_badge != blank %}
+            <span class="cwc_footer__badge">{{ section.settings.age_badge }}</span>
+          {% endif %}
+
+          {% if section.settings.disclaimer != blank %}
+            <span>{{ section.settings.disclaimer }}</span>
+          {% endif %}
+        </div>
+
+        {% comment %}
+          Every published store policy, straight from Settings > Policies —
+          nothing to maintain by hand. Unpublished policies are simply absent.
+        {% endcomment %}
+        {% if section.settings.show_policies and shop.policies.size > 0 %}
+          <nav class="cwc_footer__policies" aria-label="Store policies">
+            {% for policy in shop.policies %}
+              <a href="{{ policy.url }}">{{ policy.title }}</a>
+            {% endfor %}
+          </nav>
+        {% endif %}
+      </div>
+
+      {% if section.settings.bottom_menu != blank and section.settings.bottom_menu.links.size > 0 %}
+        <nav class="cwc_footer__bottom-links" aria-label="Legal">
+          {% for link in section.settings.bottom_menu.links %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}
+        </nav>
+      {% endif %}
+    </div>
+
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "CWC Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer Logo",
+      "info": "Leave empty to use the text wordmark below."
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Footer Logo Alt Text"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 100,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "text",
+      "id": "wordmark_top",
+      "label": "Wordmark Top Line",
+      "default": "Estates"
+    },
+    {
+      "type": "text",
+      "id": "wordmark_bottom",
+      "label": "Wordmark Bottom Line",
+      "default": "Liquor"
+    },
+    {
+      "type": "richtext",
+      "id": "info",
+      "label": "Info Text",
+      "default": "<p>Licensed retailer in Coronado, California. Allocated bourbon, rare releases, and premium spirits at fair retail.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "facebook",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "tiktok",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "twitter",
+      "label": "X"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright Text",
+      "info": "The year is added automatically.",
+      "default": "Estates Liquor. All rights reserved."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_age_badge",
+      "label": "Show Age Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "age_badge",
+      "label": "Age Badge Text",
+      "default": "21+ Only"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "You must be 21 or older to purchase. Please drink responsibly."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show Store Policies Inline",
+      "default": true,
+      "info": "Lists every published policy from Settings > Policies on its own line under the disclaimer."
+    },
+    {
+      "type": "link_list",
+      "id": "bottom_menu",
+      "label": "Legal Menu",
+      "info": "Optional extra links shown on the right. Leave empty if the inline policies above are enough."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#060F09"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Logo Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Column Heading Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Info Text Color",
+      "default": "#A6ADA8"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#8E968F"
+    },
+    {
+      "type": "color",
+      "id": "bottom_text_color",
+      "label": "Bottom Bar Text Color",
+      "default": "#5C645E"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#1B241D"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "Pick a navigation menu from Online Store > Navigation."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading Override",
+          "info": "Leave empty to use the menu's own title."
+        }
+      ]
+    },
+    {
+      "type": "email_signup",
+      "name": "Email Signup",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "The Rare Drop List"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Hear about allocated bottles before they sell out."
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Email Placeholder",
+          "default": "Your email address"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Sign Up"
+        },
+        {
+          "type": "text",
+          "id": "success_message",
+          "label": "Success Message",
+          "default": "You are on the list."
+        },
+        {
+          "type": "text",
+          "id": "disclaimer",
+          "label": "Disclaimer",
+          "default": "Must be 21+ to subscribe. Unsubscribe anytime."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "Footer",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "column" },
+        { "type": "column" },
+        { "type": "column" },
+        { "type": "email_signup" }
+      ]
+    }
+  ]
+}
+{% endschema %}
