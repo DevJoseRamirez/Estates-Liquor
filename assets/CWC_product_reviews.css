@@ -11,8 +11,14 @@
   padding-bottom: var(--padding-bottom);
 }
 
+/* jump-link target — offset so the sticky header does not cover the heading */
+.cwc_product-reviews__anchor {
+  display: block;
+  scroll-margin-top: 6rem;
+}
+
 .cwc_product-reviews__container {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 2rem;
 }

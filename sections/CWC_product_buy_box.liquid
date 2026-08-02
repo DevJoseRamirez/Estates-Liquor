@@ -115,6 +115,16 @@
         {% for block in section.blocks %}
           {% case block.type %}
 
+            {% comment %}
+              App blocks from installed apps — subscription widgets, review
+              badges, size charts. Ordered like any other block, so an app can
+              sit between the price and the buy button.
+            {% endcomment %}
+            {% when '@app' %}
+              <div class="cwc_product-buy-box__app" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+
             {% when 'brand' %}
               {% if buy_product.vendor != blank %}
                 <div class="cwc_product-buy-box__brand" {{ block.shopify_attributes }}>
@@ -552,6 +562,9 @@
     }
   ],
   "blocks": [
+    {
+      "type": "@app"
+    },
     {
       "type": "brand",
       "name": "Brand",

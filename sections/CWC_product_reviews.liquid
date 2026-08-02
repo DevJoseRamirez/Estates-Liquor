@@ -19,7 +19,14 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_product_reviews.css' | asset_url | stylesheet_tag }}
 
-<section id="cwc_product-reviews" class="cwc_product-reviews">
+<section id="cwc_product-reviews-{{ section.id }}" class="cwc_product-reviews">
+  {% comment %}
+    Separate, stable anchor for "Read N reviews" links from the buy box. The
+    section id has to stay scoped to section.id or the {% style %} block above
+    matches nothing and every CSS variable falls back to undefined.
+  {% endcomment %}
+  <span id="cwc_product-reviews" class="cwc_product-reviews__anchor" aria-hidden="true"></span>
+
   <div class="cwc_product-reviews__container">
     <div class="cwc_product-reviews__content">
 

@@ -145,8 +145,18 @@
 
       {% comment %} Icons {% endcomment %}
       <div class="cwc_header__icons">
+        {% comment %}
+          A real link to the search page. JS upgrades it into the predictive
+          dropdown below, so with scripts blocked it still reaches search.
+        {% endcomment %}
         {% if section.settings.show_search %}
-          <a href="{{ routes.search_url }}" class="cwc_header__icon" aria-label="Search">
+          <a
+            href="{{ routes.search_url }}"
+            class="cwc_header__icon"
+            aria-label="Search"
+            data-cwc-search-open
+            aria-expanded="false"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
               <circle cx="11" cy="11" r="7" />
               <path d="M20 20l-3.5-3.5" />
@@ -195,6 +205,52 @@
       </div>
 
     </div>
+
+    {% comment %}
+      Predictive search panel. The form is a plain GET to the search page, so
+      submitting works with no JS; the results below are fetched from
+      /search/suggest.json and rendered by CWC_header.js.
+    {% endcomment %}
+    {% if section.settings.show_search %}
+      <div class="cwc_header__search" data-cwc-search hidden>
+        <form
+          action="{{ routes.search_url }}"
+          method="get"
+          role="search"
+          class="cwc_header__search-form"
+        >
+          <span class="cwc_header__search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" />
+            </svg>
+          </span>
+
+          <input
+            type="search"
+            name="q"
+            class="cwc_header__search-input"
+            data-cwc-search-input
+            placeholder="{{ section.settings.search_placeholder | default: 'Search bottles, brands, collections' | escape }}"
+            aria-label="Search"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+          >
+
+          <button
+            type="button"
+            class="cwc_header__search-close"
+            data-cwc-search-close
+            aria-label="Close search"
+          >
+            &times;
+          </button>
+        </form>
+
+        <div class="cwc_header__search-results" data-cwc-search-results></div>
+      </div>
+    {% endif %}
   </div>
 </header>
 
@@ -357,6 +413,12 @@
       "id": "show_search",
       "label": "Show Search",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search Placeholder",
+      "default": "Search bottles, brands, collections"
     },
     {
       "type": "checkbox",

@@ -12,7 +12,7 @@
 }
 
 .cwc_product-buy-box__container {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -149,6 +149,17 @@
   line-height: 1.2;
   margin: 0 0 12px;
   color: var(--text-color);
+}
+
+/* === App Block === */
+/* Spacing only — app markup styles itself, so nothing here dictates its look. */
+.cwc_product-buy-box__app {
+  margin-bottom: 18px;
+}
+
+.cwc_product-buy-box__app:empty {
+  display: none;
+  margin: 0;
 }
 
 /* === Rating === */
