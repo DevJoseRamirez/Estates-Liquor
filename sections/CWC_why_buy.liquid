@@ -1,0 +1,288 @@
+{% style %}
+  #cwc_why-buy-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --icon-color: {{ section.settings.icon_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_why_buy.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_why-buy-{{ section.id }}" class="cwc_why-buy">
+  <div class="cwc_why-buy__container">
+
+    <div class="cwc_why-buy__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_why-buy__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_why-buy__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_why-buy__rule" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_why-buy__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'card' %}
+              <div class="cwc_why-buy__card" {{ block.shopify_attributes }}>
+                {% if block.settings.custom_icon != blank %}
+                  <span class="cwc_why-buy__card-image">
+                    <img
+                      src="{{ block.settings.custom_icon | image_url: width: 96 }}"
+                      alt="{{ block.settings.custom_icon_alt | default: '' | escape }}"
+                      loading="lazy"
+                      width="24"
+                      height="24"
+                    >
+                  </span>
+                {% elsif block.settings.icon != 'none' %}
+                  <span class="cwc_why-buy__card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      {% case block.settings.icon %}
+                        {% when 'store' %}
+                          <path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+                          <path d="M3 9l2-5h14l2 5" />
+                          <path d="M9 21v-6h6v6" />
+                        {% when 'shield' %}
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                          <path d="M9 12l2.2 2.2L15.5 10" />
+                        {% when 'box' %}
+                          <path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+                          <path d="M3 9l2-5h14l2 5" />
+                          <path d="M12 4v5" />
+                        {% when 'check' %}
+                          <path d="M4 12.5l5 5L20 6.5" />
+                        {% when 'tag' %}
+                          <path d="M20.6 13.4L12 22l-9-9V3h10z" />
+                          <circle cx="7.5" cy="7.5" r="1.5" />
+                        {% when 'truck' %}
+                          <rect x="1" y="4" width="15" height="12" rx="1" />
+                          <path d="M16 8h4l3 3v5h-7V8z" />
+                          <circle cx="5.5" cy="18.5" r="2.5" />
+                          <circle cx="18.5" cy="18.5" r="2.5" />
+                        {% when 'star' %}
+                          <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
+                        {% when 'bottle' %}
+                          <path d="M10 2.5h4V6l2 3.2V21H8V9.2L10 6V2.5z" />
+                          <path d="M8 13h8" />
+                      {% endcase %}
+                    </svg>
+                  </span>
+                {% endif %}
+
+                {% if block.settings.title != blank %}
+                  <h3 class="cwc_why-buy__card-title">{{ block.settings.title }}</h3>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="cwc_why-buy__card-text cwc-rte">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Why Buy",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Buy With Confidence"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Why Buy From Estates</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Reason Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "No Icon" },
+            { "value": "store", "label": "Storefront" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "box", "label": "Box" },
+            { "value": "check", "label": "Checkmark" },
+            { "value": "tag", "label": "Price Tag" },
+            { "value": "truck", "label": "Shipping Truck" },
+            { "value": "star", "label": "Star" },
+            { "value": "bottle", "label": "Bottle" }
+          ],
+          "default": "store"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom Icon Image (Optional)",
+          "info": "Overrides the icon above. Use a small square image."
+        },
+        {
+          "type": "text",
+          "id": "custom_icon_alt",
+          "label": "Custom Icon Alt Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "A Real Storefront"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>We are a licensed retailer operating a physical store in Coronado, California.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Why Buy",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

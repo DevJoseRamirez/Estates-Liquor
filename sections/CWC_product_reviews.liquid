@@ -1,0 +1,218 @@
+{% style %}
+  #cwc_product-reviews-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --slot-bg: {{ section.settings.slot_bg_color | default: '#F8F6F1' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --content-width: {{ section.settings.content_width | default: 860 }}px;
+    --slot-height: {{ section.settings.slot_height | default: 160 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_reviews.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_product-reviews" class="cwc_product-reviews">
+  <div class="cwc_product-reviews__container">
+    <div class="cwc_product-reviews__content">
+
+      <div class="cwc_product-reviews__head">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_product-reviews__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="cwc_product-reviews__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.show_rule %}
+          <span class="cwc_product-reviews__rule" aria-hidden="true"></span>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Mount point for the review app. Paste the app's embed into the custom
+        Liquid setting below, or let the app target #cwc_product-reviews-widget.
+        The placeholder only shows while nothing is mounted.
+      {% endcomment %}
+      <div id="cwc_product-reviews-widget" class="cwc_product-reviews__slot">
+        {% if section.settings.app_embed != blank %}
+          {{ section.settings.app_embed }}
+        {% else %}
+          <div class="cwc_product-reviews__placeholder">
+            {% if section.settings.placeholder_title != blank %}
+              <span class="cwc_product-reviews__placeholder-title">{{ section.settings.placeholder_title }}</span>
+            {% endif %}
+            {% if section.settings.placeholder_text != blank %}
+              <p class="cwc_product-reviews__placeholder-text">{{ section.settings.placeholder_text }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Product Reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Verified Purchases"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reviews for This Bottle"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Review App"
+    },
+    {
+      "type": "liquid",
+      "id": "app_embed",
+      "label": "App Embed",
+      "info": "Paste your review app's snippet or app block Liquid here. Leaving this empty shows the placeholder instead."
+    },
+    {
+      "type": "paragraph",
+      "content": "Apps can also target the wrapper id #cwc_product-reviews-widget directly."
+    },
+    {
+      "type": "range",
+      "id": "slot_height",
+      "label": "Placeholder Height",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "text",
+      "id": "placeholder_title",
+      "label": "Placeholder Title",
+      "default": "App Widget Slot"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder Text",
+      "default": "Your product review widget renders here. When this product has no reviews, hide this section so the store reviews above carry the page."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content Width",
+      "min": 600,
+      "max": 1100,
+      "step": 20,
+      "unit": "px",
+      "default": 860
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Placeholder Text Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "slot_bg_color",
+      "label": "Placeholder Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Reviews",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,359 @@
+{% style %}
+  #cwc_product-details-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --body-text-color: {{ section.settings.body_text_color | default: '#666666' }};
+    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --content-width: {{ section.settings.content_width | default: 820 }}px;
+    --clamp-height: {{ section.settings.clamp_height | default: 200 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_details.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign details_product = section.settings.product | default: product
+
+  if section.settings.description != blank
+    assign details_body = section.settings.description
+  else
+    assign details_body = details_product.description
+  endif
+%}
+
+<section id="cwc_product-details-{{ section.id }}" class="cwc_product-details" data-section-id="{{ section.id }}">
+  <div class="cwc_product-details__container">
+    <div class="cwc_product-details__content">
+
+      {% comment %} Section Header {% endcomment %}
+      <div class="cwc_product-details__head">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_product-details__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="cwc_product-details__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.show_rule %}
+          <span class="cwc_product-details__rule" aria-hidden="true"></span>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Merchant description gets a scoped typography reset so pasted supplier
+        HTML inherits brand styling instead of its own.
+      {% endcomment %}
+      {% if details_body != blank %}
+        <div
+          class="cwc_product-details__body{% if section.settings.enable_clamp %} cwc_product-details__body--clamped{% endif %}"
+          data-cwc-clamp-wrap
+        >
+          <div class="cwc_product-details__rte cwc-rte">
+            {{ details_body }}
+          </div>
+
+          {% if section.settings.enable_clamp %}
+            <button type="button" class="cwc_product-details__more" data-cwc-clamp-toggle
+              data-more="{{ section.settings.more_label | default: 'Read More' | escape }}"
+              data-less="{{ section.settings.less_label | default: 'Read Less' | escape }}"
+              aria-expanded="false"
+            >
+              {{ section.settings.more_label | default: 'Read More' }}
+            </button>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} Extra titled content rows {% endcomment %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'content' %}
+            <div class="cwc_product-details__card cwc_product-details__card--{{ block.settings.size }}" {{ block.shopify_attributes }}>
+              {% if block.settings.title != blank %}
+                {% case block.settings.size %}
+                  {% when 'large' %}
+                    <h2 class="cwc_product-details__card-title">{{ block.settings.title }}</h2>
+                  {% when 'medium' %}
+                    <h3 class="cwc_product-details__card-title">{{ block.settings.title }}</h3>
+                  {% else %}
+                    <h4 class="cwc_product-details__card-title">{{ block.settings.title }}</h4>
+                {% endcase %}
+              {% endif %}
+
+              {% if block.settings.text != blank %}
+                <div class="cwc_product-details__card-text cwc-rte">
+                  {{ block.settings.text }}
+                </div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+
+      {% if section.settings.note != blank %}
+        <p class="cwc_product-details__note">{{ section.settings.note }}</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% comment %}
+    Sticky mobile add-to-cart lives here as a block, per the page notes, so the
+    PDP's supporting pieces stay in one section. It watches the buy box's own
+    Add to Cart button and only shows once that scrolls away.
+  {% endcomment %}
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'sticky_atc' %}
+        {% render 'cwc-sticky-atc', block: block, sticky_product: details_product %}
+    {% endcase %}
+  {% endfor %}
+</section>
+
+<script src="{{ 'CWC_product_details.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Product Details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Product Details"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "About This Bottle"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the product being viewed."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description Override",
+      "info": "Leave empty to use the product's own description."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_clamp",
+      "label": "Clamp Long Descriptions",
+      "default": true,
+      "info": "Fades out past the height below and adds a Read More button."
+    },
+    {
+      "type": "range",
+      "id": "clamp_height",
+      "label": "Clamped Height",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Read More Label",
+      "default": "Read More"
+    },
+    {
+      "type": "text",
+      "id": "less_label",
+      "label": "Read Less Label",
+      "default": "Read Less"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Footnote"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content Width",
+      "min": 600,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 820
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Footnote Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Sticky Button Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content Block",
+      "settings": [
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Title Size",
+          "options": [
+            { "value": "large", "label": "Large" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "small", "label": "Small" }
+          ],
+          "default": "medium",
+          "info": "Also sets the heading level for SEO."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Tasting Notes"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add extra detail about this bottle.</p>"
+        }
+      ]
+    },
+    {
+      "type": "sticky_atc",
+      "name": "Sticky Add To Cart",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Add to Cart"
+        },
+        {
+          "type": "text",
+          "id": "sold_out_label",
+          "label": "Sold Out Label",
+          "default": "Sold Out"
+        },
+        {
+          "type": "text",
+          "id": "watch_selector",
+          "label": "Watched Element",
+          "default": "[data-cwc-atc]",
+          "info": "The bar appears once this element scrolls out of view. Defaults to the buy box's Add to Cart button."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "sticky_atc" }
+      ]
+    }
+  ]
+}
+{% endschema %}

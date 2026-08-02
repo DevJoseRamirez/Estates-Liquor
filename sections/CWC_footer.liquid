@@ -9,6 +9,7 @@
     --bottom-text-color: {{ section.settings.bottom_text_color | default: 'rgba(255,255,255,0.3)' }};
     --border-color: {{ section.settings.border_color | default: 'rgba(255,255,255,0.08)' }};
     --logo-width: {{ section.settings.logo_width | default: 180 }}px;
+    --footer-columns: {{ section.blocks.size | default: 3 }};
     --padding-top: {{ section.settings.padding_top | default: 65 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 50 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 65 | times: 0.5 }}px;

@@ -30,12 +30,10 @@
 .cwc_collection-header__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    var(--overlay-color) 0%,
-    rgba(0, 0, 0, 0.45) 60%,
-    rgba(0, 0, 0, 0.15) 100%
-  );
+  background: linear-gradient(to right,
+      var(--overlay-color) 0%,
+      rgba(0, 0, 0, 0.45) 60%,
+      rgba(0, 0, 0, 0.15) 100%);
   opacity: var(--overlay-opacity);
 }
 
@@ -43,7 +41,7 @@
 .cwc_collection-header__container {
   position: relative;
   z-index: 2;
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -144,10 +142,8 @@
 
   /* straighten the wash so copy stays legible over a portrait crop */
   .cwc_collection-header__overlay {
-    background: linear-gradient(
-      to bottom,
-      var(--overlay-color) 0%,
-      rgba(0, 0, 0, 0.55) 100%
-    );
+    background: linear-gradient(to bottom,
+        var(--overlay-color) 0%,
+        rgba(0, 0, 0, 0.55) 100%);
   }
 }

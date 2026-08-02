@@ -1,0 +1,343 @@
+{% style %}
+  #cwc_related-products-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_related_products.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign source_product = section.settings.product | default: product
+  assign products_to_show = section.settings.products_to_show
+%}
+
+<section
+  id="cwc_related-products-{{ section.id }}"
+  class="cwc_related-products"
+  data-section-id="{{ section.id }}"
+>
+  <div class="cwc_related-products__container">
+
+    <div class="cwc_related-products__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_related-products__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_related-products__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_related-products__rule" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+
+    {% comment %}
+      Shopify fills recommendations.products on the product-recommendations
+      route. A collection can be picked instead when a curated row is wanted.
+    {% endcomment %}
+    {% liquid
+      assign related_list = null
+      if section.settings.collection != blank
+        assign related_list = section.settings.collection.products
+      elsif recommendations.performed? and recommendations.products_count > 0
+        assign related_list = recommendations.products
+      endif
+    %}
+
+    {% if related_list %}
+      <div class="cwc_related-products__grid" data-cwc-grid>
+        {% for related in related_list limit: products_to_show %}
+          {% unless related.id == source_product.id %}
+            {% liquid
+              assign related_variant = related.selected_or_first_available_variant
+
+              assign badge_label = ''
+              assign badge_style = ''
+              if related.available == false
+                assign badge_label = 'Sold Out'
+                assign badge_style = 'soldout'
+              elsif related.tags contains 'Allocated' or related.tags contains 'allocated'
+                assign badge_label = 'Allocated'
+                assign badge_style = 'allocated'
+              elsif related.tags contains 'New' or related.tags contains 'new'
+                assign badge_label = 'New'
+                assign badge_style = 'new'
+              endif
+
+              assign related_meta = related.metafields.custom.details
+              if related_meta == blank
+                assign related_meta = related.type
+              endif
+            %}
+
+            <div class="cwc_related-products__card">
+              <a href="{{ related.url }}" class="cwc_related-products__card-media" tabindex="-1" aria-hidden="true">
+                {% if related.featured_image != blank %}
+                  <img
+                    src="{{ related.featured_image | image_url: width: 600 }}"
+                    alt="{{ related.featured_image.alt | default: related.title | escape }}"
+                    loading="lazy"
+                    width="600"
+                    height="800"
+                  >
+                {% else %}
+                  <span class="cwc_related-products__card-placeholder">
+                    <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                      <rect x="16" y="0" width="20" height="6" rx="2" />
+                      <rect x="18" y="6" width="16" height="11" />
+                      <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                    </svg>
+                  </span>
+                {% endif %}
+
+                {% if badge_label != blank %}
+                  <span class="cwc_related-products__card-badge cwc_related-products__card-badge--{{ badge_style }}">
+                    {{ badge_label }}
+                  </span>
+                {% endif %}
+              </a>
+
+              <div class="cwc_related-products__card-body">
+                {% if related.vendor != blank %}
+                  <div class="cwc_related-products__card-brand">{{ related.vendor }}</div>
+                {% endif %}
+
+                <a href="{{ related.url }}" class="cwc_related-products__card-title">{{ related.title }}</a>
+
+                {% if related_meta != blank %}
+                  <div class="cwc_related-products__card-text">{{ related_meta }}</div>
+                {% endif %}
+
+                <div class="cwc_related-products__card-footer">
+                  <div class="cwc_related-products__card-price">
+                    {% if related.compare_at_price > related.price %}
+                      <span class="cwc_related-products__card-price-was">{{ related.compare_at_price | money }}</span>
+                    {% endif %}
+                    {{ related.price | money }}
+                  </div>
+
+                  {% if related.available %}
+                    <button
+                      type="button"
+                      class="cwc_related-products__card-button"
+                      data-variant-id="{{ related_variant.id }}"
+                      aria-label="Add {{ related.title | escape }} to cart"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                      </svg>
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div
+        class="cwc_related-products__grid"
+        data-cwc-recommendations
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ source_product.id }}&limit={{ products_to_show }}"
+      >
+        <p class="cwc_related-products__empty">
+          {{ section.settings.empty_text | default: 'Recommendations load once this product is published.' }}
+        </p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<script src="{{ 'CWC_related_products.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Related Products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "More From Bourbon"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>You May Also Like</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the product being viewed."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection Override",
+      "info": "Pick a collection to curate this row. Leave empty to use Shopify's automatic recommendations."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products To Show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty Text",
+      "default": "Recommendations load once this product is published."
+    },
+    {
+      "type": "text",
+      "id": "notify_label",
+      "label": "Sold Out Label",
+      "default": "Notify Me When Available"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Meta Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Add To Cart Button Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

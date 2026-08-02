@@ -1,0 +1,169 @@
+/* ==============================
+   CWC Product Questions
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_product-questions {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_product-questions__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cwc_product-questions__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* === Icon === */
+.cwc_product-questions__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--highlight-color);
+  border-radius: 50%;
+  color: var(--highlight-color);
+}
+
+.cwc_product-questions__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* === Content === */
+.cwc_product-questions__content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cwc_product-questions__heading {
+  font-family: var(--cwc-font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 6px;
+  color: var(--text-color);
+}
+
+.cwc_product-questions__subtext p {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 0;
+  color: var(--body-text-color);
+}
+
+.cwc_product-questions__subtext a {
+  color: var(--highlight-color);
+}
+
+/* === Actions === */
+.cwc_product-questions__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cwc_product-questions__button {
+  display: inline-block;
+  padding: 13px 26px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--button-text-color);
+  background-color: var(--button-bg);
+  border: 1.5px solid var(--button-bg);
+  border-radius: 3px;
+  transition: filter 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.cwc_product-questions__button:hover {
+  filter: brightness(1.08);
+}
+
+.cwc_product-questions__button--outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--text-color);
+}
+
+.cwc_product-questions__button--outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--text-color);
+  filter: none;
+}
+
+.cwc_product-questions__button:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_product-questions__container {
+    padding: 0 1.75rem;
+  }
+
+  .cwc_product-questions__wrapper {
+    flex-wrap: wrap;
+  }
+
+  .cwc_product-questions__content {
+    flex-basis: 60%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_product-questions__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_product-questions {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_product-questions__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_product-questions__wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .cwc_product-questions__content {
+    flex-basis: auto;
+  }
+
+  .cwc_product-questions__actions {
+    width: 100%;
+  }
+
+  .cwc_product-questions__button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

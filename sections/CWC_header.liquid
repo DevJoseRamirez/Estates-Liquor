@@ -1,0 +1,447 @@
+{% style %}
+  #cwc_header-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#2C2C2C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --brand-color: {{ section.settings.brand_color | default: '#0A1F12' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#F8F6F1' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
+    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#0A1F12' }};
+    --logo-width: {{ section.settings.logo_width | default: 150 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 15 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 15 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_header.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign main_menu = section.settings.main_menu
+  assign highlights = section.settings.highlight_links | downcase | split: ','
+%}
+
+<header
+  id="cwc_header-{{ section.id }}"
+  class="cwc_header{% if section.settings.enable_sticky %} cwc_header--sticky{% endif %}{% if section.settings.show_border %} cwc_header--bordered{% endif %}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="cwc_header__container">
+    <div class="cwc_header__inner">
+
+      {% comment %} Logo {% endcomment %}
+      <a href="{{ routes.root_url }}" class="cwc_header__logo">
+        {% if section.settings.logo != blank %}
+          <img
+            src="{{ section.settings.logo | image_url: width: 500 }}"
+            alt="{{ section.settings.logo_alt | default: shop.name | escape }}"
+            loading="eager"
+            width="150"
+            height="50"
+          >
+        {% else %}
+          {% comment %} Bottle mark + stacked wordmark when no logo is set {% endcomment %}
+          {% if section.settings.show_logo_mark %}
+            <svg class="cwc_header__logo-mark" viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+              <rect x="16" y="0" width="20" height="6" rx="2" />
+              <rect x="18" y="6" width="16" height="11" />
+              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+            </svg>
+          {% endif %}
+
+          <span class="cwc_header__wordmark">
+            {% if section.settings.wordmark_top != blank %}
+              <span class="cwc_header__wordmark-top">{{ section.settings.wordmark_top }}</span>
+            {% endif %}
+            <span class="cwc_header__wordmark-rule" aria-hidden="true"></span>
+            {% if section.settings.wordmark_bottom != blank %}
+              <span class="cwc_header__wordmark-bottom">{{ section.settings.wordmark_bottom }}</span>
+            {% endif %}
+          </span>
+        {% endif %}
+      </a>
+
+      {% comment %}
+        Desktop nav. Second-level links in the chosen Shopify menu become the
+        mega panel; a top-level link with no children renders as a plain link.
+      {% endcomment %}
+      {% if main_menu != blank and main_menu.links.size > 0 %}
+        <nav class="cwc_header__nav" aria-label="{{ section.settings.nav_label | escape | default: 'Main' }}">
+          {% for link in main_menu.links %}
+            {% liquid
+              assign is_highlight = false
+              assign link_key = link.title | downcase | strip
+              for entry in highlights
+                # filters are not allowed inside an if, so strip first
+                assign entry_key = entry | strip
+                if entry_key == link_key
+                  assign is_highlight = true
+                endif
+              endfor
+            %}
+
+            {% if link.links.size > 0 %}
+              <div class="cwc_header__nav-item">
+                <a
+                  href="{{ link.url }}"
+                  class="cwc_header__nav-link{% if is_highlight %} cwc_header__nav-link--highlight{% endif %}"
+                  aria-haspopup="true"
+                >
+                  {{ link.title }}
+                  <span class="cwc_header__chevron" aria-hidden="true"></span>
+                </a>
+
+                <div class="cwc_header__mega">
+                  <span class="cwc_header__mega-title">{{ link.title }}</span>
+                  <ul class="cwc_header__mega-list">
+                    {% for child in link.links %}
+                      <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                    {% endfor %}
+                    <li>
+                      <a href="{{ link.url }}" class="cwc_header__mega-all">
+                        {{ section.settings.view_all_label | default: 'View All' }} {{ link.title }} &rarr;
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            {% else %}
+              <div class="cwc_header__nav-item">
+                <a
+                  href="{{ link.url }}"
+                  class="cwc_header__nav-link{% if is_highlight %} cwc_header__nav-link--highlight{% endif %}"
+                >
+                  {{ link.title }}
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </nav>
+      {% endif %}
+
+      {% comment %} Icons {% endcomment %}
+      <div class="cwc_header__icons">
+        {% if section.settings.show_search %}
+          <a href="{{ routes.search_url }}" class="cwc_header__icon" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" />
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if section.settings.show_account %}
+          <a
+            href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.root_url }}{% endif %}"
+            class="cwc_header__icon"
+            aria-label="Account"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1" />
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if section.settings.show_cart %}
+          <a href="{{ routes.cart_url }}" class="cwc_header__icon" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+              {{ cart.item_count }}
+            </span>
+          </a>
+        {% endif %}
+
+        <button type="button" class="cwc_header__icon cwc_header__toggle" data-cwc-drawer-open aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+{% comment %} Mobile drawer — groups are native details so they open with no JS {% endcomment %}
+<div class="cwc_header__drawer" data-cwc-drawer aria-label="Menu" hidden>
+  <div class="cwc_header__drawer-head">
+    <span class="cwc_header__drawer-title">{{ section.settings.drawer_title | default: 'Menu' }}</span>
+    <button type="button" class="cwc_header__drawer-close" data-cwc-drawer-close aria-label="Close menu">&times;</button>
+  </div>
+
+  {% if main_menu != blank and main_menu.links.size > 0 %}
+    <div class="cwc_header__drawer-list">
+      {% for link in main_menu.links %}
+        {% if link.links.size > 0 %}
+          <details class="cwc_header__drawer-group">
+            <summary class="cwc_header__drawer-parent">
+              {{ link.title }}
+              <span class="cwc_header__drawer-sign" aria-hidden="true"></span>
+            </summary>
+            <ul class="cwc_header__drawer-sub">
+              {% for child in link.links %}
+                <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+              {% endfor %}
+              <li>
+                <a href="{{ link.url }}" class="cwc_header__drawer-all">
+                  {{ section.settings.view_all_label | default: 'View All' }} {{ link.title }} &rarr;
+                </a>
+              </li>
+            </ul>
+          </details>
+        {% else %}
+          <a href="{{ link.url }}" class="cwc_header__drawer-single">{{ link.title }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="cwc_header__drawer-footer">
+    {% if section.settings.drawer_menu != blank and section.settings.drawer_menu.links.size > 0 %}
+      {% for link in section.settings.drawer_menu.links %}
+        <a href="{{ link.url }}" class="cwc_header__drawer-foot-link">{{ link.title }}</a>
+      {% endfor %}
+    {% endif %}
+
+    {% if section.settings.drawer_note != blank %}
+      <p class="cwc_header__drawer-note">{{ section.settings.drawer_note }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="cwc_header__overlay" data-cwc-drawer-overlay hidden></div>
+
+<script src="{{ 'CWC_header.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Leave empty to use the text wordmark below."
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo Alt Text"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 80,
+      "max": 280,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "checkbox",
+      "id": "show_logo_mark",
+      "label": "Show Bottle Mark",
+      "default": true,
+      "info": "Only used with the text wordmark."
+    },
+    {
+      "type": "text",
+      "id": "wordmark_top",
+      "label": "Wordmark Top Line",
+      "default": "Estates"
+    },
+    {
+      "type": "text",
+      "id": "wordmark_bottom",
+      "label": "Wordmark Bottom Line",
+      "default": "Liquor"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_menu",
+      "label": "Main Menu",
+      "info": "Top-level links with sub-links become dropdown panels. Set this up in Online Store > Navigation."
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Accessible Nav Label",
+      "default": "Main"
+    },
+    {
+      "type": "text",
+      "id": "highlight_links",
+      "label": "Highlight Links",
+      "default": "Featured",
+      "info": "Comma-separated menu titles to show in the highlight colour."
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View All Prefix",
+      "default": "View All"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show Cart",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile Drawer"
+    },
+    {
+      "type": "text",
+      "id": "drawer_title",
+      "label": "Drawer Title",
+      "default": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "drawer_menu",
+      "label": "Drawer Footer Menu",
+      "info": "Account, order status, FAQ."
+    },
+    {
+      "type": "text",
+      "id": "drawer_note",
+      "label": "Drawer Note",
+      "default": "support@estatesliquor.com · 619-791-3613"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Stick To Top On Scroll",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Border",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Link Color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Logo And Hover Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "hover_bg_color",
+      "label": "Link Hover Background",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "menu_bg_color",
+      "label": "Dropdown Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "drawer_footer_bg_color",
+      "label": "Drawer Footer Background",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

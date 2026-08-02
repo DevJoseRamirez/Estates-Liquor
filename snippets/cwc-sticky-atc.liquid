@@ -1,0 +1,64 @@
+{% comment %}
+  CWC Sticky Add To Cart
+  Rendered from the sticky_atc block of CWC Product Details. Params:
+    block            — the block (for its settings)
+    sticky_product   — the product to buy
+
+  Hidden until the main buy box's Add to Cart scrolls out of view; the
+  observer lives in CWC_product_details.js.
+{% endcomment %}
+
+{% liquid
+  assign sticky_variant = sticky_product.selected_or_first_available_variant
+%}
+
+<div
+  class="cwc_product-details__sticky"
+  data-cwc-sticky-atc
+  data-watch="{{ block.settings.watch_selector | default: '[data-cwc-atc]' }}"
+  hidden
+>
+  <div class="cwc_product-details__sticky-inner">
+    <span class="cwc_product-details__sticky-thumb">
+      {% if sticky_product.featured_image != blank %}
+        <img
+          src="{{ sticky_product.featured_image | image_url: width: 120 }}"
+          alt=""
+          loading="lazy"
+          width="44"
+          height="52"
+        >
+      {% else %}
+        <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+          <rect x="16" y="0" width="20" height="6" rx="2" />
+          <rect x="18" y="6" width="16" height="11" />
+          <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+        </svg>
+      {% endif %}
+    </span>
+
+    <span class="cwc_product-details__sticky-info">
+      <span class="cwc_product-details__sticky-name">{{ sticky_product.title }}</span>
+      <span class="cwc_product-details__sticky-price">{{ sticky_variant.price | money }}</span>
+    </span>
+
+    {% comment %} A real form, so this works even if the script fails {% endcomment %}
+    {% form 'product', sticky_product, class: 'cwc_product-details__sticky-form' %}
+      <input type="hidden" name="id" value="{{ sticky_variant.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button
+        type="submit"
+        name="add"
+        class="cwc_product-details__sticky-button"
+        data-cwc-sticky-add
+        {% unless sticky_product.available %}disabled{% endunless %}
+      >
+        {% if sticky_product.available %}
+          {{ block.settings.button_label | default: 'Add to Cart' }}
+        {% else %}
+          {{ block.settings.sold_out_label | default: 'Sold Out' }}
+        {% endif %}
+      </button>
+    {% endform %}
+  </div>
+</div>

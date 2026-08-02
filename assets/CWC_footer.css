@@ -17,9 +17,11 @@
 }
 
 /* === Grid === */
+/* brand column plus one equal track per block, so adding or removing a
+   column (or the signup) keeps the row balanced */
 .cwc_footer__grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr repeat(var(--footer-columns), 1fr);
   gap: 48px;
   padding-bottom: var(--padding-bottom);
   border-bottom: 1px solid var(--border-color);
@@ -122,34 +124,13 @@
   display: block;
 }
 
-/* === Newsletter Signup (own block, full-width band) === */
-/* spans every grid track so the form always has room, wherever the
-   merchant orders the block */
+/* === Newsletter Signup (own block, sits as a normal footer column) === */
 .cwc_footer__signup {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.5rem 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-color);
-}
-
-/* no rule when the band is the first thing in the footer */
-.cwc_footer__signup:first-child {
-  padding-top: 0;
-  border-top: none;
+  min-width: 0;
 }
 
 .cwc_footer__signup-content {
-  flex: 1 1 260px;
-  min-width: 0;
-}
-
-.cwc_footer__signup-form-wrapper {
-  flex: 0 1 420px;
-  min-width: 0;
+  margin-bottom: 0.875rem;
 }
 
 .cwc_footer__signup-title {
@@ -175,9 +156,11 @@
   color: var(--bottom-text-color);
 }
 
-/* joined input + button, matching the site's form language */
+/* stacked so the field and button both fit a narrow footer column */
 .cwc_footer__signup-form {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* screen-reader only — the placeholder carries the visual label */
@@ -194,7 +177,7 @@
 }
 
 .cwc_footer__signup-input {
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   padding: 11px 14px;
   font-family: var(--cwc-font-body);
@@ -202,8 +185,7 @@
   color: var(--text-color);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--border-color);
-  border-right: none;
-  border-radius: 3px 0 0 3px;
+  border-radius: 3px;
   outline: none;
   transition: border-color 0.15s ease;
 }
@@ -217,7 +199,7 @@
 }
 
 .cwc_footer__signup-button {
-  flex-shrink: 0;
+  width: 100%;
   white-space: nowrap;
   font-family: var(--cwc-font-body);
   font-size: 0.6875rem;
@@ -227,8 +209,8 @@
   color: #ffffff;
   background-color: var(--highlight-color);
   border: 1px solid var(--highlight-color);
-  border-radius: 0 3px 3px 0;
-  padding: 11px 18px;
+  border-radius: 3px;
+  padding: 12px 18px;
   cursor: pointer;
   transition: filter 0.2s ease;
 }
@@ -443,16 +425,6 @@
 
   .cwc_footer__info {
     max-width: 100%;
-  }
-
-  .cwc_footer__signup {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .cwc_footer__signup-form-wrapper {
-    flex-basis: auto;
   }
 
   .cwc_footer__bottom {

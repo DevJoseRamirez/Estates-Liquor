@@ -1,0 +1,123 @@
+/* ==============================
+   CWC Product Reviews
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_product-reviews {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_product-reviews__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cwc_product-reviews__content {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+/* === Header === */
+.cwc_product-reviews__head {
+  text-align: center;
+  margin-bottom: 1.875rem;
+}
+
+.cwc_product-reviews__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.625rem;
+}
+
+.cwc_product-reviews__heading {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.cwc_product-reviews__rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 1rem auto 0;
+  background-color: var(--highlight-color);
+}
+
+/* === App Slot === */
+.cwc_product-reviews__slot {
+  width: 100%;
+}
+
+.cwc_product-reviews__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: var(--slot-height);
+  padding: 2rem 1.5rem;
+  background-color: var(--slot-bg);
+  border: 1px dashed var(--border-color);
+  border-radius: 3px;
+}
+
+.cwc_product-reviews__placeholder-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--highlight-color);
+  margin-bottom: 0.625rem;
+}
+
+.cwc_product-reviews__placeholder-text {
+  max-width: 460px;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--meta-color);
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_product-reviews__container {
+    padding: 0 1.75rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_product-reviews__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_product-reviews {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_product-reviews__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_product-reviews__placeholder {
+    padding: 1.5rem 1rem;
+  }
+}

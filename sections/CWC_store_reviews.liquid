@@ -1,0 +1,251 @@
+{% style %}
+  #cwc_store-reviews-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --star-color: {{ section.settings.star_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-meta-color: {{ section.settings.card_meta_color | default: '#9A9A9A' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 3 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_store_reviews.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_store-reviews-{{ section.id }}" class="cwc_store-reviews" data-section-id="{{ section.id }}">
+  <div class="cwc_store-reviews__container">
+
+    <div class="cwc_store-reviews__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_store-reviews__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_store-reviews__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_store-reviews__rule" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_store-reviews__carousel">
+        {% comment %} Native scroll-snap track — swipes with no JS {% endcomment %}
+        <div class="cwc_store-reviews__track" tabindex="0" role="group" aria-label="Store reviews">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'review' %}
+                <div class="cwc_store-reviews__card" {{ block.shopify_attributes }}>
+                  <span class="cwc_store-reviews__stars" role="img" aria-label="5 out of 5 stars">
+                    {% for i in (1..5) %}
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
+                      </svg>
+                    {% endfor %}
+                  </span>
+
+                  {% if block.settings.text != blank %}
+                    <div class="cwc_store-reviews__card-text cwc-rte">
+                      {{ block.settings.text }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.author != blank %}
+                    <span class="cwc_store-reviews__card-author">{{ block.settings.author }}</span>
+                  {% endif %}
+
+                  {% if block.settings.meta != blank %}
+                    <span class="cwc_store-reviews__card-meta">{{ block.settings.meta }}</span>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+
+        <div class="cwc_store-reviews__nav" data-cwc-reviews-nav hidden>
+          <button type="button" class="cwc_store-reviews__nav-button" data-cwc-reviews-prev aria-label="Previous reviews">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <button type="button" class="cwc_store-reviews__nav-button" data-cwc-reviews-next aria-label="Next reviews">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<script src="{{ 'CWC_store_reviews.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Store Reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "4.9 Average · 18 Store Reviews"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>What Estates Liquor Customers Say</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards Per View",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "info": "Extra reviews scroll horizontally."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_meta_color",
+      "label": "Card Meta Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Review Text",
+          "default": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+          "info": "Every review shows five stars."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Reviewer Name",
+          "default": "Michael R."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Reviewer Note",
+          "default": "Verified buyer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Reviews",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}
