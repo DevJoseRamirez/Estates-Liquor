@@ -208,6 +208,7 @@
         "fbfe241f-1b44-41cd-ae22-e866bdad9aaf",
         "4fdb087c-4728-4785-b270-a71a092b7898"
       ],
+      "disabled": true,
       "settings": {
         "enable_sticky": true,
         "media_position": "left",
@@ -227,14 +228,31 @@
     },
     "cwc_breadcrumb": {
       "type": "CWC_breadcrumb",
-      "settings": {}
+      "settings": {
+        "home_label": "Home",
+        "separator": "/",
+        "parent_collection": "",
+        "parent_title": "",
+        "parent_link": "",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "link_color": "#666666",
+        "bold_color": "#c4933f",
+        "separator_color": "#e0ddd6",
+        "show_border": true,
+        "border_color": "#e0ddd6",
+        "padding_top": 15,
+        "padding_bottom": 15
+      }
     },
     "cwc_product_buy_box": {
       "type": "CWC_product_buy_box",
       "blocks": {
         "cwc_product_buy_box_b1": {
           "type": "brand",
-          "settings": {}
+          "settings": {
+            "link_vendor": true
+          }
         },
         "cwc_product_buy_box_b2": {
           "type": "title",
@@ -242,7 +260,10 @@
         },
         "cwc_product_buy_box_b3": {
           "type": "rating",
-          "settings": {}
+          "settings": {
+            "review_text": "Read 24 reviews",
+            "review_link": ""
+          }
         },
         "cwc_product_buy_box_b4": {
           "type": "price",
@@ -250,31 +271,66 @@
         },
         "cwc_product_buy_box_b5": {
           "type": "meta",
-          "settings": {}
+          "settings": {
+            "text": ""
+          }
         },
         "cwc_product_buy_box_b6": {
           "type": "stock",
-          "settings": {}
+          "settings": {
+            "in_stock_text": "In stock — ships this week",
+            "low_text": "Only [count] left — ships this week",
+            "low_threshold": 10,
+            "sold_out_text": "Sold out — join the waitlist"
+          }
         },
         "cwc_product_buy_box_b7": {
           "type": "buy_buttons",
-          "settings": {}
+          "settings": {
+            "show_quantity": true,
+            "button_label": "Add to Cart",
+            "sold_out_label": "Sold Out",
+            "variant_label": "Option"
+          }
         },
         "cwc_product_buy_box_b8": {
           "type": "nudge",
-          "settings": {}
+          "settings": {
+            "threshold": 200,
+            "text": "Add [amount] more for free shipping",
+            "reached_text": "Your order ships free"
+          }
         },
         "cwc_product_buy_box_b9": {
           "type": "protection",
-          "settings": {}
+          "settings": {
+            "text": "Protected shipping available at checkout — replaced if broken or lost."
+          }
         },
         "cwc_product_buy_box_b10": {
           "type": "trust_row",
-          "settings": {}
+          "settings": {
+            "icon_1": "shield",
+            "text_1": "Licensed Retailer",
+            "icon_2": "truck",
+            "text_2": "Ships Nationally",
+            "icon_3": "check",
+            "text_3": "Verified Authentic",
+            "icon_4": "lock",
+            "text_4": "Secure Checkout"
+          }
         },
         "cwc_product_buy_box_b11": {
           "type": "fbt",
-          "settings": {}
+          "settings": {
+            "heading": "Frequently Bought Together",
+            "this_item_label": "This item",
+            "product_1": "",
+            "product_2": "",
+            "product_3": "",
+            "total_label": "Total for selected",
+            "button_label": "Add Selected to Cart"
+          }
         }
       },
       "block_order": [
@@ -290,20 +346,63 @@
         "cwc_product_buy_box_b10",
         "cwc_product_buy_box_b11"
       ],
-      "settings": {}
+      "settings": {
+        "product": "",
+        "media_width": 45,
+        "gallery_limit": 8,
+        "thumb_note": "Thumbnail strip hides automatically when a product has only one image.",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "subtext_color": "#666666",
+        "meta_color": "#9a9a9a",
+        "media_bg_color": "#f2efe8",
+        "border_color": "#e0ddd6",
+        "button_bg_color": "#c4933f",
+        "button_text_color": "#ffffff",
+        "stock_color": "#2e7d47",
+        "padding_top": 30,
+        "padding_bottom": 70
+      }
     },
     "cwc_product_details": {
       "type": "CWC_product_details",
       "blocks": {
         "cwc_product_details_b1": {
           "type": "sticky_atc",
-          "settings": {}
+          "settings": {
+            "button_label": "Add to Cart",
+            "sold_out_label": "Sold Out",
+            "watch_selector": "[data-cwc-atc]"
+          }
         }
       },
       "block_order": [
         "cwc_product_details_b1"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "Product Details",
+        "heading": "About This Bottle",
+        "show_rule": true,
+        "product": "",
+        "description": "",
+        "enable_clamp": true,
+        "clamp_height": 200,
+        "more_label": "Read More",
+        "less_label": "Read Less",
+        "note": "",
+        "content_width": 820,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "body_text_color": "#666666",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "meta_color": "#9a9a9a",
+        "border_color": "#e0ddd6",
+        "button_bg_color": "#c4933f",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
     },
     "cwc_why_buy": {
       "type": "CWC_why_buy",
@@ -312,6 +411,7 @@
           "type": "card",
           "settings": {
             "icon": "store",
+            "custom_icon_alt": "",
             "title": "A Real Storefront",
             "text": "<p>We are a licensed retailer operating a physical store in Coronado, California — not a marketplace reseller or a drop shipper.</p>"
           }
@@ -320,6 +420,7 @@
           "type": "card",
           "settings": {
             "icon": "shield",
+            "custom_icon_alt": "",
             "title": "Verified Authentic",
             "text": "<p>Every bottle is sourced through licensed channels and inspected before it ships. Nothing comes off the secondary market.</p>"
           }
@@ -328,6 +429,7 @@
           "type": "card",
           "settings": {
             "icon": "box",
+            "custom_icon_alt": "",
             "title": "Packed for Glass",
             "text": "<p>Wrapped, braced, and boxed in molded inserts. The same packing whether it is a $35 bottle or a $2,000 one.</p>"
           }
@@ -336,6 +438,7 @@
           "type": "card",
           "settings": {
             "icon": "tag",
+            "custom_icon_alt": "",
             "title": "Fair Retail Pricing",
             "text": "<p>Allocated bottles are listed at fair retail when they land. No lottery, no markup games, no waitlist to buy in.</p>"
           }
@@ -347,7 +450,22 @@
         "cwc_why_buy_b3",
         "cwc_why_buy_b4"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "Buy With Confidence",
+        "heading": "<p>Why Buy From Estates</p>",
+        "show_rule": true,
+        "columns": 4,
+        "bg_color": "#f8f6f1",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "icon_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "card_bg_color": "#ffffff",
+        "card_text_color": "#666666",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
     },
     "cwc_product_faq": {
       "type": "CWC_faq",
@@ -364,28 +482,32 @@
           "type": "item",
           "settings": {
             "question": "Which states do you ship to?",
-            "answer": "<p>We ship to most US states. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay.</p>"
+            "answer": "<p>We ship to most US states. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay.</p>",
+            "open_by_default": false
           }
         },
         "cwc_product_faq_b3": {
           "type": "item",
           "settings": {
             "question": "Do I have to sign for delivery?",
-            "answer": "<p>Yes. Federal rules require an adult 21 or older to sign for every delivery.</p>"
+            "answer": "<p>Yes. Federal rules require an adult 21 or older to sign for every delivery.</p>",
+            "open_by_default": false
           }
         },
         "cwc_product_faq_b4": {
           "type": "item",
           "settings": {
             "question": "How is the bottle packed?",
-            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass.</p>"
+            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass.</p>",
+            "open_by_default": false
           }
         },
         "cwc_product_faq_b5": {
           "type": "item",
           "settings": {
             "question": "Can I return it?",
-            "answer": "<p>Add shipping protection at checkout and we replace or refund any bottle that arrives broken or goes missing.</p>"
+            "answer": "<p>Add shipping protection at checkout and we replace or refund any bottle that arrives broken or goes missing.</p>",
+            "open_by_default": false
           }
         }
       },
@@ -396,7 +518,24 @@
         "cwc_product_faq_b4",
         "cwc_product_faq_b5"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "Before You Order",
+        "heading": "<p>Common Questions</p>",
+        "subtext": "",
+        "show_rule": true,
+        "button_label": "Read Full FAQ",
+        "button_link": "",
+        "bg_color": "#f8f6f1",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "button_text_color": "#0a1f12",
+        "card_title_color": "#0a1f12",
+        "card_text_color": "#666666",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "cwc_product_questions": {
       "type": "CWC_product_questions",
@@ -406,6 +545,7 @@
           "settings": {
             "link_type": "phone",
             "value": "619-781-3613",
+            "link": "",
             "label": "Call 619-781-3613",
             "style": "primary"
           }
@@ -415,6 +555,7 @@
           "settings": {
             "link_type": "email",
             "value": "hello@estatesliquor.com",
+            "link": "",
             "label": "Email Us",
             "style": "outline"
           }
@@ -424,7 +565,19 @@
         "cwc_product_questions_b1",
         "cwc_product_questions_b2"
       ],
-      "settings": {}
+      "settings": {
+        "show_icon": true,
+        "heading": "Questions about this bottle?",
+        "subtext": "<p>Talk to someone who has actually tasted it. Our team is in the store six days a week and answers the phone.</p>",
+        "bg_color": "#0a1f12",
+        "text_color": "#ffffff",
+        "bold_color": "#c4933f",
+        "body_text_color": "#a6ada8",
+        "button_bg_color": "#c4933f",
+        "button_text_color": "#ffffff",
+        "padding_top": 45,
+        "padding_bottom": 45
+      }
     },
     "cwc_store_reviews": {
       "type": "CWC_store_reviews",
@@ -459,15 +612,69 @@
         "cwc_store_reviews_b2",
         "cwc_store_reviews_b3"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "4.9 Average · 18 Store Reviews",
+        "heading": "<p>What Estates Liquor Customers Say</p>",
+        "show_rule": true,
+        "columns": 3,
+        "bg_color": "#f8f6f1",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "star_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "card_bg_color": "#ffffff",
+        "card_meta_color": "#9a9a9a",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
     },
     "cwc_product_reviews": {
       "type": "CWC_product_reviews",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Verified Purchases",
+        "heading": "Reviews for This Bottle",
+        "show_rule": true,
+        "app_embed": "",
+        "slot_height": 160,
+        "placeholder_title": "App Widget Slot",
+        "placeholder_text": "Your product review widget renders here. When this product has no reviews, hide this section so the store reviews above carry the page.",
+        "content_width": 860,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "meta_color": "#9a9a9a",
+        "slot_bg_color": "#f8f6f1",
+        "border_color": "#e0ddd6",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
     },
     "cwc_related_products": {
       "type": "CWC_related_products",
-      "settings": {}
+      "settings": {
+        "eyebrow": "More From Bourbon",
+        "heading": "<p>You May Also Like</p>",
+        "show_rule": true,
+        "product": "",
+        "collection": "",
+        "products_to_show": 4,
+        "empty_text": "Recommendations load once this product is published.",
+        "notify_label": "Notify Me When Available",
+        "columns": 4,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "meta_color": "#9a9a9a",
+        "border_color": "#e0ddd6",
+        "card_bg_color": "#ffffff",
+        "card_media_bg_color": "#f2efe8",
+        "button_bg_color": "#0a1f12",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
     },
     "cwc_trust_strip": {
       "type": "CWC_trust_strip",
@@ -476,6 +683,7 @@
           "type": "item",
           "settings": {
             "icon": "truck",
+            "custom_icon_alt": "",
             "text": "Free shipping over $200"
           }
         },
@@ -483,6 +691,7 @@
           "type": "item",
           "settings": {
             "icon": "shield",
+            "custom_icon_alt": "",
             "text": "Replaced if broken or lost"
           }
         },
@@ -490,6 +699,7 @@
           "type": "item",
           "settings": {
             "icon": "calendar",
+            "custom_icon_alt": "",
             "text": "Ships Mon–Thu"
           }
         },
@@ -497,6 +707,7 @@
           "type": "item",
           "settings": {
             "icon": "check",
+            "custom_icon_alt": "",
             "text": "Licensed retailer · 21+"
           }
         }
@@ -507,7 +718,16 @@
         "cwc_trust_strip_b3",
         "cwc_trust_strip_b4"
       ],
-      "settings": {}
+      "settings": {
+        "icon_size": 20,
+        "bg_color": "#f2efe8",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "icon_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [

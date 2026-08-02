@@ -53,20 +53,48 @@
 }
 
 .cwc_related-products__empty {
-  grid-column: 1 / -1;
+  flex: 1 1 100%;
   text-align: center;
   padding: 2rem;
   margin: 0;
   color: var(--meta-color);
 }
 
-/* === Cards === */
-.cwc_related-products__grid {
-  display: grid;
-  grid-template-columns: repeat(var(--columns), 1fr);
-  gap: 18px;
+/* ==============================
+   Carousel
+   ==============================
+   Always a rail, never a grid. --per-view is how many cards fill the viewport;
+   anything past that is reached by dragging or by the arrows. */
+.cwc_related-products {
+  --gap: 18px;
+  --per-view: var(--columns);
 }
+
+.cwc_related-products__carousel {
+  position: relative;
+}
+
+.cwc_related-products__track {
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* overflow-x forces overflow-y to compute as auto, so the padding is what
+     keeps the cards' hover lift and shadow from being clipped */
+  padding: 6px 0 16px;
+  margin: -6px 0 -16px;
+  scrollbar-width: none;
+}
+
+.cwc_related-products__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* === Cards === */
 .cwc_related-products__card {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg);
@@ -74,6 +102,66 @@
   border-radius: 3px;
   overflow: hidden;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* === Arrows === */
+.cwc_related-products__arrow {
+  position: absolute;
+  top: 34%;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+/* JS adds this only when the rail actually overflows */
+.cwc_related-products__carousel--scrollable .cwc_related-products__arrow {
+  display: flex;
+}
+
+.cwc_related-products__arrow--prev {
+  left: -18px;
+}
+
+.cwc_related-products__arrow--next {
+  right: -18px;
+}
+
+.cwc_related-products__arrow:hover {
+  background-color: var(--button-bg);
+  border-color: var(--button-bg);
+  color: #ffffff;
+}
+
+.cwc_related-products__arrow:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+.cwc_related-products__arrow[disabled] {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.cwc_related-products__arrow[disabled]:hover {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.cwc_related-products__arrow svg {
+  width: 15px;
+  height: 15px;
 }
 .cwc_related-products__card:hover {
   box-shadow: 0 6px 28px rgba(0, 0, 0, 0.14);
@@ -222,30 +310,6 @@
 .cwc_related-products__card-button--added {
   background-color: var(--highlight-color);
 }
-.cwc_related-products__grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-.cwc_related-products__grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-.cwc_related-products__card-body {
-    padding: 14px 12px 16px;
-  }
-.cwc_related-products__card-title {
-    font-size: 0.9375rem;
-    line-height: 1.35;
-  }
-.cwc_related-products__card-brand {
-    font-size: 0.5625rem;
-  }
-.cwc_related-products__card-text {
-    font-size: 0.625rem;
-  }
-.cwc_related-products__card-price {
-    font-size: 1rem;
-  }
 /* ==============================
    Tablet Responsive
    ============================== */
@@ -254,8 +318,8 @@
     padding: 0 1.75rem;
   }
 
-  .cwc_related-products__grid {
-    grid-template-columns: repeat(3, 1fr);
+  .cwc_related-products {
+    --per-view: 3;
   }
 }
 
@@ -278,9 +342,15 @@
     padding: 0 1rem;
   }
 
-  .cwc_related-products__grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  /* the fractional per-view leaves the next card peeking, which is what tells
+     you the rail scrolls — the arrows are hidden here in favour of swiping */
+  .cwc_related-products {
+    --per-view: 2.15;
+    --gap: 12px;
+  }
+
+  .cwc_related-products__carousel--scrollable .cwc_related-products__arrow {
+    display: none;
   }
 
   .cwc_related-products__card-body {

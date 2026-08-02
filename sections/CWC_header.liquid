@@ -1,5 +1,13 @@
+{% comment %}
+  The drawer and overlay are siblings of the header, not children — nesting a
+  fixed drawer inside the sticky header would trap it in that header's
+  z-index: 500 stacking context. They are named in the selector below so the
+  section's variables still reach them.
+{% endcomment %}
 {% style %}
-  #cwc_header-{{ section.id }} {
+  #cwc_header-{{ section.id }},
+  #cwc_header-drawer-{{ section.id }},
+  #cwc_header-overlay-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --text-color: {{ section.settings.text_color | default: '#2C2C2C' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
@@ -9,6 +17,7 @@
     --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
     --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#0A1F12' }};
     --logo-width: {{ section.settings.logo_width | default: 150 }}px;
+    --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 150 }}px;
     --padding-top: {{ section.settings.padding_top | default: 15 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
@@ -31,6 +40,18 @@
 >
   <div class="cwc_header__container">
     <div class="cwc_header__inner">
+
+      {% comment %}
+        Menu toggle sits first in the DOM so it lands in the left column once
+        the header goes three-up. Hidden on desktop, where the nav takes over.
+      {% endcomment %}
+      <button type="button" class="cwc_header__icon cwc_header__toggle" data-cwc-drawer-open aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
 
       {% comment %} Logo {% endcomment %}
       <a href="{{ routes.root_url }}" class="cwc_header__logo">
@@ -146,8 +167,21 @@
           </a>
         {% endif %}
 
+        {% comment %}
+          Stays a real link to /cart. When the theme's cart type is Drawer the
+          hook below lets the JS intercept the click and open that drawer
+          instead — so it still works if the drawer never loads.
+        {% endcomment %}
         {% if section.settings.show_cart %}
-          <a href="{{ routes.cart_url }}" class="cwc_header__icon" aria-label="Cart">
+          <a
+            href="{{ routes.cart_url }}"
+            class="cwc_header__icon"
+            aria-label="Cart"
+            {% if settings.cart_type == 'drawer' %}
+              data-cwc-cart-drawer
+              aria-haspopup="dialog"
+            {% endif %}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
               <line x1="3" y1="6" x2="21" y2="6" />
@@ -158,14 +192,6 @@
             </span>
           </a>
         {% endif %}
-
-        <button type="button" class="cwc_header__icon cwc_header__toggle" data-cwc-drawer-open aria-label="Open menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
       </div>
 
     </div>
@@ -173,7 +199,13 @@
 </header>
 
 {% comment %} Mobile drawer — groups are native details so they open with no JS {% endcomment %}
-<div class="cwc_header__drawer" data-cwc-drawer aria-label="Menu" hidden>
+<div
+  id="cwc_header-drawer-{{ section.id }}"
+  class="cwc_header__drawer"
+  data-cwc-drawer
+  aria-label="Menu"
+  hidden
+>
   <div class="cwc_header__drawer-head">
     <span class="cwc_header__drawer-title">{{ section.settings.drawer_title | default: 'Menu' }}</span>
     <button type="button" class="cwc_header__drawer-close" data-cwc-drawer-close aria-label="Close menu">&times;</button>
@@ -219,7 +251,12 @@
   </div>
 </div>
 
-<div class="cwc_header__overlay" data-cwc-drawer-overlay hidden></div>
+<div
+  id="cwc_header-overlay-{{ section.id }}"
+  class="cwc_header__overlay"
+  data-cwc-drawer-overlay
+  hidden
+></div>
 
 <script src="{{ 'CWC_header.js' | asset_url }}" defer></script>
 
@@ -251,6 +288,17 @@
       "step": 10,
       "unit": "px",
       "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo Width (Mobile)",
+      "min": 60,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "default": 150,
+      "info": "Applies at 768px and below."
     },
     {
       "type": "checkbox",

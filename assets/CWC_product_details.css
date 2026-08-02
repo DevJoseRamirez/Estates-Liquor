@@ -235,13 +235,15 @@
   transform: translateY(0);
 }
 
+/* matches the section container so the bar lines up with the page on desktop */
 .cwc_product-details__sticky-inner {
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 1300px;
+  max-width: 1500px;
+  /* max-width: 1000px; */
   margin: 0 auto;
-  padding: 10px 1rem;
+  padding: 10px 2rem;
 }
 
 .cwc_product-details__sticky-thumb {
@@ -328,12 +330,7 @@
   outline-offset: 2px;
 }
 
-/* the bar is a mobile affordance — desktop keeps the buy box in reach */
-@media screen and (min-width: 1025px) {
-  .cwc_product-details__sticky {
-    display: none;
-  }
-}
+/* Shown at every width — the observer decides when, not the viewport size. */
 
 /* ==============================
    Tablet Responsive
@@ -365,6 +362,10 @@
 
   .cwc_product-details__card--large .cwc_product-details__card-title {
     font-size: 1.375rem;
+  }
+
+  .cwc_product-details__sticky-inner {
+    padding: 10px 1rem;
   }
 
   .cwc_product-details__sticky-button {

@@ -81,6 +81,19 @@
     var grid = sectionEl.querySelector('[data-cwc-grid]');
     if (!button || !grid) return;
 
+    var progress = sectionEl.querySelector('[data-cwc-load-progress]');
+    var fill = sectionEl.querySelector('[data-cwc-load-fill]');
+
+    /* The fetched page's own counter is already the running total, so copy it
+       across rather than recounting cards here. */
+    function syncProgress(parsed) {
+      var nextProgress = parsed.querySelector('[data-cwc-load-progress]');
+      if (progress && nextProgress) progress.textContent = nextProgress.textContent;
+
+      var nextFill = parsed.querySelector('[data-cwc-load-fill]');
+      if (fill && nextFill) fill.style.width = nextFill.style.width;
+    }
+
     button.addEventListener('click', function (event) {
       event.preventDefault();
       var url = button.getAttribute('href');
@@ -103,6 +116,7 @@
               grid.appendChild(card.cloneNode(true));
             });
             bindAddToCart(sectionEl);
+            syncProgress(parsed);
           }
 
           if (nextButton) {
@@ -122,7 +136,9 @@
   }
 
   function bindAddToCart(sectionEl) {
-    sectionEl.querySelectorAll('.cwc_collection-body__card-button').forEach(function (button) {
+    /* scoped to <button> — sold-out cards reuse the class on an <a> that just
+       navigates to the product page */
+    sectionEl.querySelectorAll('button.cwc_collection-body__card-button').forEach(function (button) {
       if (button.dataset.cwcBound === 'true') return;
       button.dataset.cwcBound = 'true';
 
@@ -160,7 +176,8 @@
     if (!sectionEl || sectionEl.dataset.cwcCollectionBodyInit === 'true') return;
     sectionEl.dataset.cwcCollectionBodyInit = 'true';
 
-    /* tells the CSS it can hide the no-JS Apply / Go buttons */
+    /* tells the CSS it can hide the no-JS sort Go button. the filter Apply
+       button stays — the sheet layout below does not auto-submit. */
     sectionEl.setAttribute('data-cwc-enhanced', 'true');
 
     initSheets(sectionEl);

@@ -184,6 +184,52 @@
   max-height: 400px;
   overflow-y: auto;
   padding-bottom: 16px;
+  /* keeps the option counts clear of the scrollbar track */
+  padding-right: 10px;
+}
+
+/* ==============================
+   Hairline Scrollbars
+   ==============================
+   Every scroll container in the section — the desktop filter group, and the
+   filter / sort sheets on mobile. The track stays 7px wide so it is still
+   grabbable with a mouse, but transparent borders clipped to the content box
+   shrink the visible thumb to a 1px hairline. Firefox has no numeric width;
+   'thin' is as narrow as it goes there. */
+.cwc_collection-body__filter-body,
+.cwc_collection-body__filter-form,
+.cwc_collection-body__sheet-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.cwc_collection-body__filter-body::-webkit-scrollbar,
+.cwc_collection-body__filter-form::-webkit-scrollbar,
+.cwc_collection-body__sheet-body::-webkit-scrollbar {
+  width: 7px;
+}
+
+.cwc_collection-body__filter-body::-webkit-scrollbar-track,
+.cwc_collection-body__filter-form::-webkit-scrollbar-track,
+.cwc_collection-body__sheet-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cwc_collection-body__filter-body::-webkit-scrollbar-thumb,
+.cwc_collection-body__filter-form::-webkit-scrollbar-thumb,
+.cwc_collection-body__sheet-body::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 100px;
+}
+
+.cwc_collection-body__filter-body::-webkit-scrollbar-thumb:hover,
+.cwc_collection-body__filter-form::-webkit-scrollbar-thumb:hover,
+.cwc_collection-body__sheet-body::-webkit-scrollbar-thumb:hover {
+  /* widen to 3px and darken on hover so it is easy to grab */
+  background-color: var(--meta-color);
+  border-width: 2px;
 }
 
 .cwc_collection-body__filter-list {
@@ -314,9 +360,10 @@
   color: var(--text-color);
 }
 
-/* JS auto-submits on change, so the manual button is redundant */
-.cwc_collection-body[data-cwc-enhanced='true'] .cwc_collection-body__sort-submit,
-.cwc_collection-body[data-cwc-enhanced='true'] .cwc_collection-body__sheet-foot [data-cwc-apply] {
+/* sort auto-submits on change at every width, so its manual button is redundant.
+   the filter Apply button is NOT hidden here — the sheet layout deliberately
+   skips auto-submit, so Apply is the only way to commit filters there. */
+.cwc_collection-body[data-cwc-enhanced='true'] .cwc_collection-body__sort-submit {
   display: none;
 }
 
@@ -410,10 +457,6 @@
   fill: var(--text-color);
 }
 
-.cwc_collection-body__card--soldout .cwc_collection-body__card-placeholder svg {
-  opacity: 0.32;
-}
-
 .cwc_collection-body__card-badge {
   position: absolute;
   top: 12px;
@@ -439,11 +482,6 @@
 
 .cwc_collection-body__card-badge--sale {
   background-color: #c0392b;
-  color: #ffffff;
-}
-
-.cwc_collection-body__card-badge--soldout {
-  background-color: var(--meta-color);
   color: #ffffff;
 }
 
@@ -502,10 +540,6 @@
   color: var(--text-color);
 }
 
-.cwc_collection-body__card--soldout .cwc_collection-body__card-price {
-  color: var(--meta-color);
-}
-
 .cwc_collection-body__card-price-was {
   font-family: var(--cwc-font-body);
   font-size: 0.8125rem;
@@ -515,6 +549,8 @@
   margin-right: 6px;
 }
 
+/* renders as a <button> in stock and as an <a> to the product page when sold
+   out, so it carries the reset both elements need */
 .cwc_collection-body__card-button {
   display: flex;
   align-items: center;
@@ -527,6 +563,7 @@
   border-radius: 3px;
   background-color: var(--button-bg);
   color: #ffffff;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
 }
@@ -552,30 +589,6 @@
 
 .cwc_collection-body__card-button--added {
   background-color: var(--highlight-color);
-}
-
-.cwc_collection-body__card-notify {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-  padding: 11px;
-  text-align: center;
-  text-decoration: none;
-  background: transparent;
-  border: 1.5px solid var(--text-color);
-  border-radius: 3px;
-  color: var(--text-color);
-  font-family: var(--cwc-font-body);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.cwc_collection-body__card-notify:hover {
-  background-color: var(--text-color);
-  color: #ffffff;
 }
 
 /* ==============================
@@ -608,13 +621,14 @@
   background-color: var(--highlight-color);
 }
 
+/* stands alone under the grid now, so it takes the same gap __load had */
 .cwc_collection-body__pagination {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 28px;
+  margin-top: 44px;
 }
 
 .cwc_collection-body__pagination a,

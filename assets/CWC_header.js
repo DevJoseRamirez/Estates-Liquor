@@ -60,6 +60,26 @@
     });
   }
 
+  /* The theme's own header opens its cart drawer by emitting on the shared
+     eventBus (see Header.onCartButtonClick in theme.js); component-cart-drawer
+     listens for it. Match that rather than reaching into the component. */
+  function initCartDrawer(sectionEl) {
+    var cartLink = sectionEl.querySelector('[data-cwc-cart-drawer]');
+    if (!cartLink) return;
+
+    cartLink.addEventListener('click', function (event) {
+      var bus = window.eventBus;
+      var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
+
+      /* nothing listening yet — leave the click alone so it falls through to
+         the cart page rather than doing nothing at all */
+      if (!listeners || listeners.size === 0) return;
+
+      event.preventDefault();
+      bus.emit('open:cart:drawer', { scrollToTop: false });
+    });
+  }
+
   function initCartCount(sectionEl) {
     var count = sectionEl.querySelector('[data-cwc-cart-count]');
     if (!count) return;
@@ -92,6 +112,7 @@
     sectionEl.dataset.cwcHeaderInit = 'true';
 
     initDrawer(sectionEl);
+    initCartDrawer(sectionEl);
     initCartCount(sectionEl);
   }
 

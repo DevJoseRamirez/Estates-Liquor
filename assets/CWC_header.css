@@ -22,7 +22,7 @@
 }
 
 .cwc_header__container {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -273,10 +273,11 @@
 /* ==============================
    Mobile Drawer
    ============================== */
+/* slides in from the left, under the menu toggle that opens it */
 .cwc_header__drawer {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   height: 100%;
   width: min(360px, 88vw);
   z-index: 999;
@@ -284,8 +285,8 @@
   flex-direction: column;
   overflow-y: auto;
   background-color: var(--section-bg);
-  box-shadow: -8px 0 40px rgba(10, 31, 18, 0.18);
-  transform: translateX(100%);
+  box-shadow: 8px 0 40px rgba(10, 31, 18, 0.18);
+  transform: translateX(-100%);
   transition: transform 0.28s ease;
 }
 
@@ -487,8 +488,25 @@
     display: none;
   }
 
+  /* three-up once the hamburger appears: toggle left, logo centred, icons
+     right. the nav is display:none here, so these are the only three items. */
+  .cwc_header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.75rem;
+  }
+
   .cwc_header__toggle {
     display: flex;
+    justify-self: start;
+  }
+
+  .cwc_header__logo {
+    justify-self: center;
+  }
+
+  .cwc_header__icons {
+    justify-self: end;
   }
 }
 
@@ -509,6 +527,10 @@
 
   .cwc_header__container {
     padding: 0 1rem;
+  }
+
+  .cwc_header__logo img {
+    width: var(--logo-width-mobile);
   }
 
   .cwc_header__logo-mark {

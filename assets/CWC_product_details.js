@@ -74,16 +74,32 @@
           return response.json();
         })
         .then(function () {
-          button.textContent = 'Added';
           button.disabled = false;
           document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
+
+          /* Same behaviour as the buy box: re-render the theme's cart drawer
+             and open it, rather than sending the shopper to the cart page. */
+          var bus = window.eventBus;
+          var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
+
+          if (listeners && listeners.size > 0) {
+            bus.emit('render:cart:drawer');
+            bus.emit('open:cart:drawer', { scrollToTop: true });
+            button.textContent = original;
+            return;
+          }
+
+          button.textContent = 'Added';
           window.setTimeout(function () {
             button.textContent = original;
           }, 1600);
         })
         .catch(function () {
           button.disabled = false;
-          form.submit();
+          button.textContent = 'Try Again';
+          window.setTimeout(function () {
+            button.textContent = original;
+          }, 2000);
         });
     });
   }

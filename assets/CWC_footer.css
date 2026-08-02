@@ -17,17 +17,20 @@
 }
 
 /* === Grid === */
-/* brand column plus one equal track per block, so adding or removing a
-   column (or the signup) keeps the row balanced */
+/* every block gets an equal track — logo, signup and menus all match */
 .cwc_footer__grid {
   display: grid;
-  grid-template-columns: 2fr repeat(var(--footer-columns), 1fr);
+  grid-template-columns: repeat(var(--footer-columns), minmax(0, 1fr));
   gap: 48px;
   padding-bottom: var(--padding-bottom);
   border-bottom: 1px solid var(--border-color);
 }
 
-/* === Brand Column === */
+/* === Brand Block === */
+.cwc_footer__brand {
+  min-width: 0;
+}
+
 .cwc_footer__logo {
   display: inline-block;
   margin-bottom: 1.25rem;
@@ -73,8 +76,9 @@
   color: var(--highlight-color);
 }
 
+/* fills its track now that the brand block is an equal column */
 .cwc_footer__info {
-  max-width: 260px;
+  max-width: 100%;
 }
 
 .cwc_footer__info p {

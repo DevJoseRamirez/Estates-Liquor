@@ -8,12 +8,11 @@
 {% liquid
   assign current_variant = product.selected_or_first_available_variant
 
+  # Stock state is deliberately not surfaced here — a sold-out card is meant to
+  # be indistinguishable from an in-stock one in the grid.
   assign badge_label = ''
   assign badge_style = ''
-  if product.available == false
-    assign badge_label = 'Sold Out'
-    assign badge_style = 'soldout'
-  elsif product.compare_at_price > product.price
+  if product.compare_at_price > product.price
     assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
     assign badge_label = '-' | append: discount | append: '%'
     assign badge_style = 'sale'
@@ -35,7 +34,7 @@
   endif
 %}
 
-<div class="cwc_collection-body__card{% unless product.available %} cwc_collection-body__card--soldout{% endunless %}">
+<div class="cwc_collection-body__card">
   <a href="{{ product.url }}" class="cwc_collection-body__card-media" tabindex="-1" aria-hidden="true">
     {% if product.featured_image != blank %}
       <img
@@ -73,40 +72,45 @@
       <div class="cwc_collection-body__card-text">{{ product_meta }}</div>
     {% endif %}
 
-    {% if product.available %}
-      <div class="cwc_collection-body__card-footer">
-        <div class="cwc_collection-body__card-price">
-          {% if product.compare_at_price > product.price %}
-            <span class="cwc_collection-body__card-price-was">{{ product.compare_at_price | money }}</span>
-          {% endif %}
-          {{ product.price | money }}
-        </div>
+    {% comment %}
+      Same footer in and out of stock. Sold-out swaps the add-to-cart button for
+      a visually identical link to the product page, where the back-in-stock app
+      lives — so the control never silently fails.
+    {% endcomment %}
+    <div class="cwc_collection-body__card-footer">
+      <div class="cwc_collection-body__card-price">
+        {% if product.compare_at_price > product.price %}
+          <span class="cwc_collection-body__card-price-was">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+        {{ product.price | money }}
+      </div>
 
+      {%- capture cart_icon -%}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+      {%- endcapture -%}
+
+      {% if product.available %}
         <button
           type="button"
           class="cwc_collection-body__card-button"
           data-variant-id="{{ current_variant.id }}"
           aria-label="Add {{ product.title | escape }} to cart"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
+          {{ cart_icon }}
         </button>
-      </div>
-    {% else %}
-      <div class="cwc_collection-body__card-footer cwc_collection-body__card-footer--soldout">
-        <div class="cwc_collection-body__card-price">{{ product.price | money }}</div>
-      </div>
-
-      {% comment %}
-        Links through to the product page — a back-in-stock app lives there.
-        This is deliberately a link, not a dead button.
-      {% endcomment %}
-      <a href="{{ product.url }}" class="cwc_collection-body__card-notify">
-        {{ section_settings.notify_label | default: 'Notify Me When Available' }}
-      </a>
-    {% endif %}
+      {% else %}
+        <a
+          href="{{ product.url }}"
+          class="cwc_collection-body__card-button"
+          aria-label="View {{ product.title | escape }}"
+        >
+          {{ cart_icon }}
+        </a>
+      {% endif %}
+    </div>
   </div>
 </div>

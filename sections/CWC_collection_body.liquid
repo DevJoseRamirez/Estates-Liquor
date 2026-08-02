@@ -240,50 +240,62 @@
               {% endfor %}
             </div>
 
+            {% comment %}
+              One paging control at a time — the two models conflict. Load More
+              appends to the grid; numbered pages replace it. Showing both lets
+              a page link silently discard everything Load More appended.
+            {% endcomment %}
             {% if paginate.pages > 1 %}
-              <div class="cwc_collection-body__load">
-                <p class="cwc_collection-body__load-progress">
-                  Showing {{ paginate.current_offset | plus: collection.products.size }} of {{ paginate.items }}
-                  {{ section.settings.item_noun | default: 'bottles' }}
-                </p>
-
-                {% assign shown_ratio = paginate.current_offset | plus: collection.products.size | times: 100 | divided_by: paginate.items %}
-                <div class="cwc_collection-body__load-bar" aria-hidden="true">
-                  <span style="width: {{ shown_ratio }}%;"></span>
-                </div>
-
-                {% if paginate.next %}
-                  <a
-                    href="{{ paginate.next.url }}"
-                    class="cwc_collection-body__button cwc_collection-body__button--outline"
-                    data-cwc-load-more
-                  >
-                    {{ section.settings.load_more_label | default: 'Load More' }}
-                  </a>
-                {% endif %}
-              </div>
-
-              <nav class="cwc_collection-body__pagination" aria-label="Pagination">
-                {% if paginate.previous %}
-                  <a href="{{ paginate.previous.url }}" aria-label="Previous page">&lsaquo;</a>
-                {% endif %}
-
-                {% assign current_page_label = paginate.current_page | append: '' %}
-                {% for part in paginate.parts %}
-                  {% if part.is_link %}
-                    <a href="{{ part.url }}">{{ part.title }}</a>
-                  {% elsif part.title == current_page_label %}
-                    <span class="cwc_collection-body__pagination-current" aria-current="page">{{ part.title }}</span>
-                  {% else %}
-                    {% comment %} gap marker {% endcomment %}
-                    <span class="cwc_collection-body__pagination-gap">{{ part.title }}</span>
+              {% if section.settings.use_pagination %}
+                <nav class="cwc_collection-body__pagination" aria-label="Pagination">
+                  {% if paginate.previous %}
+                    <a href="{{ paginate.previous.url }}" aria-label="Previous page">&lsaquo;</a>
                   {% endif %}
-                {% endfor %}
 
-                {% if paginate.next %}
-                  <a href="{{ paginate.next.url }}" aria-label="Next page">&rsaquo;</a>
-                {% endif %}
-              </nav>
+                  {% assign current_page_label = paginate.current_page | append: '' %}
+                  {% for part in paginate.parts %}
+                    {% if part.is_link %}
+                      <a href="{{ part.url }}">{{ part.title }}</a>
+                    {% elsif part.title == current_page_label %}
+                      <span class="cwc_collection-body__pagination-current" aria-current="page">{{ part.title }}</span>
+                    {% else %}
+                      {% comment %} gap marker {% endcomment %}
+                      <span class="cwc_collection-body__pagination-gap">{{ part.title }}</span>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if paginate.next %}
+                    <a href="{{ paginate.next.url }}" aria-label="Next page">&rsaquo;</a>
+                  {% endif %}
+                </nav>
+              {% else %}
+                <div class="cwc_collection-body__load">
+                  {% comment %}
+                    current_offset already counts every product on the pages
+                    before this one, so on page N these render the running
+                    total — exactly what Load More needs after appending page N.
+                  {% endcomment %}
+                  <p class="cwc_collection-body__load-progress" data-cwc-load-progress>
+                    Showing {{ paginate.current_offset | plus: collection.products.size }} of {{ paginate.items }}
+                    {{ section.settings.item_noun | default: 'bottles' }}
+                  </p>
+
+                  {% assign shown_ratio = paginate.current_offset | plus: collection.products.size | times: 100 | divided_by: paginate.items %}
+                  <div class="cwc_collection-body__load-bar" aria-hidden="true">
+                    <span style="width: {{ shown_ratio }}%;" data-cwc-load-fill></span>
+                  </div>
+
+                  {% if paginate.next %}
+                    <a
+                      href="{{ paginate.next.url }}"
+                      class="cwc_collection-body__button cwc_collection-body__button--outline"
+                      data-cwc-load-more
+                    >
+                      {{ section.settings.load_more_label | default: 'Load More' }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
             {% endif %}
           {% else %}
             <div class="cwc_collection-body__empty">
@@ -349,6 +361,13 @@
       "max": 48,
       "step": 3,
       "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "use_pagination",
+      "label": "Use Numbered Pagination",
+      "default": false,
+      "info": "Off: Load More button with a progress bar. On: numbered page links. Only one shows at a time."
     },
     {
       "type": "range",
@@ -432,13 +451,8 @@
       "type": "text",
       "id": "load_more_label",
       "label": "Load More Label",
-      "default": "Load More"
-    },
-    {
-      "type": "text",
-      "id": "notify_label",
-      "label": "Sold Out Label",
-      "default": "Notify Me When Available"
+      "default": "Load More",
+      "info": "Unused when Numbered Pagination is on."
     },
     {
       "type": "header",

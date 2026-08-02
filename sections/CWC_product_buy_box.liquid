@@ -194,7 +194,7 @@
 
             {% when 'buy_buttons' %}
               <div class="cwc_product-buy-box__buy" {{ block.shopify_attributes }}>
-                {% form 'product', buy_product, class: 'cwc_product-buy-box__form', data-cwc-form: '' %}
+                {% form 'product', buy_product, class: 'cwc_product-buy-box__form' %}
                   {% comment %}
                     A real product form — it posts to /cart/add and works with
                     JS disabled. The script upgrades it to an AJAX add.

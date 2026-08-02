@@ -39,6 +39,62 @@
     });
   }
 
+  /* The rail scrolls natively with scroll-snap, so this only drives the arrows
+     and hides them when everything already fits. Safe to call again after the
+     track element is swapped out — the arrow listeners bind once. */
+  function initCarousel(sectionEl) {
+    var carousel = sectionEl.querySelector('[data-cwc-carousel]');
+    if (!carousel) return;
+
+    var prev = carousel.querySelector('[data-cwc-prev]');
+    var next = carousel.querySelector('[data-cwc-next]');
+    if (!prev || !next) return;
+
+    /* looked up per call, not cached — loadRecommendations replaces the node */
+    function track() {
+      return carousel.querySelector('[data-cwc-track]');
+    }
+
+    function update() {
+      var el = track();
+      if (!el) return;
+
+      var overflow = el.scrollWidth - el.clientWidth;
+      carousel.classList.toggle('cwc_related-products__carousel--scrollable', overflow > 1);
+      prev.disabled = el.scrollLeft <= 1;
+      next.disabled = el.scrollLeft >= overflow - 1;
+    }
+
+    /* one screenful, rounded to whole cards so nothing lands half-cut */
+    function step() {
+      var el = track();
+      if (!el) return 0;
+
+      var card = el.querySelector('.cwc_related-products__card');
+      if (!card) return el.clientWidth;
+
+      var gap = parseFloat(window.getComputedStyle(el).columnGap) || 0;
+      var span = card.offsetWidth + gap;
+      return Math.max(1, Math.floor(el.clientWidth / span)) * span;
+    }
+
+    function scrollBy(direction) {
+      var el = track();
+      if (el) el.scrollBy({ left: direction * step(), behavior: 'smooth' });
+    }
+
+    if (carousel.dataset.cwcCarouselBound !== 'true') {
+      carousel.dataset.cwcCarouselBound = 'true';
+      prev.addEventListener('click', function () { scrollBy(-1); });
+      next.addEventListener('click', function () { scrollBy(1); });
+      window.addEventListener('resize', update);
+    }
+
+    var current = track();
+    if (current) current.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
   function loadRecommendations(sectionEl) {
     var slot = sectionEl.querySelector('[data-cwc-recommendations]');
     if (!slot) return;
@@ -64,6 +120,7 @@
 
         slot.replaceWith(grid);
         bindAddToCart(sectionEl);
+        initCarousel(sectionEl);
       })
       .catch(function () {
         sectionEl.remove();
@@ -75,6 +132,7 @@
     sectionEl.dataset.cwcRelatedInit = 'true';
 
     bindAddToCart(sectionEl);
+    initCarousel(sectionEl);
     loadRecommendations(sectionEl);
   }
 

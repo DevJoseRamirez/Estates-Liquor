@@ -11,18 +11,47 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "cwc_email_signup_AzwVWa": {
+      "type": "CWC_email_signup",
+      "name": "Email Signup",
+      "settings": {
+        "eyebrow": "The Rare Drop List",
+        "heading": "<p>Never miss a<br/>rare drop.</p>",
+        "subtext": "<p>Allocated bottles sell out in hours. Subscribers hear first — plus free shipping on your first order.</p>",
+        "placeholder": "Your email address",
+        "button_label": "Get First Access",
+        "success_message": "You are on the list. Watch your inbox for the next drop.",
+        "disclaimer": "Must be 21+ to subscribe. Unsubscribe anytime.",
+        "bg_color": "#0A1F12",
+        "text_color": "#ffffff",
+        "bold_color": "#C4933F",
+        "eyebrow_color": "#C4933F",
+        "button_bg_color": "#C4933F",
+        "button_text_color": "#ffffff",
+        "success_bg_color": "#163D22",
+        "success_text_color": "#ffffff",
+        "error_bg_color": "#5A1D1D",
+        "error_text_color": "#FFD9D9",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
+    },
     "cwc_footer_38VdLH": {
       "type": "CWC_footer",
       "blocks": {
-        "email_signup_XWypyE": {
-          "type": "email_signup",
+        "brand_jaEFYY": {
+          "type": "brand",
           "settings": {
-            "heading": "The Rare Drop List",
-            "text": "Hear about allocated bottles before they sell out.",
-            "placeholder": "Your email address",
-            "button_label": "Sign Up",
-            "success_message": "You are on the list.",
-            "disclaimer": "Must be 21+ to subscribe. Unsubscribe anytime."
+            "logo_alt": "",
+            "logo_width": 180,
+            "wordmark_top": "Estates",
+            "wordmark_bottom": "Liquor",
+            "info": "<p>Licensed retailer in Coronado, California. Allocated bourbon, rare releases, and premium spirits at fair retail.</p>",
+            "instagram": "",
+            "facebook": "",
+            "youtube": "",
+            "tiktok": "",
+            "twitter": ""
           }
         },
         "column_tVVpTC": {
@@ -38,25 +67,28 @@
             "menu": "footer-menu-1",
             "heading": ""
           }
+        },
+        "email_signup_XWypyE": {
+          "type": "email_signup",
+          "disabled": true,
+          "settings": {
+            "heading": "The Rare Drop List",
+            "text": "Hear about allocated bottles before they sell out.",
+            "placeholder": "Your email address",
+            "button_label": "Sign Up",
+            "success_message": "You are on the list.",
+            "disclaimer": "Must be 21+ to subscribe. Unsubscribe anytime."
+          }
         }
       },
       "block_order": [
-        "email_signup_XWypyE",
+        "brand_jaEFYY",
         "column_tVVpTC",
-        "column_tbiarJ"
+        "column_tbiarJ",
+        "email_signup_XWypyE"
       ],
       "name": "Footer",
       "settings": {
-        "logo_alt": "",
-        "logo_width": 180,
-        "wordmark_top": "Estates",
-        "wordmark_bottom": "Liquor",
-        "info": "<p>Licensed retailer in Coronado, California. Allocated bourbon, rare releases, and premium spirits at fair retail.</p>",
-        "instagram": "",
-        "facebook": "",
-        "youtube": "",
-        "tiktok": "",
-        "twitter": "",
         "copyright": "Estates Liquor. All rights reserved.",
         "show_age_badge": true,
         "age_badge": "21+ Only",
@@ -130,6 +162,7 @@
     }
   },
   "order": [
+    "cwc_email_signup_AzwVWa",
     "cwc_footer_38VdLH",
     "footer-main",
     "footer-bottom"

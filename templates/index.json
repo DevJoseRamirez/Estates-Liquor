@@ -355,7 +355,7 @@
           "settings": {
             "collection": "",
             "title": "Brandy",
-            "link": "",
+            "link": "shopify://collections/brandy",
             "highlight": false
           }
         },
@@ -380,7 +380,7 @@
         "cwc_shop_category_b15": {
           "type": "card",
           "settings": {
-            "collection": "",
+            "collection": "american-whiskey",
             "eyebrow": "",
             "alt_text": "",
             "title": "Whiskey",
@@ -411,6 +411,28 @@
           }
         },
         "cwc_shop_category_b18": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "eyebrow": "",
+            "alt_text": "",
+            "title": "Spirits",
+            "subtext": "Vodka · Rum · Cognac · 130+ bottles",
+            "link": ""
+          }
+        },
+        "card_EUi9N6": {
+          "type": "card",
+          "settings": {
+            "collection": "",
+            "eyebrow": "",
+            "alt_text": "",
+            "title": "Spirits",
+            "subtext": "Vodka · Rum · Cognac · 130+ bottles",
+            "link": ""
+          }
+        },
+        "card_memhfT": {
           "type": "card",
           "settings": {
             "collection": "",
@@ -452,6 +474,8 @@
         "cwc_shop_category_b16",
         "cwc_shop_category_b17",
         "cwc_shop_category_b18",
+        "card_EUi9N6",
+        "card_memhfT",
         "cwc_shop_category_b19"
       ],
       "settings": {
@@ -629,28 +653,28 @@
         "cwc_featured_products_b1": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "best-sellers",
             "title": "Best Sellers"
           }
         },
         "cwc_featured_products_b2": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "champagne",
             "title": "New Arrivals"
           }
         },
         "cwc_featured_products_b3": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "mezcal",
             "title": "Rare & Allocated"
           }
         },
         "cwc_featured_products_b4": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "vodka",
             "title": "Barrel Picks"
           }
         }
@@ -666,7 +690,7 @@
         "heading": "<p>Fan Favorites</p>",
         "link_label": "View All Products",
         "link_url": "",
-        "products_to_show": 4,
+        "products_to_show": 8,
         "columns": 4,
         "bg_color": "#f8f6f1",
         "text_color": "#0a1f12",
@@ -688,7 +712,7 @@
         "cwc_shop_price_b1": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "under-100",
             "link": "",
             "amount": "$100",
             "label": "Under",
@@ -699,7 +723,7 @@
         "cwc_shop_price_b2": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "under-200",
             "link": "",
             "amount": "$200",
             "label": "Under",
@@ -788,9 +812,9 @@
       ],
       "settings": {
         "eyebrow": "Rare & Allocated",
-        "heading": "<p>The bottles that<br>rarely reach<br>the shelf.</p>",
+        "heading": "<p>The bottles that<br/>rarely reach<br/>the shelf.</p>",
         "subtext": "<p>Allocated releases arrive in small quantities and leave fast. We list them at fair retail — no lottery, no markup games. When a bottle lands, it goes live.</p>",
-        "collection": "",
+        "collection": "rare-limited",
         "products_to_show": 4,
         "button_label": "Shop Rare & Allocated",
         "button_link": "",
@@ -809,9 +833,9 @@
       "type": "CWC_barrel_picks",
       "settings": {
         "eyebrow": "Estates Barrel Program",
-        "heading": "<p>We taste every<br>barrel before<br>we buy it.</p>",
+        "heading": "<p>We taste every<br/>barrel before<br/>we buy it.</p>",
         "subtext": "<p>Our team travels to the distillery, tastes through the barrel line-up, and buys the ones we would pour ourselves. Each pick is labeled with the barrel number, warehouse, and floor.</p>",
-        "collection": "",
+        "collection": "barrel-picks",
         "products_to_show": 3,
         "button_label": "Shop Barrel Picks",
         "button_link": "",
@@ -1014,30 +1038,6 @@
         "padding_top": 80,
         "padding_bottom": 80
       }
-    },
-    "cwc_email_signup": {
-      "type": "CWC_email_signup",
-      "settings": {
-        "eyebrow": "The Rare Drop List",
-        "heading": "<p>Never miss a<br>rare drop.</p>",
-        "subtext": "<p>Allocated bottles sell out in hours. Subscribers hear first — plus free shipping on your first order.</p>",
-        "placeholder": "Your email address",
-        "button_label": "Get First Access",
-        "success_message": "You are on the list. Watch your inbox for the next drop.",
-        "disclaimer": "Must be 21+ to subscribe. Unsubscribe anytime.",
-        "bg_color": "#0a1f12",
-        "text_color": "#ffffff",
-        "bold_color": "#c4933f",
-        "eyebrow_color": "#c4933f",
-        "button_bg_color": "#c4933f",
-        "button_text_color": "#ffffff",
-        "success_bg_color": "#163d22",
-        "success_text_color": "#ffffff",
-        "error_bg_color": "#5a1d1d",
-        "error_text_color": "#ffd9d9",
-        "padding_top": 70,
-        "padding_bottom": 70
-      }
     }
   },
   "order": [
@@ -1052,7 +1052,6 @@
     "cwc_barrel_picks",
     "cwc_shipping_steps",
     "cwc_reviews",
-    "cwc_faq",
-    "cwc_email_signup"
+    "cwc_faq"
   ]
 }

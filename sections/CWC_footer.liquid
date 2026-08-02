@@ -3,13 +3,12 @@
     --section-bg: {{ section.settings.bg_color | default: '#060F09' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --body-text-color: {{ section.settings.body_text_color | default: 'rgba(255,255,255,0.65)' }};
-    --link-color: {{ section.settings.link_color | default: 'rgba(255,255,255,0.55)' }};
+    --body-text-color: {{ section.settings.body_text_color | default: '#A6ADA8' }};
+    --link-color: {{ section.settings.link_color | default: '#8E968F' }};
     --heading-color: {{ section.settings.heading_color | default: '#C4933F' }};
-    --bottom-text-color: {{ section.settings.bottom_text_color | default: 'rgba(255,255,255,0.3)' }};
-    --border-color: {{ section.settings.border_color | default: 'rgba(255,255,255,0.08)' }};
-    --logo-width: {{ section.settings.logo_width | default: 180 }}px;
-    --footer-columns: {{ section.blocks.size | default: 3 }};
+    --bottom-text-color: {{ section.settings.bottom_text_color | default: '#5C645E' }};
+    --border-color: {{ section.settings.border_color | default: '#1B241D' }};
+    --footer-columns: {{ section.blocks.size | default: 4 }};
     --padding-top: {{ section.settings.padding_top | default: 65 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 50 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 65 | times: 0.5 }}px;
@@ -23,100 +22,99 @@
 <footer id="cwc_footer-{{ section.id }}" class="cwc_footer">
   <div class="cwc_footer__container">
 
+    {% comment %} Every column is a block, all on equal tracks {% endcomment %}
     <div class="cwc_footer__grid">
-
-      {% comment %} Brand column {% endcomment %}
-      <div class="cwc_footer__brand">
-        {% if section.settings.logo != blank %}
-          <a href="{{ routes.root_url }}" class="cwc_footer__logo">
-            <img
-              src="{{ section.settings.logo | image_url: width: 500 }}"
-              alt="{{ section.settings.logo_alt | default: shop.name | escape }}"
-              loading="lazy"
-              width="180"
-              height="60"
-            >
-          </a>
-        {% else %}
-          {% comment %} Wordmark lockup when no logo image is set {% endcomment %}
-          <a href="{{ routes.root_url }}" class="cwc_footer__wordmark">
-            {% if section.settings.wordmark_top != blank %}
-              <span class="cwc_footer__wordmark-top">{{ section.settings.wordmark_top }}</span>
-            {% endif %}
-            <span class="cwc_footer__wordmark-rule" aria-hidden="true"></span>
-            {% if section.settings.wordmark_bottom != blank %}
-              <span class="cwc_footer__wordmark-bottom">{{ section.settings.wordmark_bottom }}</span>
-            {% endif %}
-          </a>
-        {% endif %}
-
-        {% if section.settings.info != blank %}
-          <div class="cwc_footer__info cwc-rte">
-            {{ section.settings.info }}
-          </div>
-        {% endif %}
-
-        {% liquid
-          assign has_social = false
-          if section.settings.instagram != blank or section.settings.facebook != blank or section.settings.youtube != blank or section.settings.tiktok != blank or section.settings.twitter != blank
-            assign has_social = true
-          endif
-        %}
-
-        {% if has_social %}
-          <div class="cwc_footer__social">
-            {% if section.settings.instagram != blank %}
-              <a href="{{ section.settings.instagram }}" class="cwc_footer__social-link" aria-label="Instagram" rel="noopener" target="_blank">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
-              </a>
-            {% endif %}
-
-            {% if section.settings.facebook != blank %}
-              <a href="{{ section.settings.facebook }}" class="cwc_footer__social-link" aria-label="Facebook" rel="noopener" target="_blank">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
-              </a>
-            {% endif %}
-
-            {% if section.settings.youtube != blank %}
-              <a href="{{ section.settings.youtube }}" class="cwc_footer__social-link" aria-label="YouTube" rel="noopener" target="_blank">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-                  <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
-                </svg>
-              </a>
-            {% endif %}
-
-            {% if section.settings.tiktok != blank %}
-              <a href="{{ section.settings.tiktok }}" class="cwc_footer__social-link" aria-label="TikTok" rel="noopener" target="_blank">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
-                  <path d="M14 6.5A4.5 4.5 0 0 0 18.5 11" />
-                </svg>
-              </a>
-            {% endif %}
-
-            {% if section.settings.twitter != blank %}
-              <a href="{{ section.settings.twitter }}" class="cwc_footer__social-link" aria-label="X" rel="noopener" target="_blank">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
-                  <path d="M4 4l7.6 9.5L4.4 20" />
-                  <path d="M20 20l-7.6-9.5L19.6 4" />
-                </svg>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-
-      </div>
-
-      {% comment %} Menu columns and the signup band, in block order {% endcomment %}
       {% for block in section.blocks %}
         {% case block.type %}
+
+          {% when 'brand' %}
+            <div class="cwc_footer__brand" {{ block.shopify_attributes }}>
+              {% if block.settings.logo != blank %}
+                <a href="{{ routes.root_url }}" class="cwc_footer__logo" style="--logo-width: {{ block.settings.logo_width | default: 180 }}px;">
+                  <img
+                    src="{{ block.settings.logo | image_url: width: 500 }}"
+                    alt="{{ block.settings.logo_alt | default: shop.name | escape }}"
+                    loading="lazy"
+                    width="180"
+                    height="60"
+                  >
+                </a>
+              {% else %}
+                {% comment %} Stacked wordmark when no logo image is set {% endcomment %}
+                <a href="{{ routes.root_url }}" class="cwc_footer__wordmark">
+                  {% if block.settings.wordmark_top != blank %}
+                    <span class="cwc_footer__wordmark-top">{{ block.settings.wordmark_top }}</span>
+                  {% endif %}
+                  <span class="cwc_footer__wordmark-rule" aria-hidden="true"></span>
+                  {% if block.settings.wordmark_bottom != blank %}
+                    <span class="cwc_footer__wordmark-bottom">{{ block.settings.wordmark_bottom }}</span>
+                  {% endif %}
+                </a>
+              {% endif %}
+
+              {% if block.settings.info != blank %}
+                <div class="cwc_footer__info cwc-rte">
+                  {{ block.settings.info }}
+                </div>
+              {% endif %}
+
+              {% liquid
+                assign has_social = false
+                if block.settings.instagram != blank or block.settings.facebook != blank or block.settings.youtube != blank or block.settings.tiktok != blank or block.settings.twitter != blank
+                  assign has_social = true
+                endif
+              %}
+
+              {% if has_social %}
+                <div class="cwc_footer__social">
+                  {% if block.settings.instagram != blank %}
+                    <a href="{{ block.settings.instagram }}" class="cwc_footer__social-link" aria-label="Instagram" rel="noopener" target="_blank">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if block.settings.facebook != blank %}
+                    <a href="{{ block.settings.facebook }}" class="cwc_footer__social-link" aria-label="Facebook" rel="noopener" target="_blank">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if block.settings.youtube != blank %}
+                    <a href="{{ block.settings.youtube }}" class="cwc_footer__social-link" aria-label="YouTube" rel="noopener" target="_blank">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+                        <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if block.settings.tiktok != blank %}
+                    <a href="{{ block.settings.tiktok }}" class="cwc_footer__social-link" aria-label="TikTok" rel="noopener" target="_blank">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
+                        <path d="M14 6.5A4.5 4.5 0 0 0 18.5 11" />
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if block.settings.twitter != blank %}
+                    <a href="{{ block.settings.twitter }}" class="cwc_footer__social-link" aria-label="X" rel="noopener" target="_blank">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+                        <path d="M4 4l7.6 9.5L4.4 20" />
+                        <path d="M20 20l-7.6-9.5L19.6 4" />
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
           {% when 'email_signup' %}
             <div class="cwc_footer__signup" {{ block.shopify_attributes }}>
               <div class="cwc_footer__signup-content">
@@ -204,9 +202,9 @@
                 <p class="cwc_footer__column-empty">Select a menu for this column.</p>
               {% endif %}
             </div>
+
         {% endcase %}
       {% endfor %}
-
     </div>
 
     {% comment %} Bottom bar {% endcomment %}
@@ -259,78 +257,6 @@
 {
   "name": "CWC Footer",
   "settings": [
-    {
-      "type": "header",
-      "content": "Brand"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Footer Logo",
-      "info": "Leave empty to use the text wordmark below."
-    },
-    {
-      "type": "text",
-      "id": "logo_alt",
-      "label": "Footer Logo Alt Text"
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo Width",
-      "min": 100,
-      "max": 320,
-      "step": 10,
-      "unit": "px",
-      "default": 180
-    },
-    {
-      "type": "text",
-      "id": "wordmark_top",
-      "label": "Wordmark Top Line",
-      "default": "Estates"
-    },
-    {
-      "type": "text",
-      "id": "wordmark_bottom",
-      "label": "Wordmark Bottom Line",
-      "default": "Liquor"
-    },
-    {
-      "type": "richtext",
-      "id": "info",
-      "label": "Info Text",
-      "default": "<p>Licensed retailer in Coronado, California. Allocated bourbon, rare releases, and premium spirits at fair retail.</p>"
-    },
-    {
-      "type": "header",
-      "content": "Social Links"
-    },
-    {
-      "type": "url",
-      "id": "instagram",
-      "label": "Instagram"
-    },
-    {
-      "type": "url",
-      "id": "facebook",
-      "label": "Facebook"
-    },
-    {
-      "type": "url",
-      "id": "youtube",
-      "label": "YouTube"
-    },
-    {
-      "type": "url",
-      "id": "tiktok",
-      "label": "TikTok"
-    },
-    {
-      "type": "url",
-      "id": "twitter",
-      "label": "X"
-    },
     {
       "type": "header",
       "content": "Bottom Bar"
@@ -444,13 +370,88 @@
       "id": "padding_bottom",
       "label": "Padding Bottom",
       "min": 0,
-      "max": 120,
-      "step": 5,
+      "max": 200,
+      "step": 10,
       "unit": "px",
-      "default": 50
+      "default": 160
     }
   ],
   "blocks": [
+    {
+      "type": "brand",
+      "name": "Logo And Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Footer Logo",
+          "info": "Leave empty to use the text wordmark below."
+        },
+        {
+          "type": "text",
+          "id": "logo_alt",
+          "label": "Footer Logo Alt Text"
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "label": "Logo Width",
+          "min": 100,
+          "max": 320,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "text",
+          "id": "wordmark_top",
+          "label": "Wordmark Top Line",
+          "default": "Estates"
+        },
+        {
+          "type": "text",
+          "id": "wordmark_bottom",
+          "label": "Wordmark Bottom Line",
+          "default": "Liquor"
+        },
+        {
+          "type": "richtext",
+          "id": "info",
+          "label": "Info Text",
+          "default": "<p>Licensed retailer in Coronado, California. Allocated bourbon, rare releases, and premium spirits at fair retail.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Social Links"
+        },
+        {
+          "type": "url",
+          "id": "instagram",
+          "label": "Instagram"
+        },
+        {
+          "type": "url",
+          "id": "facebook",
+          "label": "Facebook"
+        },
+        {
+          "type": "url",
+          "id": "youtube",
+          "label": "YouTube"
+        },
+        {
+          "type": "url",
+          "id": "tiktok",
+          "label": "TikTok"
+        },
+        {
+          "type": "url",
+          "id": "twitter",
+          "label": "X"
+        }
+      ]
+    },
     {
       "type": "column",
       "name": "Menu Column",
@@ -513,16 +514,16 @@
       ]
     }
   ],
-  "max_blocks": 5,
+  "max_blocks": 6,
   "presets": [
     {
       "name": "Footer",
       "category": "CWC Custom",
       "blocks": [
+        { "type": "brand" },
+        { "type": "email_signup" },
         { "type": "column" },
-        { "type": "column" },
-        { "type": "column" },
-        { "type": "email_signup" }
+        { "type": "column" }
       ]
     }
   ]

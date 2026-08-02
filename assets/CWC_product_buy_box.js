@@ -27,6 +27,34 @@
     });
   }
 
+  /* The theme's cart drawer listens on the shared eventBus — re-render it with
+     the new line, then open it. Returns false when nothing is listening, so
+     the caller can fall back to the cart page instead of doing nothing. */
+  function openCartDrawer() {
+    var bus = window.eventBus;
+    var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
+    if (!listeners || listeners.size === 0) return false;
+
+    bus.emit('render:cart:drawer');
+    bus.emit('open:cart:drawer', { scrollToTop: true });
+    return true;
+  }
+
+  function afterAdd(button, originalLabel) {
+    document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
+
+    if (openCartDrawer()) {
+      button.textContent = originalLabel;
+      return;
+    }
+
+    /* No drawer on this theme — confirm inline rather than navigating away. */
+    button.textContent = 'Added';
+    window.setTimeout(function () {
+      button.textContent = originalLabel;
+    }, 1600);
+  }
+
   function initGallery(sectionEl) {
     var main = sectionEl.querySelector('[data-cwc-media-image]');
     var thumbs = sectionEl.querySelectorAll('[data-cwc-thumb]');
@@ -94,16 +122,16 @@
       ])
         .then(function () {
           button.classList.remove('cwc_product-buy-box__atc--loading');
-          button.textContent = 'Added';
-          document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
-          window.setTimeout(function () {
-            button.textContent = original;
-          }, 1600);
+          afterAdd(button, original);
         })
         .catch(function () {
-          /* fall back to a real form post so the shopper is never stuck */
+          /* Report it here — posting the form would bounce the shopper to the
+             cart page, which is the behaviour this replaces. */
           button.classList.remove('cwc_product-buy-box__atc--loading');
-          form.submit();
+          button.textContent = 'Try Again';
+          window.setTimeout(function () {
+            button.textContent = original;
+          }, 2000);
         });
     });
   }
@@ -155,16 +183,15 @@
 
       addItems(items)
         .then(function () {
-          addButton.textContent = 'Added';
-          document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
-          window.setTimeout(function () {
-            addButton.textContent = original;
-            addButton.disabled = false;
-          }, 1600);
+          addButton.disabled = false;
+          afterAdd(addButton, original);
         })
         .catch(function () {
-          addButton.textContent = original;
           addButton.disabled = false;
+          addButton.textContent = 'Try Again';
+          window.setTimeout(function () {
+            addButton.textContent = original;
+          }, 2000);
         });
     });
 
