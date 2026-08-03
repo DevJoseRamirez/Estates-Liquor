@@ -1,5 +1,5 @@
-{%
-  ###############################
+var(--radius);{%
+  # ##############################
   # Cart drawer component that extends the global Drawer component
   ###############################
 %}
@@ -16,7 +16,6 @@
 >
   <span data-drawer-close class="global-drawer__overlay"></span>
   <div class="global-drawer__content">
-
     <header class="global-drawer__sticky-header">
       <button
         data-drawer-close
@@ -47,15 +46,15 @@
             method="post"
             class="cart-drawer__form"
           >
-          {%- liquid
-            assign gift_wrap_property_name = 'products.general.giftwrap_label' | t
-            assign cart_compare_price = 0
+            {%- liquid
+              assign gift_wrap_property_name = 'products.general.giftwrap_label' | t
+              assign cart_compare_price = 0
 
-            if settings.show_cart_recommendations
-              assign max_price = cart.items[0].final_price
-              assign max_price_product_id = cart.items[0].product_id
-            endif
-          -%}
+              if settings.show_cart_recommendations
+                assign max_price = cart.items[0].final_price
+                assign max_price_product_id = cart.items[0].product_id
+              endif
+            -%}
 
             {% for item in cart.items %}
               {%- liquid
@@ -97,7 +96,6 @@
 
                 <div class="cart-drawer__product-card--info">
                   <div class="cart-drawer__product-card--info--body">
-
                     {% # Preorder badge %}
                     {% liquid
                       assign preorder_string = 'products.product.preorder' | t | downcase
@@ -136,15 +134,21 @@
                     {% if item.line_level_discount_allocations %}
                       {% for discount in item.line_level_discount_allocations %}
                         <div class="cart-drawer__product_card--badge cart-drawer__product_card--badge--sale">
-                          <span>{{ discount.discount_application.title }}{% if discount.amount > 0 %} (-{{ discount.amount | money }}){% endif %}</span>
+                          <span>
+                            {{- discount.discount_application.title -}}
+                            {%- if discount.amount > 0 %} (-{{ discount.amount | money }}){% endif -%}
+                          </span>
                         </div>
                       {% endfor %}
                     {% endif %}
 
                     {% # Details - options, properties, selling plan, unit price %}
-                    {% if item.product.has_only_default_variant == false or item.properties != empty or item.selling_plan_allocation != null or item.unit_price_measurement %}
+                    {% if item.product.has_only_default_variant == false
+                      or item.properties != empty
+                      or item.selling_plan_allocation != null
+                      or item.unit_price_measurement
+                    %}
                       <div class="cart-drawer__product-card--details">
-
                         {% # Options %}
                         {% if item.product.has_only_default_variant == false %}
                           {% for option in item.product.options %}
@@ -183,7 +187,8 @@
                         {% # Unit price measurement %}
                         {% if item.unit_price_measurement %}
                           <div class="cart-drawer__product-card--detail">
-                            <span>({{ item.unit_price | money }}
+                            <span
+                              >({{ item.unit_price | money }}
                               <span aria-hidden="true"> / </span>
                               {%- if item.unit_price_measurement.reference_value != 1 -%}
                                 {{- item.unit_price_measurement.reference_value -}}
@@ -197,7 +202,6 @@
                   </div>
 
                   <div class="cart-drawer__product-card--info--footer">
-
                     {% # Quantity %}
                     {% if is_gift_wrap_product %}
                       <div>
@@ -213,8 +217,8 @@
                         <div class="cart-drawer__product-card--quantity input-radius">
                           <button
                             data-cart-quantity-button
-                            name="minus" 
-                            type="button" 
+                            name="minus"
+                            type="button"
                             aria-label="{{ 'general.accessibility.quantity.decrease_quantity' | t }} - {{ item.product.title }}"
                             class="cart-drawer__product-card--quantity--button"
                           >
@@ -236,9 +240,9 @@
 
                           <button
                             data-cart-quantity-button
-                            name="plus" 
-                            type="button" 
-                            aria-label="{{ 'general.accessibility.quantity.increase_quantity' | t }} - {{ item.product.title }}" 
+                            name="plus"
+                            type="button"
+                            aria-label="{{ 'general.accessibility.quantity.increase_quantity' | t }} - {{ item.product.title }}"
                             class="cart-drawer__product-card--quantity--button"
                           >
                             {% render 'theme-icon', icon: 'plus', iconAttributes: 'aria-hidden="true"' %}
@@ -281,10 +285,14 @@
                     <div class="cart-drawer__product-card--price {{ price_font }}">
                       {% if on_sale %}
                         <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
-                        <span class="cart-drawer__product-card--price--compare">{{ compare_price | money | replace: ' ', '&nbsp;' }}</span>
+                        <span class="cart-drawer__product-card--price--compare">
+                          {{- compare_price | money | replace: ' ', '&nbsp;' -}}
+                        </span>
                         <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
                       {% endif %}
-                      <span class="{% if on_sale %}cart-drawer__product-card--price--sale{% endif %}">{{ item.final_price | money | replace: ' ', '&nbsp;' }}</span>
+                      <span class="{% if on_sale %}cart-drawer__product-card--price--sale{% endif %}">
+                        {{- item.final_price | money | replace: ' ', '&nbsp;' -}}
+                      </span>
                     </div>
                   </div>
 
@@ -297,12 +305,10 @@
                   ></div>
                 </div>
               </div>
-
             {% endfor %}
           </form>
 
         {% else %}
-
           <div class="cart-drawer__empty-container">
             {% if settings.empty_cart_message != blank %}
               <div class="cart-drawer__empty-message text-link-animated">{{ settings.empty_cart_message }}</div>
@@ -311,10 +317,20 @@
             <div class="cart-drawer__empty-btn-container">
               {% if settings.empty_cart_collections != blank %}
                 {% for empty_cart_collection in settings.empty_cart_collections %}
-                  <a class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn" href="{{ empty_cart_collection.url }}">{{ empty_cart_collection.title }}</a>
+                  <a
+                    class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn"
+                    href="{{ empty_cart_collection.url }}"
+                  >
+                    {{- empty_cart_collection.title -}}
+                  </a>
                 {% endfor %}
               {% else %}
-                <a class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn" href="{{ routes.all_products_collection_url }}">{{ 'cart.general.return_to_shop' | t }}</a>
+                <a
+                  class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn"
+                  href="{{ routes.all_products_collection_url }}"
+                >
+                  {{- 'cart.general.return_to_shop' | t -}}
+                </a>
               {% endif %}
             </div>
           </div>
@@ -330,11 +346,14 @@
           {% if show_recommendations %}
             <div class="global-drawer--secondary" data-cart-drawer-recommendations>
               <div class="global-drawer--secondary__content">
-                <div class="global-drawer--secondary__header">
+                <div class="global-drawer--secondary__header cart-recs-head">
                   {% if settings.cart_recommendations_heading != blank %}
-                    <h5 class="text-link-animated">{{ settings.cart_recommendations_heading }}</h5>
+                    {% comment %} <h5 class="text-link-animated">{{ settings.cart_recommendations_heading }}</h5> {% endcomment %}
+                    <span>Complete Your Order</span>
+                    Don’t forget these
                   {% endif %}
                 </div>
+
                 <div class="global-drawer--secondary__body cart-drawer__recommendations">
                   {% if cart.item_count > 0 %}
                     <cart-recommendations
@@ -366,7 +385,10 @@
                                   continue
                                 endif
                               -%}
-                              {% render 'product-card-basic', card_product: recommendation, show_vendor: settings.cart_vendor_enable %}
+                              {% render 'product-card-basic',
+                                card_product: recommendation,
+                                show_vendor: settings.cart_vendor_enable
+                              %}
                             {% endfor %}
                           </div>
                         {% endif %}
@@ -376,7 +398,10 @@
                     <div class="cart-drawer__recommendations-grid cart-drawer__recommendations-grid--empty">
                       {% for recommendation in settings.empty_cart_products.products %}
                         {% if recommendation.available %}
-                          {% render 'product-card-basic', card_product: recommendation, show_vendor: settings.cart_vendor_enable %}
+                          {% render 'product-card-basic',
+                            card_product: recommendation,
+                            show_vendor: settings.cart_vendor_enable
+                          %}
                         {% endif %}
                       {% endfor %}
                     </div>
@@ -390,13 +415,10 @@
     </div>
 
     <div class="global-drawer__sticky-bottom" data-cart-dynamic-content="cart-footer">
-
       {% unless cart.item_count == 0 %}
         <footer class="global-drawer__footer">
-
           {% if settings.cart_notes_enable or settings.giftwrap_gift_note %}
             <div class="cart-drawer__notes">
-
               {% # Cart notes %}
               {% if settings.cart_notes_enable %}
                 {% assign cart_note_label = 'cart.general.add_note' | t %}
@@ -420,14 +442,22 @@
                     class="cart-drawer__note--modal"
                   >
                     <cart-update>
-                      <label for="CartNote" class="cart-drawer__note--label" data-cart-update-label>{{ cart_note_label }}</label>
-                      <textarea name="note" id="CartNote" class="cart-drawer__note--textarea block-radius">{{ cart.note }}</textarea>
+                      <label for="CartNote" class="cart-drawer__note--label" data-cart-update-label>
+                        {{- cart_note_label -}}
+                      </label>
+                      <textarea
+                        name="note"
+                        id="CartNote"
+                        class="cart-drawer__note--textarea block-radius"
+                      >{{ cart.note }}</textarea>
                     </cart-update>
                     <button
                       data-cart-update-close
                       aria-label="{{ 'cart.general.save_note' | t }}"
                       class="btn dynamic-section-button--drawer-filled cart-drawer__note--close-btn"
-                    >{{ 'cart.general.save' | t }}</button>
+                    >
+                      {{ 'cart.general.save' | t }}
+                    </button>
                   </div>
                 </cart-update-modal>
               {% endif %}
@@ -455,14 +485,22 @@
                     class="cart-drawer__note--modal"
                   >
                     <cart-update>
-                      <label for="CartGiftNote" class="cart-drawer__note--label" data-cart-update-label>{{ gift_note_label }}</label>
-                      <textarea id="CartGiftNote" name="attributes[gift_note]" class="cart-drawer__note--textarea block-radius">{{ cart.attributes.gift_note }}</textarea>
+                      <label for="CartGiftNote" class="cart-drawer__note--label" data-cart-update-label>
+                        {{- gift_note_label -}}
+                      </label>
+                      <textarea
+                        id="CartGiftNote"
+                        name="attributes[gift_note]"
+                        class="cart-drawer__note--textarea block-radius"
+                      >{{ cart.attributes.gift_note }}</textarea>
                     </cart-update>
                     <button
                       data-cart-update-close
                       aria-label="{{ 'cart.general.save_gift_note' | t }}"
                       class="btn dynamic-section-button--drawer-filled cart-drawer__note--close-btn"
-                    >{{ 'cart.general.save' | t }}</button>
+                    >
+                      {{ 'cart.general.save' | t }}
+                    </button>
                   </div>
                 </cart-update-modal>
               {% endif %}
@@ -470,12 +508,13 @@
           {% endif %}
 
           <div class="cart-drawer__sub-footer">
-
             {% # Automatic discounts - cart level %}
             {% for discount_application in cart.cart_level_discount_applications %}
               <div class="cart-drawer__discounts">
                 <div class="cart-drawer__product_card--badge cart-drawer__product_card--badge--sale">
-                  <span>{{ discount_application.title }} (-{{ discount_application.total_allocated_amount | money }})</span>
+                  <span>
+                    {{- discount_application.title }} (-{{ discount_application.total_allocated_amount | money }})</span
+                  >
                 </div>
               </div>
             {% endfor %}
@@ -486,11 +525,40 @@
               <div class="cart-drawer__subtotal--price h3">
                 {% if cart_compare_price > cart.total_price %}
                   <span class="visually-hidden">{{ 'cart.general.regular_subtotal' | t }}</span>
-                  <span class="cart-drawer__subtotal--compare">{{ cart_compare_price | money | replace: ' ', '&nbsp;' }}</span>
+                  <span class="cart-drawer__subtotal--compare">
+                    {{- cart_compare_price | money | replace: ' ', '&nbsp;' -}}
+                  </span>
                   <span class="visually-hidden">{{ 'cart.general.sale_subtotal' | t }}</span>
                 {% endif %}
-                <span class="{% if cart_compare_price > cart.total_price %}cart-drawer__subtotal--sale{% endif %}">{{ cart.total_price | money | replace: ' ', '&nbsp;' }}</span>
+                <span class="{% if cart_compare_price > cart.total_price %}cart-drawer__subtotal--sale{% endif %}">
+                  {{- cart.total_price | money | replace: ' ', '&nbsp;' -}}
+                </span>
               </div>
+            </div>
+
+            {% # Buttons %}
+            <div class="cart-drawer__footer--buttons">
+              <a
+                href="{{ routes.cart_url }}"
+                class="btn btn--secondary dynamic-section-button--drawer-outlined cart-drawer__footer--button"
+              >
+                {{ 'cart.general.view_cart' | t }}
+              </a>
+
+              <button
+                type="submit"
+                class="btn dynamic-section-button--drawer-filled cart-drawer__footer--button"
+                name="checkout"
+                id="CartDrawer-Checkout"
+                form="CartDrawer-Form"
+              >
+                {{- 'cart.general.checkout' | t -}}
+                {%- if settings.cart_show_price_in_checkout_button -%}
+                  <span class="cart-drawer__footer--button-price"
+                    >&nbsp;·&nbsp;{{ cart.total_price | money | replace: ' ', '&nbsp;' -}}
+                  </span>
+                {%- endif -%}
+              </button>
             </div>
 
             {% # Tax and shipping %}
@@ -508,30 +576,300 @@
               {%- endcapture -%}
               <p>{{ taxes_shipping_checkout }}</p>
             </div>
-
-            {% # Buttons %}
-            <div class="cart-drawer__footer--buttons">
-              <a href="{{ routes.cart_url }}" class="btn btn--secondary dynamic-section-button--drawer-outlined cart-drawer__footer--button">
-                {{ 'cart.general.view_cart' | t }}
-              </a>
-
-              <button
-                type="submit"
-                class="btn dynamic-section-button--drawer-filled cart-drawer__footer--button"
-                name="checkout"
-                id="CartDrawer-Checkout"
-                form="CartDrawer-Form"
-              >
-                {{- 'cart.general.checkout' | t -}}
-                {%- if settings.cart_show_price_in_checkout_button -%}
-                  <span class="cart-drawer__footer--button-price">&nbsp;·&nbsp;{{ cart.total_price | money | replace: ' ', '&nbsp;' }}</span>
-                {%- endif -%}
-              </button>
-            </div>
           </div>
         </footer>
       {% endunless %}
-
     </div>
   </div>
 </cart-drawer>
+
+{% style %}
+  .global-drawer__content {
+    background: white;
+  }
+  .global-drawer__footer:after {
+    display: none;
+  }
+
+  .global-drawer--secondary__content {
+    background: #f2efe8;
+    padding: 0rem;
+  }
+
+  .cart-recs-head span {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c4933f;
+    margin-bottom: 5px;
+    font-family: var(--body-font-stack);
+  }
+
+  /* tesing */
+  .cart-recs-head {
+    padding: 22px 20px 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #0a1f12;
+    border-bottom: 1px solid #e0ddd6;
+    font-family: var(--header-font-stack);
+  }
+  .rec-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e0ddd6;
+  }
+  .cart-drawer__recommendations-grid {
+    gap: 0rem;
+  }
+  .global-drawer {
+    width: 472px;
+  }
+  .global-drawer__body--with-padding {
+    padding: 20px 24px;
+  }
+  .product-card-basic--info--body .product-grid--title-font-body {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    line-height: 1.35;
+    margin-bottom: 5px;
+    color: #0a1f12;
+  }
+  .product-card-basic__image .aspect-ratio:not(.quick-view-media) {
+    background: white;
+  }
+  .product-card-basic__price .product-price--sale {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 8px;
+    color: #0a1f12;
+  }
+  .cart-drawer__subtotal--compare,
+  .product-card-basic--info {
+    gap: 0px;
+  }
+  .cart-drawer__subtotal--heading {
+    font-size: 14px;
+    color: #666;
+    font-family: var(--body-font-stack);
+    font-weight: 400;
+  }
+  .cart-drawer__product_card--title.product-grid--title-font-body {
+    font-size: 14px;
+    color: var(--green);
+    margin-bottom: 8px;
+    font-family: var(--header-font-stack);
+    color: #0a1f12;
+  }
+  .cart-drawer__product-card--price.product-grid--price-font-body {
+    font-family: var(--header-font-stack);
+    color: #0a1f12;
+  }
+  .price-line-through.price--compare-at-price,
+  .cart-drawer__product-card--price--compare {
+    margin-right: 4px;
+  }
+
+  .btn--underlined.btn--underlined-with-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #0a1f12;
+    border-bottom: 1px solid #c4933f;
+    padding-bottom: 2px;
+    font-family: var(--body-font-stack);
+  }
+  .btn--underlined.btn--underlined-with-icon:hover {
+    color: #c4933f !important;
+  }
+
+  .cart-drawer__product-card--quantity.input-radius {
+    border: none;
+  }
+  .cart-drawer__product-card--quantity.input-radius .cart-drawer__product-card--quantity--button {
+    width: 26px;
+    height: 26px;
+    border: 1px solid #e0ddd6;
+    background: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+  }
+  .cart-drawer__product-card--quantity.input-radius .cart-drawer__product-card--quantity--input {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+  }
+  .cart-drawer__product-card--quantity.input-radius {
+  }
+  .cart-drawer__product-card--quantity.input-radius {
+  }
+  .cart-drawer__subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .cart-drawer__product_card--vendor.product-grid--vendor-font-body,
+  .product-card-basic__vendor.product-grid--vendor-font-body {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    color: #c4933f;
+  }
+  .btn.btn--secondary {
+    display: none;
+  }
+  a.captain-a-link {
+    width: 100% !important;
+    background: transparent;
+    color: #666 !important;
+    border: 1.5px solid #e0ddd6;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 12px !important;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px !important;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: var(--body-font-stack);
+    text-decoration: none !important;
+  }
+
+  a.captain-a-link:hover {
+    border-color: #0a1f12;
+    color: #0a1f12;
+  }
+  .cart-drawer__taxes-shipping.text-link-animated p {
+    margin-bottom: 0px !important;
+  }
+  .cart-drawer__taxes-shipping.text-link-animated {
+    font-size: 11px;
+    color: #9a9a9a;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0px !important;
+  }
+  .cart-drawer__sub-footer {
+    padding: 20px 24px 10px 24px;
+    border-top: 1px solid #e0ddd6;
+  }
+  #tm_cart {
+    background: #f8f6f1;
+    border: 1px solid #e0ddd6;
+    border-radius: 3px;
+    padding: 13px 15px;
+    margin-bottom: 14px !important;
+  }
+  .tm_cart_f {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--body-font-stack);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: #0a1f12;
+  }
+  .tm_cart_f span {
+    font-size: 12px;
+  }
+  .tm_cart_description {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    color: #666 !important;
+  }
+  .captain-button .btn.cart-drawer__footer--button.undefined {
+    width: 100%;
+    background: #0a1f12 !important;
+    color: white;
+    border: 1.5px solid #0a1f12;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--body-font-stack);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: background 0.2s;
+  }
+  @media screen and (max-width: 768px) {
+    .cart-drawer__body .cart-drawer__form {
+      padding: 16px 18px 0px 18px;
+    }
+    .cart-drawer__sub-footer {
+      padding: 16px 18px 8px 18px;
+    }
+
+    .global-drawer {
+      max-width: 100%;
+      width: 100%;
+    }
+    .cart-drawer__product_card {
+      display: flex;
+      gap: 15px;
+      transition: opacity 0.25s ease;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+    }
+    .cart-drawer__product-card--info {
+      gap: 0px;
+    }
+    .global-drawer__sticky-bottom:after {
+      display: none !important;
+    }
+    .cart-drawer__recommendations .product-card-basic {
+      background: white;
+      border-radius: 3px;
+    }
+    #tm_cart {
+      padding: 8px 10px;
+      margin-bottom: 10px !important;
+    }
+    .tm_cart_f span {
+      font-size: 10px;
+      margin-bottom: 0px !important;
+    }
+    .tm_cart_description {
+      font-size: 10px !important;
+      margin-top: -4px !important;
+    }
+    .cart-drawer__subtotal--compare {
+      margin-right: 6px !important;
+    }
+    .cart-drawer__product_card {
+      gap: 8px;
+    }
+    .cart-drawer__recommendations .product-card-basic {
+      margin-left: 4px;
+    }
+  }
+{% endstyle %}

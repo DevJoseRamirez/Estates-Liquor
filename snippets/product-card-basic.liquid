@@ -14,7 +14,7 @@
   assign form_id = 'ProductCardBasicAtcForm-' | append: card_product.id | append: '-' | append: section.id
 -%}
 
-<div class="product-card-basic">
+<div class="product-card-basic rec-item">
   {% # Product image %}
   {% if card_product.featured_media %}
     <div class="product-card-basic__image">
@@ -38,7 +38,7 @@
         {% # Product title %}
         {% assign title_font = 'product-grid--title-font-' | append: settings.type_card_title_font %}
         <div class="product-card-basic__title {{ title_font }}">
-          <a href="{{ card_product.url }}">{{ card_product.title }}</a>
+          <a href="{{ card_product.url }}">{{ card_product.title | truncate: 55 }}</a>
         </div>
       </div>
 
@@ -90,9 +90,17 @@
               <input type="hidden" name="sections" value="cart-drawer" />
               <div class="product-card-basic__add-button text-link-animated">
                 <button class="btn--underlined btn--underlined-with-icon" type="submit">
-                  {% render 'theme-icon', icon: 'shopping-bag', iconSize: 14, iconClasses: 'btn--underlined-with-icon__icon' %}
+                  {% render 'theme-icon',
+                    icon: 'shopping-bag',
+                    iconSize: 14,
+                    iconClasses: 'btn--underlined-with-icon__icon'
+                  %}
                   <span>
-                    {% if preorder_product %}{{ 'products.product.preorder' | t }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}
+                    {% if preorder_product -%}
+                      {{- 'products.product.preorder' | t -}}
+                    {%- else -%}
+                      {{- 'products.product.add_to_cart' | t -}}
+                    {%- endif %}
                   </span>
                 </button>
               </div>
@@ -106,7 +114,12 @@
           {% endif %}
         </product-card-basic>
         <safe-load-scripts class="hidden">
-          <script src="{{ 'component-product-card-basic.js' | asset_url }}" type="module" defer="defer" data-flow-load-key="component-product-card-basic"></script>
+          <script
+            src="{{ 'component-product-card-basic.js' | asset_url }}"
+            type="module"
+            defer="defer"
+            data-flow-load-key="component-product-card-basic"
+          ></script>
         </safe-load-scripts>
       {% endif %}
     </div>

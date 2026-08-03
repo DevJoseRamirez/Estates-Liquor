@@ -1,23 +1,31 @@
-{% if settings.enable_verification_popup or settings.verification-pop-up__test-mode %}
-  {% liquid 
+{% if settings.enable_verification_popup or settings['verification-pop-up__test-mode'] %}
+  {% liquid
     assign background_opacity = 100 | minus: settings.verification_background_opacity
-    assign verification_popup_background_color = 'rgba(' | append: settings.verification-popup--background-color.rgba | append: ')'
+    assign verification_popup_background_color = 'rgba(' | append: settings['verification-popup--background-color'].rgba | append: ')'
     assign verification_popup_background_color_opaque = 'color-mix(in srgb, ' | append: verification_popup_background_color | append: ', transparent ' | append: background_opacity | append: '%)'
   %}
 
-  {% if settings.verification-popup--override_button_colors %}
+  {% if settings['verification-popup--override_button_colors'] %}
     {% render 'button-color-overrides',
       id: 'verification-popup',
       style: 'filled',
-      text_color: settings.verification-popup--button_text_color,
-      background_color: settings.verification-popup--button_background_color
+      text_color: settings['verification-popup--button_text_color'],
+      background_color: settings['verification-popup--button_background_color']
     %}
   {% endif %}
 
-  <div class="verification-popup-container" style="display: none" data-age-test-mode="{{ settings.verification-pop-up__test-mode }}" tabindex="-1">
+  <div
+    class="verification-popup-container"
+    style="display: none"
+    data-age-test-mode="{{ settings.verification-pop-up__test-mode }}"
+    tabindex="-1"
+  >
     <div id="prompt__background">
-      <div id="verification__prompt" class="modal__prompt popup-shadow color-scheme--{{ settings.verification_popup_color_scheme }} block-radius" role="dialog">
-
+      <div
+        id="verification__prompt"
+        class="modal__prompt popup-shadow color-scheme--{{ settings.verification_popup_color_scheme }} block-radius"
+        role="dialog"
+      >
         {% capture logo-image %}
           <div class="verification-popup-logo__container" itemscope itemtype="http://schema.org/Organization">
             {% capture props %}itemprop="logo"{% endcapture %}
@@ -34,41 +42,42 @@
         <div class="modal-initial-content">
           {{ logo-image }}
           <div class="modal-content__wrapper">
-            {% if settings.verification-pop-up__header != '' %}
+            {% if settings['verification-pop-up__header'] != '' %}
               <h2>
-                {{ settings.verification-pop-up__header }}
+                {{ settings['verification-pop-up__header'] }}
               </h2>
             {% endif %}
-            {% if settings.verification-pop-up__description != '' %}
+            {% if settings['verification-pop-up__description'] != '' %}
               <div class="rte text-link-animated">
-                {{ settings.verification-pop-up__description }}
+                {{ settings['verification-pop-up__description'] }}
               </div>
             {% endif %}
           </div>
 
           <div class="modal-button-container">
-            {% if settings.exit-button__text != '' %}
-              <button
-                role="button"
-                id="button__exit"
-                class="btn__exit btn secondary-button styled-submit dynamic-section-button--verification-popup"
-                tabindex="1"
-              >
-                {{ settings.exit-button__text }}
-              </button>
-            {% endif %}
-
-            {% if settings.confirm-button__text != '' %}
+            {% if settings['confirm-button__text'] != '' %}
               <button
                 role="button"
                 class="btn__enter btn dynamic-section-button--verification-popup"
                 id="button__enter"
                 tabindex="1"
               >
-                {{ settings.confirm-button__text }}
+                {{ settings['confirm-button__text'] }}
+              </button>
+            {% endif %}
+
+            {% if settings['exit-button__text'] != '' %}
+              <button
+                role="button"
+                id="button__exit"
+                class="btn__exit btn secondary-button styled-submit dynamic-section-button--verification-popup"
+                tabindex="1"
+              >
+                {{ settings['exit-button__text'] }}
               </button>
             {% endif %}
           </div>
+          <div class="pop_disclaimer">By entering this site you agree to our Terms of Service and Privacy Policy.</div>
         </div>
 
         <div class="modal-deny-content hidden">
@@ -87,49 +96,105 @@
           </div>
 
           <div class="modal-button-container">
-              <button role="button" id="button__return" class="btn__return btn dynamic-section-button--verification-popup">
-                {% if settings.deny-button__text != '' %}
-                  {{ settings.deny-button__text }}
-                {% else %}
-                  {{ 'general.verification_popup.return_text' | t }}
-                {% endif %}
-              </button>
+            <button
+              role="button"
+              id="button__return"
+              class="btn__return btn dynamic-section-button--verification-popup"
+            >
+              {% if settings['deny-button__text'] != '' %}
+                {{ settings['deny-button__text'] }}
+              {% else %}
+                {{ 'general.verification_popup.return_text' | t }}
+              {% endif %}
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 {% endif %}
 
 <style>
-
-.verification-popup-logo__image img {
-  width: {{ settings.verification-popup-logo--max-width }}px;
-  max-width: {{ settings.verification-popup-logo--max-width }}px !important;
-}
-
-@media (max-width: 991px) {
   .verification-popup-logo__image img {
-    max-width: 220px !important;
+    width: {{ settings.verification-popup-logo--max-width }}px;
+    max-width: {{ settings.verification-popup-logo--max-width }}px !important;
   }
-}
 
-
-
-{% if settings.verification-popup--background-image %}
-  {% render 'responsive-background-image', image: settings.verification-popup--background-image, selector: '#prompt__background', sizes: '600, 1200, 2000', scale: 1 %}
-
-  body {
-    min-height: 100%;
+  @media (max-width: 991px) {
+    .verification-popup-logo__image img {
+      max-width: 220px !important;
+    }
   }
-{% endif %}
 
-#prompt__background:after {
-  {% if settings.verification-popup--background-color == 'rgba(0,0,0,0)' %}
-    background-color: transparent;
-  {% else %}
-    background-color: {{ verification_popup_background_color_opaque }};
+
+
+  {% if settings.verification-popup--background-image %}
+    {% render 'responsive-background-image', image: settings.verification-popup--background-image, selector: '#prompt__background', sizes: '600, 1200, 2000', scale: 1 %}
+
+    body {
+      min-height: 100%;
+    }
   {% endif %}
-}
+
+  #prompt__background:after {
+    {% if settings.verification-popup--background-color == 'rgba(0,0,0,0)' %}
+      background-color: transparent;
+    {% else %}
+      background-color: {{ verification_popup_background_color_opaque }};
+    {% endif %}
+  }
 </style>
+
+{% style %}
+  .verification-popup-container #prompt__background:after {
+    background: rgba(10, 31, 18, 0.97);
+  }
+
+  .verification-popup-container .modal__prompt {
+    background: none;
+    color: white;
+  }
+  .btn__enter.btn.dynamic-section-button--verification-popup {
+    display: inline-block;
+    background: #c4933f;
+    color: var(--white);
+    font-family: var(--body-font-stack);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 3px;
+    transition: background 0.2s, transform 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+  #button__exit {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.1em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-decoration: underline;
+    color: white;
+    text-underline-offset: 4px;
+    background: #ffffff17;
+    /* border: white solid 1px; */
+  }
+  .pop_disclaimer,
+  .rte.text-link-animated p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .pop_disclaimer {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 768px) {
+  }
+{% endstyle %}

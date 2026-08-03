@@ -42,6 +42,9 @@
   border: 1px solid var(--border-color);
   border-radius: 3px;
   overflow: hidden;
+  /* testing */
+  background-color: white;
+  border: none;
 }
 
 .cwc_product-buy-box__media-main img {
@@ -604,6 +607,14 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_product-buy-box__layout {
+    gap: 24px;
+  }
+
+  .cwc_product-buy-box__rating {
+    margin-bottom: 8px;
+  }
+
   .cwc_product-buy-box {
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
@@ -615,6 +626,7 @@
 
   .cwc_product-buy-box__title {
     font-size: 1.625rem;
+    font-size: 1.5rem;
   }
 
   .cwc_product-buy-box__price {
