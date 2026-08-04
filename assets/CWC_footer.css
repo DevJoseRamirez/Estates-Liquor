@@ -69,8 +69,8 @@
 
 .cwc_footer__wordmark-bottom {
   font-family: var(--cwc-font-body);
-  font-size: 0.5625rem;
-  /* 9px */
+  font-size: 0.625rem;
+  /* 10px */
   letter-spacing: 0.38em;
   text-transform: uppercase;
   color: var(--highlight-color);
@@ -82,7 +82,7 @@
 }
 
 .cwc_footer__info p {
-  font-size: 0.8125rem;
+  font-size: var(--footer-text-size);
   line-height: 1.7;
   margin: 0;
   color: var(--body-text-color);
@@ -139,7 +139,7 @@
 
 .cwc_footer__signup-title {
   font-family: var(--cwc-font-body);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -148,7 +148,7 @@
 }
 
 .cwc_footer__signup-text {
-  font-size: 0.8125rem;
+  font-size: var(--footer-text-size);
   line-height: 1.6;
   color: var(--body-text-color);
   margin: 0;
@@ -156,7 +156,7 @@
 
 .cwc_footer__signup-disclaimer {
   margin: 0.625rem 0 0;
-  font-size: 0.6875rem;
+  font-size: var(--footer-small-text-size);
   color: var(--bottom-text-color);
 }
 
@@ -185,10 +185,10 @@
   min-width: 0;
   padding: 11px 14px;
   font-family: var(--cwc-font-body);
-  font-size: 0.8125rem;
+  font-size: var(--footer-text-size);
   color: var(--text-color);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border-color);
   border-radius: 3px;
   outline: none;
   transition: border-color 0.15s ease;
@@ -196,17 +196,25 @@
 
 .cwc_footer__signup-input::placeholder {
   color: var(--bottom-text-color);
+  opacity: 1; /* Firefox dims placeholders by default */
 }
 
 .cwc_footer__signup-input:focus {
   border-color: var(--highlight-color);
 }
 
+/* keeps the field readable when Chrome paints its autofill background */
+.cwc_footer__signup-input:-webkit-autofill,
+.cwc_footer__signup-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-color);
+  box-shadow: 0 0 0 100px var(--input-bg) inset;
+}
+
 .cwc_footer__signup-button {
   width: 100%;
   white-space: nowrap;
   font-family: var(--cwc-font-body);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -252,8 +260,8 @@
 /* === Menu Columns === */
 .cwc_footer__column-title {
   font-family: var(--cwc-font-body);
-  font-size: 0.625rem;
-  /* 10px */
+  font-size: 0.6875rem;
+  /* 11px */
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -271,14 +279,14 @@
 }
 
 .cwc_footer__column-link {
-  font-size: 0.8125rem;
+  font-size: var(--footer-text-size);
   color: var(--link-color);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .cwc_footer__column-link:hover {
-  color: var(--text-color);
+  color: var(--link-hover-color);
 }
 
 .cwc_footer__column-link:focus-visible {
@@ -287,7 +295,7 @@
 }
 
 .cwc_footer__column-empty {
-  font-size: 0.75rem;
+  font-size: var(--footer-small-text-size);
   color: var(--bottom-text-color);
   margin: 0;
 }
@@ -299,7 +307,7 @@
   justify-content: space-between;
   gap: 1.25rem;
   padding: 20px 0;
-  font-size: 0.75rem;
+  font-size: var(--footer-small-text-size);
   color: var(--bottom-text-color);
 }
 
@@ -326,14 +334,14 @@
 
 .cwc_footer__policies a {
   position: relative;
-  font-size: 0.75rem;
+  font-size: var(--footer-small-text-size);
   color: var(--bottom-text-color);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .cwc_footer__policies a:hover {
-  color: var(--link-color);
+  color: var(--link-hover-color);
 }
 
 .cwc_footer__policies a:focus-visible {
@@ -361,7 +369,7 @@
   border: 1px solid rgba(196, 147, 63, 0.25);
   border-radius: 2px;
   padding: 6px 12px;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--highlight-color);
@@ -381,7 +389,7 @@
 }
 
 .cwc_footer__bottom-links a:hover {
-  color: var(--link-color);
+  color: var(--link-hover-color);
 }
 
 .cwc_footer__bottom-links a:focus-visible {

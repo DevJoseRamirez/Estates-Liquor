@@ -59,6 +59,10 @@
       elsif recommendations.performed? and recommendations.products_count > 0
         assign related_list = recommendations.products
       endif
+
+      # Shipping protection is a checkout add-on, never an upsell — Shopify
+      # returns it like any other product, so it goes out by handle
+      assign excluded_handles = 'shipping-protection' | split: ','
     %}
 
     <div class="cwc_related-products__carousel" data-cwc-carousel>
@@ -87,7 +91,7 @@
     {% if related_list %}
       <div class="cwc_related-products__track" data-cwc-track data-cwc-grid>
         {% for related in related_list limit: products_to_show %}
-          {% unless related.id == source_product.id %}
+          {% unless related.id == source_product.id or excluded_handles contains related.handle %}
             {% liquid
               assign related_variant = related.selected_or_first_available_variant
 

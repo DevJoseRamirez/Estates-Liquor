@@ -4,9 +4,19 @@
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --card-title-color: {{ section.settings.card_title_color | default: '#ffffff' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
     --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+
+    {% comment %}
+      Cards mirror the collection grid, so they carry their own light palette
+      rather than inheriting the dark panel's --text-color.
+    {% endcomment %}
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#0A1F12' }};
+    --card-meta-color: {{ section.settings.card_meta_color | default: '#9A9A9A' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
+    --card-border-color: {{ section.settings.card_border_color | default: '#E0DDD6' }};
+    --card-button-bg: {{ section.settings.card_button_bg_color | default: '#0A1F12' }};
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
@@ -25,14 +35,13 @@
   elsif feature_collection != blank
     assign button_link = feature_collection.url
   else
-    assign button_link = nil
+    assign button_link = null
   endif
 %}
 
 <section id="cwc_rare-allocated-{{ section.id }}" class="cwc_rare-allocated">
   <div class="cwc_rare-allocated__container">
     <div class="cwc_rare-allocated__wrapper">
-
       {% comment %} Left — copy, CTA, stats {% endcomment %}
       <div class="cwc_rare-allocated__content">
         {% if section.settings.eyebrow != blank %}
@@ -80,33 +89,116 @@
       <div class="cwc_rare-allocated__grid">
         {% if feature_collection != blank and feature_collection.products_count > 0 %}
           {% for product in feature_collection.products limit: section.settings.products_to_show %}
-            <a href="{{ product.url }}" class="cwc_rare-allocated__card">
-              <span class="cwc_rare-allocated__card-image">
+            {% liquid
+              assign current_variant = product.selected_or_first_available_variant
+
+              # Same badge ladder as the collection grid — stock state is
+              # deliberately not surfaced, so a sold-out card looks identical.
+              assign badge_label = ''
+              assign badge_style = ''
+              if product.compare_at_price > product.price
+                assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
+                assign badge_label = '-' | append: discount | append: '%'
+                assign badge_style = 'sale'
+              elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
+                assign badge_label = 'Allocated'
+                assign badge_style = 'allocated'
+              elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
+                assign badge_label = 'Barrel Pick'
+                assign badge_style = 'barrel'
+              elsif product.tags contains 'New' or product.tags contains 'new'
+                assign badge_label = 'New'
+                assign badge_style = 'new'
+              endif
+
+              # Detail line: metafield first, product type as the fallback
+              assign product_meta = product.metafields.custom.details
+              if product_meta == blank
+                assign product_meta = product.type
+              endif
+            %}
+
+            <div class="cwc_rare-allocated__card">
+              <a href="{{ product.url }}" class="cwc_rare-allocated__card-media" tabindex="-1" aria-hidden="true">
                 {% if product.featured_image != blank %}
                   <img
                     src="{{ product.featured_image | image_url: width: 500 }}"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
                     loading="lazy"
                     width="500"
-                    height="500"
+                    height="667"
                   >
                 {% else %}
-                  <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-                    <rect x="16" y="0" width="20" height="6" rx="2" fill="currentColor" />
-                    <rect x="18" y="6" width="16" height="11" fill="currentColor" />
-                    <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" fill="currentColor" />
-                  </svg>
+                  <span class="cwc_rare-allocated__card-placeholder">
+                    <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                      <rect x="16" y="0" width="20" height="6" rx="2" />
+                      <rect x="18" y="6" width="16" height="11" />
+                      <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                    </svg>
+                  </span>
                 {% endif %}
-              </span>
 
-              <span class="cwc_rare-allocated__card-body">
-                {% if product.vendor != blank %}
-                  <span class="cwc_rare-allocated__card-brand">{{ product.vendor }}</span>
+                {% if badge_label != blank %}
+                  <span class="cwc_rare-allocated__card-badge cwc_rare-allocated__card-badge--{{ badge_style }}">
+                    {{ badge_label }}
+                  </span>
                 {% endif %}
-                <span class="cwc_rare-allocated__card-title">{{ product.title }}</span>
-                <span class="cwc_rare-allocated__card-price">{{ product.price | money }}</span>
-              </span>
-            </a>
+              </a>
+
+              <div class="cwc_rare-allocated__card-body">
+                {% if product.vendor != blank %}
+                  <div class="cwc_rare-allocated__card-brand">{{ product.vendor }}</div>
+                {% endif %}
+
+                <a href="{{ product.url }}" class="cwc_rare-allocated__card-title">{{ product.title }}</a>
+
+                {% if product_meta != blank %}
+                  <div class="cwc_rare-allocated__card-text">{{ product_meta }}</div>
+                {% endif %}
+
+                {% comment %}
+                  Sold-out swaps the add-to-cart button for a visually identical
+                  link to the product page, so the control never silently fails.
+                {% endcomment %}
+                <div class="cwc_rare-allocated__card-footer">
+                  <div class="cwc_rare-allocated__card-price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="cwc_rare-allocated__card-price-was">{{ product.compare_at_price | money }}</span>
+                    {% endif %}
+                    {{ product.price | money }}
+                  </div>
+
+                  {%- capture cart_icon -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                  {%- endcapture -%}
+
+                  {% if product.available %}
+                    <button
+                      type="button"
+                      class="cwc_rare-allocated__card-button"
+                      data-variant-id="{{ current_variant.id }}"
+                      aria-label="Add {{ product.title | escape }} to cart"
+                    >
+                      {% comment %} {{ cart_icon }} {% endcomment %}
+                      Add
+                    </button>
+                  {% else %}
+                    <a
+                      href="{{ product.url }}"
+                      class="cwc_rare-allocated__card-button"
+                      aria-label="View {{ product.title | escape }}"
+                    >
+                      {% comment %} {{ cart_icon }} {% endcomment %}
+                      Add
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
           {% endfor %}
         {% else %}
           <div class="cwc_rare-allocated__empty">
@@ -114,10 +206,11 @@
           </div>
         {% endif %}
       </div>
-
     </div>
   </div>
 </section>
+
+<script src="{{ 'CWC_rare_allocated.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
@@ -210,12 +303,6 @@
     },
     {
       "type": "color",
-      "id": "card_title_color",
-      "label": "Card Title Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
       "id": "button_bg_color",
       "label": "Button Color",
       "default": "#C4933F"
@@ -225,6 +312,47 @@
       "id": "button_text_color",
       "label": "Button Text Color",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors",
+      "info": "Defaults match the collection grid cards."
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_meta_color",
+      "label": "Card Detail Line Color",
+      "default": "#9A9A9A"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "card_button_bg_color",
+      "label": "Quick Add Button Color",
+      "default": "#0A1F12"
     },
     {
       "type": "header",
@@ -276,11 +404,7 @@
     {
       "name": "Rare And Allocated",
       "category": "CWC Custom",
-      "blocks": [
-        { "type": "stat" },
-        { "type": "stat" },
-        { "type": "stat" }
-      ]
+      "blocks": [{ "type": "stat" }, { "type": "stat" }, { "type": "stat" }]
     }
   ]
 }

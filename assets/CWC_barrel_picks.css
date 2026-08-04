@@ -44,7 +44,7 @@
   color: inherit;
 }
 
-.cwc_barrel-picks__content-heading > * strong {
+.cwc_barrel-picks__content-heading>* strong {
   color: var(--highlight-color);
 }
 
@@ -93,31 +93,31 @@
 }
 
 /* === Card === */
+/* Mirrors the collection grid card so the two read as one component */
 .cwc_barrel-picks__card {
-  display: block;
-  overflow: hidden;
-  text-decoration: none;
+  display: flex;
+  flex-direction: column;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 3px;
-  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .cwc_barrel-picks__card:hover {
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-}
-
-.cwc_barrel-picks__card:focus-visible {
-  outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.14);
+  transform: translateY(-3px);
 }
 
 .cwc_barrel-picks__card-image {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 3 / 4;
-  background-color: var(--card-media-bg);
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
   overflow: hidden;
 }
 
@@ -128,41 +128,164 @@
   display: block;
 }
 
-.cwc_barrel-picks__card-image svg {
-  width: 40%;
-  height: 60%;
-  opacity: 0.15;
-  color: var(--text-color);
+.cwc_barrel-picks__card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  height: 80%;
+}
+
+.cwc_barrel-picks__card-placeholder svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.18;
+  fill: var(--text-color);
+}
+
+.cwc_barrel-picks__card-badge {
+  position: absolute;
+
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.cwc_barrel-picks__card-badge--allocated,
+.cwc_barrel-picks__card-badge--barrel {
+  background-color: var(--text-color);
+  color: var(--highlight-color);
+  top: 12px;
+  left: 12px;
+}
+
+.cwc_barrel-picks__card-badge--new {
+  background-color: var(--highlight-color);
+  color: #ffffff;
+  top: 12px;
+  left: 12px;
+}
+
+.cwc_barrel-picks__card-badge--sale {
+  background-color: #c0392b;
+  color: #ffffff;
+  top: 12px;
+  right: 12px;
 }
 
 .cwc_barrel-picks__card-body {
-  display: block;
-  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 16px;
+}
+
+.cwc_barrel-picks__card-brand {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--card-brand-color);
+  margin-bottom: 5px;
 }
 
 .cwc_barrel-picks__card-title {
   display: block;
   font-family: var(--cwc-font-heading);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.35;
-  margin-bottom: 4px;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  text-decoration: none;
   color: var(--card-title-color);
+}
+
+.cwc_barrel-picks__card-title:hover {
+  color: var(--highlight-color);
 }
 
 .cwc_barrel-picks__card-text {
-  display: block;
-  font-size: 0.6875rem;
-  margin-bottom: 10px;
+  font-size: 0.75rem;
   color: var(--card-text-color);
+  margin-bottom: 12px;
+}
+
+/* footer pins to the bottom so ragged titles still line up */
+.cwc_barrel-picks__card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  /* width: 100%; */
+  /* flex-direction: column; */
 }
 
 .cwc_barrel-picks__card-price {
-  display: block;
   font-family: var(--cwc-font-heading);
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--card-title-color);
+}
+
+.cwc_barrel-picks__card-price-was {
+  font-family: var(--cwc-font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--card-text-color);
+  text-decoration: line-through;
+  margin-right: 6px;
+}
+
+/* renders as a <button> in stock and as an <a> to the product page when sold
+   out, so it carries the reset both elements need */
+.cwc_barrel-picks__card-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background-color: var(--button-bg);
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  flex: 1;
+  max-width: 90px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cwc_barrel-picks__card-button:hover {
+  background-color: var(--highlight-color);
+}
+
+.cwc_barrel-picks__card-button:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+.cwc_barrel-picks__card-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cwc_barrel-picks__card-button--loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cwc_barrel-picks__card-button--added {
+  background-color: var(--highlight-color);
 }
 
 /* === Empty State === */
@@ -201,6 +324,18 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_barrel-picks__card-footer {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .cwc_barrel-picks__card-button {
+    width: 100%;
+    max-width: 100%;
+    padding: 2px;
+  }
+
   .cwc_barrel-picks {
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
@@ -218,5 +353,9 @@
     display: block;
     width: 100%;
     text-align: center;
+  }
+
+  .cwc_barrel-picks__card-body {
+    padding: 10px;
   }
 }

@@ -8,6 +8,9 @@
   color: var(--text-color);
   font-family: var(--cwc-font-body);
   text-align: center;
+  /* border-box so the border never adds to the section's overall height */
+  box-sizing: border-box;
+  border: var(--section-border-width) solid var(--section-border-color);
   padding-top: var(--padding-top);
   padding-bottom: var(--padding-bottom);
 }
@@ -47,7 +50,7 @@
   color: inherit;
 }
 
-.cwc_email-signup__content-heading > * strong {
+.cwc_email-signup__content-heading>* strong {
   color: var(--highlight-color);
 }
 
@@ -60,7 +63,7 @@
   font-size: 0.9375rem;
   line-height: 1.6;
   margin: 0;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--subtext-color);
 }
 
 /* === Messages === */
@@ -114,21 +117,31 @@
   padding: 14px 20px;
   font-size: 0.875rem;
   font-family: var(--cwc-font-body);
-  color: var(--text-color);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: var(--input-text-color);
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border-color);
   border-right: none;
   border-radius: 3px 0 0 3px;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  border: 1px solid rgb(255 255 255 / 25%) !important;
 }
 
 .cwc_email-signup__input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--input-placeholder-color);
+  opacity: 1;
+  /* Firefox dims placeholders by default */
 }
 
 .cwc_email-signup__input:focus {
   border-color: var(--highlight-color);
+}
+
+/* keeps the field readable when Chrome paints its autofill background */
+.cwc_email-signup__input:-webkit-autofill,
+.cwc_email-signup__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--input-text-color);
+  box-shadow: 0 0 0 100px var(--input-bg) inset;
 }
 
 .cwc_email-signup__button {
@@ -161,7 +174,7 @@
 .cwc_email-signup__disclaimer {
   margin: 0.875rem 0 0;
   font-size: 0.6875rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--disclaimer-color);
 }
 
 /* ==============================
@@ -203,7 +216,7 @@
   }
 
   .cwc_email-signup__input {
-    border-right: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-right: 1.5px solid var(--input-border-color);
     border-radius: 3px;
   }
 

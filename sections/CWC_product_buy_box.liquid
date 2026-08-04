@@ -111,11 +111,7 @@
 
       {% comment %} Buy column — every row is a reorderable block {% endcomment %}
       <div class="cwc_product-buy-box__info">
-
-
-        
         {% for block in section.blocks %}
-          
           {% case block.type %}
               {% comment %}
                 App blocks from installed apps — subscription widgets, review
@@ -378,19 +374,54 @@
               </div>
 
             {% when 'fbt' %}
-              <div class="cwc_product-buy-box__fbt" {{ block.shopify_attributes }} data-cwc-fbt>
+              {%- liquid
+                # Companion rows normally come from the recommendations API at
+                # runtime. The picked products below are the fallback: rendered
+                # server-side so the block is never empty and works without JS,
+                # then replaced once live recommendations arrive.
+                assign fbt_fallback_count = 0
+                for i in (1..3)
+                  assign fallback_key = 'product_' | append: i
+                  assign fallback_product = block.settings[fallback_key]
+                  if fallback_product != blank and fallback_product.available
+                    assign fbt_fallback_count = fbt_fallback_count | plus: 1
+                  endif
+                endfor
+              -%}
+              <div
+                class="cwc_product-buy-box__fbt"
+                {{ block.shopify_attributes }}
+                data-cwc-fbt
+                data-product-id="{{ buy_product.id }}"
+                data-shop="{{ shop.permanent_domain }}"
+                data-max="{{ block.settings.max_products | default: 3 }}"
+                {% comment %}
+                  The label's count token cannot be written as a literal here —
+                  a brace inside an output tag reads as the start of another tag
+                  and the template fails to parse. The schema default carries it,
+                  and the script has its own fallback for a blank setting.
+                {% endcomment %}
+                data-total-label="{{ block.settings.total_label | escape }}"
+                {% if block.settings.use_recommendations %}data-cwc-fbt-fetch{% endif %}
+                {% comment %}
+                  With nothing picked there is nothing to pair with yet — stay
+                  hidden rather than showing this product on its own, and let
+                  the fetch reveal the block only if it finds companions.
+                {% endcomment %}
+                {% if fbt_fallback_count == 0 %}hidden{% endif %}
+              >
                 {% if block.settings.heading != blank %}
                   <h2 class="cwc_product-buy-box__fbt-head">{{ block.settings.heading }}</h2>
                 {% endif %}
 
-                <div class="cwc_product-buy-box__fbt-row">
-                  {% comment %} This product first, always checked {% endcomment %}
+                <div class="cwc_product-buy-box__fbt-row" data-cwc-fbt-list>
+                  {% comment %} This product first, and unlike the companions it is never replaced {% endcomment %}
                   <label class="cwc_product-buy-box__fbt-item">
                     <input
                       type="checkbox"
                       class="cwc_product-buy-box__fbt-check"
                       checked
-                      disabled
+                      data-cwc-fbt-check
                       data-cwc-fbt-self
                       data-variant-id="{{ current_variant.id }}"
                       data-price="{{ current_variant.price }}"
@@ -423,7 +454,8 @@
                       assign key = 'product_' | append: i
                       assign fbt_product = block.settings[key]
                     %}
-                    {% if fbt_product != blank %}
+                    {% comment %} Sold-out picks are dropped rather than shown disabled {% endcomment %}
+                    {% if fbt_product != blank and fbt_product.available %}
                       {% assign fbt_variant = fbt_product.selected_or_first_available_variant %}
                       {% liquid
                         assign fbt_meta = fbt_product.metafields.custom.details
@@ -431,19 +463,14 @@
                           assign fbt_meta = fbt_product.type
                         endif
                       %}
-                      <label class="cwc_product-buy-box__fbt-item">
+                      <label class="cwc_product-buy-box__fbt-item" data-cwc-fbt-fallback>
                         <input
                           type="checkbox"
                           class="cwc_product-buy-box__fbt-check"
+                          checked
                           data-cwc-fbt-check
                           data-variant-id="{{ fbt_variant.id }}"
                           data-price="{{ fbt_variant.price }}"
-                          {% if forloop.first %}
-                            checked
-                          {% endif %}
-                          {% unless fbt_product.available %}
-                            disabled
-                          {% endunless %}
                         >
                         <span class="cwc_product-buy-box__fbt-thumb">
                           {% if fbt_product.featured_image != blank %}
@@ -468,8 +495,32 @@
                   {% endfor %}
                 </div>
 
+                {% comment %}
+                  One empty row for the JS to clone per live recommendation, so
+                  the markup and its classes stay here rather than in the script.
+                {% endcomment %}
+                <template data-cwc-fbt-template>
+                  <label class="cwc_product-buy-box__fbt-item">
+                    <input
+                      type="checkbox"
+                      class="cwc_product-buy-box__fbt-check"
+                      checked
+                      data-cwc-fbt-check
+                    >
+                    <span class="cwc_product-buy-box__fbt-thumb">
+                      <img alt="" loading="lazy" width="46" height="58" hidden>
+                    </span>
+                    <span class="cwc_product-buy-box__fbt-info">
+                      <span class="cwc_product-buy-box__fbt-name"></span>
+                      <span class="cwc_product-buy-box__fbt-meta" hidden></span>
+                    </span>
+                    <span class="cwc_product-buy-box__fbt-price"></span>
+                  </label>
+                </template>
+
                 <div class="cwc_product-buy-box__fbt-total">
                   <span class="cwc_product-buy-box__fbt-total-label" data-cwc-fbt-label>
+                    {% comment %} Replaced by the script with the live count {% endcomment %}
                     {{ block.settings.total_label | default: 'Total for selected' }}
                   </span>
                   <span class="cwc_product-buy-box__fbt-total-price" data-cwc-fbt-total></span>
@@ -908,25 +959,43 @@
           "default": "This item"
         },
         {
+          "type": "checkbox",
+          "id": "use_recommendations",
+          "label": "Use Live Recommendations",
+          "default": true,
+          "info": "Pulls pairings for this product from the Frequently Bought Together app. Turn off to always use the picked products below."
+        },
+        {
+          "type": "range",
+          "id": "max_products",
+          "label": "Companions To Show",
+          "min": 2,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        },
+        {
           "type": "product",
           "id": "product_1",
-          "label": "Product 1"
+          "label": "Fallback Product 1",
+          "info": "Shown when live recommendations are off or unavailable. Leave all three empty to hide the block instead."
         },
         {
           "type": "product",
           "id": "product_2",
-          "label": "Product 2"
+          "label": "Fallback Product 2"
         },
         {
           "type": "product",
           "id": "product_3",
-          "label": "Product 3"
+          "label": "Fallback Product 3"
         },
         {
           "type": "text",
           "id": "total_label",
           "label": "Total Label",
-          "default": "Total for selected"
+          "default": "Total for {count} items",
+          "info": "{count} is replaced with the number of selected items."
         },
         {
           "type": "text",

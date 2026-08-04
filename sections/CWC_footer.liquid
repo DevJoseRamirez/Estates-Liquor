@@ -3,11 +3,19 @@
     --section-bg: {{ section.settings.bg_color | default: '#060F09' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --body-text-color: {{ section.settings.body_text_color | default: '#A6ADA8' }};
-    --link-color: {{ section.settings.link_color | default: '#8E968F' }};
+    --body-text-color: {{ section.settings.body_text_color | default: '#ffffff' }};
+    --link-color: {{ section.settings.link_color | default: '#D8DDD9' }};
+    --link-hover-color: {{ section.settings.link_hover_color | default: '#ffffff' }};
     --heading-color: {{ section.settings.heading_color | default: '#C4933F' }};
-    --bottom-text-color: {{ section.settings.bottom_text_color | default: '#5C645E' }};
+    --bottom-text-color: {{ section.settings.bottom_text_color | default: '#A8B0AA' }};
     --border-color: {{ section.settings.border_color | default: '#1B241D' }};
+
+    {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
+    --input-bg: {{ section.settings.input_bg_color | default: '#16211A' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#2E3A32' }};
+
+    --footer-text-size: {{ section.settings.text_size | default: 14 }}px;
+    --footer-small-text-size: {{ section.settings.small_text_size | default: 13 }}px;
     --footer-columns: {{ section.blocks.size | default: 4 }};
     --padding-top: {{ section.settings.padding_top | default: 65 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 50 }}px;
@@ -331,25 +339,73 @@
       "type": "color",
       "id": "body_text_color",
       "label": "Info Text Color",
-      "default": "#A6ADA8"
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "link_color",
       "label": "Link Color",
-      "default": "#8E968F"
+      "default": "#D8DDD9"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link Hover Color",
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "bottom_text_color",
       "label": "Bottom Bar Text Color",
-      "default": "#5C645E"
+      "default": "#A8B0AA"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Divider Color",
       "default": "#1B241D"
+    },
+    {
+      "type": "header",
+      "content": "Email Field Colors"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Field Background Color",
+      "default": "#16211A"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Field Border Color",
+      "default": "#2E3A32"
+    },
+    {
+      "type": "header",
+      "content": "Text Size"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Body And Link Size",
+      "min": 12,
+      "max": 17,
+      "step": 1,
+      "unit": "px",
+      "default": 14,
+      "info": "Applies to the info paragraph, menu links and signup text."
+    },
+    {
+      "type": "range",
+      "id": "small_text_size",
+      "label": "Fine Print Size",
+      "min": 10,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "default": 13,
+      "info": "Applies to the bottom bar, policy links and disclaimer."
     },
     {
       "type": "header",

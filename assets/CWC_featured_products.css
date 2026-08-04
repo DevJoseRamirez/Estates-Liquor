@@ -72,11 +72,12 @@
   gap: 4px;
   margin-bottom: 2.25rem;
   border-bottom: 1px solid var(--border-color);
+
 }
 
 .cwc_featured-products__tab {
   font-family: var(--cwc-font-body);
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--card-text-color);
@@ -87,6 +88,7 @@
   padding: 10px 20px;
   cursor: pointer;
   transition: color 0.15s ease, border-color 0.15s ease;
+  color: #505050;
 }
 
 .cwc_featured-products__tab:hover {
@@ -264,7 +266,6 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
   height: 36px;
   padding: 0;
   border: 0;
@@ -273,6 +274,11 @@
   color: #ffffff;
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
+  /* text pill rather than a square icon button — mirrors CWC_barrel_picks */
+  flex: 1;
+  max-width: 90px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .cwc_featured-products__card-button:hover:not(:disabled) {
@@ -393,5 +399,19 @@
 
   .cwc_featured-products__card-price {
     font-size: 1rem;
+  }
+
+  /* narrow cards can't hold price and pill side by side — stack them and let
+     the button run full width. Mirrors CWC_barrel_picks. */
+  .cwc_featured-products__card-footer {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .cwc_featured-products__card-button {
+    width: 100%;
+    max-width: 100%;
+    padding: 2px;
   }
 }

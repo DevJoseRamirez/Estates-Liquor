@@ -228,6 +228,7 @@
     },
     "cwc_breadcrumb": {
       "type": "CWC_breadcrumb",
+      "disabled": true,
       "settings": {
         "home_label": "Home",
         "separator": "/",
@@ -298,14 +299,6 @@
             "variant_label": "Option"
           }
         },
-        "cwc_product_buy_box_b8": {
-          "type": "nudge",
-          "settings": {
-            "threshold": 200,
-            "text": "Add [amount] more for free shipping",
-            "reached_text": "Your order ships free"
-          }
-        },
         "cwc_product_buy_box_b9": {
           "type": "protection",
           "settings": {
@@ -325,20 +318,17 @@
             "text_4": "Secure Checkout"
           }
         },
-        "frequently_bought_app_block_ir4Pfa": {
-          "type": "shopify://apps/frequently-bought/blocks/app-block/b1a8cbea-c844-4842-9529-7c62dbab1b1f",
-          "settings": {}
-        },
         "cwc_product_buy_box_b11": {
           "type": "fbt",
-          "disabled": true,
           "settings": {
             "heading": "Frequently Bought Together",
             "this_item_label": "This item",
+            "use_recommendations": true,
+            "max_products": 3,
             "product_1": "",
             "product_2": "",
             "product_3": "",
-            "total_label": "Total for selected",
+            "total_label": "Total for {count} items",
             "button_label": "Add Selected to Cart"
           }
         }
@@ -352,10 +342,8 @@
         "cwc_product_buy_box_b5",
         "cwc_product_buy_box_b6",
         "cwc_product_buy_box_b7",
-        "cwc_product_buy_box_b8",
         "cwc_product_buy_box_b9",
         "cwc_product_buy_box_b10",
-        "frequently_bought_app_block_ir4Pfa",
         "cwc_product_buy_box_b11"
       ],
       "settings": {

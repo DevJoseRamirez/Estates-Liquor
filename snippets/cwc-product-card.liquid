@@ -100,7 +100,8 @@
           data-variant-id="{{ current_variant.id }}"
           aria-label="Add {{ product.title | escape }} to cart"
         >
-          {{ cart_icon }}
+          {% comment %} {{ cart_icon }} {% endcomment %}
+          Add
         </button>
       {% else %}
         <a
@@ -108,7 +109,8 @@
           class="cwc_collection-body__card-button"
           aria-label="View {{ product.title | escape }}"
         >
-          {{ cart_icon }}
+          {% comment %} {{ cart_icon }} {% endcomment %}
+          Add
         </a>
       {% endif %}
     </div>

@@ -4,8 +4,18 @@
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#ffffff' }};
+    --disclaimer-color: {{ section.settings.disclaimer_color | default: '#8E968F' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
     --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+
+    {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
+    --input-bg: {{ section.settings.input_bg_color | default: '#1A3A25' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#3E5C48' }};
+    --input-text-color: {{ section.settings.input_text_color | default: '#ffffff' }};
+    --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#9DAEA3' }};
+    --section-border-color: {{ section.settings.section_border_color | default: '#36473D' }};
+    --section-border-width: {{ section.settings.section_border_width | default: 1 }}px;
     --success-bg: {{ section.settings.success_bg_color | default: '#163D22' }};
     --success-text-color: {{ section.settings.success_text_color | default: '#ffffff' }};
     --error-bg: {{ section.settings.error_bg_color | default: '#5A1D1D' }};
@@ -172,6 +182,18 @@
     },
     {
       "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "disclaimer_color",
+      "label": "Disclaimer Color",
+      "default": "#8E968F"
+    },
+    {
+      "type": "color",
       "id": "button_bg_color",
       "label": "Button Color",
       "default": "#C4933F"
@@ -181,6 +203,55 @@
       "id": "button_text_color",
       "label": "Button Text Color",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "color",
+      "id": "section_border_color",
+      "label": "Border Color",
+      "default": "#36473D"
+    },
+    {
+      "type": "range",
+      "id": "section_border_width",
+      "label": "Border Width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1,
+      "info": "Set to 0 to remove the border."
+    },
+    {
+      "type": "header",
+      "content": "Email Field Colors"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Field Background Color",
+      "default": "#1A3A25"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Field Border Color",
+      "default": "#3E5C48"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Field Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Field Placeholder Color",
+      "default": "#9DAEA3"
     },
     {
       "type": "header",

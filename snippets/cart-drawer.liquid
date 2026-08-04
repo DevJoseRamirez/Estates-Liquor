@@ -367,12 +367,20 @@
                             assign in_cart_product_ids = in_cart_product_ids | append: cart_item.product_id | append: ','
                           endfor
 
+                          # Shipping protection is a checkout add-on, never an upsell —
+                          # Shopify returns it like any other product, so it goes out by handle
+                          assign excluded_handles = 'shipping-protection' | split: ','
+
                           assign filtered_recommendations_count = 0
                           for recommendation in recommendations.products
                             assign recommendation_id_token = ',' | append: recommendation.id | append: ','
-                            unless in_cart_product_ids contains recommendation_id_token
-                              assign filtered_recommendations_count = filtered_recommendations_count | plus: 1
-                            endunless
+                            if in_cart_product_ids contains recommendation_id_token
+                              continue
+                            endif
+                            if excluded_handles contains recommendation.handle
+                              continue
+                            endif
+                            assign filtered_recommendations_count = filtered_recommendations_count | plus: 1
                           endfor
                         -%}
                         {% comment %} When every recommendation is already in the cart, render nothing: cart-recommendations.js sees the empty response and adds .hide-recommendations, which hides the whole rail (heading included) {% endcomment %}
@@ -382,6 +390,9 @@
                               {%- liquid
                                 assign recommendation_id_token = ',' | append: recommendation.id | append: ','
                                 if in_cart_product_ids contains recommendation_id_token
+                                  continue
+                                endif
+                                if excluded_handles contains recommendation.handle
                                   continue
                                 endif
                               -%}
