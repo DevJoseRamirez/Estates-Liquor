@@ -40,7 +40,6 @@
 >
   <div class="cwc_product-buy-box__container">
     <div class="cwc_product-buy-box__layout">
-
       {% comment %} Media gallery {% endcomment %}
       <div class="cwc_product-buy-box__media">
         <div class="cwc_product-buy-box__media-main" data-cwc-media-main>
@@ -112,14 +111,17 @@
 
       {% comment %} Buy column — every row is a reorderable block {% endcomment %}
       <div class="cwc_product-buy-box__info">
-        {% for block in section.blocks %}
-          {% case block.type %}
 
-            {% comment %}
-              App blocks from installed apps — subscription widgets, review
-              badges, size charts. Ordered like any other block, so an app can
-              sit between the price and the buy button.
-            {% endcomment %}
+
+        
+        {% for block in section.blocks %}
+          
+          {% case block.type %}
+              {% comment %}
+                App blocks from installed apps — subscription widgets, review
+                badges, size charts. Ordered like any other block, so an app can
+                sit between the price and the buy button.
+              {% endcomment %}
             {% when '@app' %}
               <div class="cwc_product-buy-box__app" {{ block.shopify_attributes }}>
                 {% render block %}
@@ -196,7 +198,10 @@
                 endif
               %}
               {% if stock_message != blank %}
-                <p class="cwc_product-buy-box__stock{% unless buy_product.available %} cwc_product-buy-box__stock--out{% endunless %}" {{ block.shopify_attributes }}>
+                <p
+                  class="cwc_product-buy-box__stock{% unless buy_product.available %} cwc_product-buy-box__stock--out{% endunless %}"
+                  {{ block.shopify_attributes }}
+                >
                   <span class="cwc_product-buy-box__stock-dot" aria-hidden="true"></span>
                   {{ stock_message }}
                 </p>
@@ -211,13 +216,19 @@
                   {% endcomment %}
                   {% unless buy_product.has_only_default_variant %}
                     <div class="cwc_product-buy-box__variants">
-                      <label for="cwc_variant-{{ section.id }}">{{ block.settings.variant_label | default: 'Option' }}</label>
+                      <label for="cwc_variant-{{ section.id }}">
+                        {{- block.settings.variant_label | default: 'Option' -}}
+                      </label>
                       <select id="cwc_variant-{{ section.id }}" name="id" data-cwc-variant-select>
                         {% for variant in buy_product.variants %}
                           <option
                             value="{{ variant.id }}"
-                            {% if variant == current_variant %}selected{% endif %}
-                            {% unless variant.available %}disabled{% endunless %}
+                            {% if variant == current_variant %}
+                              selected
+                            {% endif %}
+                            {% unless variant.available %}
+                              disabled
+                            {% endunless %}
                           >
                             {{ variant.title }} — {{ variant.price | money }}
                           </option>
@@ -251,7 +262,9 @@
                       name="add"
                       class="cwc_product-buy-box__atc"
                       data-cwc-atc
-                      {% unless buy_product.available %}disabled{% endunless %}
+                      {% unless buy_product.available %}
+                        disabled
+                      {% endunless %}
                     >
                       {% if buy_product.available %}
                         {{ block.settings.button_label | default: 'Add to Cart' }}
@@ -267,16 +280,29 @@
               {% liquid
                 assign threshold = block.settings.threshold | times: 100
                 assign remaining = threshold | minus: cart.total_price
+
+                # formatted separately — chaining `| money` after `| replace`
+                # feeds the whole sentence to the filter and renders blank
+                assign remaining_money = remaining | money
               %}
               {% if remaining > 0 %}
                 <p class="cwc_product-buy-box__nudge" {{ block.shopify_attributes }}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
                     <rect x="1" y="4" width="15" height="12" rx="1" />
                     <path d="M16 8h4l3 3v5h-7V8z" />
                     <circle cx="5.5" cy="18.5" r="2.5" />
                     <circle cx="18.5" cy="18.5" r="2.5" />
                   </svg>
-                  {{ block.settings.text | replace: '[amount]', remaining | money }}
+                  {{ block.settings.text | replace: '[amount]', remaining_money }}
                 </p>
               {% elsif block.settings.reached_text != blank %}
                 <p class="cwc_product-buy-box__nudge" {{ block.shopify_attributes }}>
@@ -287,7 +313,16 @@
             {% when 'protection' %}
               {% if block.settings.text != blank %}
                 <p class="cwc_product-buy-box__protect" {{ block.shopify_attributes }}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   {{ block.settings.text }}
@@ -305,7 +340,16 @@
                   %}
                   {% if trust_text != blank %}
                     <div class="cwc_product-buy-box__trust-item">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
                         {% case trust_icon %}
                           {% when 'shield' %}
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -353,12 +397,19 @@
                     >
                     <span class="cwc_product-buy-box__fbt-thumb">
                       {% if buy_product.featured_image != blank %}
-                        <img src="{{ buy_product.featured_image | image_url: width: 120 }}" alt="" loading="lazy" width="46" height="58">
+                        <img
+                          src="{{ buy_product.featured_image | image_url: width: 120 }}"
+                          alt=""
+                          loading="lazy"
+                          width="46"
+                          height="58"
+                        >
                       {% endif %}
                     </span>
                     <span class="cwc_product-buy-box__fbt-info">
                       <span class="cwc_product-buy-box__fbt-name">
-                        {{ buy_product.title }} <em>({{ block.settings.this_item_label | default: 'This item' }})</em>
+                        {{ buy_product.title }}
+                        <em>({{ block.settings.this_item_label | default: 'This item' }})</em>
                       </span>
                       {% if product_meta != blank %}
                         <span class="cwc_product-buy-box__fbt-meta">{{ product_meta }}</span>
@@ -387,12 +438,22 @@
                           data-cwc-fbt-check
                           data-variant-id="{{ fbt_variant.id }}"
                           data-price="{{ fbt_variant.price }}"
-                          {% if forloop.first %}checked{% endif %}
-                          {% unless fbt_product.available %}disabled{% endunless %}
+                          {% if forloop.first %}
+                            checked
+                          {% endif %}
+                          {% unless fbt_product.available %}
+                            disabled
+                          {% endunless %}
                         >
                         <span class="cwc_product-buy-box__fbt-thumb">
                           {% if fbt_product.featured_image != blank %}
-                            <img src="{{ fbt_product.featured_image | image_url: width: 120 }}" alt="" loading="lazy" width="46" height="58">
+                            <img
+                              src="{{ fbt_product.featured_image | image_url: width: 120 }}"
+                              alt=""
+                              loading="lazy"
+                              width="46"
+                              height="58"
+                            >
                           {% endif %}
                         </span>
                         <span class="cwc_product-buy-box__fbt-info">
@@ -418,11 +479,9 @@
                   {{ block.settings.button_label | default: 'Add Selected to Cart' }}
                 </button>
               </div>
-
           {% endcase %}
         {% endfor %}
       </div>
-
     </div>
   </div>
 </section>

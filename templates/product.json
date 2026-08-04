@@ -260,10 +260,15 @@
         },
         "cwc_product_buy_box_b3": {
           "type": "rating",
+          "disabled": true,
           "settings": {
             "review_text": "Read 24 reviews",
             "review_link": ""
           }
+        },
+        "judge_me_reviews_preview_badge_pgXwLn": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
         },
         "cwc_product_buy_box_b4": {
           "type": "price",
@@ -326,6 +331,7 @@
         },
         "cwc_product_buy_box_b11": {
           "type": "fbt",
+          "disabled": true,
           "settings": {
             "heading": "Frequently Bought Together",
             "this_item_label": "This item",
@@ -341,6 +347,7 @@
         "cwc_product_buy_box_b1",
         "cwc_product_buy_box_b2",
         "cwc_product_buy_box_b3",
+        "judge_me_reviews_preview_badge_pgXwLn",
         "cwc_product_buy_box_b4",
         "cwc_product_buy_box_b5",
         "cwc_product_buy_box_b6",
@@ -640,7 +647,7 @@
         "eyebrow": "Verified Purchases",
         "heading": "Reviews for This Bottle",
         "show_rule": true,
-        "app_embed": "",
+        "app_embed": "<!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->",
         "slot_height": 160,
         "placeholder_title": "App Widget Slot",
         "placeholder_text": "Your product review widget renders here. When this product has no reviews, hide this section so the store reviews above carry the page.",

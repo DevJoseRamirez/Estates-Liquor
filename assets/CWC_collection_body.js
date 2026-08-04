@@ -5,6 +5,20 @@
      works: filter groups are <details>, the form has an Apply button, sort has
      a Go button, and Load More is a plain link to page 2. */
 
+  /* The theme's cart drawer listens on the shared eventBus — re-render it with
+     the new line, then open it. Returns false when nothing is listening (the
+     store is set to cart page rather than drawer), so the caller can fall back
+     to its own inline confirmation. Mirrors CWC_product_buy_box.js. */
+  function openCartDrawer() {
+    var bus = window.eventBus;
+    var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
+    if (!listeners || listeners.size === 0) return false;
+
+    bus.emit('render:cart:drawer');
+    bus.emit('open:cart:drawer', { scrollToTop: true });
+    return true;
+  }
+
   function initSheets(sectionEl) {
     var overlay = sectionEl.querySelector('[data-cwc-overlay]');
     var sheets = sectionEl.querySelectorAll('[data-cwc-sheet]');
@@ -159,8 +173,12 @@
           })
           .then(function () {
             button.classList.remove('cwc_collection-body__card-button--loading');
-            button.classList.add('cwc_collection-body__card-button--added');
             document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
+
+            /* the drawer is the confirmation — don't also flash the button */
+            if (openCartDrawer()) return;
+
+            button.classList.add('cwc_collection-body__card-button--added');
             window.setTimeout(function () {
               button.classList.remove('cwc_collection-body__card-button--added');
             }, 1600);

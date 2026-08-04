@@ -86,13 +86,14 @@
     "cwc_collection_header": {
       "type": "CWC_collection_header",
       "settings": {
-        "eyebrow": "Whiskey",
+        "eyebrow": "",
         "title": "",
         "description": "",
         "show_count": true,
         "count_text": "",
+        "image": "shopify://shop_images/Mask_group-1.png",
         "image_opacity": 38,
-        "overlay_opacity": 94,
+        "overlay_opacity": 88,
         "bg_color": "#0a1f12",
         "text_color": "#ffffff",
         "bold_color": "#c4933f",
@@ -186,6 +187,7 @@
       "type": "CWC_collection_body",
       "settings": {
         "products_per_page": 24,
+        "use_pagination": false,
         "columns": 4,
         "item_noun": "bottles",
         "empty_text": "No bottles match these filters.",
@@ -196,7 +198,6 @@
         "clear_label": "Clear All",
         "apply_label": "Apply Filters",
         "load_more_label": "Load More",
-        "notify_label": "Notify Me When Available",
         "bg_color": "#ffffff",
         "text_color": "#0a1f12",
         "bold_color": "#c4933f",
@@ -288,32 +289,40 @@
           "type": "content",
           "settings": {
             "size": "large",
-            "title": "About Our Bourbon Selection",
-            "text": "<p>Bourbon has to be made in the United States from a mash bill of at least 51 percent corn, aged in new charred oak, and entered into the barrel at no more than 125 proof. Everything on this page meets that standard. Most of it comes out of Kentucky.</p>"
+            "title": "Buying From Estates Liquor",
+            "text": "<p>Estates Liquor is a licensed retailer operating a physical store in Coronado, California. Every bottle listed here is in stock and ships from our shelf, not from a third-party warehouse or a drop-shipping partner.</p>"
           }
         },
         "cwc_collection_seo_b2": {
           "type": "content",
           "settings": {
             "size": "medium",
-            "title": "What We Carry",
-            "text": "<p>Our bourbon shelf runs from everyday pours like Elijah Craig Small Batch and Weller Special Reserve through to allocated releases such as the Buffalo Trace Antique Collection, Blanton’s, and Pappy Van Winkle. We list allocated bottles at fair retail when they land, and we do not run a lottery.</p>"
+            "title": "How We Price",
+            "text": "<p>Allocated and hard-to-find bottles are listed at fair retail the day they land. No lottery, no waitlist to buy in, and no inflated secondary-market pricing. When a bottle sells out we take it down rather than leaving it listed at a markup</p>"
           }
         },
         "cwc_collection_seo_b3": {
           "type": "content",
           "settings": {
             "size": "medium",
-            "title": "Barrel Picks",
-            "text": "<p>Our team tastes through the rickhouse and selects single barrels bottled at full proof. Each pick is labeled with its barrel number, warehouse, and floor, and once it is gone we cannot reorder it.</p>"
+            "title": "Sourcing and Authenticity",
+            "text": "<p>Everything we carry comes through licensed distribution channels and is inspected before it ships. We do not buy from the secondary market or resell bottles of unverified origin.</p><p></p>"
           }
         },
         "cwc_collection_seo_b4": {
           "type": "content",
           "settings": {
             "size": "medium",
-            "title": "Shipping Bourbon",
-            "text": "<p>Every bottle is wrapped, braced, and boxed in molded inserts built for glass. Orders placed Monday through Thursday ship the same week, and someone 21 or older must sign on delivery. Enter your ZIP at checkout to confirm we can ship to your address.</p>"
+            "title": "Packing and Shipping",
+            "text": "<p>Every order is wrapped, braced, and boxed in molded inserts built for glass — the same packing whether it is a $35 bottle or a $2,000 one. Orders placed Monday through Thursday ship the same week. Someone 21 or older must be present to sign on delivery. We ship to most US states; enter your ZIP at checkout to confirm delivery to your address.</p>"
+          }
+        },
+        "content_J6KmyV": {
+          "type": "content",
+          "settings": {
+            "size": "small",
+            "title": "Questions",
+            "text": "<p>Our team is in the store six days a week. Call 619-791-3613 or email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a>.</p>"
           }
         }
       },
@@ -321,7 +330,8 @@
         "cwc_collection_seo_b1",
         "cwc_collection_seo_b2",
         "cwc_collection_seo_b3",
-        "cwc_collection_seo_b4"
+        "cwc_collection_seo_b4",
+        "content_J6KmyV"
       ],
       "settings": {
         "content_width": 820,

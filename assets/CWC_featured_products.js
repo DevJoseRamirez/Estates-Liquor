@@ -43,6 +43,20 @@
     });
   }
 
+  /* The theme's cart drawer listens on the shared eventBus — re-render it with
+     the new line, then open it. Returns false when nothing is listening (the
+     store is set to cart page rather than drawer), so the caller can fall back
+     to its own inline confirmation. Mirrors CWC_product_buy_box.js. */
+  function openCartDrawer() {
+    var bus = window.eventBus;
+    var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
+    if (!listeners || listeners.size === 0) return false;
+
+    bus.emit('render:cart:drawer');
+    bus.emit('open:cart:drawer', { scrollToTop: true });
+    return true;
+  }
+
   function addToCart(variantId) {
     return fetch('/cart/add.js', {
       method: 'POST',
@@ -67,11 +81,14 @@
         addToCart(variantId)
           .then(function () {
             button.classList.remove('cwc_featured-products__card-button--loading');
-            button.classList.add('cwc_featured-products__card-button--added');
 
-            /* let the theme's cart drawer / bubble refresh itself */
+            /* refreshes the header count bubble */
             document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
 
+            /* the drawer is the confirmation — don't also flash the button */
+            if (openCartDrawer()) return;
+
+            button.classList.add('cwc_featured-products__card-button--added');
             window.setTimeout(function () {
               button.classList.remove('cwc_featured-products__card-button--added');
             }, 1600);

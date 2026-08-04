@@ -158,8 +158,8 @@
         "show_border": true,
         "border_color": "#e0ddd6",
         "item_gap": 52,
-        "padding_top": 10,
-        "padding_bottom": 10
+        "padding_top": 5,
+        "padding_bottom": 5
       }
     },
     "cwc_hero": {
@@ -169,14 +169,15 @@
         "heading": "<p>Rare spirits.<br/><em>Delivered</em><br/>to your door.</p>",
         "subtext": "<p>Fair prices on allocated bourbon, rare releases, and premium spirits. Every bottle hand-packed and shipped from Coronado.</p>",
         "button_label": "Shop Rare & Allocated",
-        "button_link": "",
+        "button_link": "shopify://collections/rare-limited",
         "button_2_label": "View Best Sellers",
-        "button_2_link": "",
+        "button_2_link": "shopify://collections/best-selling-products",
         "show_badge": true,
         "badge_number": "600+",
         "badge_text": "Bottles In Stock",
+        "image": "shopify://shop_images/banner_1.png",
         "alt_text": "",
-        "overlay_opacity": 92,
+        "overlay_opacity": 86,
         "hero_height": 640,
         "bg_color": "#0a1f12",
         "text_color": "#ffffff",
@@ -216,7 +217,7 @@
             "icon": "truck",
             "custom_icon_alt": "",
             "title": "Ships Mon–Thu",
-            "subtext": "Most orders leave same week"
+            "subtext": "Most orders leave same dey"
           }
         },
         "cwc_trust_bar_b4": {
@@ -254,7 +255,7 @@
         "cwc_shop_category_b1": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "bourbon",
             "title": "Bourbon",
             "link": "",
             "highlight": false
@@ -263,7 +264,7 @@
         "cwc_shop_category_b2": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "rye-whiskey",
             "title": "Rye Whiskey",
             "link": "",
             "highlight": false
@@ -272,7 +273,7 @@
         "cwc_shop_category_b3": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "american-whiskey",
             "title": "American Whiskey",
             "link": "",
             "highlight": false
@@ -281,7 +282,7 @@
         "cwc_shop_category_b4": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "japanese-whiskey",
             "title": "Japanese Whisky",
             "link": "",
             "highlight": false
@@ -290,7 +291,7 @@
         "cwc_shop_category_b5": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "tequila",
             "title": "Tequila",
             "link": "",
             "highlight": false
@@ -299,7 +300,7 @@
         "cwc_shop_category_b6": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "mezcal",
             "title": "Mezcal",
             "link": "",
             "highlight": false
@@ -308,7 +309,7 @@
         "cwc_shop_category_b7": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "wine",
             "title": "Wine",
             "link": "",
             "highlight": false
@@ -317,7 +318,7 @@
         "cwc_shop_category_b8": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "champagne",
             "title": "Champagne",
             "link": "",
             "highlight": false
@@ -326,7 +327,7 @@
         "cwc_shop_category_b9": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "vodka",
             "title": "Vodka",
             "link": "",
             "highlight": false
@@ -335,7 +336,7 @@
         "cwc_shop_category_b10": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "rum",
             "title": "Rum",
             "link": "",
             "highlight": false
@@ -344,7 +345,7 @@
         "cwc_shop_category_b11": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "cognac",
             "title": "Cognac",
             "link": "",
             "highlight": false
@@ -362,7 +363,7 @@
         "cwc_shop_category_b13": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "liqueur",
             "title": "Liqueur",
             "link": "",
             "highlight": false
@@ -371,7 +372,7 @@
         "cwc_shop_category_b14": {
           "type": "pill",
           "settings": {
-            "collection": "",
+            "collection": "best-selling-products",
             "title": "Shop All 600+",
             "link": "",
             "highlight": true
@@ -382,6 +383,7 @@
           "settings": {
             "collection": "american-whiskey",
             "eyebrow": "",
+            "image": "shopify://shop_images/v2_bg_whiskey.png",
             "alt_text": "",
             "title": "Whiskey",
             "subtext": "Bourbon · Rye · American · Japanese · 240+ bottles",
@@ -391,8 +393,9 @@
         "cwc_shop_category_b16": {
           "type": "card",
           "settings": {
-            "collection": "",
+            "collection": "tequila",
             "eyebrow": "",
+            "image": "shopify://shop_images/v2_bg_tequila.png",
             "alt_text": "",
             "title": "Tequila & Mezcal",
             "subtext": "Tequila · Mezcal · 90+ bottles",
@@ -402,8 +405,9 @@
         "cwc_shop_category_b17": {
           "type": "card",
           "settings": {
-            "collection": "",
+            "collection": "wine",
             "eyebrow": "",
+            "image": "shopify://shop_images/v2_bg_wine.png",
             "alt_text": "",
             "title": "Wine & Champagne",
             "subtext": "Wine · Champagne · 110+ bottles",
@@ -415,14 +419,28 @@
           "settings": {
             "collection": "",
             "eyebrow": "",
+            "image": "shopify://shop_images/v2_bg_spirits.png",
             "alt_text": "",
             "title": "Spirits",
             "subtext": "Vodka · Rum · Cognac · 130+ bottles",
             "link": ""
           }
         },
+        "cwc_shop_category_b19": {
+          "type": "card",
+          "settings": {
+            "collection": "rare-limited",
+            "eyebrow": "Restocked Weekly",
+            "image": "shopify://shop_images/v2_bg_rare_banner.png",
+            "alt_text": "",
+            "title": "Rare & Allocated",
+            "subtext": "Pappy · BTAC · Barrel Picks",
+            "link": ""
+          }
+        },
         "card_EUi9N6": {
           "type": "card",
+          "disabled": true,
           "settings": {
             "collection": "",
             "eyebrow": "",
@@ -434,23 +452,13 @@
         },
         "card_memhfT": {
           "type": "card",
+          "disabled": true,
           "settings": {
             "collection": "",
             "eyebrow": "",
             "alt_text": "",
             "title": "Spirits",
             "subtext": "Vodka · Rum · Cognac · 130+ bottles",
-            "link": ""
-          }
-        },
-        "cwc_shop_category_b19": {
-          "type": "card",
-          "settings": {
-            "collection": "",
-            "eyebrow": "Restocked Weekly",
-            "alt_text": "",
-            "title": "Rare & Allocated",
-            "subtext": "Pappy · BTAC · Barrel Picks",
             "link": ""
           }
         }
@@ -474,9 +482,9 @@
         "cwc_shop_category_b16",
         "cwc_shop_category_b17",
         "cwc_shop_category_b18",
+        "cwc_shop_category_b19",
         "card_EUi9N6",
-        "card_memhfT",
-        "cwc_shop_category_b19"
+        "card_memhfT"
       ],
       "settings": {
         "eyebrow": "Browse the Collection",
@@ -506,108 +514,108 @@
         "cwc_shop_brand_b1": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "buffalo-trace",
             "title": "Buffalo Trace",
-            "count_text": "42 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b2": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "michter-s",
             "title": "Michter’s",
-            "count_text": "28 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b3": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "blanton-s",
             "title": "Blanton’s",
-            "count_text": "15 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b4": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "w-l-weller",
             "title": "W.L. Weller",
-            "count_text": "19 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b5": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "willett",
             "title": "Willett",
-            "count_text": "24 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b6": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "four-roses",
             "title": "Four Roses",
-            "count_text": "31 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b7": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "elijah-craig",
             "title": "Elijah Craig",
-            "count_text": "18 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b8": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "e-h-taylor",
             "title": "E.H. Taylor",
-            "count_text": "12 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b9": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "don-julio",
             "title": "Don Julio",
-            "count_text": "22 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b10": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "clase-azul",
             "title": "Clase Azul",
-            "count_text": "14 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b11": {
           "type": "brand",
           "settings": {
-            "collection": "",
+            "collection": "macallan",
             "title": "Macallan",
-            "count_text": "26 bottles",
+            "count_text": "",
             "link": ""
           }
         },
         "cwc_shop_brand_b12": {
           "type": "brand",
           "settings": {
-            "collection": "",
-            "title": "Louis XIII",
-            "count_text": "6 bottles",
+            "collection": "cognac",
+            "title": "Cognac",
+            "count_text": "",
             "link": ""
           }
         }
@@ -653,29 +661,43 @@
         "cwc_featured_products_b1": {
           "type": "tab",
           "settings": {
-            "collection": "best-sellers",
+            "collection": "best-selling-products",
             "title": "Best Sellers"
           }
         },
         "cwc_featured_products_b2": {
           "type": "tab",
           "settings": {
-            "collection": "champagne",
+            "collection": "newest-products",
             "title": "New Arrivals"
           }
         },
         "cwc_featured_products_b3": {
           "type": "tab",
           "settings": {
-            "collection": "mezcal",
-            "title": "Rare & Allocated"
+            "collection": "bourbon",
+            "title": "Bourbon"
           }
         },
         "cwc_featured_products_b4": {
           "type": "tab",
           "settings": {
-            "collection": "vodka",
+            "collection": "champagne",
             "title": "Barrel Picks"
+          }
+        },
+        "tab_YEqCRb": {
+          "type": "tab",
+          "settings": {
+            "collection": "vodka",
+            "title": ""
+          }
+        },
+        "tab_7WtNcM": {
+          "type": "tab",
+          "settings": {
+            "collection": "wine",
+            "title": ""
           }
         }
       },
@@ -683,13 +705,15 @@
         "cwc_featured_products_b1",
         "cwc_featured_products_b2",
         "cwc_featured_products_b3",
-        "cwc_featured_products_b4"
+        "cwc_featured_products_b4",
+        "tab_YEqCRb",
+        "tab_7WtNcM"
       ],
       "settings": {
         "eyebrow": "Best Sellers",
         "heading": "<p>Fan Favorites</p>",
         "link_label": "View All Products",
-        "link_url": "",
+        "link_url": "shopify://collections",
         "products_to_show": 8,
         "columns": 4,
         "bg_color": "#f8f6f1",
@@ -713,7 +737,7 @@
           "type": "tile",
           "settings": {
             "collection": "under-100",
-            "link": "",
+            "link": "shopify://collections/under-100",
             "amount": "$100",
             "label": "Under",
             "description": "Everyday pours and reliable gifts worth giving.",
@@ -724,7 +748,7 @@
           "type": "tile",
           "settings": {
             "collection": "under-200",
-            "link": "",
+            "link": "shopify://collections/under-200",
             "amount": "$200",
             "label": "Under",
             "description": "Premium bottles for a celebration or a milestone.",
@@ -735,7 +759,7 @@
           "type": "tile",
           "settings": {
             "collection": "",
-            "link": "",
+            "link": "shopify://collections/under-500",
             "amount": "$500",
             "label": "Under",
             "description": "Limited releases and single barrel selections.",
@@ -745,8 +769,8 @@
         "cwc_shop_price_b4": {
           "type": "tile",
           "settings": {
-            "collection": "",
-            "link": "",
+            "collection": "500-the-vault",
+            "link": "shopify://collections/500-the-vault",
             "amount": "$500+",
             "label": "The Vault",
             "description": "Allocated, collectible, and hard to find anywhere else.",
@@ -817,7 +841,7 @@
         "collection": "rare-limited",
         "products_to_show": 4,
         "button_label": "Shop Rare & Allocated",
-        "button_link": "",
+        "button_link": "shopify://collections/rare-limited",
         "bg_color": "#0a1f12",
         "text_color": "#ffffff",
         "bold_color": "#c4933f",
@@ -836,7 +860,7 @@
         "heading": "<p>We taste every<br/>barrel before<br/>we buy it.</p>",
         "subtext": "<p>Our team travels to the distillery, tastes through the barrel line-up, and buys the ones we would pour ourselves. Each pick is labeled with the barrel number, warehouse, and floor.</p>",
         "collection": "barrel-picks",
-        "products_to_show": 3,
+        "products_to_show": 6,
         "button_label": "Shop Barrel Picks",
         "button_link": "",
         "columns": 3,
