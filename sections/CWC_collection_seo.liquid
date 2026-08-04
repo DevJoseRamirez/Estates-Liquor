@@ -15,36 +15,77 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_collection_seo.css' | asset_url | stylesheet_tag }}
 
-{% if section.blocks.size > 0 %}
+{% liquid
+  # A collection that carries its own SEO copy wins over the blocks: the copy is
+  # written once per collection and travels with it, rather than being retyped
+  # into this section for every template that uses it. Blocks stay as the
+  # fallback for collections that have no metafield yet.
+  assign seo_metafield = null
+  if section.settings.use_metafield
+    assign seo_metafield = collection.metafields.custom.seo_description
+  endif
+%}
+
+{%- comment -%}
+  seo_description is rich text, so it is rendered through metafield_tag rather
+  than read via .value — .value hands back the structured object, not markup.
+  Going through the filter also keeps this working if the metafield is ever
+  created as plain multi-line text instead.
+{%- endcomment -%}
+{%- capture seo_copy -%}
+  {%- if seo_metafield != blank -%}
+    {{ seo_metafield | metafield_tag }}
+  {%- endif -%}
+{%- endcapture -%}
+
+{% comment %}
+  An existing but empty metafield still renders as markup, and that empty
+  wrapper must not win over the blocks — so test the text, not the tags.
+{% endcomment %}
+{% assign seo_text = seo_copy | strip_html | strip %}
+
+{% if seo_text != blank or section.blocks.size > 0 %}
   <section id="cwc_collection-seo-{{ section.id }}" class="cwc_collection-seo">
     <div class="cwc_collection-seo__container">
       <div class="cwc_collection-seo__content">
-        {% for block in section.blocks %}
-          {% case block.type %}
-            {% when 'content' %}
-              <div
-                class="cwc_collection-seo__card cwc_collection-seo__card--{{ block.settings.size }}"
-                {{ block.shopify_attributes }}
-              >
-                {% if block.settings.title != blank %}
-                  {% case block.settings.size %}
-                    {% when 'large' %}
-                      <h2 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h2>
-                    {% when 'medium' %}
-                      <h3 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h3>
-                    {% else %}
-                      <h4 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h4>
-                  {% endcase %}
-                {% endif %}
+        {% if seo_text != blank %}
+          {% comment %}
+            Rich text metafield — headings and lists come through as markup, so
+            the whole thing renders as one card rather than block by block.
+          {% endcomment %}
+          <div class="cwc_collection-seo__card cwc_collection-seo__card--metafield">
+            <div class="cwc_collection-seo__card-text cwc-rte">
+              {{ seo_copy }}
+            </div>
+          </div>
+        {% else %}
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'content' %}
+                <div
+                  class="cwc_collection-seo__card cwc_collection-seo__card--{{ block.settings.size }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {% if block.settings.title != blank %}
+                    {% case block.settings.size %}
+                      {% when 'large' %}
+                        <h2 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h2>
+                      {% when 'medium' %}
+                        <h3 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h3>
+                      {% else %}
+                        <h4 class="cwc_collection-seo__card-title">{{ block.settings.title }}</h4>
+                    {% endcase %}
+                  {% endif %}
 
-                {% if block.settings.text != blank %}
-                  <div class="cwc_collection-seo__card-text cwc-rte">
-                    {{ block.settings.text }}
-                  </div>
-                {% endif %}
-              </div>
-          {% endcase %}
-        {% endfor %}
+                  {% if block.settings.text != blank %}
+                    <div class="cwc_collection-seo__card-text cwc-rte">
+                      {{ block.settings.text }}
+                    </div>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   </section>
@@ -54,6 +95,17 @@
 {
   "name": "CWC Collection SEO Copy",
   "settings": [
+    {
+      "type": "header",
+      "content": "Content Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_metafield",
+      "label": "Use Collection Metafield",
+      "default": true,
+      "info": "When the collection has custom.seo_description filled in, that copy renders instead of the blocks below. Collections without it fall back to the blocks."
+    },
     {
       "type": "header",
       "content": "Layout"

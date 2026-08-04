@@ -272,6 +272,7 @@
   border-radius: 3px;
   background-color: var(--button-bg);
   color: #ffffff;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
   /* text pill rather than a square icon button — mirrors CWC_barrel_picks */
@@ -281,13 +282,8 @@
   text-transform: uppercase;
 }
 
-.cwc_featured-products__card-button:hover:not(:disabled) {
+.cwc_featured-products__card-button:hover {
   background-color: var(--highlight-color);
-}
-
-.cwc_featured-products__card-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 .cwc_featured-products__card-button:focus-visible {

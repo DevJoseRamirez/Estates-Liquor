@@ -16,13 +16,36 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_subcategory_rail.css' | asset_url | stylesheet_tag }}
 
-{% if section.blocks.size > 0 %}
+{% liquid
+  assign auto_mode = section.settings.auto_collections
+
+  # Handles already covered by a manual block, plus any the merchant excluded —
+  # both are skipped by the auto loop so nothing renders twice.
+  assign used_handles = ','
+  if auto_mode
+    for block in section.blocks
+      if block.settings.collection != blank
+        assign used_handles = used_handles | append: block.settings.collection.handle | append: ','
+      endif
+    endfor
+
+    if section.settings.auto_exclude != blank
+      assign excluded = section.settings.auto_exclude | replace: ' ', '' | split: ','
+      for handle in excluded
+        assign used_handles = used_handles | append: handle | append: ','
+      endfor
+    endif
+  endif
+%}
+
+{% if section.blocks.size > 0 or auto_mode %}
   <section
     id="cwc_subcategory-rail-{{ section.id }}"
     class="cwc_subcategory-rail{% if section.settings.show_border %} cwc_subcategory-rail--bordered{% endif %}"
   >
     <div class="cwc_subcategory-rail__container">
       <nav class="cwc_subcategory-rail__rail" aria-label="{{ section.settings.aria_label | escape | default: 'Sub categories' }}">
+        {% comment %} Manual blocks render first, so a pinned pill keeps its position {% endcomment %}
         {% for block in section.blocks %}
           {% case block.type %}
             {% when 'link' %}
@@ -64,6 +87,40 @@
               {% endif %}
           {% endcase %}
         {% endfor %}
+
+        {% comment %}
+          Auto mode — every collection in the store, minus the ones a block
+          already covers and anything the merchant excluded by handle.
+        {% endcomment %}
+        {% if auto_mode %}
+          {% for auto_collection in collections limit: section.settings.auto_limit %}
+            {% liquid
+              assign handle_token = ',' | append: auto_collection.handle | append: ','
+
+              assign skip = false
+              if used_handles contains handle_token
+                assign skip = true
+              elsif section.settings.auto_hide_empty and auto_collection.products_count == 0
+                assign skip = true
+              endif
+
+              assign is_active = false
+              if collection != blank and auto_collection.handle == collection.handle
+                assign is_active = true
+              endif
+            %}
+
+            {% unless skip %}
+              <a
+                href="{{ auto_collection.url }}"
+                class="cwc_subcategory-rail__pill{% if is_active %} cwc_subcategory-rail__pill--highlight{% endif %}"
+                {% if is_active %}aria-current="page"{% endif %}
+              >
+                {{ auto_collection.title }}
+              </a>
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
       </nav>
     </div>
   </section>
@@ -87,6 +144,43 @@
     {
       "type": "paragraph",
       "content": "The pill matching the collection being viewed highlights itself automatically."
+    },
+    {
+      "type": "header",
+      "content": "Collections Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_collections",
+      "label": "Use All Store Collections",
+      "default": false,
+      "info": "Fills the rail from your catalog instead of one block per collection. Any Pill Link blocks you keep render first, and their collections are not repeated."
+    },
+    {
+      "type": "range",
+      "id": "auto_limit",
+      "label": "Maximum Collections",
+      "min": 4,
+      "max": 50,
+      "step": 1,
+      "default": 20,
+      "info": "Shopify caps a collections loop at 50.",
+      "visible_if": "{{ section.settings.auto_collections }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_hide_empty",
+      "label": "Hide Empty Collections",
+      "default": true,
+      "info": "Skips collections with no products.",
+      "visible_if": "{{ section.settings.auto_collections }}"
+    },
+    {
+      "type": "text",
+      "id": "auto_exclude",
+      "label": "Exclude Handles",
+      "info": "Comma separated, e.g. frontpage, all. Use to drop collections you do not want in the rail.",
+      "visible_if": "{{ section.settings.auto_collections }}"
     },
     {
       "type": "header",

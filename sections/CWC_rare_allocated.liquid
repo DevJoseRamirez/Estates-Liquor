@@ -17,6 +17,7 @@
     --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
     --card-border-color: {{ section.settings.card_border_color | default: '#E0DDD6' }};
     --card-button-bg: {{ section.settings.card_button_bg_color | default: '#0A1F12' }};
+    --decor-opacity: {{ section.settings.decor_opacity | default: 16 | divided_by: 100.0 }};
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
@@ -40,6 +41,26 @@
 %}
 
 <section id="cwc_rare-allocated-{{ section.id }}" class="cwc_rare-allocated">
+  {% comment %} Decorative bottle silhouettes — purely visual, hidden from AT {% endcomment %}
+  {% if section.settings.show_decor %}
+    <span class="cwc_rare-allocated__decor" aria-hidden="true">
+      <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--1" width="28" height="72" viewBox="0 0 28 72" focusable="false">
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#bf8d3a"/>
+        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#bf8d3a"/>
+      </svg>
+
+      <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--2" width="28" height="86" viewBox="0 0 28 86" focusable="false">
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#a8ccb4"/>
+        <path d="M4 8 Q2 14 2 20 L2 76 Q2 82 14 82 Q26 82 26 76 L26 20 Q26 14 24 8 Z" fill="#a8ccb4"/>
+      </svg>
+
+      <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--3" width="28" height="72" viewBox="0 0 28 72" focusable="false">
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#bf8d3a"/>
+        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#bf8d3a"/>
+      </svg>
+    </span>
+  {% endif %}
+
   <div class="cwc_rare-allocated__container">
     <div class="cwc_rare-allocated__wrapper">
       {% comment %} Left — copy, CTA, stats {% endcomment %}
@@ -312,6 +333,28 @@
       "id": "button_text_color",
       "label": "Button Text Color",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Background Decoration"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decor",
+      "label": "Show Bottle Silhouettes",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "decor_opacity",
+      "label": "Silhouette Opacity",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 16,
+      "info": "Higher values compete with the copy sitting over them.",
+      "visible_if": "{{ section.settings.show_decor }}"
     },
     {
       "type": "header",

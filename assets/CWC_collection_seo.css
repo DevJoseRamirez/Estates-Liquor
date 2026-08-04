@@ -52,6 +52,40 @@
   font-size: 1rem;
 }
 
+/* Headings only ever arrive from the collection metafield — the block editor's
+   rich text cannot produce them — so they are matched to the card title scale */
+.cwc_collection-seo__card-text h2,
+.cwc_collection-seo__card-text h3,
+.cwc_collection-seo__card-text h4,
+.cwc_collection-seo__card-text h5,
+.cwc_collection-seo__card-text h6 {
+  font-family: var(--cwc-font-heading);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-color);
+  margin: 1.75rem 0 0.625rem;
+}
+
+.cwc_collection-seo__card-text> :first-child {
+  margin-top: 0;
+}
+
+.cwc_collection-seo__card-text h2 {
+  font-size: 1.625rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cwc_collection-seo__card-text h3 {
+  font-size: 1.125rem;
+}
+
+.cwc_collection-seo__card-text h4,
+.cwc_collection-seo__card-text h5,
+.cwc_collection-seo__card-text h6 {
+  font-size: 1rem;
+}
+
 .cwc_collection-seo__card-text p {
   font-size: 0.9375rem;
   line-height: 1.8;

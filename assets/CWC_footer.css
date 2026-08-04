@@ -8,6 +8,7 @@
   color: var(--body-text-color);
   font-family: var(--cwc-font-body);
   padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
 }
 
 .cwc_footer__container {
@@ -22,8 +23,8 @@
   display: grid;
   grid-template-columns: repeat(var(--footer-columns), minmax(0, 1fr));
   gap: 48px;
-  padding-bottom: var(--padding-bottom);
   border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5rem;
 }
 
 /* === Brand Block === */
@@ -196,7 +197,8 @@
 
 .cwc_footer__signup-input::placeholder {
   color: var(--bottom-text-color);
-  opacity: 1; /* Firefox dims placeholders by default */
+  opacity: 1;
+  /* Firefox dims placeholders by default */
 }
 
 .cwc_footer__signup-input:focus {
@@ -350,7 +352,7 @@
 }
 
 /* thin separator sits in the gap between policy links */
-.cwc_footer__policies a + a::before {
+.cwc_footer__policies a+a::before {
   content: '';
   position: absolute;
   left: -0.5625rem;

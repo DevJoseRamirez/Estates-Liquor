@@ -69,12 +69,14 @@
   }
 
   function initAddToCart(sectionEl) {
-    var buttons = sectionEl.querySelectorAll('.cwc_featured-products__card-button');
+    /* scoped to <button> — sold-out cards reuse the class on an <a> that just
+       navigates to the product page */
+    var buttons = sectionEl.querySelectorAll('button.cwc_featured-products__card-button');
 
     buttons.forEach(function (button) {
       button.addEventListener('click', function () {
         var variantId = button.dataset.variantId;
-        if (!variantId || button.disabled) return;
+        if (!variantId) return;
 
         button.classList.add('cwc_featured-products__card-button--loading');
 

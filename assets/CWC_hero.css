@@ -95,6 +95,10 @@
   line-height: 1.7;
   margin: 0;
   color: rgba(255, 255, 255, 0.75);
+  color: var(--text-color);
+  /*  */
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 /* === Buttons === */
@@ -141,6 +145,7 @@
 .cwc_hero__button--outline:hover {
   background: rgba(255, 255, 255, 0.15);
   border-color: var(--text-color);
+  color: white;
 }
 
 .cwc_hero__button:focus-visible {
@@ -222,6 +227,10 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_hero__content-heading p {
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
   .cwc_hero {
     min-height: 480px;
     padding-top: var(--padding-top-mobile);

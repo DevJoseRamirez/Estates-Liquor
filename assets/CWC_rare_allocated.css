@@ -13,29 +13,42 @@
   padding-bottom: var(--padding-bottom);
 }
 
-/* soft gold radials — decorative depth behind the panel */
-.cwc_rare-allocated::before,
-.cwc_rare-allocated::after {
-  content: '';
+/* bottle silhouettes — decorative depth behind the panel */
+.cwc_rare-allocated__decor {
   position: absolute;
-  border-radius: 50%;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
+  opacity: var(--decor-opacity);
 }
 
-.cwc_rare-allocated::before {
-  top: -60px;
-  right: -60px;
-  width: 400px;
+/* height drives the size; viewBox keeps the aspect ratio */
+.cwc_rare-allocated__decor-bottle {
+  position: absolute;
+  display: block;
+  width: auto;
+}
+
+.cwc_rare-allocated__decor-bottle--1 {
+  top: -50px;
+  left: 1%;
   height: 400px;
-  background: rgba(196, 147, 63, 0.06);
+  transform: rotate(-8deg);
 }
 
-.cwc_rare-allocated::after {
-  bottom: -80px;
-  left: 10%;
-  width: 300px;
+.cwc_rare-allocated__decor-bottle--2 {
+  bottom: -90px;
+  right: 2%;
+  height: 520px;
+  transform: rotate(6deg);
+}
+
+.cwc_rare-allocated__decor-bottle--3 {
+  bottom: 6%;
+  left: 15%;
   height: 300px;
-  background: rgba(196, 147, 63, 0.04);
+  transform: rotate(12deg);
 }
 
 .cwc_rare-allocated__container {
@@ -392,6 +405,19 @@
   .cwc_rare-allocated__stats {
     flex-wrap: wrap;
     gap: 20px;
+  }
+
+  /* scaled back so the silhouettes stay decorative on a narrow screen */
+  .cwc_rare-allocated__decor-bottle--1 {
+    height: 240px;
+  }
+
+  .cwc_rare-allocated__decor-bottle--2 {
+    height: 320px;
+  }
+
+  .cwc_rare-allocated__decor-bottle--3 {
+    display: none;
   }
 
   .cwc_rare-allocated__grid {

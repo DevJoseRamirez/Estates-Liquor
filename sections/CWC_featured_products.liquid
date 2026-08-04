@@ -173,16 +173,31 @@
                             </svg>
                           {%- endcapture -%}
 
-                          <button
-                            type="button"
-                            class="cwc_featured-products__card-button"
-                            data-variant-id="{{ current_variant.id }}"
-                            aria-label="Add {{ product.title | escape }} to cart"
-                            {% unless product.available %}disabled{% endunless %}
-                          >
-                            {% comment %} {{ cart_icon }} {% endcomment %}
-                            Add
-                          </button>
+                          {% comment %}
+                            Sold-out swaps the add-to-cart button for a visually
+                            identical link to the product page, so the control
+                            never silently fails.
+                          {% endcomment %}
+                          {% if product.available %}
+                            <button
+                              type="button"
+                              class="cwc_featured-products__card-button"
+                              data-variant-id="{{ current_variant.id }}"
+                              aria-label="Add {{ product.title | escape }} to cart"
+                            >
+                              {% comment %} {{ cart_icon }} {% endcomment %}
+                              Add
+                            </button>
+                          {% else %}
+                            <a
+                              href="{{ product.url }}"
+                              class="cwc_featured-products__card-button"
+                              aria-label="View {{ product.title | escape }}"
+                            >
+                              {% comment %} {{ cart_icon }} {% endcomment %}
+                              Add
+                            </a>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
