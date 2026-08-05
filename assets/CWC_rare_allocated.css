@@ -66,6 +66,12 @@
   align-items: center;
 }
 
+/* both tracks stay inside the container regardless of what their content
+   would rather be */
+.cwc_rare-allocated__wrapper>* {
+  min-width: 0;
+}
+
 /* === Content === */
 .cwc_rare-allocated__content-eyebrow {
   font-size: 0.6875rem;
@@ -155,16 +161,112 @@
 }
 
 /* === Product Grid === */
+/* ==============================
+   Carousel
+   ==============================
+   Always a rail, never a grid. --per-view is how many cards fill the column;
+   anything past that is reached by dragging or by the arrows. */
+.cwc_rare-allocated {
+  --gap: 16px;
+}
+
+.cwc_rare-allocated__carousel {
+  position: relative;
+  /* A nowrap flex row reports the sum of every card as its min-content, and a
+     1fr track can't shrink below that — without this the whole wrapper (copy,
+     button, stats included) stretches past the screen. */
+  min-width: 0;
+}
+
 .cwc_rare-allocated__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* overflow-x forces overflow-y to compute as auto, so the padding is what
+     keeps the cards' hover lift and shadow from being clipped */
+  padding: 6px 0 16px;
+  margin: -6px 0 -16px;
+  scrollbar-width: none;
+}
+
+.cwc_rare-allocated__grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* === Arrows === */
+.cwc_rare-allocated__arrow {
+  position: absolute;
+  top: 34%;
+  top: 50%;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  /* gold disc, not a white one — a white circle disappears against the white
+     product cards it sits on */
+  border: 2px solid var(--card-bg);
+  border-radius: 50%;
+  background-color: var(--highlight-color);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+/* JS adds this only when the rail actually overflows */
+.cwc_rare-allocated__carousel--scrollable .cwc_rare-allocated__arrow {
+  display: flex;
+}
+
+.cwc_rare-allocated__arrow--prev {
+  left: -20px;
+}
+
+.cwc_rare-allocated__arrow--next {
+  right: -20px;
+}
+
+.cwc_rare-allocated__arrow:hover {
+  background-color: var(--card-text-color);
+  border-color: var(--card-text-color);
+  color: var(--highlight-color);
+  transform: scale(1.06);
+}
+
+.cwc_rare-allocated__arrow:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+.cwc_rare-allocated__arrow[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cwc_rare-allocated__arrow[disabled]:hover {
+  background-color: var(--highlight-color);
+  border-color: var(--card-bg);
+  color: #ffffff;
+  transform: none;
+}
+
+.cwc_rare-allocated__arrow svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.5;
 }
 
 /* Card treatment mirrors .cwc_collection-body__card so the two grids read as
    the same component. Sizes are nudged down a step — this grid sits in a
    half-width column, not a full-width collection page. */
 .cwc_rare-allocated__card {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg);
@@ -240,9 +342,12 @@
   color: #ffffff;
 }
 
+/* sale sits opposite the tag badges so the two never collide */
 .cwc_rare-allocated__card-badge--sale {
   background-color: #c0392b;
   color: #ffffff;
+  right: 12px;
+  left: auto;
 }
 
 /* === Card Body === */
@@ -359,7 +464,7 @@
 
 /* === Empty State === */
 .cwc_rare-allocated__empty {
-  grid-column: 1 / -1;
+  flex: 1 1 100%;
   text-align: center;
   padding: 2rem;
   color: rgba(255, 255, 255, 0.5);
@@ -420,8 +525,53 @@
     display: none;
   }
 
+  .cwc_rare-allocated {
+    --gap: 12px;
+  }
+
+  /* no room for arrows beside a full-bleed column — the scrollbar is the cue
+     that there are more bottles off-screen */
+  .cwc_rare-allocated__arrow,
+  .cwc_rare-allocated__carousel--scrollable .cwc_rare-allocated__arrow {
+    display: none;
+  }
+
+  /* the rail bleeds past the container so the cards get the full screen width
+     — they scroll off the edges instead of stopping inside the padding */
+  .cwc_rare-allocated__carousel {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+
   .cwc_rare-allocated__grid {
-    gap: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--highlight-color) var(--card-border-color);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 12px;
+    margin-bottom: -12px;
+    margin-left: 10px;
+  }
+
+  /* keep the track lined up with the cards, not the bled-out edges */
+  .cwc_rare-allocated__grid::-webkit-scrollbar-track {
+    margin: 0 1rem;
+  }
+
+  .cwc_rare-allocated__grid::-webkit-scrollbar {
+    display: block;
+    -webkit-appearance: none;
+    height: 4px;
+  }
+
+  .cwc_rare-allocated__grid::-webkit-scrollbar-track {
+    background-color: var(--card-border-color);
+    border-radius: 100px;
+  }
+
+  .cwc_rare-allocated__grid::-webkit-scrollbar-thumb {
+    background-color: var(--highlight-color);
+    border-radius: 100px;
   }
 
   .cwc_rare-allocated__button {

@@ -1,0 +1,249 @@
+{% style %}
+  #cwc_about-order-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F2EFE8' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --button-2-border-color: {{ section.settings.button_2_border_color | default: '#0A1F12' }};
+    --button-2-text-color: {{ section.settings.button_2_text_color | default: '#0A1F12' }};
+    --content-width: {{ section.settings.content_width | default: 600 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 75 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 75 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 75 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 75 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_about_order.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_about-order-{{ section.id }}" class="cwc_about-order">
+  <div class="cwc_about-order__container">
+    <div class="cwc_about-order__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_about-order__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_about-order__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_about-order__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+
+      {% comment %}
+        Phone and email are typed as plain values and prefixed here, so the
+        merchant never has to remember the tel: / mailto: scheme.
+      {% endcomment %}
+      {% liquid
+        assign phone_digits = section.settings.phone_number | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+        assign email_address = section.settings.email_address | strip
+      %}
+
+      {% if section.settings.button_label != blank or section.settings.button_2_label != blank %}
+        <div class="cwc_about-order__actions">
+          {% if section.settings.button_label != blank and phone_digits != blank %}
+            <a
+              href="tel:{{ phone_digits }}"
+              class="cwc_about-order__button cwc_about-order__button--primary"
+            >
+              {{ section.settings.button_label }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.button_2_label != blank and email_address != blank %}
+            <a
+              href="mailto:{{ email_address }}"
+              class="cwc_about-order__button cwc_about-order__button--outline"
+            >
+              {{ section.settings.button_2_label }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.note != blank %}
+        <p class="cwc_about-order__note">{{ section.settings.note }}</p>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC About Order",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Have a question before you order?</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Looking for something specific, buying a gift, or want a recommendation in a price range? Reach out. We respond within one business day.</p>"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note Below Buttons"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Call Button Label",
+      "default": "Call 619-791-3613"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone Number",
+      "default": "619-791-3613",
+      "info": "Digits only or dashes — the tel: link is built automatically."
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Email Button Label",
+      "default": "support@estatesliquor.com"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Email Address",
+      "default": "support@estatesliquor.com"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content Width",
+      "min": 440,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Call Button Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Call Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_2_border_color",
+      "label": "Email Button Border Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "button_2_text_color",
+      "label": "Email Button Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Order",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

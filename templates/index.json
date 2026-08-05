@@ -177,7 +177,9 @@
         "badge_text": "Bottles In Stock",
         "image": "shopify://shop_images/banner_1.png",
         "alt_text": "",
+        "image_opacity": 100,
         "overlay_opacity": 100,
+        "overlay_coverage": 35,
         "hero_height": 640,
         "bg_color": "#0a1f12",
         "text_color": "#ffffff",
@@ -199,7 +201,7 @@
             "icon": "arrow",
             "custom_icon_alt": "",
             "title": "Use code WELCOME15",
-            "subtext": "On orders over $200"
+            "subtext": "$15 off your order when you spend $150+"
           }
         },
         "cwc_trust_bar_b2": {
@@ -501,6 +503,7 @@
         "card_bg_color": "#0a1f12",
         "card_bg_end_color": "#163d22",
         "card_overlay_color": "#0a1f12",
+        "card_overlay_opacity": 100,
         "card_title_color": "#ffffff",
         "card_text_color": "#c4933f",
         "card_height": 208,
@@ -714,8 +717,8 @@
         "heading": "<p>Fan Favorites</p>",
         "link_label": "View All Products",
         "link_url": "shopify://collections/best-selling-products",
-        "products_to_show": 8,
-        "columns": 4,
+        "products_to_show": 10,
+        "columns": 5,
         "bg_color": "#f8f6f1",
         "text_color": "#0a1f12",
         "bold_color": "#c4933f",
@@ -839,7 +842,8 @@
         "heading": "<p>The bottles that<br/>rarely reach<br/>the shelf.</p>",
         "subtext": "<p>Allocated releases arrive in small quantities and leave fast. We list them at fair retail — no lottery, no markup games. When a bottle lands, it goes live.</p>",
         "collection": "rare-limited",
-        "products_to_show": 2,
+        "products_to_show": 16,
+        "cards_per_view": 2,
         "button_label": "Shop Rare & Allocated",
         "button_link": "shopify://collections/rare-limited",
         "bg_color": "#0a1f12",
@@ -867,10 +871,11 @@
         "heading": "<p>We taste every<br/>barrel before<br/>we buy it.</p>",
         "subtext": "<p>Our team travels to the distillery, tastes through the barrel line-up, and buys the ones we would pour ourselves. Each pick is labeled with the barrel number, warehouse, and floor.</p>",
         "collection": "barrel-picks",
-        "products_to_show": 3,
+        "products_to_show": 16,
         "button_label": "Shop Barrel Picks",
         "button_link": "",
         "columns": 3,
+        "columns_mobile": 2,
         "bg_color": "#ffffff",
         "text_color": "#0a1f12",
         "bold_color": "#c4933f",
@@ -1008,40 +1013,64 @@
         "cwc_faq_b1": {
           "type": "item",
           "settings": {
-            "question": "Which states do you ship to?",
-            "answer": "<p>We ship to most US states. A small number restrict direct spirits shipments. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay.</p>",
-            "open_by_default": false
+            "question": "When will this ship?",
+            "answer": "<p>Orders placed Monday through Thursday are processed and ship within 3–5 business days. Orders placed Friday through Sunday are processed the following Monday. We ship from Coronado, CA via UPS, and tracking is emailed as soon as your order leaves.</p>",
+            "open_by_default": true
           }
         },
         "cwc_faq_b2": {
           "type": "item",
           "settings": {
-            "question": "Do I have to be home to receive my order?",
-            "answer": "<p>Yes. Federal rules require an adult 21 or older to sign for every delivery. The carrier will attempt delivery three times. You can also route the package to a nearby pickup location.</p>",
+            "question": "Which states do you ship to?",
+            "answer": "<p>We ship to most US states, but not to Tennessee, US territories, or APO/FPO addresses. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay. Not sure? Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> before ordering.</p>",
             "open_by_default": false
           }
         },
         "cwc_faq_b3": {
           "type": "item",
           "settings": {
-            "question": "What happens if a bottle arrives broken?",
-            "answer": "<p>Add shipping protection at checkout and we replace the bottle or refund you in full, no claim forms and no waiting on a carrier investigation. Send us a photo and we handle the rest.</p>",
+            "question": "Do I have to sign for delivery?",
+            "answer": "<p>Yes. An adult 21 or older with valid government-issued ID must be present to sign. UPS will not leave alcohol unattended.</p><p></p>",
             "open_by_default": false
           }
         },
         "cwc_faq_b4": {
           "type": "item",
           "settings": {
-            "question": "Are your allocated bottles authentic?",
-            "answer": "<p>Every bottle is sourced through licensed channels and inspected before it ships. We are a licensed retailer operating a physical store in Coronado, California, not a marketplace reseller.</p>",
+            "question": "What happens if I miss the delivery?",
+            "answer": "<p>UPS attempts delivery up to three times. If all three attempts fail, the package is returned to us and re-shipping costs are the customer's responsibility.</p><p></p>",
             "open_by_default": false
           }
         },
         "cwc_faq_b5": {
           "type": "item",
           "settings": {
-            "question": "When will my order ship?",
-            "answer": "<p>Orders placed Monday through Thursday ship the same week. Orders placed Friday through Sunday ship the following Monday, so bottles are never sitting in a warehouse over a weekend.</p>",
+            "question": "How is the bottle packed?",
+            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass — the same packing whether it is a $35 bottle or a $2,000 one.</p><p></p>",
+            "open_by_default": false
+          }
+        },
+        "item_m9HTdC": {
+          "type": "item",
+          "settings": {
+            "question": "Can I return it?",
+            "answer": "<p>All sales are final. Alcohol is a consumable product, so we cannot accept returns based on taste preference. If a bottle arrives broken or we ship the wrong item, contact us within 48 hours of delivery with your order number and a photo, and we will replace or refund it at no cost.</p>",
+            "open_by_default": false
+          }
+        },
+        "item_ctWHkr": {
+          "type": "item",
+          "settings": {
+            "question": "What if my order is lost or damaged in transit?",
+            "answer": "<p>Contact us within 48 hours at <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> with your order number and photos. Adding shipping protection at checkout covers loss, damage, and theft, and lets us resolve it immediately rather than waiting on a UPS claim.</p>",
+            "open_by_default": false
+          }
+        },
+        "item_DNNXet": {
+          "type": "item",
+          "settings": {
+            "question": "Can I cancel an order?",
+            "answer": "<p>Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> immediately and we will try to stop it before it ships. If the order has already been processed, a 10% restocking fee applies.</p>",
             "open_by_default": false
           }
         }
@@ -1051,14 +1080,17 @@
         "cwc_faq_b2",
         "cwc_faq_b3",
         "cwc_faq_b4",
-        "cwc_faq_b5"
+        "cwc_faq_b5",
+        "item_m9HTdC",
+        "item_ctWHkr",
+        "item_DNNXet"
       ],
       "settings": {
         "eyebrow": "Before You Order",
         "heading": "<p>Common Questions</p>",
         "subtext": "",
         "show_rule": true,
-        "button_label": "Read Full FAQ",
+        "button_label": "",
         "button_link": "",
         "bg_color": "#f8f6f1",
         "text_color": "#0a1f12",

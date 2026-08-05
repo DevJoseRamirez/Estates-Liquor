@@ -1,0 +1,174 @@
+/* ==============================
+   CWC About Image Text
+   ============================== */
+
+/* === Section Wrapper === */
+/* full-bleed split: the media half runs to the viewport edge, so the padding
+   lives on the copy panel rather than on a shared container */
+.cwc_about-image-text {
+  background-color: var(--section-bg);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+}
+
+.cwc_about-image-text__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+.cwc_about-image-text--reverse .cwc_about-image-text__wrapper {
+  direction: rtl;
+}
+
+.cwc_about-image-text--reverse .cwc_about-image-text__media,
+.cwc_about-image-text--reverse .cwc_about-image-text__panel {
+  direction: ltr;
+}
+
+/* === Media === */
+.cwc_about-image-text__media {
+  position: relative;
+  min-height: 440px;
+  background-color: var(--media-bg);
+  overflow: hidden;
+}
+
+/* the photo sits back into the dark panel behind it rather than running at
+   full strength */
+.cwc_about-image-text__media img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / var(--media-ratio);
+  object-fit: cover;
+  display: block;
+  opacity: var(--media-opacity, 1);
+}
+
+.cwc_about-image-text__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / var(--media-ratio);
+  background: #f5f5f5;
+  border: 2px dashed #ddd;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* === Copy Panel === */
+.cwc_about-image-text__panel {
+  display: flex;
+  align-items: center;
+  background-color: var(--panel-bg);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_about-image-text__content {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.cwc_about-image-text__content-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.875rem;
+}
+
+.cwc_about-image-text__content-heading p {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(1.5rem, 2.6vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.cwc_about-image-text__content-heading>* strong {
+  color: var(--highlight-color);
+}
+
+.cwc_about-image-text__rule {
+  display: block;
+  width: 80px;
+  height: 2px;
+  margin: 1rem 0 1.25rem;
+  background-color: var(--highlight-color);
+}
+
+.cwc_about-image-text__content-subtext p {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  margin: 0;
+  color: var(--body-color);
+}
+
+.cwc_about-image-text__content-subtext p+p {
+  /* margin-top: 0.875rem; */
+}
+
+.cwc_about-image-text__content-subtext strong {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_about-image-text__content {
+    padding: 0 2rem;
+  }
+
+  .cwc_about-image-text__media {
+    min-height: 340px;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+
+  /* image on top, copy below — the split has no room to sit side by side */
+  .cwc_about-image-text__wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .cwc_about-image-text--reverse .cwc_about-image-text__wrapper {
+    direction: ltr;
+  }
+
+  .cwc_about-image-text__media {
+    min-height: 300px;
+  }
+
+  .cwc_about-image-text__media img,
+  .cwc_about-image-text__placeholder {
+    aspect-ratio: 16 / 10;
+  }
+
+  .cwc_about-image-text__panel {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_about-image-text__content {
+    max-width: 100%;
+    padding: 0 1.25rem;
+  }
+
+  .cwc_about-image-text__rule {
+    margin: 1.25rem 0;
+  }
+
+  .cwc_about-image-text__content-subtext p {
+    /* font-size: 0.875rem; */
+  }
+}

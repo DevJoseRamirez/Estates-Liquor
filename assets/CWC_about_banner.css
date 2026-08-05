@@ -1,0 +1,147 @@
+/* ==============================
+   CWC About Banner
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_about-banner {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+}
+
+/* === Background === */
+.cwc_about-banner__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: var(--image-opacity, 1);
+}
+
+.cwc_about-banner__image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cwc_about-banner__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* wash holds full strength across the copy, then clears toward the photo */
+.cwc_about-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right,
+      rgba(var(--overlay-rgb), 0.94) 0%,
+      rgba(var(--overlay-rgb), 0.94) var(--overlay-coverage, 0%),
+      rgba(var(--overlay-rgb), 0.72) 60%,
+      rgba(var(--overlay-rgb), 0.5) 100%);
+  opacity: var(--overlay-opacity);
+}
+
+/* === Container === */
+.cwc_about-banner__container {
+  position: relative;
+  z-index: 2;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cwc_about-banner__content {
+  max-width: 640px;
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+/* === Content === */
+.cwc_about-banner__content-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  margin: 0 0 0.875rem;
+}
+
+.cwc_about-banner__content-heading p {
+  font-family: var(--cwc-font-heading);
+  font-size: clamp(2rem, 4vw, 2.875rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  color: inherit;
+}
+
+.cwc_about-banner__content-heading>* strong,
+.cwc_about-banner__content-heading>* em {
+  color: var(--highlight-color);
+}
+
+.cwc_about-banner__content-heading>* em {
+  font-style: italic;
+}
+
+.cwc_about-banner__content-subtext {
+  max-width: 520px;
+  margin-top: 1rem;
+}
+
+.cwc_about-banner__content-subtext p {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  margin: 0;
+  color: var(--subtext-color);
+  color: var(--text-color);
+
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_about-banner__container {
+    padding: 0 1.75rem;
+  }
+
+  .cwc_about-banner__content {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_about-banner__container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_about-banner__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_about-banner__content {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_about-banner__content-subtext p {
+    font-size: 0.875rem;
+  }
+
+  /* straighten the wash so the copy stays legible over a portrait crop */
+  .cwc_about-banner__overlay {
+    background: linear-gradient(to bottom,
+        rgba(var(--overlay-rgb), 0.94) 0%,
+        rgba(var(--overlay-rgb), 0.94) var(--overlay-coverage, 0%),
+        rgba(var(--overlay-rgb), 0.78) 100%);
+  }
+}

@@ -207,6 +207,7 @@
   padding: 4px 10px;
   border-radius: 2px;
 }
+.cwc_related-products__card-badge--allocated,
 .cwc_related-products__card-badge--barrel {
   background-color: var(--text-color);
   color: var(--highlight-color);
@@ -215,13 +216,12 @@
   background-color: var(--highlight-color);
   color: #ffffff;
 }
+/* sale sits opposite the tag badges so the two never collide */
 .cwc_related-products__card-badge--sale {
   background-color: #c0392b;
   color: #ffffff;
-}
-.cwc_related-products__card-badge--soldout {
-  background-color: var(--meta-color);
-  color: #ffffff;
+  right: 12px;
+  left: auto;
 }
 .cwc_related-products__card-body {
   display: flex;
@@ -278,20 +278,27 @@
   text-decoration: line-through;
   margin-right: 6px;
 }
+/* renders as a <button> in stock and as an <a> to the product page when sold
+   out, so it carries the reset both elements need */
 .cwc_related-products__card-button {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
   height: 36px;
   padding: 0;
   border: 0;
   border-radius: 3px;
   background-color: var(--button-bg);
   color: #ffffff;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
+  /* text pill rather than a square icon button — mirrors the collection grid */
+  flex: 1;
+  max-width: 90px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 .cwc_related-products__card-button:hover {
   background-color: var(--highlight-color);
@@ -373,5 +380,19 @@
 
   .cwc_related-products__card-price {
     font-size: 1rem;
+  }
+
+  /* narrow cards can't hold price and pill side by side — stack them and let
+     the button run full width. Mirrors the collection grid. */
+  .cwc_related-products__card-footer {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .cwc_related-products__card-button {
+    width: 100%;
+    max-width: 100%;
+    padding: 2px;
   }
 }

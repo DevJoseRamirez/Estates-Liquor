@@ -99,6 +99,8 @@
   color: var(--text-color);
   border-bottom-color: var(--highlight-color);
   font-weight: 600;
+  background: #c4933f;
+  color: white !important;
 }
 
 .cwc_featured-products__tab:focus-visible {
@@ -115,7 +117,8 @@
 .cwc_featured-products__grid {
   display: grid;
   grid-template-columns: repeat(var(--columns), 1fr);
-  gap: 20px;
+  /* gap: 20px; */
+  gap: 16px;
 }
 
 /* === Card === */
@@ -181,7 +184,8 @@
   border-radius: 2px;
 }
 
-.cwc_featured-products__card-badge--allocated {
+.cwc_featured-products__card-badge--allocated,
+.cwc_featured-products__card-badge--barrel {
   background-color: var(--text-color);
   color: var(--highlight-color);
 }
@@ -191,9 +195,12 @@
   color: #ffffff;
 }
 
-.cwc_featured-products__card-badge--soldout {
-  background-color: var(--card-text-color);
+/* sale sits opposite the tag badges so the two never collide */
+.cwc_featured-products__card-badge--sale {
+  background-color: #c0392b;
   color: #ffffff;
+  right: 12px;
+  left: auto;
 }
 
 /* === Card Body === */
@@ -352,18 +359,36 @@
   }
 
   /* tabs bleed to the edges and swipe */
+  /* the scrollbar stays visible here — it is the only cue that there are more
+     tabs off-screen, and it replaces the container rule so there is one line
+     rather than two stacked */
   .cwc_featured-products__tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--highlight-color) var(--border-color);
+    border-bottom: 0;
     margin: 0 -1rem 1.5rem;
-    padding: 0 1rem;
+    padding: 0 1rem 8px;
   }
 
   .cwc_featured-products__tabs::-webkit-scrollbar {
-    display: none;
+    -webkit-appearance: none;
+    height: 4px;
+  }
+
+  .cwc_featured-products__tabs::-webkit-scrollbar-track {
+    background-color: var(--border-color);
+    border-radius: 100px;
+    /* line up the track with the tabs rather than the bled-out edges */
+    margin: 0 1rem;
+  }
+
+  .cwc_featured-products__tabs::-webkit-scrollbar-thumb {
+    background-color: var(--highlight-color);
+    border-radius: 100px;
   }
 
   .cwc_featured-products__tab {

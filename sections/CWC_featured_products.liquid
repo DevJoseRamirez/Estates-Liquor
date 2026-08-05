@@ -97,14 +97,20 @@
                     {% liquid
                       assign current_variant = product.selected_or_first_available_variant
 
+                      # Same badge ladder as the collection grid — stock state is
+                      # deliberately not surfaced here
                       assign badge_label = ''
                       assign badge_style = ''
-                      if product.available == false
-                        assign badge_label = 'Sold Out'
-                        assign badge_style = 'soldout'
+                      if product.compare_at_price > product.price
+                        assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
+                        assign badge_label = '-' | append: discount | append: '%'
+                        assign badge_style = 'sale'
                       elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
                         assign badge_label = 'Allocated'
                         assign badge_style = 'allocated'
+                      elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
+                        assign badge_label = 'Barrel Pick'
+                        assign badge_style = 'barrel'
                       elsif product.tags contains 'New' or product.tags contains 'new'
                         assign badge_label = 'New'
                         assign badge_style = 'new'
@@ -258,7 +264,7 @@
       "id": "products_to_show",
       "label": "Products Per Tab",
       "min": 2,
-      "max": 8,
+      "max": 10,
       "step": 1,
       "default": 4
     },

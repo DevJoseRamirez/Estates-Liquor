@@ -21,6 +21,20 @@
   z-index: 0;
 }
 
+/* photo layer — faded on its own so the overlay wash keeps full strength */
+.cwc_hero__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: var(--image-opacity, 1);
+}
+
+.cwc_hero__image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .cwc_hero__bg img {
   width: 100%;
   height: 100%;
@@ -28,13 +42,16 @@
   display: block;
 }
 
-/* Diagonal wash — heaviest behind the copy, clearing toward the image */
+/* Diagonal wash — holds full strength across --overlay-coverage so the copy
+   sits on solid colour, then clears toward the image */
 .cwc_hero__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(105deg,
       var(--overlay-color) 0%,
-      rgba(0, 0, 0, 0) 100%);
+      var(--overlay-color) var(--overlay-coverage, 35%),
+      rgba(0, 0, 0, 0.45) calc(var(--overlay-coverage, 35%) + 30%),
+      rgba(0, 0, 0, 0.05) 100%);
   opacity: var(--overlay-opacity);
 }
 
@@ -168,10 +185,9 @@
   padding: 12px;
   text-align: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.86);
+  background: white;
   border: 1px solid var(--highlight-color);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 
 .cwc_hero__badge-number {
@@ -191,6 +207,7 @@
   text-transform: uppercase;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.7);
+  color: black;
 }
 
 /* ==============================
@@ -245,7 +262,8 @@
   .cwc_hero__overlay {
     background: linear-gradient(165deg,
         var(--overlay-color) 0%,
-        rgba(0, 0, 0, 0.35) 100%);
+        var(--overlay-color) var(--overlay-coverage, 35%),
+        rgba(0, 0, 0, 0.55) 100%);
   }
 
   .cwc_hero__content-heading {

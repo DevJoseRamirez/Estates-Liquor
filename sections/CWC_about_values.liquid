@@ -1,0 +1,244 @@
+{% style %}
+  #cwc_about-values-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --columns: {{ section.settings.columns | default: 3 }};
+    --padding-top: {{ section.settings.padding_top | default: 75 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 75 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 75 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 75 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_about_values.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_about-values-{{ section.id }}" class="cwc_about-values">
+  <div class="cwc_about-values__container">
+
+    {% comment %} Section Header {% endcomment %}
+    <div class="cwc_about-values__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_about-values__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <div class="cwc_about-values__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_rule %}
+        <span class="cwc_about-values__rule" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="cwc_about-values__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Values — one bordered row, hairline dividers between cards {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_about-values__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'value' %}
+              <div class="cwc_about-values__card" {{ block.shopify_attributes }}>
+                {% if section.settings.show_numbers %}
+                  <span class="cwc_about-values__card-number">
+                    {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                  </span>
+                {% endif %}
+
+                {% if block.settings.title != blank %}
+                  <div class="cwc_about-values__card-title">{{ block.settings.title }}</div>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="cwc_about-values__card-text cwc-rte">{{ block.settings.text }}</div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_about-values__empty">
+        <p>Add value blocks to display content.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC About Values",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "How We Operate"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>What We Believe In</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Gold Rule",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show Numbers",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Fair pricing on hard-to-find bottles"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Describe how this principle shows up in the way you sell.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "About Values",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "value"
+        },
+        {
+          "type": "value"
+        },
+        {
+          "type": "value"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

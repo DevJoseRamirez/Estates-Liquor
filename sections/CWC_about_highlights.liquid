@@ -1,0 +1,218 @@
+{% style %}
+  #cwc_about-highlights-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --value-color: {{ section.settings.value_color | default: '#C4933F' }};
+    --label-color: {{ section.settings.label_color | default: '#A2AAA5' }};
+    --divider-color: {{ section.settings.divider_color | default: '#3E3F20' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 55 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 55 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 55 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 55 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_about_highlights.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_about-highlights-{{ section.id }}" class="cwc_about-highlights">
+  <div class="cwc_about-highlights__container">
+
+    {% comment %} Section Header — optional, the row usually stands alone {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="cwc_about-highlights__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_about-highlights__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_about-highlights__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_about-highlights__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'highlight' %}
+              <div class="cwc_about-highlights__card" {{ block.shopify_attributes }}>
+                {% if block.settings.value != blank %}
+                  <span class="cwc_about-highlights__card-value">{{ block.settings.value }}</span>
+                {% endif %}
+
+                {% comment %}
+                  Two label lines rather than one wrapping string — the row
+                  stays even when one item needs two words and the rest need one.
+                {% endcomment %}
+                {% if block.settings.label != blank or block.settings.label_2 != blank %}
+                  <span class="cwc_about-highlights__card-label">
+                    {% if block.settings.label != blank %}
+                      <span class="cwc_about-highlights__card-label-line">{{ block.settings.label }}</span>
+                    {% endif %}
+                    {% if block.settings.label_2 != blank %}
+                      <span class="cwc_about-highlights__card-label-line">{{ block.settings.label_2 }}</span>
+                    {% endif %}
+                  </span>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_about-highlights__empty">
+        <p>Add highlight blocks to display content.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC About Highlights",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label Color",
+      "default": "#A2AAA5"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#3E3F20"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "2025"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label Line 1",
+          "default": "Founded"
+        },
+        {
+          "type": "text",
+          "id": "label_2",
+          "label": "Label Line 2"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "About Highlights",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "highlight"
+        },
+        {
+          "type": "highlight"
+        },
+        {
+          "type": "highlight"
+        },
+        {
+          "type": "highlight"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

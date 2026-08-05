@@ -474,7 +474,7 @@
           "type": "item",
           "settings": {
             "question": "When will this ship?",
-            "answer": "<p>Orders placed Monday through Thursday ship the same week. Orders placed Friday through Sunday ship the following Monday, so bottles are never sitting in a warehouse over a weekend.</p>",
+            "answer": "<p>Orders placed Monday through Thursday are processed and ship within 3–5 business days. Orders placed Friday through Sunday are processed the following Monday. We ship from Coronado, CA via UPS, and tracking is emailed as soon as your order leaves.</p>",
             "open_by_default": true
           }
         },
@@ -482,31 +482,55 @@
           "type": "item",
           "settings": {
             "question": "Which states do you ship to?",
-            "answer": "<p>We ship to most US states. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay.</p>",
+            "answer": "<p>We ship to most US states, but not to Tennessee, US territories, or APO/FPO addresses. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay. Not sure? Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> before ordering.</p>",
+            "open_by_default": false
+          }
+        },
+        "item_egUDKr": {
+          "type": "item",
+          "settings": {
+            "question": "Do I have to sign for delivery?",
+            "answer": "<p>Yes. An adult 21 or older with valid government-issued ID must be present to sign. UPS will not leave alcohol unattended.</p><p></p>",
+            "open_by_default": false
+          }
+        },
+        "item_TbTiUj": {
+          "type": "item",
+          "settings": {
+            "question": "What happens if I miss the delivery?",
+            "answer": "<p>UPS attempts delivery up to three times. If all three attempts fail, the package is returned to us and re-shipping costs are the customer's responsibility.</p>",
+            "open_by_default": false
+          }
+        },
+        "item_zhxWcG": {
+          "type": "item",
+          "settings": {
+            "question": "How is the bottle packed?",
+            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass — the same packing whether it is a $35 bottle or a $2,000 one.</p><p></p>",
             "open_by_default": false
           }
         },
         "cwc_product_faq_b3": {
           "type": "item",
           "settings": {
-            "question": "Do I have to sign for delivery?",
-            "answer": "<p>Yes. Federal rules require an adult 21 or older to sign for every delivery.</p>",
+            "question": "Can I return it?",
+            "answer": "<p>All sales are final. Alcohol is a consumable product, so we cannot accept returns based on taste preference. If a bottle arrives broken or we ship the wrong item, contact us within 48 hours of delivery with your order number and a photo, and we will replace or refund it at no cost.</p><p></p>",
             "open_by_default": false
           }
         },
         "cwc_product_faq_b4": {
           "type": "item",
           "settings": {
-            "question": "How is the bottle packed?",
-            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass.</p>",
+            "question": "What if my order is lost or damaged in transit?",
+            "answer": "<p>Contact us within 48 hours at <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> with your order number and photos. Adding shipping protection at checkout covers loss, damage, and theft, and lets us resolve it immediately rather than waiting on a UPS claim.</p><p></p>",
             "open_by_default": false
           }
         },
         "cwc_product_faq_b5": {
           "type": "item",
           "settings": {
-            "question": "Can I return it?",
-            "answer": "<p>Add shipping protection at checkout and we replace or refund any bottle that arrives broken or goes missing.</p>",
+            "question": "Can I cancel an order?",
+            "answer": "<p>Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> immediately and we will try to stop it before it ships. If the order has already been processed, a 10% restocking fee applies.</p>",
             "open_by_default": false
           }
         }
@@ -514,6 +538,9 @@
       "block_order": [
         "cwc_product_faq_b1",
         "cwc_product_faq_b2",
+        "item_egUDKr",
+        "item_TbTiUj",
+        "item_zhxWcG",
         "cwc_product_faq_b3",
         "cwc_product_faq_b4",
         "cwc_product_faq_b5"
@@ -523,7 +550,7 @@
         "heading": "<p>Common Questions</p>",
         "subtext": "",
         "show_rule": true,
-        "button_label": "Read Full FAQ",
+        "button_label": "",
         "button_link": "",
         "bg_color": "#f8f6f1",
         "text_color": "#0a1f12",

@@ -85,16 +85,107 @@
   outline-offset: 2px;
 }
 
-/* === Grid === */
+/* ==============================
+   Carousel
+   ==============================
+   Always a rail, never a grid. --per-view is how many cards fill the column;
+   anything past that is reached by dragging or by the arrows. */
+.cwc_barrel-picks {
+  --gap: 16px;
+}
+
+.cwc_barrel-picks__carousel {
+  position: relative;
+  min-width: 0;
+}
+
 .cwc_barrel-picks__grid {
-  display: grid;
-  grid-template-columns: repeat(var(--columns), 1fr);
-  gap: 16px;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* overflow-x forces overflow-y to compute as auto, so the padding is what
+     keeps the cards' hover lift and shadow from being clipped */
+  padding: 6px 0 16px;
+  margin: -6px 0 -16px;
+  scrollbar-width: none;
+}
+
+.cwc_barrel-picks__grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* === Arrows === */
+.cwc_barrel-picks__arrow {
+  position: absolute;
+  top: 34%;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  /* gold disc, not a white one — a white circle disappears against the white
+     product cards it sits on */
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background-color: var(--highlight-color);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+/* JS adds this only when the rail actually overflows */
+.cwc_barrel-picks__carousel--scrollable .cwc_barrel-picks__arrow {
+  display: flex;
+}
+
+.cwc_barrel-picks__arrow--prev {
+  left: -20px;
+}
+
+.cwc_barrel-picks__arrow--next {
+  right: -20px;
+}
+
+.cwc_barrel-picks__arrow:hover {
+  background-color: var(--text-color);
+  border-color: #ffffff;
+  color: var(--highlight-color);
+  transform: scale(1.06);
+}
+
+.cwc_barrel-picks__arrow:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+}
+
+.cwc_barrel-picks__arrow[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cwc_barrel-picks__arrow[disabled]:hover {
+  background-color: var(--highlight-color);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: none;
+}
+
+.cwc_barrel-picks__arrow svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.5;
 }
 
 /* === Card === */
 /* Mirrors the collection grid card so the two read as one component */
 .cwc_barrel-picks__card {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg);
@@ -145,7 +236,8 @@
 
 .cwc_barrel-picks__card-badge {
   position: absolute;
-
+  top: 12px;
+  left: 12px;
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -158,22 +250,19 @@
 .cwc_barrel-picks__card-badge--barrel {
   background-color: var(--text-color);
   color: var(--highlight-color);
-  top: 12px;
-  left: 12px;
 }
 
 .cwc_barrel-picks__card-badge--new {
   background-color: var(--highlight-color);
   color: #ffffff;
-  top: 12px;
-  left: 12px;
 }
 
+/* sale sits opposite the tag badges so the two never collide */
 .cwc_barrel-picks__card-badge--sale {
   background-color: #c0392b;
   color: #ffffff;
-  top: 12px;
   right: 12px;
+  left: auto;
 }
 
 .cwc_barrel-picks__card-body {
@@ -290,7 +379,7 @@
 
 /* === Empty State === */
 .cwc_barrel-picks__empty {
-  grid-column: 1 / -1;
+  flex: 1 1 100%;
   text-align: center;
   padding: 2rem;
   color: var(--card-text-color);
@@ -307,10 +396,6 @@
   .cwc_barrel-picks__wrapper {
     grid-template-columns: 1fr;
     gap: 40px;
-  }
-
-  .cwc_barrel-picks__grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -345,8 +430,54 @@
     padding: 0 1rem;
   }
 
+  .cwc_barrel-picks {
+    --gap: 12px;
+  }
+
+  .cwc_barrel-picks__card {
+    flex: 0 0 calc((100% - (var(--per-view-mobile) - 1) * var(--gap)) / var(--per-view-mobile));
+  }
+
+  /* no room for arrows beside a full-bleed column — the scrollbar is the cue
+     that there are more bottles off-screen */
+  .cwc_barrel-picks__arrow,
+  .cwc_barrel-picks__carousel--scrollable .cwc_barrel-picks__arrow {
+    display: none;
+  }
+
+  /* the rail bleeds past the container so the cards get the full screen width
+     — they scroll off the edges instead of stopping inside the padding */
+  .cwc_barrel-picks__carousel {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+
   .cwc_barrel-picks__grid {
-    gap: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--highlight-color) var(--border-color);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 12px;
+    margin-bottom: -12px;
+    margin-left: 10px;
+  }
+
+  .cwc_barrel-picks__grid::-webkit-scrollbar {
+    display: block;
+    -webkit-appearance: none;
+    height: 4px;
+  }
+
+  /* keep the track lined up with the cards, not the bled-out edges */
+  .cwc_barrel-picks__grid::-webkit-scrollbar-track {
+    margin: 0 1rem;
+    background-color: var(--border-color);
+    border-radius: 100px;
+  }
+
+  .cwc_barrel-picks__grid::-webkit-scrollbar-thumb {
+    background-color: var(--highlight-color);
+    border-radius: 100px;
   }
 
   .cwc_barrel-picks__button {

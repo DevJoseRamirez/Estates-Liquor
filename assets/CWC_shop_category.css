@@ -159,14 +159,17 @@
   transform: scale(1.05);
 }
 
-/* scrim sits low so the label stays legible without flattening the photo */
+/* scrim sits low so the label stays legible without flattening the photo.
+   Card Overlay Strength scales the whole gradient rather than any one stop. */
 .cwc_shop-category__card-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top,
-      var(--card-overlay-color) 0%,
-      rgba(0, 0, 0, 0.15) 60%,
-      transparent 100%);
+      rgba(var(--card-overlay-rgb), 1) 0%,
+      rgba(var(--card-overlay-rgb), 0.88) 30%,
+      rgba(var(--card-overlay-rgb), 0.6) 65%,
+      rgba(var(--card-overlay-rgb), 0.3) 100%);
+  opacity: var(--card-overlay-opacity, 1);
 }
 
 .cwc_shop-category__card-content {
@@ -205,21 +208,21 @@
 .cwc_shop-category__card-title {
   display: block;
   font-family: var(--cwc-font-heading);
-  font-size: 1.0625rem;
+  font-size: 1.5rem;
   /* 17px */
   font-weight: 700;
   line-height: 1.2;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   color: var(--card-title-color);
 }
 
 .cwc_shop-category__card:first-child .cwc_shop-category__card-title {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
 }
 
 .cwc_shop-category__card-text {
   display: block;
-  font-size: 0.6875rem;
+  font-size: 0.8rem;
   letter-spacing: 0.1em;
   line-height: 1.4;
   color: var(--card-text-color);
@@ -276,19 +279,35 @@
     font-size: 1rem;
   }
 
-  /* pills become a single swipeable row that bleeds to the edges */
+  /* pills become a single swipeable row that bleeds to the edges. The
+     scrollbar stays visible here — it is the only cue that there are more
+     collections off-screen. */
   .cwc_shop-category__rail {
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--highlight-color) var(--border-color);
     margin: 0 -1rem 1.375rem;
-    padding: 0 1rem 6px;
+    padding: 0 1rem 10px;
   }
 
   .cwc_shop-category__rail::-webkit-scrollbar {
-    display: none;
+    -webkit-appearance: none;
+    height: 4px;
+  }
+
+  .cwc_shop-category__rail::-webkit-scrollbar-track {
+    background-color: var(--border-color);
+    border-radius: 100px;
+    /* line up the track with the pills rather than the bled-out edges */
+    margin: 0 1rem;
+  }
+
+  .cwc_shop-category__rail::-webkit-scrollbar-thumb {
+    background-color: var(--highlight-color);
+    border-radius: 100px;
   }
 
   .cwc_shop-category__pill {
@@ -306,11 +325,11 @@
   }
 
   .cwc_shop-category__card-title {
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
   }
 
   .cwc_shop-category__card:first-child .cwc_shop-category__card-title {
-    font-size: 1.3125rem;
+    font-size: 1.5rem;
   }
 
   .cwc_shop-category__card-text {

@@ -9,462 +9,303 @@
  */
 {
   "sections": {
-    "94a50e02-c7cb-4f8e-8809-f281c98044d2": {
-      "type": "image-with-text-overlay",
-      "blocks": {
-        "heading_dHiCp8": {
-          "type": "heading",
-          "settings": {
-            "title": "Nourishing lives with organic delights",
-            "font_size_desktop": 50,
-            "font_size_mobile": 28,
-            "heading_bottom_spacing": 25
-          }
-        }
-      },
-      "block_order": [
-        "heading_dHiCp8"
-      ],
+    "cwc_breadcrumb": {
+      "type": "CWC_breadcrumb",
       "settings": {
-        "height_desktop": "original",
-        "text_position_desktop": "center",
-        "text_alignment_desktop": "center",
-        "caption_width_desktop": 100,
-        "height_mobile": "original",
-        "text_position_mobile": "bottom_center",
-        "text_alignment_mobile": "center",
-        "section_link": "",
-        "animation_style": "parallax",
-        "section_margin_top": 0,
-        "section_margin_bottom": 0,
+        "home_label": "Home",
+        "separator": "/",
+        "parent_collection": "",
+        "parent_title": "",
+        "parent_link": "",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "link_color": "#666666",
+        "bold_color": "#c4933f",
+        "separator_color": "#e0ddd6",
+        "show_border": true,
+        "border_color": "#e0ddd6",
+        "padding_top": 15,
+        "padding_bottom": 15
+      }
+    },
+    "cwc_about_banner": {
+      "type": "CWC_about_banner",
+      "settings": {
+        "eyebrow": "Coronado, California",
+        "heading": "<p>About Estates Liquor</p>",
+        "subtext": "<p>A specialist retailer for rare, allocated, and premium spirits — the bottles that are genuinely hard to find at a fair price.</p>",
+        "image": "shopify://shop_images/bg_whiskey.png",
+        "alt_text": "",
+        "image_opacity": 80,
+        "overlay_opacity": 78,
+        "overlay_coverage": 0,
+        "bg_color": "#0a1f12",
         "text_color": "#ffffff",
-        "caption_bg_color": "rgba(0,0,0,0)",
-        "image_overlay_color": "#ffffff",
-        "image_overlay_opacity": 0
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "subtext_color": "#c9d2cc",
+        "overlay_color": "#0a1f12",
+        "padding_top": 60,
+        "padding_bottom": 60
       }
     },
-    "63d055aa-9706-43b0-b3c8-49b4a2e53ef9": {
-      "type": "rich-text",
+    "cwc_about_richtext": {
+      "type": "CWC_about_richtext",
       "blocks": {
-        "a52c67a4-24a0-4020-93a2-4b06cdc1c155": {
-          "type": "richtext",
+        "lead": {
+          "type": "paragraph",
           "settings": {
-            "text": "<p>We've made it our mission at Queenstown Smoothies to promote well-being and educate others about the benefits of organic living - while ensuring incredible taste. We're dedicated to making our products available to as many people as possible, and inspiring positive change through good food.</p>",
-            "text_size": 20,
-            "text_bottom_spacing": 20
+            "text": "<p>We started Estates Liquor in November 2025 for one reason: the bottles worth chasing had become almost impossible to buy at a fair price.</p>",
+            "style": "lead"
+          }
+        },
+        "body_1": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Allocated bourbon arrives in small quantities and disappears fast. Somewhere between the distillery and the shelf, that scarcity turned into a game — lotteries, waitlists, bundles you did not want attached to the one bottle you did, and secondary-market pricing dressed up as retail.</p>",
+            "style": "body"
+          }
+        },
+        "body_2": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>We are not a discount outlet, and we do not chase every commodity brand. <strong>Bourbon is our core focus</strong>, alongside rare tequila, wine, and premium spirits worth the shelf space. When an allocated bottle lands, we list it at fair retail that day. No lottery. No waitlist to buy in.</p>",
+            "style": "body"
           }
         }
       },
       "block_order": [
-        "a52c67a4-24a0-4020-93a2-4b06cdc1c155"
+        "lead",
+        "body_1",
+        "body_2"
       ],
       "settings": {
-        "section_width": "narrow",
-        "text_alignment_desktop": "center",
-        "text_alignment_mobile": "left",
-        "section_padding_top": 60,
-        "section_padding_bottom": 0,
-        "colors": "white"
+        "eyebrow": "",
+        "heading": "",
+        "column_width": 780,
+        "bg_color": "#ffffff",
+        "text_color": "#666666",
+        "bold_color": "#0a1f12",
+        "lead_color": "#0a1f12",
+        "padding_top": 75,
+        "padding_bottom": 75
       }
     },
-    "410e0db0-6d01-4d70-8356-6c6849fcdadc": {
-      "type": "template--product--info-columns",
+    "cwc_about_image_text": {
+      "type": "CWC_about_image_text",
+      "settings": {
+        "eyebrow": "Not A Drop-Shipper",
+        "heading": "<p>There is an actual store behind this website.</p>",
+        "subtext": "<p>We operate a physical storefront in Coronado, California. The bottles listed on this site are bottles we hold — not inventory sitting in a third-party warehouse, and not a catalog we forward to someone else to fulfill.</p><p>That means when you call with a question about a bottle, you are talking to someone who can walk over and look at it. Every order is packed by hand and ships nationally via UPS, with an adult signature required at delivery.</p>",
+        "show_rule": true,
+        "image": "shopify://shop_images/about-image.jpg",
+        "alt_text": "",
+        "media_ratio": 100,
+        "media_opacity": 55,
+        "image_position": "left",
+        "bg_color": "#f8f6f1",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "panel_bg_color": "#f8f6f1",
+        "body_color": "#666666",
+        "media_bg_color": "#0a1f12",
+        "border_color": "#e0ddd6",
+        "padding_top": 75,
+        "padding_bottom": 75
+      }
+    },
+    "cwc_about_values": {
+      "type": "CWC_about_values",
       "blocks": {
-        "template--14773137178694__410e0db0-6d01-4d70-8356-6c6849fcdadc-1686321924a56b1582-0": {
-          "type": "image_and_text",
+        "value_1": {
+          "type": "value",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Emily Anderson",
-            "text": "<p>CEO & Founder</p>",
-            "button_link": "#",
-            "button_text": "@EmilyA-Queenstown"
+            "title": "Fair pricing on hard-to-find bottles",
+            "text": "<p>Allocated does not mean overpriced. When a rare release comes in, it goes up at fair retail the same day — no markup games, no forced bundles, no premium for the privilege of being told it is rare.</p>"
           }
         },
-        "template--14773137178694__410e0db0-6d01-4d70-8356-6c6849fcdadc-1686321924a56b1582-1": {
-          "type": "image_and_text",
+        "value_2": {
+          "type": "value",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Olivia Roberts",
-            "text": "<p>Operations Manager</p>",
-            "button_link": "#",
-            "button_text": "@OliviaR-Queenstown"
+            "title": "Real inventory, honestly listed",
+            "text": "<p>If it is listed on the site, we have it and we can get it to you. When something sells out we take it down rather than leaving it up at an inflated price to see who bites.</p>"
           }
         },
-        "b8b1f231-a59c-4b75-9a90-a5badf60b192": {
-          "type": "image_and_text",
+        "value_3": {
+          "type": "value",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Ethan Thompson",
-            "text": "<p>Senior Smoothie Mixologist</p>",
-            "button_link": "#",
-            "button_text": "@EthanT-Queenstown"
-          }
-        },
-        "4e0dc6d9-55a1-44c4-9305-dfad1ed65478": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "square",
-            "heading": "Sophia Davis",
-            "text": "<p>Smoothie Mixologist</p>",
-            "button_link": "#",
-            "button_text": "@SophiaD-Queenstown"
+            "title": "A relationship, not a transaction",
+            "text": "<p>Questions about a bottle, a gift, or a special order? We are a phone call or a text away, and we answer. Most of our repeat customers started with a question before they ever placed an order.</p>"
           }
         }
       },
       "block_order": [
-        "template--14773137178694__410e0db0-6d01-4d70-8356-6c6849fcdadc-1686321924a56b1582-0",
-        "template--14773137178694__410e0db0-6d01-4d70-8356-6c6849fcdadc-1686321924a56b1582-1",
-        "b8b1f231-a59c-4b75-9a90-a5badf60b192",
-        "4e0dc6d9-55a1-44c4-9305-dfad1ed65478"
+        "value_1",
+        "value_2",
+        "value_3"
       ],
       "settings": {
-        "title": "",
-        "description": "",
-        "maximum_width": 500,
-        "override_border_radius": false,
-        "buttons_style": "underlined",
-        "override_button_colors": false,
-        "button_background_color": "#e68819",
+        "eyebrow": "How We Operate",
+        "heading": "<p>What We Believe In</p>",
+        "subtext": "",
+        "show_rule": true,
+        "show_numbers": true,
+        "columns": 3,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "card_title_color": "#0a1f12",
+        "card_text_color": "#666666",
+        "padding_top": 75,
+        "padding_bottom": 75
+      }
+    },
+    "cwc_about_highlights": {
+      "type": "CWC_about_highlights",
+      "blocks": {
+        "highlight_1": {
+          "type": "highlight",
+          "settings": {
+            "value": "2025",
+            "label": "Founded",
+            "label_2": ""
+          }
+        },
+        "highlight_2": {
+          "type": "highlight",
+          "settings": {
+            "value": "600+",
+            "label": "Bottles",
+            "label_2": "In Stock"
+          }
+        },
+        "highlight_3": {
+          "type": "highlight",
+          "settings": {
+            "value": "Coronado",
+            "label": "California",
+            "label_2": "Storefront"
+          }
+        },
+        "highlight_4": {
+          "type": "highlight",
+          "settings": {
+            "value": "UPS",
+            "label": "National",
+            "label_2": "Shipping"
+          }
+        }
+      },
+      "block_order": [
+        "highlight_1",
+        "highlight_2",
+        "highlight_3",
+        "highlight_4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "columns": 4,
+        "bg_color": "#0a1f12",
+        "text_color": "#ffffff",
+        "bold_color": "#c4933f",
+        "value_color": "#c4933f",
+        "label_color": "#a2aaa5",
+        "divider_color": "#3e3f20",
+        "padding_top": 55,
+        "padding_bottom": 55
+      }
+    },
+    "cwc_about_order": {
+      "type": "CWC_about_order",
+      "settings": {
+        "eyebrow": "",
+        "heading": "<p>Have a question before you order?</p>",
+        "subtext": "<p>Looking for something specific, buying a gift, or want a recommendation in a price range? Reach out. We respond within one business day.</p>",
+        "note": "",
+        "button_label": "Call 619-791-3613",
+        "phone_number": "619-791-3613",
+        "button_2_label": "support@estatesliquor.com",
+        "email_address": "support@estatesliquor.com",
+        "content_width": 600,
+        "bg_color": "#f2efe8",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "subtext_color": "#666666",
+        "button_bg_color": "#c4933f",
         "button_text_color": "#ffffff",
-        "hover_navigation_desktop": "left-and-right",
-        "columns_per_row": 4,
-        "vertical_alignment": "top",
-        "text_alignment": "center",
-        "text_alignment_mobile": "center",
-        "section_width": "full",
-        "section_padding_top": 60,
-        "section_padding_bottom": 60,
-        "colors": "white"
+        "button_2_border_color": "#0a1f12",
+        "button_2_text_color": "#0a1f12",
+        "padding_top": 75,
+        "padding_bottom": 75
       }
     },
-    "8e700b4c-da55-45f7-9f69-8263da89d7a8": {
-      "type": "template--product--info-columns",
+    "cwc_trust_strip": {
+      "type": "CWC_trust_strip",
       "blocks": {
-        "template--14773137178694__8e700b4c-da55-45f7-9f69-8263da89d7a8-1686321924a56b1582-0": {
-          "type": "image_and_text",
+        "item_1": {
+          "type": "item",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Ava Mitchell",
-            "text": "<p>Sales and Marketing Coordinator</p>",
-            "button_link": "#",
-            "button_text": "@AvaM-Queenstown"
+            "icon": "truck",
+            "custom_icon_alt": "",
+            "text": "Free shipping over $200"
           }
         },
-        "template--14773137178694__8e700b4c-da55-45f7-9f69-8263da89d7a8-1686321924a56b1582-1": {
-          "type": "image_and_text",
+        "item_2": {
+          "type": "item",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Liam Johnson",
-            "text": "<p>Quality Assurance Specialist</p>",
-            "button_link": "#",
-            "button_text": "@LiamJ-Queenstown"
+            "icon": "shield",
+            "custom_icon_alt": "",
+            "text": "Replaced if broken or lost"
           }
         },
-        "63cc8e24-38f9-49c8-af78-5c6b3961c78c": {
-          "type": "image_and_text",
+        "item_3": {
+          "type": "item",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Benjamin Davis",
-            "text": "<p>Supply Chain Manager</p>",
-            "button_link": "#",
-            "button_text": "@BenjaminD-Queenstown"
+            "icon": "calendar",
+            "custom_icon_alt": "",
+            "text": "Ships Mon–Thu"
           }
         },
-        "537c5daf-2647-4d9a-9244-83f6ef7c9203": {
-          "type": "image_and_text",
+        "item_4": {
+          "type": "item",
           "settings": {
-            "grid_image_size": "square",
-            "heading": "Emma Williams",
-            "text": "<p>Customer Service Representative</p>",
-            "button_link": "#",
-            "button_text": "@EmmaW-Queenstown"
+            "icon": "check",
+            "custom_icon_alt": "",
+            "text": "Licensed retailer · 21+"
           }
         }
       },
       "block_order": [
-        "template--14773137178694__8e700b4c-da55-45f7-9f69-8263da89d7a8-1686321924a56b1582-0",
-        "template--14773137178694__8e700b4c-da55-45f7-9f69-8263da89d7a8-1686321924a56b1582-1",
-        "63cc8e24-38f9-49c8-af78-5c6b3961c78c",
-        "537c5daf-2647-4d9a-9244-83f6ef7c9203"
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
       ],
       "settings": {
-        "title": "",
-        "description": "",
-        "maximum_width": 500,
-        "override_border_radius": false,
-        "buttons_style": "underlined",
-        "override_button_colors": false,
-        "button_background_color": "#e68819",
-        "button_text_color": "#ffffff",
-        "hover_navigation_desktop": "left-and-right",
-        "columns_per_row": 4,
-        "vertical_alignment": "top",
-        "text_alignment": "center",
-        "text_alignment_mobile": "center",
-        "section_width": "full",
-        "section_padding_top": 0,
-        "section_padding_bottom": 60,
-        "colors": "white"
-      }
-    },
-    "e6a03a56-ff97-4d48-99d0-0b9156a3b02d": {
-      "type": "template--product--info-columns",
-      "blocks": {
-        "template--14773137178694__e6a03a56-ff97-4d48-99d0-0b9156a3b02d-1686321924a56b1582-0": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "square",
-            "heading": "Almond & banana",
-            "text": "<p>“The creamy texture of blended bananas complements the nutty richness of almond, creating a harmonious taste experience.”<br/><em>Emily / Founder</em></p>",
-            "button_link": "/",
-            "button_text": "Shop the flavour"
-          }
-        },
-        "template--14773137178694__e6a03a56-ff97-4d48-99d0-0b9156a3b02d-1686321924a56b1582-1": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "square",
-            "heading": "Spinach & pineapple",
-            "text": "<p>“The combination of spinach and pineapple creates a refreshing and vibrant taste. It has unique flavor profile and health benefits.” <br/><em>Ethan / Smoothie Mixologist</em></p>",
-            "button_link": "/",
-            "button_text": "Shop the flavour"
-          }
-        },
-        "59287d78-99ec-44b1-a130-3306b031be63": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "square",
-            "heading": "Peanut & banana",
-            "text": "<p>“This smoothie creates a rich and satisfying flavor that appeals to both the sweet tooth and those who enjoy a hint of nuttiness.”<br/><em>Sophia / Smoothie Mixologist</em></p>",
-            "button_link": "/",
-            "button_text": "Shop the flavour"
-          }
-        },
-        "db95411e-77ab-45e4-aa83-e8c3775c3288": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "square",
-            "heading": "Kale & blueberry",
-            "text": "<p>“This smoothie is a perfect choice for those seeking a delicious and nutritious option to support their overall health and well-being.”<br/><em>Liam / Quality assurance specialist</em></p>",
-            "button_link": "/",
-            "button_text": "Shop the flavour"
-          }
-        }
-      },
-      "block_order": [
-        "template--14773137178694__e6a03a56-ff97-4d48-99d0-0b9156a3b02d-1686321924a56b1582-0",
-        "template--14773137178694__e6a03a56-ff97-4d48-99d0-0b9156a3b02d-1686321924a56b1582-1",
-        "59287d78-99ec-44b1-a130-3306b031be63",
-        "db95411e-77ab-45e4-aa83-e8c3775c3288"
-      ],
-      "settings": {
-        "title": "Our top picks",
-        "description": "<p>Discover our meticulously curated flavors selected by our dedicated team</p>",
-        "maximum_width": 500,
-        "override_border_radius": false,
-        "buttons_style": "underlined",
-        "override_button_colors": true,
-        "button_background_color": "#ffffff",
-        "button_text_color": "#242424",
-        "hover_navigation_desktop": "left-and-right",
-        "columns_per_row": 4,
-        "vertical_alignment": "top",
-        "text_alignment": "left",
-        "text_alignment_mobile": "center",
-        "section_width": "full",
-        "section_padding_top": 60,
-        "section_padding_bottom": 60,
-        "colors": "accent"
-      }
-    },
-    "58a12040-d534-4682-b1b7-5479f4052864": {
-      "type": "map",
-      "settings": {
-        "map_address": "Ottawa, 151 O'Connor Street, Ground Floor, Canada",
-        "layout": "left",
-        "text_alignment": "center",
-        "heading": "Our store",
-        "address": "<p>123 Fake St.<br>Toronto, Canada</p><p>Mon - Fri, 10am - 9pm<br>Saturday, 11am - 9pm<br>Sunday, 11am - 5pm</p>",
-        "button_text": "Get directions",
-        "buttons_style": "filled",
-        "override_button_colors": false,
-        "button_background_color": "#e68819",
-        "button_text_color": "#ffffff",
-        "section_padding_top": 0,
-        "section_padding_bottom": 0,
-        "colors": "light"
-      }
-    },
-    "f33a0dde-7961-4114-a8ff-6e5c2a459969": {
-      "type": "contact-form",
-      "blocks": {
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-0": {
-          "type": "name_input",
-          "settings": {
-            "required": true,
-            "input_width": "partial"
-          }
-        },
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-1": {
-          "type": "email_input",
-          "settings": {
-            "required": true,
-            "input_width": "partial"
-          }
-        },
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-2": {
-          "type": "tel_input",
-          "settings": {
-            "required": true,
-            "input_width": "full"
-          }
-        },
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-3": {
-          "type": "message_input",
-          "settings": {
-            "required": true,
-            "input_width": "full"
-          }
-        }
-      },
-      "block_order": [
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-0",
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-1",
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-2",
-        "template--14773137178694__f33a0dde-7961-4114-a8ff-6e5c2a459969-168632303920a5f9ea-3"
-      ],
-      "settings": {
-        "title": "Contact us",
-        "description": "<p>Have a question, or want a product recommendation? Get in touch.</p>",
-        "form_width": "narrow",
-        "section_padding_top": 60,
-        "section_padding_bottom": 60,
-        "section_color_scheme": "white",
-        "override_button_colors": false,
-        "button_background_color": "#e68819",
-        "button_text_color": "#ffffff"
-      }
-    },
-    "16c77c63-79ef-4e35-be30-ea87725968de": {
-      "type": "logo-list",
-      "blocks": {
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-2": {
-          "type": "logo_image",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-0": {
-          "type": "logo_image",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-3": {
-          "type": "logo_image",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "28ae0150-769d-4d17-a6c3-751dcfe6f0b2": {
-          "type": "logo_image",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-1": {
-          "type": "logo_image",
-          "settings": {
-            "link": "/"
-          }
-        }
-      },
-      "block_order": [
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-2",
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-0",
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-3",
-        "28ae0150-769d-4d17-a6c3-751dcfe6f0b2",
-        "template--14773137178694__16c77c63-79ef-4e35-be30-ea87725968de-1686323103b740650d-1"
-      ],
-      "settings": {
-        "title": "Contact us through our socials",
-        "description": "",
-        "width": 100,
-        "override_border_radius": false,
-        "section_padding_top": 60,
-        "section_padding_bottom": 60,
-        "colors": "light"
-      }
-    },
-    "744d98e2-004e-44b9-a03d-ecb59f18bc52": {
-      "type": "template--product--info-columns",
-      "blocks": {
-        "template--14773137178694__744d98e2-004e-44b9-a03d-ecb59f18bc52-1686321924a56b1582-0": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "natural",
-            "heading": "In season flavours",
-            "text": "<p>New seasonal flavors will bring you a tantalizing taste experience like never before.</p>",
-            "button_link": "/",
-            "button_text": "Shop now"
-          }
-        },
-        "template--14773137178694__744d98e2-004e-44b9-a03d-ecb59f18bc52-1686321924a56b1582-1": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "natural",
-            "heading": "New store in San Antonio",
-            "text": "<p>Grab your favourite flavours at our new flagship store in the vibrant city of San Antonio.</p>",
-            "button_link": "/",
-            "button_text": "View map"
-          }
-        },
-        "2ecdd5ca-7f5d-41e4-955d-06a9d09b406b": {
-          "type": "image_and_text",
-          "settings": {
-            "grid_image_size": "natural",
-            "heading": "Sale! Up to 30% off",
-            "text": "<p>Get ready for a refreshing deal! Enjoy our delicious smoothies at unbeatable prices.</p>",
-            "button_link": "/",
-            "button_text": "Shop sale"
-          }
-        }
-      },
-      "block_order": [
-        "template--14773137178694__744d98e2-004e-44b9-a03d-ecb59f18bc52-1686321924a56b1582-0",
-        "template--14773137178694__744d98e2-004e-44b9-a03d-ecb59f18bc52-1686321924a56b1582-1",
-        "2ecdd5ca-7f5d-41e4-955d-06a9d09b406b"
-      ],
-      "settings": {
-        "title": "",
-        "description": "",
-        "maximum_width": 500,
-        "override_border_radius": false,
-        "buttons_style": "underlined",
-        "override_button_colors": false,
-        "button_background_color": "#e68819",
-        "button_text_color": "#ffffff",
-        "hover_navigation_desktop": "left-and-right",
-        "columns_per_row": 3,
-        "vertical_alignment": "top",
-        "text_alignment": "center",
-        "text_alignment_mobile": "center",
-        "section_width": "full",
-        "section_padding_top": 60,
-        "section_padding_bottom": 60,
-        "colors": "white"
+        "icon_size": 20,
+        "bg_color": "#f2efe8",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "icon_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     }
   },
   "order": [
-    "94a50e02-c7cb-4f8e-8809-f281c98044d2",
-    "63d055aa-9706-43b0-b3c8-49b4a2e53ef9",
-    "410e0db0-6d01-4d70-8356-6c6849fcdadc",
-    "8e700b4c-da55-45f7-9f69-8263da89d7a8",
-    "e6a03a56-ff97-4d48-99d0-0b9156a3b02d",
-    "58a12040-d534-4682-b1b7-5479f4052864",
-    "f33a0dde-7961-4114-a8ff-6e5c2a459969",
-    "16c77c63-79ef-4e35-be30-ea87725968de",
-    "744d98e2-004e-44b9-a03d-ecb59f18bc52"
+    "cwc_breadcrumb",
+    "cwc_about_banner",
+    "cwc_about_richtext",
+    "cwc_about_image_text",
+    "cwc_about_values",
+    "cwc_about_highlights",
+    "cwc_about_order",
+    "cwc_trust_strip"
   ]
 }

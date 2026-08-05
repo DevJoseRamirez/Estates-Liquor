@@ -5,6 +5,13 @@
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
     --card-overlay-color: {{ section.settings.card_overlay_color | default: '#0A1F12' }};
+    {% comment %}
+      The scrim steps down in the overlay colour itself, so the rgb channels
+      are pulled out once here and reused at three alphas.
+    {% endcomment %}
+    {%- assign card_overlay_hex = section.settings.card_overlay_color | default: '#0A1F12' -%}
+    --card-overlay-rgb: {{ card_overlay_hex | color_extract: 'red' }}, {{ card_overlay_hex | color_extract: 'green' }}, {{ card_overlay_hex | color_extract: 'blue' }};
+    --card-overlay-opacity: {{ section.settings.card_overlay_opacity | default: 100 | divided_by: 100.0 }};
     --card-title-color: {{ section.settings.card_title_color | default: '#ffffff' }};
     --card-text-color: {{ section.settings.card_text_color | default: '#C4933F' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#0A1F12' }};
@@ -276,6 +283,17 @@
       "id": "card_overlay_color",
       "label": "Card Image Overlay Color",
       "default": "#0A1F12"
+    },
+    {
+      "type": "range",
+      "id": "card_overlay_opacity",
+      "label": "Card Overlay Strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Darkens the bottom of each card image so the label stays readable. Lower it to let more of the photo through."
     },
     {
       "type": "color",

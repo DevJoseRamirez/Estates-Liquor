@@ -95,14 +95,20 @@
             {% liquid
               assign related_variant = related.selected_or_first_available_variant
 
+              # Same badge ladder as the collection grid — stock state is
+              # deliberately not surfaced here
               assign badge_label = ''
               assign badge_style = ''
-              if related.available == false
-                assign badge_label = 'Sold Out'
-                assign badge_style = 'soldout'
+              if related.compare_at_price > related.price
+                assign discount = related.compare_at_price | minus: related.price | times: 100 | divided_by: related.compare_at_price
+                assign badge_label = '-' | append: discount | append: '%'
+                assign badge_style = 'sale'
               elsif related.tags contains 'Allocated' or related.tags contains 'allocated'
                 assign badge_label = 'Allocated'
                 assign badge_style = 'allocated'
+              elsif related.tags contains 'Barrel Pick' or related.tags contains 'barrel pick'
+                assign badge_label = 'Barrel Pick'
+                assign badge_style = 'barrel'
               elsif related.tags contains 'New' or related.tags contains 'new'
                 assign badge_label = 'New'
                 assign badge_style = 'new'
@@ -160,6 +166,11 @@
                     {{ related.price | money }}
                   </div>
 
+                  {% comment %}
+                    Same footer in and out of stock — matches the collection
+                    grid card. Sold-out swaps the add-to-cart button for a
+                    visually identical link to the product page.
+                  {% endcomment %}
                   {% if related.available %}
                     <button
                       type="button"
@@ -167,12 +178,16 @@
                       data-variant-id="{{ related_variant.id }}"
                       aria-label="Add {{ related.title | escape }} to cart"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                      </svg>
+                      Add
                     </button>
+                  {% else %}
+                    <a
+                      href="{{ related.url }}"
+                      class="cwc_related-products__card-button"
+                      aria-label="View {{ related.title | escape }}"
+                    >
+                      Add
+                    </a>
                   {% endif %}
                 </div>
               </div>

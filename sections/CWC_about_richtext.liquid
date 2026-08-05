@@ -1,0 +1,196 @@
+{% style %}
+  #cwc_about-richtext-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#666666' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#0A1F12' }};
+    --lead-color: {{ section.settings.lead_color | default: '#0A1F12' }};
+    --column-width: {{ section.settings.column_width | default: 780 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 75 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 75 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 75 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 75 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_about_richtext.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_about-richtext-{{ section.id }}" class="cwc_about-richtext">
+  <div class="cwc_about-richtext__container">
+
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="cwc_about-richtext__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_about-richtext__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_about-richtext__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Paragraph blocks — lead reads as a pull quote, body is plain {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_about-richtext__body">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'paragraph' %}
+              {% if block.settings.text != blank %}
+                <div
+                  class="cwc_about-richtext__text cwc_about-richtext__text--{{ block.settings.style | default: 'body' }} cwc-rte"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.text }}
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_about-richtext__empty">
+        <p>Add paragraph blocks to display copy.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC About Richtext",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "column_width",
+      "label": "Column Width",
+      "min": 440,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 780
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "lead_color",
+      "label": "Lead Paragraph Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "name": "Paragraph",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Paragraph copy goes here.</p>"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            {
+              "value": "lead",
+              "label": "Lead (italic serif)"
+            },
+            {
+              "value": "body",
+              "label": "Body"
+            }
+          ],
+          "default": "body"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "About Richtext",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "paragraph"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

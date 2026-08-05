@@ -60,11 +60,53 @@
     });
   }
 
+  /* The rail scrolls natively with scroll-snap, so this only drives the arrows
+     and hides them when everything already fits. Mirrors CWC_related_products. */
+  function initCarousel(sectionEl) {
+    var carousel = sectionEl.querySelector('[data-cwc-carousel]');
+    if (!carousel) return;
+
+    var track = carousel.querySelector('[data-cwc-track]');
+    var prev = carousel.querySelector('[data-cwc-prev]');
+    var next = carousel.querySelector('[data-cwc-next]');
+    if (!track || !prev || !next) return;
+
+    function update() {
+      var overflow = track.scrollWidth - track.clientWidth;
+      carousel.classList.toggle('cwc_rare-allocated__carousel--scrollable', overflow > 1);
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= overflow - 1;
+    }
+
+    /* one screenful, rounded to whole cards so nothing lands half-cut */
+    function step() {
+      var card = track.querySelector('.cwc_rare-allocated__card');
+      if (!card) return track.clientWidth;
+
+      var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      var span = card.offsetWidth + gap;
+      return Math.max(1, Math.floor(track.clientWidth / span)) * span;
+    }
+
+    prev.addEventListener('click', function () {
+      track.scrollBy({ left: -step(), behavior: 'smooth' });
+    });
+
+    next.addEventListener('click', function () {
+      track.scrollBy({ left: step(), behavior: 'smooth' });
+    });
+
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
   function initSection(sectionEl) {
     if (!sectionEl || sectionEl.dataset.cwcRareAllocatedInit === 'true') return;
     sectionEl.dataset.cwcRareAllocatedInit = 'true';
 
     bindAddToCart(sectionEl);
+    initCarousel(sectionEl);
   }
 
   function initAllSections() {
