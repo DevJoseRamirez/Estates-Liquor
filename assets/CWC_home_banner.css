@@ -1,0 +1,267 @@
+/* ==============================
+   CWC Home Banner
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_home-banner {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_home-banner__container {
+  max-width: var(--banner-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* === Viewport ===
+   Height comes only from the first slide image's aspect ratio — no fixed
+   height or width anywhere, so the banner scales with the viewport. */
+.cwc_home-banner__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--banner-ratio);
+  overflow: hidden;
+  border-radius: var(--banner-radius);
+  background-color: var(--section-bg);
+}
+
+/* === Track === */
+.cwc_home-banner__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cwc_home-banner__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* === Slide === */
+.cwc_home-banner__slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.cwc_home-banner__slide-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.cwc_home-banner__slide-link:focus-visible {
+  outline: 3px solid var(--dot-active-color);
+  outline-offset: -3px;
+}
+
+.cwc_home-banner__picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cwc_home-banner__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--image-fit);
+  object-position: center;
+  user-select: none;
+}
+
+/* === Placeholder === */
+.cwc_home-banner__placeholder {
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  border: 2px dashed #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* === Arrows === */
+.cwc_home-banner__nav[hidden] {
+  display: none;
+}
+
+.cwc_home-banner__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--arrow-bg);
+  color: var(--arrow-icon-color);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.cwc_home-banner__arrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cwc_home-banner__arrow:hover {
+  opacity: 1;
+}
+
+.cwc_home-banner__arrow:focus-visible {
+  outline: 3px solid var(--dot-active-color);
+  outline-offset: 2px;
+}
+
+.cwc_home-banner__arrow[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cwc_home-banner__arrow--prev {
+  left: 1.25rem;
+}
+
+.cwc_home-banner__arrow--next {
+  right: 1.25rem;
+}
+
+/* === Dots === */
+.cwc_home-banner__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.cwc_home-banner__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--dot-color);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.2s ease;
+}
+
+.cwc_home-banner__dot:hover {
+  opacity: 0.8;
+}
+
+.cwc_home-banner__dot:focus-visible {
+  outline: 3px solid var(--dot-active-color);
+  outline-offset: 2px;
+}
+
+.cwc_home-banner__dot--active {
+  width: 1.5rem;
+  border-radius: 999px;
+  background-color: var(--dot-active-color);
+  opacity: 1;
+}
+
+/* === Empty State === */
+.cwc_home-banner__empty {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_home-banner__arrow {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .cwc_home-banner__arrow svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .cwc_home-banner__arrow--prev {
+    left: 0.75rem;
+  }
+
+  .cwc_home-banner__arrow--next {
+    right: 0.75rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_home-banner {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  /* Mobile height follows the first slide's mobile image ratio */
+  .cwc_home-banner__viewport {
+    aspect-ratio: var(--banner-ratio-mobile);
+  }
+
+  .cwc_home-banner__nav {
+    display: none;
+  }
+
+  .cwc_home-banner__dots {
+    bottom: 0.75rem;
+    gap: 0.4375rem;
+  }
+
+  .cwc_home-banner__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .cwc_home-banner__dot--active {
+    width: 1.25rem;
+  }
+}
+
+/* ==============================
+   Reduced Motion
+   ============================== */
+@media (prefers-reduced-motion: reduce) {
+  .cwc_home-banner__track {
+    scroll-behavior: auto;
+  }
+
+  .cwc_home-banner__dot,
+  .cwc_home-banner__arrow {
+    transition: none;
+  }
+}

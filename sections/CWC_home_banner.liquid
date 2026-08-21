@@ -1,0 +1,418 @@
+{%- liquid
+  comment
+    The banner takes its height from the first slide that has an image — the
+    image's own aspect ratio informs the section, so there is no fixed height
+    anywhere in the CSS. Mobile uses the same slide's mobile image ratio when
+    one is set, otherwise it inherits the desktop ratio.
+  endcomment
+
+  assign ratio_desktop = 0
+  assign ratio_mobile = 0
+
+  for block in section.blocks
+    if block.settings.image != blank
+      assign ratio_desktop = block.settings.image.aspect_ratio
+      if block.settings.image_mobile != blank
+        assign ratio_mobile = block.settings.image_mobile.aspect_ratio
+      endif
+      break
+    endif
+  endfor
+
+  if ratio_desktop == 0
+    for block in section.blocks
+      if block.settings.image_mobile != blank
+        assign ratio_mobile = block.settings.image_mobile.aspect_ratio
+        assign ratio_desktop = ratio_mobile
+        break
+      endif
+    endfor
+  endif
+
+  if ratio_desktop == 0
+    assign ratio_desktop = 2.5
+  endif
+  if ratio_mobile == 0
+    assign ratio_mobile = ratio_desktop
+  endif
+
+  assign has_multiple = false
+  if section.blocks.size > 1
+    assign has_multiple = true
+  endif
+
+  assign autoplay_ms = section.settings.autoplay_speed | default: 5 | times: 1000
+-%}
+
+{% style %}
+  #cwc_home-banner-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --banner-ratio: {{ ratio_desktop }};
+    --banner-ratio-mobile: {{ ratio_mobile }};
+    --banner-max-width: {% if section.settings.full_width %}100%{% else %}1300px{% endif %};
+    --banner-radius: {{ section.settings.border_radius | default: 0 }}px;
+    --image-fit: {{ section.settings.image_fit | default: 'cover' }};
+    --arrow-bg: {{ section.settings.arrow_bg_color | default: '#ffffff' }};
+    --arrow-icon-color: {{ section.settings.arrow_icon_color | default: '#0A1F12' }};
+    --dot-color: {{ section.settings.dot_color | default: '#ffffff' }};
+    --dot-active-color: {{ section.settings.dot_active_color | default: '#C4933F' }};
+    --padding-top: {{ section.settings.padding_top | default: 0 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 0 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 0 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 0 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_home_banner.css' | asset_url | stylesheet_tag }}
+
+<section
+  id="cwc_home-banner-{{ section.id }}"
+  class="cwc_home-banner"
+  data-section-id="{{ section.id }}"
+  data-autoplay="{% if section.settings.autoplay and has_multiple %}true{% else %}false{% endif %}"
+  data-autoplay-speed="{{ autoplay_ms }}"
+  data-loop="{% if section.settings.loop %}true{% else %}false{% endif %}"
+>
+  <div class="cwc_home-banner__container">
+    {%- if section.blocks.size > 0 -%}
+      <div
+        class="cwc_home-banner__viewport"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="{{ section.settings.slider_label | default: 'Promotions' | escape }}"
+      >
+        <div class="cwc_home-banner__track" data-cwc-banner-track>
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'slide' -%}
+                {%- liquid
+                  assign desktop_image = block.settings.image
+                  assign mobile_image = block.settings.image_mobile
+
+                  if desktop_image == blank
+                    assign desktop_image = mobile_image
+                  endif
+
+                  assign slide_alt = block.settings.alt_text | default: 'Promotional banner' | escape
+
+                  assign load_mode = 'lazy'
+                  if forloop.first
+                    assign load_mode = 'eager'
+                  endif
+                -%}
+
+                <div
+                  class="cwc_home-banner__slide"
+                  data-cwc-banner-slide
+                  data-slide-index="{{ forloop.index0 }}"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label="{{ forloop.index }} of {{ section.blocks.size }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if block.settings.link != blank -%}
+                    <a
+                      class="cwc_home-banner__slide-link"
+                      href="{{ block.settings.link }}"
+                      aria-label="{{ slide_alt }}"
+                    >
+                  {%- else -%}
+                    <div class="cwc_home-banner__slide-link">
+                  {%- endif -%}
+
+                  {%- if desktop_image != blank -%}
+                    <picture class="cwc_home-banner__picture">
+                      {%- if mobile_image != blank -%}
+                        <source
+                          media="(max-width: 767px)"
+                          srcset="
+                            {{ mobile_image | image_url: width: 480 }} 480w,
+                            {{ mobile_image | image_url: width: 750 }} 750w,
+                            {{ mobile_image | image_url: width: 1100 }} 1100w
+                          "
+                          sizes="100vw"
+                          width="{{ mobile_image.width }}"
+                          height="{{ mobile_image.height }}"
+                        >
+                      {%- endif -%}
+                      <img
+                        class="cwc_home-banner__image"
+                        src="{{ desktop_image | image_url: width: 1800 }}"
+                        srcset="
+                          {{ desktop_image | image_url: width: 800 }} 800w,
+                          {{ desktop_image | image_url: width: 1200 }} 1200w,
+                          {{ desktop_image | image_url: width: 1600 }} 1600w,
+                          {{ desktop_image | image_url: width: 2000 }} 2000w,
+                          {{ desktop_image | image_url: width: 2600 }} 2600w
+                        "
+                        sizes="100vw"
+                        alt="{{ slide_alt }}"
+                        width="{{ desktop_image.width }}"
+                        height="{{ desktop_image.height }}"
+                        loading="{{ load_mode }}"
+                        {% if forloop.first %}fetchpriority="high"{% endif %}
+                        draggable="false"
+                      >
+                    </picture>
+                  {%- else -%}
+                    <div class="cwc_home-banner__placeholder">
+                      <span>Add a slide image</span>
+                    </div>
+                  {%- endif -%}
+
+                  {%- if block.settings.link != blank -%}
+                    </a>
+                  {%- else -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if has_multiple and section.settings.show_arrows -%}
+          <div class="cwc_home-banner__nav" data-cwc-banner-nav>
+            <button
+              type="button"
+              class="cwc_home-banner__arrow cwc_home-banner__arrow--prev"
+              data-cwc-banner-prev
+              aria-label="Previous slide"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15 4 7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="cwc_home-banner__arrow cwc_home-banner__arrow--next"
+              data-cwc-banner-next
+              aria-label="Next slide"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m9 4 8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+
+        {%- if has_multiple and section.settings.show_dots -%}
+          <div class="cwc_home-banner__dots" data-cwc-banner-dots>
+            {%- for block in section.blocks -%}
+              <button
+                type="button"
+                class="cwc_home-banner__dot{% if forloop.first %} cwc_home-banner__dot--active{% endif %}"
+                data-cwc-banner-dot
+                data-slide-index="{{ forloop.index0 }}"
+                aria-label="Go to slide {{ forloop.index }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+              ></button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="cwc_home-banner__empty">
+        <p>Add slides to display the banner.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script src="{{ 'CWC_home_banner.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Home Banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "text",
+      "id": "slider_label",
+      "label": "Slider Accessibility Label",
+      "default": "Promotions",
+      "info": "Describes the slider to screen readers. Not shown on the page."
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance Slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Seconds Per Slide",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop Slides",
+      "default": true,
+      "info": "Wraps from the last slide back to the first."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show Dots",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": true,
+      "info": "Uncheck to constrain the banner to 1300px."
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        { "value": "cover", "label": "Fill (crop to banner)" },
+        { "value": "contain", "label": "Fit (show whole image)" }
+      ],
+      "default": "cover",
+      "info": "The banner is sized by the first slide image. Slides with a different shape are cropped or letterboxed to match."
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner Radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow Icon Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active Dot Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop Image",
+          "info": "Recommended: 2400 x 900px (JPG or WebP, under 400KB). The first slide's image sets the height of the whole banner \u2014 use the same dimensions on every slide for a consistent look."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile Image",
+          "info": "Recommended: 1000 x 1200px (JPG or WebP, under 250KB). Shown below 768px \u2014 falls back to the desktop image when empty."
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image Alt Text",
+          "info": "Describes the promotion for screen readers and SEO."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide Link",
+          "info": "Links the whole slide to a collection, product, or page."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Home Banner",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}
