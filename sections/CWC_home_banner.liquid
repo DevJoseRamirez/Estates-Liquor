@@ -46,8 +46,6 @@
 
 {% style %}
   #cwc_home-banner-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
-    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --banner-ratio: {{ ratio_desktop }};
     --banner-ratio-mobile: {{ ratio_mobile }};
     --banner-max-width: {% if section.settings.full_width %}100%{% else %}1300px{% endif %};
@@ -307,19 +305,7 @@
     },
     {
       "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#0A1F12"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#ffffff"
+      "content": "Arrow & Dot Colors"
     },
     {
       "type": "color",
