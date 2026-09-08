@@ -9,54 +9,6 @@
  */
 {
   "sections": {
-    "cwc_home_banner": {
-      "type": "CWC_home_banner",
-      "blocks": {
-        "cwc_home_banner_s1": {
-          "type": "slide",
-          "settings": {
-            "alt_text": "Featured promotion",
-            "link": ""
-          }
-        },
-        "cwc_home_banner_s2": {
-          "type": "slide",
-          "settings": {
-            "alt_text": "Featured promotion",
-            "link": ""
-          }
-        },
-        "cwc_home_banner_s3": {
-          "type": "slide",
-          "settings": {
-            "alt_text": "Featured promotion",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "cwc_home_banner_s1",
-        "cwc_home_banner_s2",
-        "cwc_home_banner_s3"
-      ],
-      "settings": {
-        "slider_label": "Promotions",
-        "autoplay": true,
-        "autoplay_speed": 5,
-        "loop": true,
-        "show_arrows": true,
-        "show_dots": true,
-        "full_width": true,
-        "image_fit": "cover",
-        "border_radius": 0,
-        "arrow_bg_color": "#ffffff",
-        "arrow_icon_color": "#0A1F12",
-        "dot_color": "#ffffff",
-        "dot_active_color": "#C4933F",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
     "cwc_brand_marquee": {
       "type": "CWC_brand_marquee",
       "blocks": {
@@ -208,6 +160,64 @@
         "item_gap": 52,
         "padding_top": 5,
         "padding_bottom": 5
+      }
+    },
+    "cwc_home_banner_PPNPdA": {
+      "type": "CWC_home_banner",
+      "blocks": {
+        "slide_cqJdN8": {
+          "type": "slide",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "slide_AQyKwe": {
+          "type": "slide",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "slide_VbXLkb": {
+          "type": "slide",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "slide_kQUfcM": {
+          "type": "slide",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_cqJdN8",
+        "slide_AQyKwe",
+        "slide_VbXLkb",
+        "slide_kQUfcM"
+      ],
+      "disabled": true,
+      "name": "Home Banner",
+      "settings": {
+        "slider_label": "Promotions",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "loop": true,
+        "show_arrows": true,
+        "show_dots": true,
+        "full_width": true,
+        "image_fit": "cover",
+        "border_radius": 0,
+        "arrow_bg_color": "#ffffff",
+        "arrow_icon_color": "#0A1F12",
+        "dot_color": "#ffffff",
+        "dot_active_color": "#C4933F",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "cwc_hero": {
@@ -719,7 +729,7 @@
         "cwc_featured_products_b2": {
           "type": "tab",
           "settings": {
-            "collection": "newest-products",
+            "collection": "new-arrivals",
             "title": "New Arrivals"
           }
         },
@@ -1154,8 +1164,8 @@
     }
   },
   "order": [
-    "cwc_home_banner",
     "cwc_brand_marquee",
+    "cwc_home_banner_PPNPdA",
     "cwc_hero",
     "cwc_trust_bar",
     "cwc_shop_category",
