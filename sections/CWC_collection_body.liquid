@@ -47,6 +47,25 @@
 %}
 
 {% paginate collection.products by section.settings.products_per_page %}
+  {%- comment -%}
+    Products tagged no_feed never render, so every count on the page has to be
+    measured against the visible set, not paginate's raw totals. hidden_count is
+    exact for this page only — Liquid can't see the other pages' products — so
+    adjusted_items starts high and the Load More script shrinks it as it learns
+    each page's hidden count.
+  {%- endcomment -%}
+  {%- liquid
+    assign hidden_count = 0
+    for product in collection.products
+      assign no_feed_check = product.tags | join: ',' | downcase | prepend: ',' | append: ','
+      if no_feed_check contains ',no_feed,'
+        assign hidden_count = hidden_count | plus: 1
+      endif
+    endfor
+    assign page_visible = collection.products.size | minus: hidden_count
+    assign adjusted_items = paginate.items | minus: hidden_count
+    assign shown_total = paginate.current_offset | plus: page_visible
+  -%}
   <section
     id="cwc_collection-body-{{ section.id }}"
     class="cwc_collection-body"
@@ -182,12 +201,17 @@
         <div class="cwc_collection-body__main">
 
           <div class="cwc_collection-body__toolbar">
-            <p class="cwc_collection-body__count">
+            <p
+              class="cwc_collection-body__count"
+              data-cwc-count
+              data-cwc-noun="{{ section.settings.item_noun | default: 'bottles' | escape }}"
+            >
               Showing
-              <strong>
-                {{ paginate.current_offset | plus: 1 }}–{{ paginate.current_offset | plus: paginate.page_size | at_most: paginate.items }}
+              <strong data-cwc-count-range>
+                {{ paginate.current_offset | plus: 1 }}–{{ shown_total | at_most: adjusted_items }}
               </strong>
-              of {{ paginate.items }} {{ section.settings.item_noun | default: 'bottles' }}
+              of <span data-cwc-count-total>{{ adjusted_items }}</span>
+              {{ section.settings.item_noun | default: 'bottles' }}
             </p>
 
             {% if collection.sort_options.size > 0 %}
@@ -233,9 +257,23 @@
             </div>
           {% endif %}
 
-          {% if collection.products.size > 0 %}
-            <div class="cwc_collection-body__grid" data-cwc-grid>
+          {% comment %}
+            A page whose products are all tagged no_feed still needs its paging
+            controls so the shopper can reach the rest — only fall through to
+            the empty state when there is nothing visible and nowhere to go.
+          {% endcomment %}
+          {% if page_visible > 0 or paginate.pages > 1 %}
+            <div class="cwc_collection-body__grid" data-cwc-grid data-cwc-hidden="{{ hidden_count }}">
               {% for product in collection.products %}
+                {% comment %}
+                  Products tagged no_feed are hidden from the grid. Tag match is
+                  case-insensitive and comma-delimited so no_feed_extra doesn't
+                  trip it.
+                {% endcomment %}
+                {%- assign product_tag_list = product.tags | join: ',' | downcase | prepend: ',' | append: ',' -%}
+                {%- if product_tag_list contains ',no_feed,' -%}
+                  {%- continue -%}
+                {%- endif -%}
                 {% render 'cwc-product-card', product: product, section_settings: section.settings %}
               {% endfor %}
             </div>
@@ -275,12 +313,17 @@
                     before this one, so on page N these render the running
                     total — exactly what Load More needs after appending page N.
                   {% endcomment %}
-                  <p class="cwc_collection-body__load-progress" data-cwc-load-progress>
-                    Showing {{ paginate.current_offset | plus: collection.products.size }} of {{ paginate.items }}
+                  <p
+                    class="cwc_collection-body__load-progress"
+                    data-cwc-load-progress
+                    data-cwc-total-items="{{ paginate.items }}"
+                    data-cwc-noun="{{ section.settings.item_noun | default: 'bottles' | escape }}"
+                  >
+                    Showing {{ shown_total }} of {{ adjusted_items }}
                     {{ section.settings.item_noun | default: 'bottles' }}
                   </p>
 
-                  {% assign shown_ratio = paginate.current_offset | plus: collection.products.size | times: 100 | divided_by: paginate.items %}
+                  {% assign shown_ratio = shown_total | times: 100 | divided_by: adjusted_items %}
                   <div class="cwc_collection-body__load-bar" aria-hidden="true">
                     <span style="width: {{ shown_ratio }}%;" data-cwc-load-fill></span>
                   </div>

@@ -97,15 +97,40 @@
 
     var progress = sectionEl.querySelector('[data-cwc-load-progress]');
     var fill = sectionEl.querySelector('[data-cwc-load-fill]');
+    var countEl = sectionEl.querySelector('[data-cwc-count]');
 
-    /* The fetched page's own counter is already the running total, so copy it
-       across rather than recounting cards here. */
+    /* Products tagged no_feed are dropped server-side, so the fetched page's
+       counter can't be copied across — it only knows about its own hidden
+       products, not the ones skipped on pages already loaded. Count the cards
+       actually in the grid instead, and subtract each page's hidden count from
+       the total as we learn it. */
+    var totalItems = parseInt((progress && progress.getAttribute('data-cwc-total-items')) || '0', 10) || 0;
+    var noun = (progress && progress.getAttribute('data-cwc-noun')) || '';
+    var hiddenSoFar = parseInt(grid.getAttribute('data-cwc-hidden') || '0', 10) || 0;
+
     function syncProgress(parsed) {
-      var nextProgress = parsed.querySelector('[data-cwc-load-progress]');
-      if (progress && nextProgress) progress.textContent = nextProgress.textContent;
+      var nextGrid = parsed.querySelector('[data-cwc-grid]');
+      if (nextGrid) {
+        hiddenSoFar += parseInt(nextGrid.getAttribute('data-cwc-hidden') || '0', 10) || 0;
+      }
 
-      var nextFill = parsed.querySelector('[data-cwc-load-fill]');
-      if (fill && nextFill) fill.style.width = nextFill.style.width;
+      var shown = grid.children.length;
+      var total = Math.max(totalItems - hiddenSoFar, shown);
+
+      if (progress) {
+        progress.textContent = 'Showing ' + shown + ' of ' + total + ' ' + noun;
+      }
+
+      if (countEl) {
+        var range = countEl.querySelector('[data-cwc-count-range]');
+        var countTotal = countEl.querySelector('[data-cwc-count-total]');
+        if (range) range.textContent = '1\u2013' + shown;
+        if (countTotal) countTotal.textContent = total;
+      }
+
+      if (fill) {
+        fill.style.width = (total > 0 ? Math.round((shown / total) * 100) : 0) + '%';
+      }
     }
 
     button.addEventListener('click', function (event) {
@@ -130,8 +155,11 @@
               grid.appendChild(card.cloneNode(true));
             });
             bindAddToCart(sectionEl);
-            syncProgress(parsed);
           }
+
+          /* Runs even when the fetched page had nothing to append — its hidden
+             count still has to come off the total. */
+          syncProgress(parsed);
 
           if (nextButton) {
             button.setAttribute('href', nextButton.getAttribute('href'));

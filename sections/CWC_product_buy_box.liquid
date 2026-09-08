@@ -531,15 +531,15 @@
                 </button>
               </div>
           {% endcase %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</section>
 
-<script src="{{ 'CWC_product_buy_box.js' | asset_url }}" defer></script>
 
-{% schema %}
+
+        {%- endfor %}
+        </div> </div> </div> </section>
+
+        <script src="{{ 'CWC_product_buy_box.js' | asset_url }}" defer></script>
+
+        {% schema %}
 {
   "name": "CWC Product Buy Box",
   "settings": [
@@ -1026,4 +1026,4 @@
     }
   ]
 }
-{% endschema %}
+        {% endschema %}

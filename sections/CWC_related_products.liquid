@@ -91,7 +91,12 @@
     {% if related_list %}
       <div class="cwc_related-products__track" data-cwc-track data-cwc-grid>
         {% for related in related_list limit: products_to_show %}
-          {% unless related.id == source_product.id or excluded_handles contains related.handle %}
+          {%- comment -%}
+            Products tagged no_feed stay out of every feed, this row included.
+            Case-insensitive, comma-delimited so no_feed_extra doesn't trip it.
+          {%- endcomment -%}
+          {%- assign related_tag_list = related.tags | join: ',' | downcase | prepend: ',' | append: ',' -%}
+          {% unless related.id == source_product.id or excluded_handles contains related.handle or related_tag_list contains ',no_feed,' %}
             {% liquid
               assign related_variant = related.selected_or_first_available_variant
 
