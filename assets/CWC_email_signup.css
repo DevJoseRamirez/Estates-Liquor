@@ -90,6 +90,15 @@
   border: 1px solid var(--error-text-color);
 }
 
+/* === Klaviyo Embed ===
+   Klaviyo ships its own form styles, so this only constrains the width to
+   match the built-in field and clears the disclaimer below it. */
+.cwc_email-signup__embed {
+  max-width: 440px;
+  margin: 0 auto;
+  margin-top: -1rem;
+}
+
 /* === Form === */
 .cwc_email-signup__form {
   display: flex;

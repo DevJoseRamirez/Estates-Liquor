@@ -33,7 +33,6 @@
 <section id="cwc_email-signup-{{ section.id }}" class="cwc_email-signup">
   <div class="cwc_email-signup__container">
     <div class="cwc_email-signup__content">
-
       {% if section.settings.eyebrow != blank %}
         <p class="cwc_email-signup__content-eyebrow">{{ section.settings.eyebrow }}</p>
       {% endif %}
@@ -50,50 +49,61 @@
         </div>
       {% endif %}
 
-      {% form 'customer', class: 'cwc_email-signup__form-wrapper' %}
-        {% comment %}
-          Confirmation and errors sit above the field on a filled panel so they
-          stay legible against the dark section background.
-        {% endcomment %}
-        {% if form.posted_successfully? %}
-          <p class="cwc_email-signup__message cwc_email-signup__message--success" role="status">
-            {{ section.settings.success_message | default: 'You are on the list. Watch your inbox for the next drop.' }}
-          </p>
-        {% elsif form.errors %}
-          <p class="cwc_email-signup__message cwc_email-signup__message--error" role="alert">
-            {{ form.errors.translated_fields.email | capitalize }}
-            {{ form.errors.messages.email }}
-          </p>
-        {% endif %}
-
-        <input type="hidden" name="contact[tags]" value="newsletter">
-
-        <div class="cwc_email-signup__form">
-          <label class="cwc_email-signup__label" for="cwc_email-{{ section.id }}">
-            {{ section.settings.placeholder | default: 'Your email address' }}
-          </label>
-
-          <input
-            id="cwc_email-{{ section.id }}"
-            class="cwc_email-signup__input"
-            type="email"
-            name="contact[email]"
-            value="{{ form.email }}"
-            placeholder="{{ section.settings.placeholder | default: 'Your email address' | escape }}"
-            autocomplete="email"
-            required
-          >
-
-          <button type="submit" class="cwc_email-signup__button">
-            {{ section.settings.button_label | default: 'Get First Access' }}
-          </button>
+      {% comment %}
+        A pasted Klaviyo embed replaces the built-in form entirely — the two
+        would otherwise collect the same address twice. With the setting empty
+        the section falls back to the native customer form.
+      {% endcomment %}
+      {% if section.settings.klaviyo_form_embed != blank %}
+        <div class="cwc_email-signup__embed">
+          {{ section.settings.klaviyo_form_embed }}
         </div>
-      {% endform %}
 
-      {% if section.settings.disclaimer != blank %}
-        <p class="cwc_email-signup__disclaimer">{{ section.settings.disclaimer }}</p>
+      {% else %}
+        {% form 'customer', class: 'cwc_email-signup__form-wrapper' %}
+          {% comment %}
+            Confirmation and errors sit above the field on a filled panel so they
+            stay legible against the dark section background.
+          {% endcomment %}
+          {% if form.posted_successfully? %}
+            <p class="cwc_email-signup__message cwc_email-signup__message--success" role="status">
+              {{ section.settings.success_message | default: 'You are on the list. Watch your inbox for the next drop.' }}
+            </p>
+          {% elsif form.errors %}
+            <p class="cwc_email-signup__message cwc_email-signup__message--error" role="alert">
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}
+            </p>
+          {% endif %}
+
+          <input type="hidden" name="contact[tags]" value="newsletter">
+
+          <div class="cwc_email-signup__form">
+            <label class="cwc_email-signup__label" for="cwc_email-{{ section.id }}">
+              {{ section.settings.placeholder | default: 'Your email address' }}
+            </label>
+
+            <input
+              id="cwc_email-{{ section.id }}"
+              class="cwc_email-signup__input"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.placeholder | default: 'Your email address' | escape }}"
+              autocomplete="email"
+              required
+            >
+
+            <button type="submit" class="cwc_email-signup__button">
+              {{ section.settings.button_label | default: 'Get First Access' }}
+            </button>
+          </div>
+
+          {% if section.settings.disclaimer != blank %}
+            <p class="cwc_email-signup__disclaimer">{{ section.settings.disclaimer }}</p>
+          {% endif %}
+        {% endform %}
       {% endif %}
-
     </div>
   </div>
 </section>
@@ -123,6 +133,16 @@
       "id": "subtext",
       "label": "Section Subtext",
       "default": "<p>Allocated bottles sell out in hours. Subscribers hear first — plus free shipping on your first order.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Klaviyo Form"
+    },
+    {
+      "type": "html",
+      "id": "klaviyo_form_embed",
+      "label": "Klaviyo Embed Code",
+      "info": "Paste the Klaviyo embed snippet here. When filled, it replaces the built-in email form below. Leave empty to use the built-in form."
     },
     {
       "type": "header",
