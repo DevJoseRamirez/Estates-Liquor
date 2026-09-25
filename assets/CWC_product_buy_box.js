@@ -251,7 +251,19 @@
     var labelEl = fbt.querySelector("[data-cwc-fbt-label]");
     var listEl = fbt.querySelector("[data-cwc-fbt-list]");
     var template = fbt.querySelector("[data-cwc-fbt-template]");
+    var totalWasEl = fbt.querySelector("[data-cwc-fbt-total-was]");
+    /* One or both placements, depending on the block's Offer Placement */
+    var offerEls = fbt.querySelectorAll("[data-cwc-fbt-offer]");
+    var saveEl = fbt.querySelector("[data-cwc-fbt-save]");
     if (!totalEl || !addButton) return;
+
+    /* Display only. The reduction itself comes from the automatic discount in
+       Shopify and lands in the cart; these settings just let the widget show
+       the same figure instead of quoting a total the customer never pays. */
+    var discountPercent = parseFloat(fbt.dataset.discountPercent) || 0;
+    var discountThreshold = parseInt(fbt.dataset.discountThreshold, 10) || 0;
+    var showItemDiscounts = fbt.hasAttribute("data-cwc-fbt-item-discounts");
+    var showMeta = !fbt.hasAttribute("data-cwc-fbt-no-meta");
 
     /* Re-queried rather than captured: live recommendations replace these rows */
     function checkboxes() {
@@ -278,13 +290,137 @@
       return count === 1 ? text.replace(/\bitems\b/, "item") : text;
     }
 
+    /* Rounded off the bundle total rather than per line, which is how the
+       discount lands on the cart — summing rounded lines drifts a cent. */
+    function discountFor(sum) {
+      if (discountPercent <= 0 || sum < discountThreshold) return 0;
+      return Math.round((sum * discountPercent) / 100);
+    }
+
+    /* Splits that one rounded figure back across the rows so the struck prices
+       always add up to the total under them. Shopify's own per-line allocation
+       can differ by a cent; the total is the number that has to match. */
+    function allocate(prices, discount) {
+      var parts = prices.map(function (price) {
+        return Math.floor((price * discountPercent) / 100);
+      });
+      var spare = parts.reduce(function (acc, part) {
+        return acc - part;
+      }, discount);
+      for (var i = 0; i < parts.length && spare > 0; i++) {
+        parts[i] += 1;
+        spare -= 1;
+      }
+      return parts;
+    }
+
+    function renderItemPrice(priceEl, was, now) {
+      priceEl.textContent = "";
+      if (was === now) {
+        priceEl.textContent = moneyFormat(now);
+        return;
+      }
+      var struck = document.createElement("s");
+      struck.className = "cwc_product-buy-box__fbt-price-was";
+      struck.textContent = moneyFormat(was);
+      var current = document.createElement("span");
+      current.className = "cwc_product-buy-box__fbt-price-now";
+      current.textContent = moneyFormat(now);
+      priceEl.appendChild(struck);
+      priceEl.appendChild(current);
+    }
+
+    /* Opt-in: on a column this narrow three struck prices crowd the rows. */
+    function syncItemPrices(discount) {
+      if (!showItemDiscounts) return;
+
+      var live = [];
+      checkboxes().forEach(function (check) {
+        var row = check.closest(".cwc_product-buy-box__fbt-item");
+        var priceEl =
+          row && row.querySelector(".cwc_product-buy-box__fbt-price");
+        if (!priceEl) return;
+        var price = parseInt(check.dataset.price, 10) || 0;
+        /* An unticked row is not in the bundle, so it keeps its full price */
+        if (!discount || !check.checked || check.disabled) {
+          renderItemPrice(priceEl, price, price);
+          return;
+        }
+        live.push({ priceEl: priceEl, price: price });
+      });
+
+      var parts = allocate(
+        live.map(function (row) {
+          return row.price;
+        }),
+        discount
+      );
+      live.forEach(function (row, i) {
+        renderItemPrice(row.priceEl, row.price, row.price - parts[i]);
+      });
+    }
+
+    /* Two states: the saving once the bundle qualifies, and the gap left to
+       close before it does — the second is what makes the bar worth putting
+       above the products rather than under them. */
+    function syncOffer(sum, discount) {
+      if (!offerEls.length) return;
+
+      var pending = !discount && discountPercent > 0 && sum > 0;
+      var copy = pending
+        ? fbt.dataset.discountNotePending || ""
+        : fbt.dataset.discountNote || "";
+      var text = copy
+        .replace("{percent}", discountPercent)
+        .replace("{amount}", moneyFormat(discount))
+        .replace("{threshold}", moneyFormat(discountThreshold))
+        .replace("{remaining}", moneyFormat(Math.max(discountThreshold - sum, 0)));
+
+      offerEls.forEach(function (el) {
+        el.textContent = text;
+        el.classList.toggle("cwc_product-buy-box__fbt-offer--pending", pending);
+        el.hidden = !text || (!discount && !pending);
+      });
+    }
+
+    /* The label already toggles the input; this only mirrors that onto the row
+       so the card itself can read as selected. */
+    function syncRows() {
+      checkboxes().forEach(function (check) {
+        var row = check.closest(".cwc_product-buy-box__fbt-item");
+        if (!row) return;
+        row.classList.toggle(
+          "cwc_product-buy-box__fbt-item--selected",
+          check.checked && !check.disabled
+        );
+      });
+    }
+
+    function syncSave(discount) {
+      if (!saveEl) return;
+      var copy = fbt.dataset.saveLabel || "";
+      saveEl.textContent = copy
+        .replace("{amount}", moneyFormat(discount))
+        .replace("{percent}", discountPercent);
+      saveEl.hidden = !discount || !copy;
+    }
+
     function syncTotal() {
       var items = selected();
       var sum = items.reduce(function (acc, item) {
         return acc + item.price;
       }, 0);
+      var discount = discountFor(sum);
 
-      totalEl.textContent = moneyFormat(sum);
+      totalEl.textContent = moneyFormat(sum - discount);
+      if (totalWasEl) {
+        totalWasEl.textContent = discount ? moneyFormat(sum) : "";
+        totalWasEl.hidden = !discount;
+      }
+      syncOffer(sum, discount);
+      syncSave(discount);
+      syncRows();
+      syncItemPrices(discount);
       if (labelEl) labelEl.textContent = totalLabel(items.length);
       addButton.disabled = items.length === 0;
     }
@@ -299,8 +435,6 @@
 
     function renderRecommendations(products) {
       if (!template || !listEl) return;
-      console.log(rows);
-      console.log("rows");
       var rows = products.map(function (product) {
         var variant =
           product.variants.filter(function (candidate) {
@@ -329,7 +463,7 @@
           image.hidden = false;
         }
 
-        if (product.type) {
+        if (product.type && showMeta) {
           meta.textContent = product.type;
           meta.hidden = false;
         }

@@ -387,6 +387,22 @@
                     assign fbt_fallback_count = fbt_fallback_count | plus: 1
                   endif
                 endfor
+
+                # Mirrors the automatic discount configured in Shopify. Nothing
+                # here creates or applies a discount — the cart does that — so
+                # these two numbers must be kept in step with the real rule.
+                assign fbt_discount_threshold = block.settings.discount_threshold | times: 100 | round
+                assign fbt_discount_percent = block.settings.discount_percent
+
+                assign fbt_position = block.settings.discount_position | default: 'top'
+                assign fbt_offer_top = false
+                assign fbt_offer_bottom = false
+                if fbt_position == 'top' or fbt_position == 'both'
+                  assign fbt_offer_top = true
+                endif
+                if fbt_position == 'bottom' or fbt_position == 'both'
+                  assign fbt_offer_bottom = true
+                endif
               -%}
               <div
                 class="cwc_product-buy-box__fbt"
@@ -402,6 +418,14 @@
                   and the script has its own fallback for a blank setting.
                 {% endcomment %}
                 data-total-label="{{ block.settings.total_label | escape }}"
+                data-discount-threshold="{{ fbt_discount_threshold }}"
+                data-discount-percent="{{ fbt_discount_percent }}"
+                data-discount-note="{{ block.settings.discount_note | escape }}"
+                data-discount-note-pending="{{ block.settings.discount_note_pending | escape }}"
+                data-save-label="{{ block.settings.save_badge_label | escape }}"
+                {% unless block.settings.show_item_meta %}data-cwc-fbt-no-meta{% endunless %}
+                style="--cwc-fbt-thumb: {{ block.settings.thumb_size | default: 56 }}px; --cwc-fbt-zoom: {{ block.settings.thumb_zoom | default: 115 | divided_by: 100.0 }};"
+                {% if block.settings.show_item_discounts %}data-cwc-fbt-item-discounts{% endif %}
                 {% if block.settings.use_recommendations %}data-cwc-fbt-fetch{% endif %}
                 {% comment %}
                   With nothing picked there is nothing to pair with yet — stay
@@ -410,13 +434,29 @@
                 {% endcomment %}
                 {% if fbt_fallback_count == 0 %}hidden{% endif %}
               >
+                {% comment %}
+                  The offer leads the block so the saving frames the products
+                  rather than trailing them. Clearing the heading in the editor
+                  leaves this bar on its own as the block's opening line.
+                {% endcomment %}
+           
                 {% if block.settings.heading != blank %}
                   <h2 class="cwc_product-buy-box__fbt-head">{{ block.settings.heading }}</h2>
+                {% endif %}
+
+               {% if fbt_offer_top %}
+                  <p class="cwc_product-buy-box__fbt-offer" data-cwc-fbt-offer hidden></p>
                 {% endif %}
 
                 <div class="cwc_product-buy-box__fbt-row" data-cwc-fbt-list>
                   {% comment %} This product first, and unlike the companions it is never replaced {% endcomment %}
                   <label class="cwc_product-buy-box__fbt-item">
+                    {% comment %}
+                      The whole row is the control. The input stays in the
+                      markup and keeps the label, keyboard focus and screen
+                      reader wiring — it is only moved out of sight, so the
+                      badge on the thumbnail is decorative.
+                    {% endcomment %}
                     <input
                       type="checkbox"
                       class="cwc_product-buy-box__fbt-check"
@@ -427,22 +467,25 @@
                       data-price="{{ current_variant.price }}"
                     >
                     <span class="cwc_product-buy-box__fbt-thumb">
-                      {% if buy_product.featured_image != blank %}
-                        <img
-                          src="{{ buy_product.featured_image | image_url: width: 120 }}"
-                          alt=""
-                          loading="lazy"
-                          width="46"
-                          height="58"
-                        >
-                      {% endif %}
+                      <span class="cwc_product-buy-box__fbt-thumb-frame">
+                        {% if buy_product.featured_image != blank %}
+                          <img
+                            src="{{ buy_product.featured_image | image_url: width: 160 }}"
+                            alt=""
+                            loading="lazy"
+                            width="56"
+                            height="56"
+                          >
+                        {% endif %}
+                      </span>
+                      {% render 'cwc_fbt_tick' %}
                     </span>
                     <span class="cwc_product-buy-box__fbt-info">
                       <span class="cwc_product-buy-box__fbt-name">
                         {{ buy_product.title }}
                         <em>({{ block.settings.this_item_label | default: 'This item' }})</em>
                       </span>
-                      {% if product_meta != blank %}
+                      {% if product_meta != blank and block.settings.show_item_meta %}
                         <span class="cwc_product-buy-box__fbt-meta">{{ product_meta }}</span>
                       {% endif %}
                     </span>
@@ -473,19 +516,22 @@
                           data-price="{{ fbt_variant.price }}"
                         >
                         <span class="cwc_product-buy-box__fbt-thumb">
-                          {% if fbt_product.featured_image != blank %}
-                            <img
-                              src="{{ fbt_product.featured_image | image_url: width: 120 }}"
-                              alt=""
-                              loading="lazy"
-                              width="46"
-                              height="58"
-                            >
-                          {% endif %}
+                          <span class="cwc_product-buy-box__fbt-thumb-frame">
+                            {% if fbt_product.featured_image != blank %}
+                              <img
+                                src="{{ fbt_product.featured_image | image_url: width: 160 }}"
+                                alt=""
+                                loading="lazy"
+                                width="56"
+                                height="56"
+                              >
+                            {% endif %}
+                          </span>
+                          {% render 'cwc_fbt_tick' %}
                         </span>
                         <span class="cwc_product-buy-box__fbt-info">
                           <span class="cwc_product-buy-box__fbt-name">{{ fbt_product.title }}</span>
-                          {% if fbt_meta != blank %}
+                          {% if fbt_meta != blank and block.settings.show_item_meta %}
                             <span class="cwc_product-buy-box__fbt-meta">{{ fbt_meta }}</span>
                           {% endif %}
                         </span>
@@ -508,7 +554,10 @@
                       data-cwc-fbt-check
                     >
                     <span class="cwc_product-buy-box__fbt-thumb">
-                      <img alt="" loading="lazy" width="46" height="58" hidden>
+                      <span class="cwc_product-buy-box__fbt-thumb-frame">
+                        <img alt="" loading="lazy" width="56" height="56" hidden>
+                      </span>
+                      {% render 'cwc_fbt_tick' %}
                     </span>
                     <span class="cwc_product-buy-box__fbt-info">
                       <span class="cwc_product-buy-box__fbt-name"></span>
@@ -523,8 +572,23 @@
                     {% comment %} Replaced by the script with the live count {% endcomment %}
                     {{ block.settings.total_label | default: 'Total for selected' }}
                   </span>
+                  {% comment %}
+                    Flat on purpose. All four are direct children so the narrow
+                    layout can regroup them into two lines — label + badge, then
+                    was + now — and collapse back to one line with no discount.
+                  {% endcomment %}
+                  <span class="cwc_product-buy-box__fbt-save" data-cwc-fbt-save hidden></span>
+                  <s class="cwc_product-buy-box__fbt-total-was" data-cwc-fbt-total-was hidden></s>
                   <span class="cwc_product-buy-box__fbt-total-price" data-cwc-fbt-total></span>
                 </div>
+
+                {% if fbt_offer_bottom %}
+                  <p
+                    class="cwc_product-buy-box__fbt-offer cwc_product-buy-box__fbt-offer--bottom"
+                    data-cwc-fbt-offer
+                    hidden
+                  ></p>
+                {% endif %}
 
                 <button type="button" class="cwc_product-buy-box__fbt-button" data-cwc-fbt-add>
                   {{ block.settings.button_label | default: 'Add Selected to Cart' }}
@@ -989,6 +1053,105 @@
           "type": "product",
           "id": "product_3",
           "label": "Fallback Product 3"
+        },
+        {
+          "type": "header",
+          "content": "Rows"
+        },
+        {
+          "type": "range",
+          "id": "thumb_size",
+          "label": "Image Size",
+          "min": 40,
+          "max": 96,
+          "step": 4,
+          "unit": "px",
+          "default": 56,
+          "info": "The frame around the bottle. Rows scale this up on mobile, where the bottle is the thing worth seeing."
+        },
+        {
+          "type": "range",
+          "id": "thumb_zoom",
+          "label": "Image Zoom",
+          "min": 100,
+          "max": 150,
+          "step": 5,
+          "unit": "%",
+          "default": 115,
+          "info": "Scales the bottle inside that frame, so a smaller frame still reads clearly."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_item_meta",
+          "label": "Show Item Type",
+          "default": false,
+          "info": "The category line under each title. Off keeps rows to a single line."
+        },
+        {
+          "type": "header",
+          "content": "Bundle Discount"
+        },
+        {
+          "type": "paragraph",
+          "content": "Display only. This mirrors the automatic discount set in Shopify so the widget total matches the cart — it does not create or change the discount itself."
+        },
+        {
+          "type": "number",
+          "id": "discount_threshold",
+          "label": "Discount Threshold",
+          "default": 150,
+          "info": "Bundle total, in store currency, at which the discount starts. Use 0 to always apply it."
+        },
+        {
+          "type": "range",
+          "id": "discount_percent",
+          "label": "Discount Percent",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 5
+        },
+        {
+          "type": "select",
+          "id": "discount_position",
+          "label": "Offer Placement",
+          "options": [
+            { "value": "top", "label": "Top of block" },
+            { "value": "bottom", "label": "Above button" },
+            { "value": "both", "label": "Both" },
+            { "value": "none", "label": "Hidden" }
+          ],
+          "default": "top",
+          "info": "At the top the saving frames the products instead of trailing them. Clear the Heading above to let it open the block on its own."
+        },
+        {
+          "type": "text",
+          "id": "discount_note",
+          "label": "Offer Text",
+          "default": "Bundle & save on the perfect pairing",
+          "info": "Shown once the bundle qualifies. {amount}, {percent} and {threshold} are replaced with the live values. Leave empty to hide."
+        },
+        {
+          "type": "text",
+          "id": "discount_note_pending",
+          "label": "Offer Text Before Threshold",
+          "default": "Add {remaining} more to save {percent}%",
+          "info": "Shown while the bundle is short of the threshold. {remaining} is the gap left to close. Leave empty to show nothing until it qualifies."
+        },
+        {
+          "type": "text",
+          "id": "save_badge_label",
+          "label": "Save Badge",
+          "default": "Save {amount}",
+          "info": "Pill beside the total. {amount} and {percent} are replaced with the live values. Leave empty to hide."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_item_discounts",
+          "label": "Strike Through Item Prices",
+          "default": false,
+          "info": "Also strike each row's price. Off by default — three struck prices crowd the rows, and the total carries the discount on its own."
         },
         {
           "type": "text",
