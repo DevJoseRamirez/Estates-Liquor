@@ -310,23 +310,34 @@
 
         {% else %}
           <div class="cart-drawer__empty-container">
-            {% if settings.empty_cart_message != blank %}
-              <div class="cart-drawer__empty-message text-link-animated">{{ settings.empty_cart_message }}</div>
-            {% endif %}
+            <div class="cart-drawer__empty-intro">
+              <span class="cart-drawer__empty-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 7h12l-1 13H7L6 7Z"/>
+                  <path d="M9 7V5a3 3 0 0 1 6 0v2"/>
+                </svg>
+              </span>
+              {% if settings.empty_cart_heading != blank %}
+                <h2 class="cart-drawer__empty-heading">{{ settings.empty_cart_heading }}</h2>
+              {% endif %}
+              {% if settings.empty_cart_message != blank %}
+                <div class="cart-drawer__empty-message text-link-animated">{{ settings.empty_cart_message }}</div>
+              {% endif %}
+            </div>
 
             <div class="cart-drawer__empty-btn-container">
               {% if settings.empty_cart_collections != blank %}
                 {% for empty_cart_collection in settings.empty_cart_collections %}
                   <a
-                    class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn"
+                    class="btn cart-drawer__empty-btn"
                     href="{{ empty_cart_collection.url }}"
                   >
-                    {{- empty_cart_collection.title -}}
+                    Shop {{ empty_cart_collection.title -}}
                   </a>
                 {% endfor %}
               {% else %}
                 <a
-                  class="btn dynamic-section-button--drawer-filled cart-drawer__empty-btn"
+                  class="btn cart-drawer__empty-btn"
                   href="{{ routes.all_products_collection_url }}"
                 >
                   {{- 'cart.general.return_to_shop' | t -}}
@@ -831,6 +842,78 @@
     justify-content: center;
     gap: 9px;
     transition: background 0.2s;
+  }
+  /* Empty cart */
+  .cart-drawer__empty-container {
+    gap: 28px;
+    padding: 40px 24px;
+  }
+  .cart-drawer__empty-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .cart-drawer__empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 18px;
+    border: 1px solid #c4933f;
+    border-radius: 50%;
+    background: #f8f6f1;
+    color: #c4933f;
+  }
+  .cart-drawer__empty-heading {
+    margin: 0 0 8px;
+    font-family: var(--header-font-stack);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #0a1f12;
+  }
+  .cart-drawer__empty-message {
+    font-family: var(--body-font-stack);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #666;
+  }
+  .cart-drawer__empty-btn-container {
+    width: 100%;
+    gap: 10px;
+  }
+  .cart-drawer__empty-btn.btn {
+    width: 100%;
+    background: transparent;
+    color: #0a1f12;
+    border: 1.5px solid #e0ddd6;
+    border-radius: 3px;
+    font-family: var(--body-font-stack);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 14px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+  .cart-drawer__empty-btn.btn:hover,
+  .cart-drawer__empty-btn.btn:focus-visible {
+    background: #0a1f12;
+    border-color: #0a1f12;
+    color: #fff;
+  }
+  .cart-drawer__empty-btn.btn:first-child {
+    background: #0a1f12;
+    border-color: #0a1f12;
+    color: #fff;
+  }
+  .cart-drawer__empty-btn.btn:first-child:hover,
+  .cart-drawer__empty-btn.btn:first-child:focus-visible {
+    background: #c4933f;
+    border-color: #c4933f;
   }
   @media screen and (max-width: 768px) {
     .cart-drawer__body .cart-drawer__form {

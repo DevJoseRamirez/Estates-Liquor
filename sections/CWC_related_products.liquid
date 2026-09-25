@@ -23,6 +23,11 @@
 {% liquid
   assign source_product = section.settings.product | default: product
   assign products_to_show = section.settings.products_to_show
+
+  # Filtered-out products (this one, add-ons, no_feed) would otherwise shrink
+  # the row, so ask for a couple spare — Shopify caps recommendations at 10
+  assign fetch_limit = products_to_show | plus: 2 | at_most: 10
+  assign rendered_count = 0
 %}
 
 <section
@@ -90,13 +95,15 @@
 
     {% if related_list %}
       <div class="cwc_related-products__track" data-cwc-track data-cwc-grid>
-        {% for related in related_list limit: products_to_show %}
+        {% for related in related_list %}
+          {%- if rendered_count >= products_to_show -%}{%- break -%}{%- endif -%}
           {%- comment -%}
             Products tagged no_feed stay out of every feed, this row included.
             Case-insensitive, comma-delimited so no_feed_extra doesn't trip it.
           {%- endcomment -%}
           {%- assign related_tag_list = related.tags | join: ',' | downcase | prepend: ',' | append: ',' -%}
           {% unless related.id == source_product.id or excluded_handles contains related.handle or related_tag_list contains ',no_feed,' %}
+            {%- assign rendered_count = rendered_count | plus: 1 -%}
             {% liquid
               assign related_variant = related.selected_or_first_available_variant
 
@@ -205,7 +212,7 @@
         class="cwc_related-products__track"
         data-cwc-track
         data-cwc-recommendations
-        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ source_product.id }}&limit={{ products_to_show }}"
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ source_product.id }}&limit={{ fetch_limit }}"
       >
         <p class="cwc_related-products__empty">
           {{ section.settings.empty_text | default: 'Recommendations load once this product is published.' }}
@@ -265,8 +272,9 @@
       "type": "range",
       "id": "products_to_show",
       "label": "Products To Show",
+      "info": "Automatic recommendations top out at 10. A collection override can show up to 12.",
       "min": 2,
-      "max": 8,
+      "max": 12,
       "step": 1,
       "default": 4
     },

@@ -242,6 +242,109 @@
     return url + (url.indexOf("?") === -1 ? "?" : "&") + "width=120";
   }
 
+  /* The bundle discount belongs to the Frequently Bought Together app: each
+     click has it mint a one-off code scoped to exactly the checked products,
+     which is then applied to the cart. This mirrors what the app's own widget
+     does — it is the app's storefront API, not a documented one, so every
+     step here fails soft and the items still go in the cart without it. */
+  var FBT_APP_BASE = "https://cdn.codeblackbelt.com";
+
+  function fbtMarket() {
+    var shopify = window.Shopify || {};
+    return {
+      country: shopify.country || "",
+      currency: (shopify.currency && shopify.currency.active) || "",
+    };
+  }
+
+  /* The signature that authorises creating a code comes with the app's
+     preferences for this page, so they are loaded once per page view */
+  function fbtLoadDiscountPrefs(productId, shop) {
+    var market = fbtMarket();
+    var params = new URLSearchParams({
+      productId: productId,
+      shop: shop,
+      marketCountry: market.country,
+      marketCurrency: market.currency,
+      path: location.pathname,
+      version: new Date().toISOString().slice(0, 16).replace(/[-:T]/g, ""),
+    });
+
+    return fetch(
+      FBT_APP_BASE +
+        "/json/preferences/frequently-bought-together.json?" +
+        params.toString(),
+      { headers: { Accept: "application/json" } },
+    )
+      .then(function (response) {
+        if (!response.ok) throw new Error("Discount preferences unavailable");
+        return response.json();
+      })
+      .then(function (data) {
+        var prefs = data && data.preferences && data.preferences[0];
+        if (!prefs || !prefs.offer_discount || !prefs.discount_hmac) {
+          return null;
+        }
+        return {
+          hmac: prefs.discount_hmac,
+          timestamp: prefs.discount_timestamp,
+          path: prefs.path,
+          /* in cents, like every other amount in this file */
+          minimum: Math.round(
+            (Number(prefs.discount_minimum_amount_requirement) || 0) * 100,
+          ),
+        };
+      });
+  }
+
+  function fbtCreateDiscountCode(prefs, shop, bundle) {
+    var market = fbtMarket();
+    var params = new URLSearchParams({
+      shop: shop,
+      marketCountry: market.country,
+      marketCurrency: market.currency,
+      hmac: prefs.hmac,
+      timestamp: prefs.timestamp,
+      path: prefs.path,
+      currentProductId: bundle.currentProductId,
+    });
+    bundle.productIds.forEach(function (id, i) {
+      params.append("productIds[" + i + "]", id);
+    });
+    bundle.selectedProductIds.forEach(function (id, i) {
+      params.append("selectedProductIds[" + i + "]", id);
+    });
+    bundle.selectedVariantIds.forEach(function (id, i) {
+      params.append("selectedVariantIds[" + i + "]", id);
+    });
+
+    return fetch(FBT_APP_BASE + "/frequently-bought-together/discount.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+      body: params.toString(),
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error("Discount could not be created");
+        return response.json();
+      })
+      .then(function (data) {
+        if (!data || !data.discountCode) throw new Error("No discount code");
+        return data.discountCode;
+      });
+  }
+
+  /* Visiting /discount/<code> is how Shopify attaches a code to the cart;
+     redirecting to cart.js keeps the response small instead of the home page */
+  function fbtApplyDiscountCode(code) {
+    return fetch(
+      "/discount/" + encodeURIComponent(code) + "?redirect=%2Fcart.js",
+    ).then(function (response) {
+      if (!response.ok) throw new Error("Discount could not be applied");
+    });
+  }
+
   function initFbt(sectionEl) {
     var fbt = sectionEl.querySelector("[data-cwc-fbt]");
     if (!fbt) return;
@@ -265,6 +368,57 @@
     var showItemDiscounts = fbt.hasAttribute("data-cwc-fbt-item-discounts");
     var showMeta = !fbt.hasAttribute("data-cwc-fbt-no-meta");
 
+    /* One request per page view, shared by the reveal and the click */
+    var discountPrefsPromise = null;
+    function discountPrefs() {
+      if (discountPrefsPromise) return discountPrefsPromise;
+      var productId = fbt.dataset.productId;
+      var shop = fbt.dataset.shop;
+      discountPrefsPromise = !productId || !shop
+        ? Promise.resolve(null)
+        : fbtLoadDiscountPrefs(productId, shop).catch(function (error) {
+            console.warn("[cwc] bundle discount unavailable:", error);
+            return null;
+          });
+      discountPrefsPromise.then(function (prefs) {
+        /* The app is not offering a discount, so neither should this widget */
+        if (prefs || discountPercent <= 0) return;
+        discountPercent = 0;
+        syncTotal();
+      });
+      return discountPrefsPromise;
+    }
+
+    /* Mints and applies the app's code for exactly these items. Resolves
+       either way — a missing discount must never block the add itself. */
+    function applyBundleDiscount(items, sum) {
+      if (!discountFor(sum)) return Promise.resolve();
+
+      return discountPrefs()
+        .then(function (prefs) {
+          if (!prefs || sum < prefs.minimum) return null;
+
+          var productIds = [];
+          checkboxes().forEach(function (check) {
+            if (check.dataset.productId) productIds.push(check.dataset.productId);
+          });
+
+          return fbtCreateDiscountCode(prefs, fbt.dataset.shop, {
+            currentProductId: fbt.dataset.productId,
+            productIds: productIds,
+            selectedProductIds: items.map(function (item) {
+              return item.productId;
+            }),
+            selectedVariantIds: items.map(function (item) {
+              return item.id;
+            }),
+          }).then(fbtApplyDiscountCode);
+        })
+        .catch(function (error) {
+          console.warn("[cwc] bundle discount not applied:", error);
+        });
+    }
+
     /* Re-queried rather than captured: live recommendations replace these rows */
     function checkboxes() {
       return fbt.querySelectorAll("[data-cwc-fbt-check]");
@@ -277,6 +431,7 @@
           return;
         items.push({
           id: check.dataset.variantId,
+          productId: check.dataset.productId,
           price: parseInt(check.dataset.price, 10) || 0,
         });
       });
@@ -450,6 +605,7 @@
         var price = row.querySelector(".cwc_product-buy-box__fbt-price");
 
         check.dataset.variantId = variant.id;
+        check.dataset.productId = product.id;
         check.dataset.price = variant.price;
         check.setAttribute(
           "aria-label",
@@ -498,6 +654,8 @@
       var shop = fbt.dataset.shop;
       if (!productId || !shop) return;
 
+      discountPrefs();
+
       var max = parseInt(fbt.dataset.max, 10) || 3;
 
       fbtFetchHandles(productId, shop)
@@ -533,15 +691,23 @@
     bindChecks();
 
     addButton.addEventListener("click", function () {
-      var items = selected().map(function (item) {
+      var picked = selected();
+      if (!picked.length) return;
+
+      var sum = picked.reduce(function (acc, item) {
+        return acc + item.price;
+      }, 0);
+      var items = picked.map(function (item) {
         return { id: item.id, quantity: 1 };
       });
-      if (!items.length) return;
 
       var original = addButton.textContent;
       addButton.disabled = true;
 
-      addItems(items)
+      applyBundleDiscount(picked, sum)
+        .then(function () {
+          return addItems(items);
+        })
         .then(function () {
           addButton.disabled = false;
           afterAdd(addButton, original);
