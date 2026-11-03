@@ -1,0 +1,140 @@
+{% style %}
+  #cwc_back-to-top-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#F8F6F1' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --padding-top: {{ section.settings.padding_top | default: 20 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
+    --margin-top: {{ section.settings.margin_top | default: 0 }}px;
+    --margin-top-mobile: {{ section.settings.margin_top | default: 0 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_back_to_top.css' | asset_url | stylesheet_tag }}
+
+<section
+  id="cwc_back-to-top-{{ section.id }}"
+  class="cwc_back-to-top{% if section.settings.show_border %} cwc_back-to-top--border{% endif %}"
+>
+  <button type="button" class="cwc_back-to-top__button" data-back-to-top>
+    {% if section.settings.show_icon %}
+      <svg class="cwc_back-to-top__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+    {% endif %}
+    <span class="cwc_back-to-top__label">{{ section.settings.label | default: 'Back to top' | escape }}</span>
+  </button>
+</section>
+
+{{ 'CWC_back_to_top.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "CWC Back To Top",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Back to top"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show Arrow Icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Hover Text Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "hover_bg_color",
+      "label": "Hover Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Top And Bottom Border",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Space Above",
+      "info": "Gap between this band and the section above",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "CWC Back To Top",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

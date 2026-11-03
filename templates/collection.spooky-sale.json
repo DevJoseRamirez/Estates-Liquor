@@ -77,31 +77,41 @@
         "link_color": "#666666",
         "bold_color": "#c4933f",
         "separator_color": "#e0ddd6",
-        "show_border": true,
+        "show_border": false,
         "border_color": "#e0ddd6",
-        "padding_top": 15,
-        "padding_bottom": 15
-      }
+        "padding_top": 25,
+        "padding_bottom": 0,
+        "alignment": "center"
+      },
+      "disabled": true
     },
     "cwc_collection_header": {
       "type": "CWC_collection_header",
       "settings": {
-        "eyebrow": "",
+        "show_breadcrumb": true,
+        "show_description": true,
         "title": "",
         "description": "",
-        "show_count": true,
-        "count_text": "",
-        "image": "shopify://shop_images/Mask_group_2_1.png",
-        "image_opacity": 62,
-        "overlay_opacity": 68,
-        "bg_color": "#0a1f12",
-        "text_color": "#ffffff",
+        "show_all_pill": true,
+        "all_label": "All",
+        "search_crumb": "Search",
+        "search_title": "Search",
+        "search_results_title": "Results for",
+        "search_placeholder": "Search bottles, brands, collections",
+        "search_button_label": "Search",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
         "bold_color": "#c4933f",
-        "eyebrow_color": "#c4933f",
-        "count_color": "#c4933f",
-        "overlay_color": "#0a1f12",
-        "padding_top": 60,
-        "padding_bottom": 60
+        "subtext_color": "#343434",
+        "meta_color": "#666666",
+        "border_color": "#e0ddd6",
+        "pill_border_color": "#c9c3b5",
+        "pill_bg_color": "#ffffff",
+        "pill_text_color": "#0a1f12",
+        "pill_active_bg_color": "#0a1f12",
+        "pill_active_text_color": "#ffffff",
+        "padding_top": 36,
+        "padding_bottom": 32
       }
     },
     "cwc_subcategory_rail": {
@@ -404,6 +414,22 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "cwc_back_to_top": {
+      "type": "CWC_back_to_top",
+      "settings": {
+        "label": "Back to top",
+        "show_icon": true,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "hover_bg_color": "#f8f6f1",
+        "border_color": "#e0ddd6",
+        "show_border": true,
+        "margin_top": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [
@@ -415,6 +441,7 @@
     "cwc_collection_body",
     "cwc_related_collections",
     "cwc_collection_seo",
-    "cwc_trust_strip"
+    "cwc_trust_strip",
+    "cwc_back_to_top"
   ]
 }

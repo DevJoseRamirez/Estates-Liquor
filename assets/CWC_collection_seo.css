@@ -114,6 +114,37 @@
   padding-left: 1.25rem;
 }
 
+/* === Read More === */
+.cwc_collection-seo__more {
+  max-width: var(--content-width);
+  margin: 1.75rem auto 0;
+}
+
+.cwc_collection-seo__toggle {
+  height: 44px;
+  padding: 0 1.375rem;
+  border: 1px solid var(--text-color);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cwc_collection-seo__toggle:hover {
+  background: var(--text-color);
+  color: var(--section-bg);
+}
+
+.cwc_collection-seo__toggle[hidden] {
+  display: none;
+}
+
 /* ==============================
    Tablet Responsive
    ============================== */

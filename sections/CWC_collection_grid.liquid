@@ -1,0 +1,496 @@
+{% style %}
+  #cwc_collection-grid-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#343434' }};
+    --meta-color: {{ section.settings.meta_color | default: '#666666' }};
+    --card-meta-color: {{ section.settings.meta_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --control-border: {{ section.settings.control_border_color | default: '#C9C3B5' }};
+    --chip-bg: {{ section.settings.chip_bg_color | default: '#F8F6F1' }};
+    --accent-color: {{ section.settings.accent_color | default: '#C4933F' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#FFFFFF' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
+    --button-text: {{ section.settings.button_text_color | default: '#FFFFFF' }};
+    --filter-list-height: {{ section.settings.filter_list_height | default: 280 }}px;
+    --columns-desktop: {{ section.settings.columns_desktop | default: 4 }};
+    --columns-wide: {{ section.settings.columns_desktop | default: 4 | plus: 1 }};
+    --padding-top: {{ section.settings.padding_top | default: 0 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 72 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 0 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 72 | times: 0.5 }}px;
+  }
+
+  {% comment %}
+    The theme clips every section wrapper (.shopify-section { overflow: hidden }), which makes the
+    wrapper its own scroll box — the sticky toolbar would stick inside it instead of to the screen.
+  {% endcomment %}
+  #shopify-section-{{ section.id }} {
+    overflow: visible;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_collection_grid.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Shared by templates/collection.json and templates/search.json — same layout, cards and filters.
+  # grid_source is the collection or the search object; both expose filters, sort_options and sort_by.
+  assign is_search = false
+  if template.name == 'search'
+    assign is_search = true
+    assign grid_source = search
+    assign base_url = routes.search_url
+    assign search_terms_param = search.terms | url_encode
+    assign base_query = '?q=' | append: search_terms_param | append: '&type=product'
+  else
+    assign grid_source = collection
+    assign base_url = collection.url
+    assign base_query = ''
+  endif
+
+  assign per_page = section.settings.products_per_page | default: 12
+  assign button_labels = section.settings.button_filters | downcase | split: ','
+  assign form_id = 'cwc_collection-grid-form-' | append: section.id
+  assign has_filters = false
+  if section.settings.show_filters and grid_source.filters.size > 0
+    assign has_filters = true
+  endif
+
+  # Active filter count + availability ("In stock only") filter
+  assign active_count = 0
+  assign stock_value = nil
+  for filter in grid_source.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: filter.active_values.size
+    endif
+    if filter.param_name == 'filter.v.availability'
+      for value in filter.values
+        if value.value == '1'
+          assign stock_value = value
+        endif
+      endfor
+    endif
+  endfor
+
+  assign sort_by = grid_source.sort_by | default: grid_source.default_sort_by
+  assign clear_url = base_url | append: base_query
+  if grid_source.sort_by != blank
+    if base_query != blank
+      assign clear_url = clear_url | append: '&sort_by=' | append: grid_source.sort_by
+    else
+      assign clear_url = clear_url | append: '?sort_by=' | append: grid_source.sort_by
+    endif
+  endif
+
+  if is_search
+    assign results_count = search.results_count
+  else
+    assign results_count = collection.products_count
+  endif
+  if results_count == 1
+    assign results_label = '1 result'
+  else
+    assign results_label = results_count | append: ' results'
+  endif
+-%}
+
+{%- capture chips_html -%}
+  {%- for filter in grid_source.filters -%}
+    {%- if filter.type == 'price_range' -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+        <a href="{{ filter.url_to_remove }}" class="cwc_collection-grid__chip no-transition" data-cwc-link>
+          {%- if filter.min_value.value != nil -%}{{ filter.min_value.value | money_without_trailing_zeros }}{%- else -%}{{ 0 | money_without_trailing_zeros }}{%- endif -%}
+          –
+          {%- if filter.max_value.value != nil -%}{{ filter.max_value.value | money_without_trailing_zeros }}{%- else -%}{{ filter.range_max | money_without_trailing_zeros }}{%- endif -%}
+          <span class="cwc_collection-grid__chip-x" aria-hidden="true">✕</span>
+          <span class="cwc_collection-grid__sr">Remove filter</span>
+        </a>
+      {%- endif -%}
+    {%- else -%}
+      {%- for value in filter.active_values -%}
+        <a href="{{ value.url_to_remove }}" class="cwc_collection-grid__chip no-transition" data-cwc-link>
+          {%- if filter.param_name == 'filter.v.availability' -%}In stock only{%- else -%}{{ value.label | escape }}{%- endif -%}
+          <span class="cwc_collection-grid__chip-x" aria-hidden="true">✕</span>
+          <span class="cwc_collection-grid__sr">Remove filter</span>
+        </a>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if active_count > 0 -%}
+    <a href="{{ clear_url }}" class="cwc_collection-grid__clear no-transition" data-cwc-link>Clear all</a>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture stock_html -%}
+  {%- if stock_value != nil -%}
+    {%- if stock_value.active -%}
+      {%- assign stock_url = stock_value.url_to_remove -%}
+    {%- else -%}
+      {%- assign stock_url = stock_value.url_to_add -%}
+    {%- endif -%}
+    <a
+      href="{{ stock_url }}"
+      class="cwc_collection-grid__stock no-transition{% if stock_value.active %} cwc_collection-grid__stock--active{% endif %}"
+      role="checkbox"
+      aria-checked="{{ stock_value.active }}"
+      data-cwc-link
+    >
+      <span class="cwc_collection-grid__stock-box" aria-hidden="true"></span>
+      In stock only <span class="cwc_collection-grid__stock-count">({{ stock_value.count }})</span>
+    </a>
+  {%- endif -%}
+{%- endcapture -%}
+
+<section
+  id="cwc_collection-grid-{{ section.id }}"
+  class="cwc_collection-grid{% unless has_filters %} cwc_collection-grid--no-filters{% endunless %}{% if section.settings.sticky_toolbar %} cwc_collection-grid--sticky{% endif %}{% if section.settings.sticky_filters %} cwc_collection-grid--sticky-filters{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-collection-url="{{ base_url }}"
+>
+  {% comment %} paginate needs the real object path, so each source gets its own block {% endcomment %}
+  {% if is_search %}
+    {% paginate search.results by per_page %}
+      {%- assign item_count = 0 -%}
+      {%- capture grid_items -%}
+        {%- for product in search.results -%}
+          {%- liquid
+            # Search can return pages / articles — the grid only shows products
+            if product.object_type != blank and product.object_type != 'product'
+              continue
+            endif
+            # Products tagged no_feed / no-feed never show in the grid
+            assign tags_lower = product.tags | join: '|' | downcase | split: '|'
+            if tags_lower contains 'no-feed' or tags_lower contains 'no_feed'
+              continue
+            endif
+            assign item_count = item_count | plus: 1
+          -%}
+          <li class="cwc_collection-grid__item">
+            {% render 'cwc-product-card', product: product, section_settings: section.settings %}
+          </li>
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign page_size = search.results.size -%}
+      {% render 'CWC_collection_grid_body',
+      paginate: paginate,
+      grid_source: grid_source,
+      is_search: is_search,
+      base_url: base_url,
+      form_id: form_id,
+      per_page: per_page,
+      has_filters: has_filters,
+      active_count: active_count,
+      stock_value: stock_value,
+      sort_by: sort_by,
+      clear_url: clear_url,
+      results_label: results_label,
+      chips_html: chips_html,
+      stock_html: stock_html,
+      button_labels: button_labels,
+      grid_items: grid_items,
+      item_count: item_count,
+      page_size: page_size
+      %}
+    {% endpaginate %}
+  {% else %}
+    {% paginate collection.products by per_page %}
+      {%- assign item_count = 0 -%}
+      {%- capture grid_items -%}
+        {%- for product in collection.products -%}
+          {%- liquid
+            # Search can return pages / articles — the grid only shows products
+            if product.object_type != blank and product.object_type != 'product'
+              continue
+            endif
+            # Products tagged no_feed / no-feed never show in the grid
+            assign tags_lower = product.tags | join: '|' | downcase | split: '|'
+            if tags_lower contains 'no-feed' or tags_lower contains 'no_feed'
+              continue
+            endif
+            assign item_count = item_count | plus: 1
+          -%}
+          <li class="cwc_collection-grid__item">
+            {% render 'cwc-product-card', product: product, section_settings: section.settings %}
+          </li>
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign page_size = collection.products.size -%}
+      {% render 'CWC_collection_grid_body',
+      paginate: paginate,
+      grid_source: grid_source,
+      is_search: is_search,
+      base_url: base_url,
+      form_id: form_id,
+      per_page: per_page,
+      has_filters: has_filters,
+      active_count: active_count,
+      stock_value: stock_value,
+      sort_by: sort_by,
+      clear_url: clear_url,
+      results_label: results_label,
+      chips_html: chips_html,
+      stock_html: stock_html,
+      button_labels: button_labels,
+      grid_items: grid_items,
+      item_count: item_count,
+      page_size: page_size
+      %}
+    {% endpaginate %}
+  {% endif %}
+</section>
+
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
+<script src="{{ 'CWC_collection_grid.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Collection Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "info": "One more column is used when filters are hidden",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "load_more_icon",
+      "label": "Load more icon",
+      "options": [
+        {
+          "value": "chevron",
+          "label": "Down arrow"
+        },
+        {
+          "value": "plus",
+          "label": "Plus"
+        },
+        {
+          "value": "refresh",
+          "label": "Circular arrow (spins while loading)"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "chevron"
+    },
+    {
+      "type": "header",
+      "content": "Filters & Sort"
+    },
+    {
+      "type": "paragraph",
+      "content": "Filters come from the Shopify Search & Discovery app."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show filters",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_filters",
+      "label": "Filters shown as buttons",
+      "info": "Comma-separated filter labels shown as boxed buttons instead of checkboxes on desktop (e.g. Bottle size, Size)",
+      "default": "Bottle size, Size"
+    },
+    {
+      "type": "range",
+      "id": "filters_open_count",
+      "label": "Filter groups open on load",
+      "info": "The rest start collapsed. A group with a selected value always opens",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "filter_list_height",
+      "label": "Filter list max height",
+      "info": "Longer lists scroll inside their group",
+      "min": 160,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_toolbar",
+      "label": "Sticky toolbar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_filters",
+      "label": "Sticky filters (desktop)",
+      "info": "The filter sidebar stays in view beside the grid while scrolling. A sidebar taller than the screen scrolls on its own",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Body Text Color",
+      "default": "#343434"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Muted Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "control_border_color",
+      "label": "Input / Button Border Color",
+      "default": "#C9C3B5"
+    },
+    {
+      "type": "color",
+      "id": "chip_bg_color",
+      "label": "Active Filter Chip Background",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "info": "Checkboxes, links, filter count",
+      "default": "#C4933F"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_media_bg_color",
+      "label": "Card Image Background Color",
+      "default": "#F2EFE8"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#0A1F12",
+      "info": "Add to cart on cards and Show results in the mobile filter sheet."
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

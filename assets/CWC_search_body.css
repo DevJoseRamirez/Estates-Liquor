@@ -1,0 +1,73 @@
+/* ==============================
+   CWC Search Body
+   Layout, filters, grid and product cards come from CWC_collection_body.css.
+   Only search-specific pieces live here.
+   ============================== */
+
+/* === Article / Page Result Card === */
+.cwc_search-body__entry {
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 22px 20px;
+  min-height: 100%;
+  text-decoration: none;
+  color: var(--text-color);
+  background-color: var(--off-white);
+}
+
+.cwc_search-body__entry-type {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--highlight-color);
+}
+
+.cwc_search-body__entry-title {
+  font-family: var(--cwc-font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.cwc_search-body__entry-text {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--subtext-color);
+}
+
+.cwc_search-body__entry-link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+.cwc_search-body__entry:hover .cwc_search-body__entry-link {
+  color: var(--highlight-color);
+}
+
+/* === Idle State (no query yet) === */
+.cwc_search-body--idle .cwc_collection-body__empty {
+  padding: 2rem 1rem;
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_search-body__entry {
+    padding: 16px 14px;
+  }
+
+  .cwc_search-body__entry-title {
+    font-size: 0.9375rem;
+  }
+
+  .cwc_search-body__entry-text {
+    font-size: 0.75rem;
+  }
+}

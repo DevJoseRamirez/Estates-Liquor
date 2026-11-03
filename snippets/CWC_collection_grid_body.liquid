@@ -1,0 +1,314 @@
+{% comment %}
+  CWC Collection Grid — body (toolbar, filters, grid, pagination).
+  Rendered from inside the paginate block of sections/CWC_collection_grid.liquid so the same markup
+  serves the collection page and the search page. All values are prepared by the section.
+  Cards are snippets/cwc-product-card.liquid (styles: CWC_product_card.css).
+
+  Accepts: paginate, grid_source (collection or search), is_search, base_url, form_id, per_page,
+  has_filters, active_count, stock_value, sort_by, clear_url, results_label, chips_html, stock_html,
+  button_labels, grid_items (rendered <li> cards), item_count, page_size.
+{% endcomment %}
+
+{% comment %} Toolbar (sticky) {% endcomment %}
+<div class="cwc_collection-grid__toolbar">
+  <div class="cwc_collection-grid__toolbar-inner">
+    {% if has_filters %}
+      <button
+        type="button"
+        class="cwc_collection-grid__filter-toggle"
+        aria-controls="cwc_collection-grid-sidebar-{{ section.id }}"
+        aria-expanded="true"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+        <span class="cwc_collection-grid__filter-toggle-desktop">Hide filters</span>
+        <span class="cwc_collection-grid__filter-toggle-mobile">Filter</span>
+        <span class="cwc_collection-grid__filter-count{% if active_count == 0 %} cwc_collection-grid__filter-count--empty{% endif %}" data-cwc-region="filter-count">{{ active_count }}</span>
+      </button>
+    {% endif %}
+
+    <div class="cwc_collection-grid__toolbar-stock" data-cwc-region="stock">{{ stock_html }}</div>
+
+    <p class="cwc_collection-grid__count" data-cwc-region="count" aria-live="polite">{{ results_label }}</p>
+
+    {% if section.settings.show_sort and grid_source.sort_options.size > 0 %}
+      <div class="cwc_collection-grid__sort">
+        <label for="cwc_collection-grid-sort-{{ section.id }}" class="cwc_collection-grid__sort-label">Sort</label>
+        <select
+          id="cwc_collection-grid-sort-{{ section.id }}"
+          class="cwc_collection-grid__sort-select"
+          name="sort_by"
+          form="{{ form_id }}"
+        >
+          {% for option in grid_source.sort_options %}
+            <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+  </div>
+
+  {% comment %} Mobile: results + active chips row {% endcomment %}
+  <div class="cwc_collection-grid__toolbar-chips" data-cwc-region="chips-mobile">
+    <span class="cwc_collection-grid__toolbar-chips-count">{{ results_label }}</span>
+    {{ chips_html }}
+  </div>
+</div>
+
+<div class="cwc_collection-grid__container">
+  <div class="cwc_collection-grid__wrapper">
+
+    {% comment %} Filters: sidebar on desktop, bottom sheet on tablet/mobile {% endcomment %}
+    {% if has_filters %}
+      <div class="cwc_collection-grid__overlay" data-cwc-close></div>
+      <aside
+        class="cwc_collection-grid__sidebar"
+        id="cwc_collection-grid-sidebar-{{ section.id }}"
+        aria-label="Filters"
+        tabindex="-1"
+      >
+        <div class="cwc_collection-grid__drawer-head">
+          <p class="cwc_collection-grid__drawer-title">Filter</p>
+          <button type="button" class="cwc_collection-grid__drawer-close" aria-label="Close filters" data-cwc-close>✕</button>
+        </div>
+
+        <form id="{{ form_id }}" class="cwc_collection-grid__form" action="{{ base_url }}" method="get">
+          {% if is_search %}
+            <input type="hidden" name="q" value="{{ search.terms | escape }}">
+            <input type="hidden" name="type" value="product">
+          {% endif %}
+          <div class="cwc_collection-grid__groups" data-cwc-region="filters">
+
+            {% comment %} Drawer only: In stock only toggle (desktop uses the toolbar link) {% endcomment %}
+            {% if stock_value != nil %}
+              <label class="cwc_collection-grid__stock-row" for="cwc_collection-grid-stock-{{ section.id }}">
+                In stock only
+                <input
+                  type="checkbox"
+                  id="cwc_collection-grid-stock-{{ section.id }}"
+                  class="cwc_collection-grid__stock-input"
+                  name="{{ stock_value.param_name }}"
+                  value="{{ stock_value.value }}"
+                  {% if stock_value.active %}checked{% endif %}
+                >
+              </label>
+            {% endif %}
+
+            {%- assign group_index = 0 -%}
+            {% for filter in grid_source.filters %}
+              {% if filter.param_name == 'filter.v.availability' %}{% continue %}{% endif %}
+              {%- liquid
+                assign label_lower = filter.label | downcase | strip
+                assign as_buttons = false
+                for button_label in button_labels
+                  assign button_label_clean = button_label | strip
+                  if button_label_clean == label_lower
+                    assign as_buttons = true
+                  endif
+                endfor
+                assign filter_key = filter.param_name | handle
+                assign group_index = group_index | plus: 1
+                assign open_groups = section.settings.filters_open_count | default: 1
+                assign group_active = 0
+                if filter.type == 'price_range'
+                  if filter.min_value.value != nil or filter.max_value.value != nil
+                    assign group_active = 1
+                  endif
+                else
+                  assign group_active = filter.active_values.size
+                endif
+                assign group_open = false
+                if group_index <= open_groups or group_active > 0
+                  assign group_open = true
+                endif
+              -%}
+              <details
+                class="cwc_collection-grid__group{% if as_buttons %} cwc_collection-grid__group--buttons{% endif %}"
+                data-cwc-group="{{ filter_key }}"
+                {% if group_open %}open{% endif %}
+              >
+                <summary class="cwc_collection-grid__group-title">
+                  <span>
+                    {{- filter.label | escape -}}
+                    {%- if group_active > 0 and filter.type != 'price_range' %} <span class="cwc_collection-grid__group-count">({{ group_active }})</span>{% endif -%}
+                  </span>
+                  <span class="cwc_collection-grid__group-icon" aria-hidden="true"></span>
+                </summary>
+                <fieldset class="cwc_collection-grid__fieldset">
+                <legend class="cwc_collection-grid__sr">{{ filter.label | escape }}</legend>
+
+                {% case filter.type %}
+                  {% when 'list', 'boolean' %}
+                    <div class="cwc_collection-grid__options">
+                      {% for value in filter.values %}
+                        {%- liquid
+                          assign is_disabled = false
+                          if value.count == 0 and value.active == false
+                            assign is_disabled = true
+                          endif
+                        -%}
+                        <label class="cwc_collection-grid__option{% if is_disabled %} cwc_collection-grid__option--disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            class="cwc_collection-grid__option-input"
+                            id="cwc_collection-grid-{{ section.id }}-{{ filter_key }}-{{ forloop.index }}"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value | escape }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if is_disabled %}disabled{% endif %}
+                          >
+                          <span class="cwc_collection-grid__option-label">{{ value.label | escape }}</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+
+                  {% when 'price_range' %}
+                    <div class="cwc_collection-grid__price">
+                      <label class="cwc_collection-grid__price-field" for="cwc_collection-grid-{{ section.id }}-price-min">
+                        Min
+                        <span class="cwc_collection-grid__price-input-wrap">
+                          <span class="cwc_collection-grid__price-currency" aria-hidden="true">{{ cart.currency.symbol }}</span>
+                          <input
+                            type="number"
+                            inputmode="decimal"
+                            class="cwc_collection-grid__price-input"
+                            id="cwc_collection-grid-{{ section.id }}-price-min"
+                            name="{{ filter.min_value.param_name }}"
+                            {% if filter.min_value.value != nil %}value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                            placeholder="0"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                            step="any"
+                          >
+                        </span>
+                      </label>
+                      <label class="cwc_collection-grid__price-field" for="cwc_collection-grid-{{ section.id }}-price-max">
+                        Max
+                        <span class="cwc_collection-grid__price-input-wrap">
+                          <span class="cwc_collection-grid__price-currency" aria-hidden="true">{{ cart.currency.symbol }}</span>
+                          <input
+                            type="number"
+                            inputmode="decimal"
+                            class="cwc_collection-grid__price-input"
+                            id="cwc_collection-grid-{{ section.id }}-price-max"
+                            name="{{ filter.max_value.param_name }}"
+                            {% if filter.max_value.value != nil %}value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                            placeholder="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                            step="any"
+                          >
+                        </span>
+                      </label>
+                    </div>
+                {% endcase %}
+                </fieldset>
+              </details>
+            {% endfor %}
+          </div>
+
+          <noscript>
+            <button type="submit" class="cwc_collection-grid__apply">Apply filters</button>
+          </noscript>
+        </form>
+
+        <div class="cwc_collection-grid__drawer-foot" data-cwc-region="drawer-foot">
+          <a href="{{ clear_url }}" class="cwc_collection-grid__drawer-clear no-transition" data-cwc-link>Clear all</a>
+          <button type="button" class="cwc_collection-grid__drawer-apply" data-cwc-close>Show {{ results_label }}</button>
+        </div>
+      </aside>
+    {% endif %}
+
+    {% comment %} Main column {% endcomment %}
+    <div class="cwc_collection-grid__main">
+      <div class="cwc_collection-grid__chips" data-cwc-region="chips">{{ chips_html }}</div>
+
+      <div data-cwc-region="grid">
+        {% if item_count > 0 %}
+          <ul class="cwc_collection-grid__grid" role="list">
+            {{ grid_items }}
+          </ul>
+        {% elsif grid_source == blank %}
+          {% comment %} Theme editor preview with no collection picked {% endcomment %}
+          <ul class="cwc_collection-grid__grid" role="list">
+            {% for i in (1..per_page) %}
+              <li class="cwc_collection-grid__item">
+                <div class="cwc_collection-body__card">
+                  <span class="cwc_collection-body__card-media">
+                    <span class="cwc_collection-body__card-placeholder">
+                      <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                        <rect x="16" y="0" width="20" height="6" rx="2" />
+                        <rect x="18" y="6" width="16" height="11" />
+                        <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                      </svg>
+                    </span>
+                  </span>
+                  <div class="cwc_collection-body__card-body">
+                    <span class="cwc_collection-body__card-title">Product title</span>
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="cwc_collection-grid__empty">
+            <p class="cwc_collection-grid__empty-text">
+              {%- if is_search and active_count == 0 -%}
+                {%- if search.performed -%}
+                  No products found for “{{ search.terms | escape }}”. Try a different spelling or a brand name.
+                {%- else -%}
+                  Search for a bottle, brand or spirit.
+                {%- endif -%}
+              {%- else -%}
+                No products match these filters.
+              {%- endif -%}
+            </p>
+            {% if active_count > 0 %}
+              <a href="{{ clear_url }}" class="cwc_collection-grid__empty-link no-transition" data-cwc-link>Clear all filters</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cwc_collection-grid__pagination" data-cwc-region="pagination">
+        {%- liquid
+          assign shown = paginate.current_offset | plus: page_size
+          if shown > paginate.items
+            assign shown = paginate.items
+          endif
+          assign remaining = paginate.items | minus: shown
+        -%}
+        {% if paginate.items > 0 %}
+          {%- assign progress = shown | times: 100 | divided_by: paginate.items -%}
+          <p class="cwc_collection-grid__pagination-status">
+            Showing {{ shown }} of {{ paginate.items }}
+          </p>
+          <div
+            class="cwc_collection-grid__progress"
+            role="progressbar"
+            aria-label="Products shown"
+            aria-valuemin="0"
+            aria-valuemax="{{ paginate.items }}"
+            aria-valuenow="{{ shown }}"
+          >
+            <span class="cwc_collection-grid__progress-fill" style="width: {{ progress }}%;"></span>
+          </div>
+        {% endif %}
+        {% if paginate.next %}
+          {%- assign load_more_icon = section.settings.load_more_icon | default: 'chevron' -%}
+          <a href="{{ paginate.next.url }}" class="cwc_collection-grid__load-more cwc_collection-grid__load-more--{{ load_more_icon }} no-transition" data-cwc-load-more>
+            {%- case load_more_icon -%}
+              {%- when 'chevron' -%}
+                <svg class="cwc_collection-grid__load-more-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"></path></svg>
+              {%- when 'plus' -%}
+                <svg class="cwc_collection-grid__load-more-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"></path></svg>
+              {%- when 'refresh' -%}
+                <svg class="cwc_collection-grid__load-more-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.34-5.66"></path><path d="M20 4v5h-5"></path></svg>
+            {%- endcase -%}
+            Load more<span class="cwc_collection-grid__load-more-left"> · {{ remaining }} left</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>

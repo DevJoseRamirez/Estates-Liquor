@@ -1,0 +1,297 @@
+{% style %}
+  #cwc_search-header-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#343434' }};
+    --input-border: {{ section.settings.input_border_color | default: '#E0DDD6' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --count-color: {{ section.settings.count_color | default: '#C4933F' }};
+    --input-bg: {{ section.settings.input_bg_color | default: '#ffffff' }};
+    --input-text: {{ section.settings.input_text_color | default: '#0A1F12' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --button-text: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --padding-top: {{ section.settings.padding_top | default: 30 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 35 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 30 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 35 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_search_header.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign terms = search.terms | escape
+
+  if search.performed
+    assign header_title = section.settings.results_title | default: 'Results for [terms]'
+    assign quoted_terms = '&ldquo;' | append: terms | append: '&rdquo;'
+    assign header_title = header_title | replace: '[terms]', quoted_terms
+  else
+    assign header_title = section.settings.empty_title | default: 'Search the Shelf'
+  endif
+
+  # Products-only wins; otherwise keep whatever types the last search used
+  if section.settings.products_only
+    assign search_types = 'product'
+  else
+    assign search_types = search.types | join: ','
+  endif
+%}
+
+<section id="cwc_search-header-{{ section.id }}" class="cwc_search-header{% if section.settings.show_border %} cwc_search-header--bordered{% endif %}">
+  <div class="cwc_search-header__container">
+    <div class="cwc_search-header__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cwc_search-header__content-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      <h1 class="cwc_search-header__content-heading">{{ header_title }}</h1>
+
+      {% if search.performed and section.settings.show_count %}
+        <p class="cwc_search-header__count">
+          {{ search.results_count }}
+          {% if search.results_count == 1 %}
+            {{ section.settings.count_singular | default: 'result' }}
+          {% else %}
+            {{ section.settings.count_plural | default: 'results' }}
+          {% endif %}
+        </p>
+      {% elsif search.performed == false and section.settings.subtext != blank %}
+        <div class="cwc_search-header__content-subtext cwc-rte">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+
+      <form action="{{ routes.search_url }}" method="get" role="search" class="cwc_search-header__form">
+        {% if search_types != blank %}
+          <input type="hidden" name="type" value="{{ search_types }}">
+        {% endif %}
+        <input type="hidden" name="options[prefix]" value="last">
+
+        <span class="cwc_search-header__form-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+        </span>
+
+        <input
+          type="search"
+          name="q"
+          value="{{ terms }}"
+          class="cwc_search-header__form-input"
+          placeholder="{{ section.settings.placeholder | default: 'Search bottles, brands, collections' | escape }}"
+          aria-label="Search"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+
+        <button type="submit" class="cwc_search-header__form-button">
+          {{ section.settings.button_label | default: 'Search' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Search Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (Optional)",
+      "default": "Search"
+    },
+    {
+      "type": "text",
+      "id": "results_title",
+      "label": "Results Title",
+      "default": "Results for [terms]",
+      "info": "[terms] is replaced with what the shopper searched."
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Title Before Searching",
+      "default": "Search the Shelf"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext Before Searching",
+      "default": "<p>Find a bottle by name, distillery, or style.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Result Count"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show Result Count",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "count_singular",
+      "label": "Count Label (One)",
+      "default": "result"
+    },
+    {
+      "type": "text",
+      "id": "count_plural",
+      "label": "Count Label (Many)",
+      "default": "results"
+    },
+    {
+      "type": "header",
+      "content": "Search Box"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "Search bottles, brands, collections"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Search"
+    },
+    {
+      "type": "checkbox",
+      "id": "products_only",
+      "label": "Search Products Only",
+      "default": true,
+      "info": "Applies to searches started from this box. Leaves out blog posts and pages."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#343434"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Highlight Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "count_color",
+      "label": "Count Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Search Box Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Search Box Text",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Search Box Border",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Divider",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search Header",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

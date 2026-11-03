@@ -1,0 +1,241 @@
+{% style %}
+  #cwc_announcement-bar-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0E2119' }};
+    --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C9974A' }};
+    --arrow-color: {{ section.settings.arrow_color | default: '#C9974A' }};
+    --text-size: {{ section.settings.text_size | default: 14 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 10 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 10 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 10 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_announcement_bar.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign slide_count = 0
+  for block in section.blocks
+    if block.type == 'announcement' and block.settings.text != blank
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+
+  assign rotates = false
+  if slide_count > 1
+    assign rotates = true
+  endif
+%}
+
+{% if slide_count > 0 %}
+  <section
+    id="cwc_announcement-bar-{{ section.id }}"
+    class="cwc_announcement-bar{% if rotates %} cwc_announcement-bar--rotating{% endif %}"
+    data-section-id="{{ section.id }}"
+    {% if rotates %}
+      aria-roledescription="carousel"
+      aria-label="Announcements"
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-interval="{{ section.settings.interval | default: 5 }}"
+    {% endif %}
+  >
+    <div class="cwc_announcement-bar__container">
+      {% if rotates and section.settings.show_arrows %}
+        <button type="button" class="cwc_announcement-bar__arrow cwc_announcement-bar__arrow--prev" data-cwc-announcement-prev aria-label="Previous announcement">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+      {% endif %}
+
+      <div class="cwc_announcement-bar__track" {% if rotates %}aria-live="off"{% endif %}>
+        {% assign slide_index = 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'announcement' %}
+              {% if block.settings.text != blank %}
+                {% assign slide_index = slide_index | plus: 1 %}
+                <div
+                  class="cwc_announcement-bar__slide{% if slide_index == 1 %} cwc_announcement-bar__slide--active{% endif %}"
+                  data-cwc-announcement-slide
+                  {% if rotates %}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label="{{ slide_index }} of {{ slide_count }}"
+                    {% if slide_index != 1 %}aria-hidden="true"{% endif %}
+                  {% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  {% if block.settings.link != blank %}
+                    <a href="{{ block.settings.link }}" class="cwc_announcement-bar__text cwc_announcement-bar__text--link cwc-rte"{% if slide_index != 1 %} tabindex="-1"{% endif %}>
+                      {{ block.settings.text }}
+                    </a>
+                  {% else %}
+                    <div class="cwc_announcement-bar__text cwc-rte">
+                      {{ block.settings.text }}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% if rotates and section.settings.show_arrows %}
+        <button type="button" class="cwc_announcement-bar__arrow cwc_announcement-bar__arrow--next" data-cwc-announcement-next aria-label="Next announcement">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if rotates %}
+    <script src="{{ 'CWC_announcement_bar.js' | asset_url }}" defer></script>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Announcement Bar",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Rotation"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Cycle Announcements Automatically",
+      "info": "Only applies when there is more than one announcement. Pauses on hover and focus",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "interval",
+      "label": "Time Per Announcement",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Arrows",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0E2119"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Bold And Link Color",
+      "default": "#C9974A"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Color",
+      "default": "#C9974A"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Message",
+          "info": "Bold text uses the bold and link color",
+          "default": "<p>Use Code <strong>WELCOME15</strong> for $15 Off your first order of $150+</p>"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional. Makes the whole message clickable"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "CWC Announcement Bar",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>Use Code <strong>WELCOME15</strong> for $15 Off your first order of $150+</p>"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p><strong>Shipping Protection</strong> available at checkout</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

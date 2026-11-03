@@ -21,21 +21,26 @@
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_collection_body.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
 
 {% liquid
   # Current filter selections, rebuilt as a query string so sort links keep them
   assign filter_query = ''
   for filter in collection.filters
     for value in filter.active_values
-      assign pair = value.param_name | append: '=' | append: value.value
+      # Values can hold spaces, &, ' or # — encode or the sort links break
+      assign encoded_value = value.value | url_encode
+      assign pair = value.param_name | append: '=' | append: encoded_value
       assign filter_query = filter_query | append: '&' | append: pair
     endfor
     if filter.type == 'price_range'
       if filter.min_value.value != nil
-        assign filter_query = filter_query | append: '&' | append: filter.min_value.param_name | append: '=' | append: filter.min_value.value
+        assign encoded_value = filter.min_value.value | url_encode
+        assign filter_query = filter_query | append: '&' | append: filter.min_value.param_name | append: '=' | append: encoded_value
       endif
       if filter.max_value.value != nil
-        assign filter_query = filter_query | append: '&' | append: filter.max_value.param_name | append: '=' | append: filter.max_value.value
+        assign encoded_value = filter.max_value.value | url_encode
+        assign filter_query = filter_query | append: '&' | append: filter.max_value.param_name | append: '=' | append: encoded_value
       endif
     endif
   endfor
@@ -387,6 +392,7 @@
 {% endpaginate %}
 
 <script src="{{ 'CWC_collection_body.js' | asset_url }}" defer></script>
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

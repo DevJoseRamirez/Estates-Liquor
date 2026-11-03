@@ -10,6 +10,20 @@
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
     --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
   }
+
+  {%- comment -%}
+    Read more: blocks collapse to the first N cards; metafield copy (one card)
+    collapses to its first N×2 elements — roughly N heading + paragraph pairs.
+    CWC_collection_seo.js adds the collapsed class, so with JS off it all shows.
+  {%- endcomment -%}
+  {%- if section.settings.enable_read_more %}
+    {%- assign visible_cards = section.settings.visible_blocks | default: 2 %}
+    {%- assign visible_children = visible_cards | times: 2 %}
+    #cwc_collection-seo-{{ section.id }} .cwc_collection-seo--collapsed > .cwc_collection-seo__card:nth-child(n + {{ visible_cards | plus: 1 }}),
+    #cwc_collection-seo-{{ section.id }} .cwc_collection-seo--collapsed .cwc_collection-seo__card--metafield .cwc_collection-seo__card-text > :nth-child(n + {{ visible_children | plus: 1 }}) {
+      display: none;
+    }
+  {%- endif %}
 {% endstyle %}
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
@@ -47,7 +61,7 @@
 {% if seo_text != blank or section.blocks.size > 0 %}
   <section id="cwc_collection-seo-{{ section.id }}" class="cwc_collection-seo">
     <div class="cwc_collection-seo__container">
-      <div class="cwc_collection-seo__content">
+      <div class="cwc_collection-seo__content" data-cwc-seo-body>
         {% if seo_text != blank %}
           {% comment %}
             Rich text metafield — headings and lists come through as markup, so
@@ -87,8 +101,25 @@
           {% endfor %}
         {% endif %}
       </div>
+
+      {% if section.settings.enable_read_more %}
+        <div class="cwc_collection-seo__more">
+          <button
+            type="button"
+            class="cwc_collection-seo__toggle"
+            aria-expanded="false"
+            data-more="{{ section.settings.more_label | default: 'Read More' | escape }}"
+            data-less="{{ section.settings.less_label | default: 'Read Less' | escape }}"
+            hidden
+          >
+            {{- section.settings.more_label | default: 'Read More' | escape -}}
+          </button>
+        </div>
+      {% endif %}
     </div>
   </section>
+
+  <script src="{{ 'CWC_collection_seo.js' | asset_url }}" defer></script>
 {% endif %}
 
 {% schema %}
@@ -119,6 +150,38 @@
       "step": 20,
       "unit": "px",
       "default": 1000
+    },
+    {
+      "type": "header",
+      "content": "Read More"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_read_more",
+      "label": "Collapse Long Copy",
+      "default": true,
+      "info": "Shows the first few blocks with a Read More button for the rest."
+    },
+    {
+      "type": "range",
+      "id": "visible_blocks",
+      "label": "Blocks Shown Before Read More",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Read More Label",
+      "default": "Read More"
+    },
+    {
+      "type": "text",
+      "id": "less_label",
+      "label": "Read Less Label",
+      "default": "Read Less"
     },
     {
       "type": "header",
@@ -183,9 +246,18 @@
           "id": "size",
           "label": "Title Size",
           "options": [
-            { "value": "large", "label": "Large" },
-            { "value": "medium", "label": "Medium" },
-            { "value": "small", "label": "Small" }
+            {
+              "value": "large",
+              "label": "Large"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "small",
+              "label": "Small"
+            }
           ],
           "default": "medium",
           "info": "Also sets the heading level for SEO — Large is the section's main heading, Medium and Small nest under it."
@@ -209,7 +281,17 @@
     {
       "name": "Collection SEO Copy",
       "category": "CWC Custom",
-      "blocks": [{ "type": "content" }, { "type": "content" }, { "type": "content" }]
+      "blocks": [
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        }
+      ]
     }
   ]
 }

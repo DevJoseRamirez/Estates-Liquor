@@ -1,90 +1,168 @@
 {% style %}
   #cwc_collection-header-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
-    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --count-color: {{ section.settings.count_color | default: '#C4933F' }};
-    --overlay-color: {{ section.settings.overlay_color | default: '#0A1F12' }};
-    --overlay-opacity: {{ section.settings.overlay_opacity | default: 94 | divided_by: 100.0 }};
-    --image-opacity: {{ section.settings.image_opacity | default: 38 | divided_by: 100.0 }};
-    --padding-top: {{ section.settings.padding_top | default: 60 }}px;
-    --padding-bottom: {{ section.settings.padding_bottom | default: 60 }}px;
-    --padding-top-mobile: {{ section.settings.padding_top | default: 60 | times: 0.5 }}px;
-    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 60 | times: 0.5 }}px;
+    --subtext-color: {{ section.settings.subtext_color | default: '#343434' }};
+    --meta-color: {{ section.settings.meta_color | default: '#666666' }};
+    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --pill-border: {{ section.settings.pill_border_color | default: '#C9C3B5' }};
+    --pill-bg: {{ section.settings.pill_bg_color | default: '#FFFFFF' }};
+    --pill-text: {{ section.settings.pill_text_color | default: '#0A1F12' }};
+    --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#0A1F12' }};
+    --pill-active-text: {{ section.settings.pill_active_text_color | default: '#FFFFFF' }};
+    --padding-top: {{ section.settings.padding_top | default: 36 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 36 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 32 | times: 0.5 }}px;
   }
 {% endstyle %}
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_collection_header.css' | asset_url | stylesheet_tag }}
 
-{% liquid
-  # Every field falls back to the live collection, overrides win when set
-  if section.settings.title != blank
-    assign header_title = section.settings.title
-  else
-    assign header_title = collection.title
+{%- liquid
+  # Also used on templates/search.json: title becomes the search terms, a search box replaces
+  # the intro and the pill row is hidden.
+  assign is_search = false
+  if template.name == 'search'
+    assign is_search = true
   endif
 
-  if section.settings.description != blank
-    assign header_description = section.settings.description
-  else
-    assign header_description = collection.description
-  endif
+  assign current = collection
+  assign parent_collection = current.metafields.custom.parent_collection.value
 
-  if section.settings.image != blank
-    assign header_image = section.settings.image
-  elsif collection.image != blank
-    assign header_image = collection.image
-  else
-    assign header_image = nil
+  # Pills: collection metafield first, then the fixed pill blocks, else none
+  assign meta_pills = current.metafields.custom.sub_collections.value
+  assign pill_source = 'none'
+  if is_search
+    assign pill_source = 'none'
+  elsif meta_pills != blank and meta_pills.size > 0
+    assign pill_source = 'metafield'
+  elsif section.blocks.size > 0
+    assign pill_source = 'blocks'
   endif
-
-  if section.settings.count_text != blank
-    assign header_count = section.settings.count_text
-  elsif collection.products_count > 0
-    assign header_count = collection.products_count | append: ' bottles in stock'
-  else
-    assign header_count = blank
-  endif
-%}
+-%}
 
 <section id="cwc_collection-header-{{ section.id }}" class="cwc_collection-header">
-  {% if header_image %}
-    <span class="cwc_collection-header__image" aria-hidden="true">
-      <img
-        src="{{ header_image | image_url: width: 2000 }}"
-        alt=""
-        loading="eager"
-        fetchpriority="high"
-        width="2000"
-        height="800"
-      >
-    </span>
-  {% endif %}
-
-  <span class="cwc_collection-header__overlay" aria-hidden="true"></span>
-
   <div class="cwc_collection-header__container">
+
+    {% if section.settings.show_breadcrumb %}
+      <nav class="cwc_collection-header__breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}" class="cwc_collection-header__breadcrumb-link">Home</a>
+        {% if parent_collection != blank %}
+          <span class="cwc_collection-header__breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="{{ parent_collection.url }}" class="cwc_collection-header__breadcrumb-link">{{ parent_collection.title | escape }}</a>
+        {% endif %}
+        {% if is_search %}
+          <span class="cwc_collection-header__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="cwc_collection-header__breadcrumb-current" aria-current="page">{{ section.settings.search_crumb | default: 'Search' | escape }}</span>
+        {% elsif current != blank %}
+          <span class="cwc_collection-header__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="cwc_collection-header__breadcrumb-current" aria-current="page">{{ current.title | escape }}</span>
+        {% endif %}
+      </nav>
+    {% endif %}
+
     <div class="cwc_collection-header__content">
-      {% if section.settings.eyebrow != blank %}
-        <p class="cwc_collection-header__content-eyebrow">{{ section.settings.eyebrow }}</p>
-      {% endif %}
+      <h1 class="cwc_collection-header__content-heading">
+        {%- if is_search -%}
+          {%- if search.performed -%}
+            {{- section.settings.search_results_title | default: 'Results for' | escape }} “{{ search.terms | escape }}”
+          {%- else -%}
+            {{- section.settings.search_title | default: 'Search' | escape -}}
+          {%- endif -%}
+        {%- elsif section.settings.title != blank -%}
+          {{- section.settings.title | escape -}}
+        {%- elsif current != blank -%}
+          {{- current.title | escape -}}
+        {%- else -%}
+          Collection title
+        {%- endif -%}
+      </h1>
 
-      {% if header_title != blank %}
-        <h1 class="cwc_collection-header__content-heading">{{ header_title }}</h1>
-      {% endif %}
-
-      {% if header_description != blank %}
+      {% if is_search %}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="cwc_collection-header__search">
+          <label class="cwc_collection-header__search-label" for="cwc_collection-header-search-{{ section.id }}">Search the store</label>
+          <input
+            id="cwc_collection-header-search-{{ section.id }}"
+            type="search"
+            name="q"
+            class="cwc_collection-header__search-input"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ section.settings.search_placeholder | default: 'Search a bottle, brand or spirit' | escape }}"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          >
+          <input type="hidden" name="type" value="product">
+          <button type="submit" class="cwc_collection-header__search-submit">
+            {{- section.settings.search_button_label | default: 'Search' | escape -}}
+          </button>
+        </form>
+      {% elsif section.settings.show_description and section.settings.description != blank %}
         <div class="cwc_collection-header__content-subtext cwc-rte">
-          {{ header_description }}
+          {{ section.settings.description }}
+        </div>
+      {% elsif section.settings.show_description and current.description != blank %}
+        <div class="cwc_collection-header__content-subtext cwc-rte">
+          {{ current.description }}
         </div>
       {% endif %}
-
-      {% if section.settings.show_count and header_count != blank %}
-        <p class="cwc_collection-header__count">{{ header_count }}</p>
-      {% endif %}
     </div>
+
+    {% if pill_source != 'none' %}
+      <ul class="cwc_collection-header__pills" role="list">
+        {% if section.settings.show_all_pill and current != blank %}
+          <li class="cwc_collection-header__pill-item">
+            <a href="{{ current.url }}" class="cwc_collection-header__pill cwc_collection-header__pill--active" aria-current="page">
+              {{- section.settings.all_label | default: 'All' | escape -}}
+            </a>
+          </li>
+        {% endif %}
+
+        {% if pill_source == 'metafield' %}
+          {% for pill_collection in meta_pills %}
+            {% if pill_collection == blank or pill_collection.handle == current.handle %}{% continue %}{% endif %}
+            <li class="cwc_collection-header__pill-item">
+              <a href="{{ pill_collection.url }}" class="cwc_collection-header__pill">{{ pill_collection.title | escape }}</a>
+            </li>
+          {% endfor %}
+        {% else %}
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'pill' %}
+                {%- liquid
+                  assign pill_collection = block.settings.collection
+                  assign pill_label = block.settings.label
+                  if pill_label == blank and pill_collection != blank
+                    assign pill_label = pill_collection.title
+                  endif
+                  assign pill_active = false
+                  if pill_collection != blank and pill_collection.handle == current.handle
+                    assign pill_active = true
+                  endif
+                -%}
+                {% if pill_collection != blank and pill_label != blank %}
+                  {% unless pill_active and section.settings.show_all_pill %}
+                    <li class="cwc_collection-header__pill-item" {{ block.shopify_attributes }}>
+                      <a
+                        href="{{ pill_collection.url }}"
+                        class="cwc_collection-header__pill{% if pill_active %} cwc_collection-header__pill--active{% endif %}"
+                        {% if pill_active %}aria-current="page"{% endif %}
+                      >
+                        {{- pill_label | escape -}}
+                      </a>
+                    </li>
+                  {% endunless %}
+                {% endif %}
+            {% endcase %}
+          {% endfor %}
+        {% endif %}
+      </ul>
+    {% endif %}
+
   </div>
 </section>
 
@@ -97,10 +175,20 @@
       "content": "Section Header"
     },
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow (Optional)",
-      "default": "Whiskey"
+      "type": "paragraph",
+      "content": "Title and intro come from the collection. Breadcrumb middle level uses the collection metafield custom.parent_collection (collection) when set."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
     },
     {
       "type": "text",
@@ -116,49 +204,61 @@
     },
     {
       "type": "header",
-      "content": "Bottle Count"
+      "content": "Sub-collection Pills"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pills come from the collection metafield custom.sub_collections (list of collections). Without it, the Pill blocks below are used. With neither, the pill row is hidden."
     },
     {
       "type": "checkbox",
-      "id": "show_count",
-      "label": "Show Product Count",
+      "id": "show_all_pill",
+      "label": "Show \"All\" pill",
       "default": true
     },
     {
       "type": "text",
-      "id": "count_text",
-      "label": "Count Override",
-      "info": "Leave empty to use the collection's live product count."
+      "id": "all_label",
+      "label": "\"All\" pill label",
+      "default": "All"
     },
     {
       "type": "header",
-      "content": "Image"
+      "content": "Search Page"
     },
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Background Image Override",
-      "info": "Leave empty to use the collection image."
+      "type": "paragraph",
+      "content": "Used when this section is on the search template."
     },
     {
-      "type": "range",
-      "id": "image_opacity",
-      "label": "Image Opacity",
-      "min": 0,
-      "max": 100,
-      "step": 2,
-      "unit": "%",
-      "default": 38
+      "type": "text",
+      "id": "search_crumb",
+      "label": "Breadcrumb Label",
+      "default": "Search"
     },
     {
-      "type": "range",
-      "id": "overlay_opacity",
-      "label": "Overlay Strength",
-      "min": 0,
-      "max": 100,
-      "step": 2,
-      "unit": "%",
-      "default": 94
+      "type": "text",
+      "id": "search_title",
+      "label": "Title (No Search Yet)",
+      "default": "Search"
+    },
+    {
+      "type": "text",
+      "id": "search_results_title",
+      "label": "Title Before Search Terms",
+      "default": "Results for"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search Placeholder",
+      "default": "Search a bottle, brand or spirit"
+    },
+    {
+      "type": "text",
+      "id": "search_button_label",
+      "label": "Search Button Label",
+      "default": "Search"
     },
     {
       "type": "header",
@@ -168,13 +268,13 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0A1F12"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#ffffff"
+      "default": "#0A1F12"
     },
     {
       "type": "color",
@@ -184,21 +284,55 @@
     },
     {
       "type": "color",
-      "id": "eyebrow_color",
-      "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "id": "subtext_color",
+      "label": "Intro Text Color",
+      "default": "#343434"
     },
     {
       "type": "color",
-      "id": "count_color",
-      "label": "Product Count Color",
-      "default": "#C4933F"
+      "id": "meta_color",
+      "label": "Breadcrumb Color",
+      "default": "#666666"
     },
     {
       "type": "color",
-      "id": "overlay_color",
-      "label": "Overlay Color",
+      "id": "border_color",
+      "label": "Bottom Border Color",
+      "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Pill Colors"
+    },
+    {
+      "type": "color",
+      "id": "pill_border_color",
+      "label": "Pill Border Color",
+      "default": "#C9C3B5"
+    },
+    {
+      "type": "color",
+      "id": "pill_bg_color",
+      "label": "Pill Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "pill_text_color",
+      "label": "Pill Text Color",
       "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "pill_active_bg_color",
+      "label": "Active Pill Background",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "pill_active_text_color",
+      "label": "Active Pill Text",
+      "default": "#FFFFFF"
     },
     {
       "type": "header",
@@ -209,22 +343,42 @@
       "id": "padding_top",
       "label": "Padding Top",
       "min": 0,
-      "max": 120,
-      "step": 5,
+      "max": 100,
+      "step": 2,
       "unit": "px",
-      "default": 60
+      "default": 36
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "label": "Padding Bottom",
       "min": 0,
-      "max": 120,
-      "step": 5,
+      "max": 100,
+      "step": 2,
       "unit": "px",
-      "default": 60
+      "default": 32
     }
   ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Pill",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Fallback pill, shown only when the collection has no custom.sub_collections metafield"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label Override"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
   "presets": [
     {
       "name": "Collection Header",

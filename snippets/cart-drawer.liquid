@@ -312,7 +312,16 @@
           <div class="cart-drawer__empty-container">
             <div class="cart-drawer__empty-intro">
               <span class="cart-drawer__empty-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <path d="M6 7h12l-1 13H7L6 7Z"/>
                   <path d="M9 7V5a3 3 0 0 1 6 0v2"/>
                 </svg>
@@ -525,7 +534,7 @@
                     </button>
                   </div>
                 </cart-update-modal>
-              {% endif %}11
+              {% endif %}
             </div>
           {% endif %}
 
@@ -543,7 +552,11 @@
 
             {% # Subtotal %}
             <div class="cart-drawer__subtotal">
-              <h5 class="cart-drawer__subtotal--heading">{{ 'cart.general.subtotal' | t }}</h5>
+              <h5 class="cart-drawer__subtotal--heading">
+                {{- 'cart.general.subtotal' | t }} ({{ cart.item_count }}
+                {{ cart.item_count | pluralize: 'item', 'items' -}}
+                )
+              </h5>
               <div class="cart-drawer__subtotal--price h3">
                 {% if cart_compare_price > cart.total_price %}
                   <span class="visually-hidden">{{ 'cart.general.regular_subtotal' | t }}</span>
@@ -581,22 +594,6 @@
                   </span>
                 {%- endif -%}
               </button>
-            </div>
-
-            {% # Tax and shipping %}
-            <div class="cart-drawer__taxes-shipping text-link-animated">
-              {%- capture taxes_shipping_checkout -%}
-                {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                  {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                {%- elsif cart.taxes_included -%}
-                  {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
-                {%- elsif shop.shipping_policy.body != blank -%}
-                  {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                {%- else -%}
-                  {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
-                {%- endif -%}
-              {%- endcapture -%}
-              <p>{{ taxes_shipping_checkout }}</p>
             </div>
           </div>
         </footer>
@@ -676,20 +673,34 @@
     gap: 0px;
   }
   .cart-drawer__subtotal--heading {
-    font-size: 14px;
-    color: #666;
+    margin: 0;
+    font-size: 15px;
+    color: #0a1f12;
     font-family: var(--body-font-stack);
-    font-weight: 400;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .cart-drawer__subtotal--price {
+    margin: 0;
+    font-family: var(--body-font-stack);
+    font-size: 17px;
+    font-weight: 700;
+    color: #0a1f12;
   }
   .cart-drawer__product_card--title.product-grid--title-font-body {
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 700;
     color: var(--green);
     margin-bottom: 8px;
     font-family: var(--header-font-stack);
     color: #0a1f12;
   }
   .cart-drawer__product-card--price.product-grid--price-font-body {
-    font-family: var(--header-font-stack);
+    font-family: var(--body-font-stack);
+    font-weight: 700;
+    letter-spacing: 0;
     color: #0a1f12;
   }
   .price-line-through.price--compare-at-price,
@@ -746,8 +757,9 @@
   .cart-drawer__subtotal {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 14px;
   }
   .cart-drawer__product_card--vendor.product-grid--vendor-font-body,
   .product-card-basic__vendor.product-grid--vendor-font-body {
@@ -761,87 +773,133 @@
   .btn.btn--secondary {
     display: none;
   }
-  a.captain-a-link {
-    width: 100% !important;
-    background: transparent;
-    color: #666 !important;
-    border: 1.5px solid #e0ddd6;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    font-size: 12px !important;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 14px !important;
-    transition: border-color 0.2s, color 0.2s;
-    font-family: var(--body-font-stack);
-    text-decoration: none !important;
-  }
-
-  a.captain-a-link:hover {
-    border-color: #0a1f12;
-    color: #0a1f12;
-  }
-  .cart-drawer__taxes-shipping.text-link-animated p {
-    margin-bottom: 0px !important;
-  }
-  .cart-drawer__taxes-shipping.text-link-animated {
-    font-size: 11px;
-    color: #9a9a9a;
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 0px !important;
-  }
   .cart-drawer__sub-footer {
     padding: 20px 24px 10px 24px;
     border-top: 1px solid #e0ddd6;
   }
-  #tm_cart {
-    background: #f8f6f1;
-    border: 1px solid #e0ddd6;
-    border-radius: 3px;
-    padding: 13px 15px;
-    margin-bottom: 14px !important;
+  /* === Shipping Protection (Captain app) ===
+     The app injects its markup with inline styles, so these overrides are
+     scoped to the sub-footer and use !important where the app sets values. */
+  .cart-drawer__sub-footer #tm_cart {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 0 14px !important;
+    padding: 0 0 0 2px !important;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: left !important;
   }
-  .tm_cart_f {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--body-font-stack);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    color: #0a1f12;
+  .cart-drawer__sub-footer #tm_cart::before {
+    content: '';
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4933f' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z'/%3E%3Cpath d='m8.5 12 2.5 2.5 4.5-5'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
-  .tm_cart_f span {
-    font-size: 12px;
+  .cart-drawer__sub-footer #tm_cart .tm_cart_content {
+    flex: 1 1 auto !important;
+    min-width: 0;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
   }
-  .tm_cart_description {
+  .cart-drawer__sub-footer #tm_cart .tm_cart_f,
+  .cart-drawer__sub-footer #tm_cart .tm_cart_f > div {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+  }
+  .cart-drawer__sub-footer #tm_cart .tm_cart_f,
+  .cart-drawer__sub-footer #tm_cart .tm_cart_f span {
+    font-family: var(--body-font-stack) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    color: #0a1f12 !important;
+    margin: 0 !important;
+  }
+  .cart-drawer__sub-footer #tm_cart .tm_cart_description {
+    display: block !important;
+    font-family: var(--body-font-stack) !important;
     font-size: 12px !important;
+    font-weight: 400 !important;
     line-height: 1.4 !important;
+    text-transform: none !important;
     color: #666 !important;
+    margin: 2px 0 0 !important;
+    padding: 0 !important;
   }
+
+  /* Protected checkout (primary) */
+  .cart-drawer__sub-footer #captain-checkout,
   .captain-button .btn.cart-drawer__footer--button.undefined {
-    width: 100%;
-    background: #0a1f12 !important;
-    color: white;
-    border: 1.5px solid #0a1f12;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: var(--body-font-stack);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 16px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100% !important;
+    min-height: 54px !important;
+    margin: 0 !important;
+    padding: 0 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     gap: 9px;
-    transition: background 0.2s;
+    background: #c4933f !important;
+    border: 1.5px solid #c4933f !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    font-family: var(--body-font-stack) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+  }
+  .cart-drawer__sub-footer #captain-checkout:hover,
+  .captain-button .btn.cart-drawer__footer--button.undefined:hover {
+    filter: brightness(1.08);
+  }
+
+  /* Checkout without protection (text link) */
+  .cart-drawer__sub-footer a.captain-a-link {
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 14px 0 4px !important;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: var(--body-font-stack) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    text-align: center !important;
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+    color: #0a1f12 !important;
+    transition: color 0.2s;
+  }
+  .cart-drawer__sub-footer a.captain-a-link:hover {
+    color: #c4933f !important;
+  }
+  /* The app's small info icon beside the title is also a .captain-a-link — keep it inline */
+  .cart-drawer__sub-footer #tm_cart a.captain-a-link {
+    display: flex !important;
+    width: auto !important;
+    margin: 0 0 0 10px !important;
   }
   /* Empty cart */
   .cart-drawer__empty-container {
@@ -944,17 +1002,26 @@
       background: white;
       border-radius: 3px;
     }
-    #tm_cart {
-      padding: 8px 10px;
-      margin-bottom: 10px !important;
+    .cart-drawer__sub-footer #tm_cart {
+      margin-bottom: 12px !important;
     }
-    .tm_cart_f span {
-      font-size: 10px;
-      margin-bottom: 0px !important;
+    .cart-drawer__sub-footer #tm_cart::before {
+      flex-basis: 28px;
+      width: 28px;
+      height: 28px;
     }
-    .tm_cart_description {
-      font-size: 10px !important;
-      margin-top: -4px !important;
+    .cart-drawer__sub-footer #tm_cart .tm_cart_f,
+    .cart-drawer__sub-footer #tm_cart .tm_cart_f span {
+      font-size: 13px !important;
+    }
+    .cart-drawer__sub-footer #tm_cart .tm_cart_description {
+      font-size: 11px !important;
+    }
+    .cart-drawer__subtotal--heading {
+      font-size: 14px;
+    }
+    .cart-drawer__subtotal--price {
+      font-size: 16px;
     }
     .cart-drawer__subtotal--compare {
       margin-right: 6px !important;

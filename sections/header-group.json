@@ -11,52 +11,48 @@
   "type": "header",
   "name": "Header",
   "sections": {
-    "cwc_announcement_yFwRzz": {
-      "type": "CWC_announcement",
-      "disabled": true,
-      "name": "Announcement",
+    "cwc_announcement_bar": {
+      "type": "CWC_announcement_bar",
+      "name": "CWC Announcement Bar",
+      "blocks": {
+        "announcement_yFwRzz": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p><strong>Spooky Savings: $25 off $250+ | $60 off $600+ | $120 off $1,200+ 🎃 Automatically applied at checkout. Oct 23–Nov 1.</strong></p>",
+            "link": "shopify://collections/spooky-sale"
+          },
+          "disabled": true
+        },
+        "announcement_GJGFJp": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>Use Code <strong>WELCOME15</strong> for $15 Off your first order of $150+ · Rare allocated drops every month · <strong>Shipping Protection</strong> available at checkout</p>",
+            "link": "shopify://collections/best-sellers"
+          }
+        },
+        "announcement_bn7tJU": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>Use Code <strong>LABORDAY10</strong> for <strong>10% Off Sitewide</strong> · <strong>$200 Minimum</strong> · Ends Monday, Sept 7</p>",
+            "link": "shopify://collections/best-sellers"
+          },
+          "disabled": true
+        }
+      },
+      "block_order": [
+        "announcement_yFwRzz",
+        "announcement_GJGFJp",
+        "announcement_bn7tJU"
+      ],
       "settings": {
-        "text": "<p><strong>Spooky Savings: $25 off $250+ | $60 off $600+ | $120 off $1,200+ 🎃 Automatically applied at checkout. Oct 23–Nov 1.</strong></p>",
-        "link": "shopify://collections/spooky-sale",
-        "enable_dismiss": true,
-        "enable_gradient": false,
-        "bg_color": "#ef6000",
-        "bg_end_color": "#1c3b2a",
-        "text_color": "#ffffff",
-        "bold_color": "#ffffff",
-        "padding_top": 10,
-        "padding_bottom": 10
-      }
-    },
-    "cwc_announcement_GJGFJp": {
-      "type": "CWC_announcement",
-      "name": "Announcement",
-      "settings": {
-        "text": "<p>Use Code <strong>WELCOME15</strong> for $15 Off your first order of $150+ · Rare allocated drops every month · <strong>Shipping Protection</strong> available at checkout</p>",
-        "link": "shopify://collections/best-sellers",
-        "enable_dismiss": true,
-        "enable_gradient": false,
+        "autoplay": true,
+        "interval": 5,
+        "show_arrows": true,
+        "text_size": 14,
         "bg_color": "#0e2119",
-        "bg_end_color": "#1c3b2a",
         "text_color": "#ffffff",
         "bold_color": "#c9974a",
-        "padding_top": 10,
-        "padding_bottom": 10
-      }
-    },
-    "cwc_announcement_bn7tJU": {
-      "type": "CWC_announcement",
-      "disabled": true,
-      "name": "Announcement",
-      "settings": {
-        "text": "<p>Use Code <strong>LABORDAY10</strong> for <strong>10% Off Sitewide</strong> · <strong>$200 Minimum</strong> · Ends Monday, Sept 7</p>",
-        "link": "shopify://collections/best-sellers",
-        "enable_dismiss": true,
-        "enable_gradient": false,
-        "bg_color": "#0e2119",
-        "bg_end_color": "#1c3b2a",
-        "text_color": "#ffffff",
-        "bold_color": "#c9974a",
+        "arrow_color": "#c9974a",
         "padding_top": 10,
         "padding_bottom": 10
       }
@@ -274,9 +270,7 @@
     }
   },
   "order": [
-    "cwc_announcement_yFwRzz",
-    "cwc_announcement_GJGFJp",
-    "cwc_announcement_bn7tJU",
+    "cwc_announcement_bar",
     "cwc_header_JMrPr8",
     "header"
   ]

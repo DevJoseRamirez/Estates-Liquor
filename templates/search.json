@@ -8,7 +8,7 @@
  * ------------------------------------------------------------
  */
 {
-  "wrapper": "div.collection-wrapper",
+  "wrapper": "div.collection-wrapper.wrapper",
   "sections": {
     "main": {
       "type": "template--search",
@@ -19,7 +19,8 @@
         "show_swatch_filter_labels": true,
         "desktop-results-per-row": 4,
         "mobile-results-per-row": "2"
-      }
+      },
+      "disabled": true
     },
     "ba0289a9-189c-44b4-a569-0217c0002607": {
       "type": "newsletter",
@@ -32,10 +33,153 @@
         "section_padding_bottom": 60,
         "colors": "light"
       }
+    },
+    "cwc_breadcrumb": {
+      "type": "CWC_breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "separator": "/",
+        "parent_collection": "",
+        "parent_title": "",
+        "parent_link": "",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "link_color": "#666666",
+        "bold_color": "#c4933f",
+        "separator_color": "#e0ddd6",
+        "show_border": false,
+        "border_color": "#e0ddd6",
+        "padding_top": 25,
+        "padding_bottom": 0,
+        "alignment": "center"
+      }
+    },
+    "cwc_search_header": {
+      "type": "CWC_search_header",
+      "settings": {
+        "eyebrow": "Search",
+        "results_title": "Results for [terms]",
+        "empty_title": "Search the Shelf",
+        "subtext": "<p>Find a bottle by name, distillery, or style.</p>",
+        "show_count": false,
+        "count_singular": "result",
+        "count_plural": "results",
+        "placeholder": "Search bottles, brands, collections",
+        "button_label": "Search",
+        "products_only": true,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "count_color": "#c4933f",
+        "input_bg_color": "#ffffff",
+        "input_text_color": "#0a1f12",
+        "button_bg_color": "#c4933f",
+        "button_text_color": "#ffffff",
+        "padding_top": 10,
+        "padding_bottom": 35,
+        "subtext_color": "#343434",
+        "input_border_color": "#e0ddd6",
+        "show_border": true,
+        "border_color": "#e0ddd6"
+      }
+    },
+    "cwc_search_body": {
+      "type": "CWC_search_body",
+      "settings": {
+        "products_per_page": 24,
+        "use_pagination": false,
+        "columns": 4,
+        "sidebar_width": 250,
+        "open_filter_groups": 4,
+        "filter_label": "Filter",
+        "sort_label": "Sort",
+        "clear_label": "Clear All",
+        "apply_label": "Apply Filters",
+        "load_more_label": "Load More",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "subtext_color": "#666666",
+        "meta_color": "#9a9a9a",
+        "border_color": "#e0ddd6",
+        "muted_bg_color": "#f8f6f1",
+        "card_bg_color": "#ffffff",
+        "card_media_bg_color": "#f2efe8",
+        "button_bg_color": "#0a1f12",
+        "padding_top": 35,
+        "padding_bottom": 80,
+        "item_noun": "results",
+        "idle_text": "Type a bottle, brand, or style above to search our shelf.",
+        "no_results_text": "Nothing on the shelf matches [terms].",
+        "empty_filtered_text": "No bottles match these filters.",
+        "browse_link": "/collections/all",
+        "browse_label": "Browse All Bottles",
+        "article_label": "Article",
+        "page_label": "Page",
+        "entry_link_label": "Read More"
+      }
+    },
+    "cwc_trust_strip": {
+      "type": "CWC_trust_strip",
+      "blocks": {
+        "cwc_trust_strip_b1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "custom_icon_alt": "",
+            "text": "$15 off WELCOME15"
+          }
+        },
+        "cwc_trust_strip_b2": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "custom_icon_alt": "",
+            "text": "Replaced if broken or lost"
+          }
+        },
+        "cwc_trust_strip_b3": {
+          "type": "item",
+          "settings": {
+            "icon": "calendar",
+            "custom_icon_alt": "",
+            "text": "Ships Mon–Thu"
+          }
+        },
+        "cwc_trust_strip_b4": {
+          "type": "item",
+          "settings": {
+            "icon": "check",
+            "custom_icon_alt": "",
+            "text": "Licensed retailer · 21+"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_trust_strip_b1",
+        "cwc_trust_strip_b2",
+        "cwc_trust_strip_b3",
+        "cwc_trust_strip_b4"
+      ],
+      "settings": {
+        "icon_size": 20,
+        "bg_color": "#f2efe8",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "icon_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [
     "main",
+    "cwc_breadcrumb",
+    "cwc_search_header",
+    "cwc_search_body",
+    "cwc_trust_strip",
     "ba0289a9-189c-44b4-a569-0217c0002607"
   ]
 }

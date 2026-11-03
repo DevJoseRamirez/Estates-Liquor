@@ -56,7 +56,7 @@
 
 <section
   id="cwc_breadcrumb-{{ section.id }}"
-  class="cwc_breadcrumb{% if section.settings.show_border %} cwc_breadcrumb--bordered{% endif %}"
+  class="cwc_breadcrumb{% if section.settings.show_border %} cwc_breadcrumb--bordered{% endif %}{% if section.settings.alignment == 'center' %} cwc_breadcrumb--center{% endif %}"
 >
   <div class="cwc_breadcrumb__container">
     <nav class="cwc_breadcrumb__nav" aria-label="Breadcrumb">
@@ -182,6 +182,26 @@
       "id": "border_color",
       "label": "Border Color",
       "default": "#E0DDD6"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
     },
     {
       "type": "header",
