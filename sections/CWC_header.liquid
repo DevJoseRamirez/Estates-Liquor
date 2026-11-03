@@ -219,6 +219,12 @@
           role="search"
           class="cwc_header__search-form"
         >
+          {% comment %}
+            The search page grid only lists products — keep results (and the
+            result count) to products, and match partial words as you type.
+          {% endcomment %}
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
           <span class="cwc_header__search-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false">
               <circle cx="11" cy="11" r="7" />

@@ -121,7 +121,7 @@
       render(
         '<a class="cwc_search__view-all" href="' +
           root +
-          'search?q=' +
+          'search?type=product&options%5Bprefix%5D=last&q=' +
           encodeURIComponent(query) +
           '" data-cwc-search-item>View all results for &ldquo;' +
           escapeHtml(query) +
@@ -256,7 +256,7 @@
         (side ? '<div class="cwc_search__side">' + side + '</div>' : '') +
         productList +
         '</div>' +
-        '<a href="' + root + 'search?q=' + encodeURIComponent(query) +
+        '<a href="' + root + 'search?type=product&options%5Bprefix%5D=last&q=' + encodeURIComponent(query) +
         '" class="cwc_search__view-all" data-cwc-search-item>' +
         'View all results for &ldquo;' + escapeHtml(query) + '&rdquo;</a>'
       );

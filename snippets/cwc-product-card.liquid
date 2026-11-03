@@ -3,6 +3,9 @@
   Shared by the collection grid. Params:
     product          — required
     section_settings — the calling section's settings (for labels/colours)
+                       show_card_vendor / show_card_meta: false hides the
+                       brand line / category line. Missing = shown, so
+                       sections without the toggles are unchanged.
 {% endcomment %}
 
 {% liquid
@@ -25,6 +28,15 @@
   elsif product.tags contains 'New' or product.tags contains 'new'
     assign badge_label = 'New'
     assign badge_style = 'new'
+  endif
+
+  assign show_vendor = true
+  if section_settings.show_card_vendor == false
+    assign show_vendor = false
+  endif
+  assign show_meta = true
+  if section_settings.show_card_meta == false
+    assign show_meta = false
   endif
 
   # Detail line: metafield first, product type as the fallback
@@ -62,13 +74,13 @@
   </a>
 
   <div class="cwc_collection-body__card-body">
-    {% if product.vendor != blank %}
+    {% if show_vendor and product.vendor != blank %}
       <div class="cwc_collection-body__card-brand">{{ product.vendor }}</div>
     {% endif %}
 
     <a href="{{ product.url }}" class="cwc_collection-body__card-title">{{ product.title }}</a>
 
-    {% if product_meta != blank %}
+    {% if show_meta and product_meta != blank %}
       <div class="cwc_collection-body__card-text">{{ product_meta }}</div>
     {% endif %}
 

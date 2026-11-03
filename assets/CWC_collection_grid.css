@@ -223,7 +223,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.cwc_collection-grid__group:first-of-type > .cwc_collection-grid__group-title {
+.cwc_collection-grid__group:first-of-type>.cwc_collection-grid__group-title {
   padding-top: 0;
 }
 
@@ -267,7 +267,8 @@
 /* Long lists scroll inside their group */
 .cwc_collection-grid__options {
   max-height: var(--filter-list-height, 280px);
-  padding: 2px 8px 2px 2px; /* room for focus rings and the scrollbar */
+  padding: 2px 8px 2px 2px;
+  /* room for focus rings and the scrollbar */
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -338,14 +339,14 @@
   font-size: var(--cg-text-size);
 }
 
-.cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:checked + .cwc_collection-grid__option-label {
+.cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:checked+.cwc_collection-grid__option-label {
   border: 2px solid var(--text-color);
   padding: 0 calc(0.75rem - 1px);
   background: var(--chip-bg);
   font-weight: 600;
 }
 
-.cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:focus-visible + .cwc_collection-grid__option-label {
+.cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:focus-visible+.cwc_collection-grid__option-label {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
@@ -395,6 +396,7 @@
   font-family: inherit;
   font-size: 1rem;
   -moz-appearance: textfield;
+  border: none !important;
 }
 
 .cwc_collection-grid__price-input::-webkit-outer-spin-button,
@@ -476,8 +478,18 @@
   grid-template-columns: repeat(var(--columns-wide), minmax(0, 1fr));
 }
 
+/* Grid rows already stretch each cell to the tallest card; the card has to
+   fill its cell so every card in a row is the same height. The card's footer
+   is pinned to the bottom (margin-top: auto), so prices and buttons line up. */
 .cwc_collection-grid__item {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+}
+
+.cwc_collection-grid__item > .cwc_collection-body__card {
+  flex: 1 1 auto;
+  width: 100%;
 }
 
 .cwc_collection-grid--loading [data-cwc-region='grid'] {
@@ -555,7 +567,9 @@
 }
 
 @keyframes cwc_collection-grid-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -829,7 +843,7 @@
   }
 
   .cwc_collection-grid__group-title,
-  .cwc_collection-grid__group:first-of-type > .cwc_collection-grid__group-title {
+  .cwc_collection-grid__group:first-of-type>.cwc_collection-grid__group-title {
     min-height: 52px;
     padding: 0.875rem 0;
   }
@@ -852,7 +866,7 @@
     padding: 0 0.875rem;
   }
 
-  .cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:checked + .cwc_collection-grid__option-label {
+  .cwc_collection-grid__group--buttons .cwc_collection-grid__option-input:checked+.cwc_collection-grid__option-label {
     padding: 0 calc(0.875rem - 1px);
   }
 

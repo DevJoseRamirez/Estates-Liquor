@@ -352,6 +352,21 @@
           "type": "shopify://apps/frequently-bought/blocks/app-block/b1a8cbea-c844-4842-9529-7c62dbab1b1f",
           "disabled": true,
           "settings": {}
+        },
+        "help": {
+          "type": "help",
+          "settings": {
+            "show_photo": false,
+            "heading": "Questions? We're here to help.",
+            "subtext": "Talk to someone at the store",
+            "hours": "",
+            "phone": "619-791-3613",
+            "call_label": "Call",
+            "call_label_mobile": "Call us",
+            "chat_label": "Chat now",
+            "chat_action": "inbox",
+            "chat_url": ""
+          }
         }
       },
       "block_order": [
@@ -366,6 +381,7 @@
         "cwc_product_buy_box_b7",
         "cwc_product_buy_box_b9",
         "cwc_product_buy_box_b10",
+        "help",
         "cwc_product_buy_box_b11",
         "frequently_bought_app_block_Bgewk8"
       ],
@@ -778,6 +794,36 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "cwc_contact_band": {
+      "type": "CWC_contact_band",
+      "blocks": {
+        "call": {
+          "type": "button",
+          "settings": {
+            "label": "Call 619-791-3613",
+            "action": "call",
+            "style": "solid",
+            "show_icon": true,
+            "phone": "619-791-3613"
+          }
+        },
+        "chat": {
+          "type": "button",
+          "settings": {
+            "label": "Chat now",
+            "action": "chat",
+            "style": "outline",
+            "show_icon": true,
+            "phone": "619-791-3613"
+          }
+        }
+      },
+      "block_order": [
+        "call",
+        "chat"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -791,6 +837,7 @@
     "cwc_store_reviews",
     "cwc_product_reviews",
     "cwc_related_products",
+    "cwc_contact_band",
     "cwc_trust_strip"
   ]
 }

@@ -615,6 +615,104 @@
     padding: 0rem;
   }
 
+  /* === Recommendations rail — desktop ===
+     Bigger image and a real button instead of the 10px underlined link, while
+     the panel only grows 30px (310 → 340). Scoped to the secondary panel so
+     cart line items and the mobile swipe row are untouched. */
+  @media screen and (min-width: 768px) {
+    .global-drawer--secondary {
+      width: 340px;
+      max-width: calc(100vw - 472px - 30px);
+    }
+
+    .global-drawer--secondary .product-card-basic {
+      width: auto;
+      min-width: 0;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .global-drawer--secondary .product-card-basic__image {
+      width: 108px;
+      align-self: flex-start;
+      background: #ffffff;
+      border: 1px solid #e0ddd6;
+      border-radius: 3px;
+      padding: 6px;
+    }
+
+    .global-drawer--secondary .product-card-basic__image .theme-img {
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .global-drawer--secondary .product-card-basic--info {
+      flex: 1 1 auto;
+      min-width: 0;
+      transform: none;
+      gap: 10px;
+    }
+
+    .global-drawer--secondary .product-card-basic--info--body .product-grid--title-font-body {
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .global-drawer--secondary .product-card-basic__price .money,
+    .global-drawer--secondary .product-card-basic__price .product-price--sale {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Add to cart / View options become a full-width solid button */
+    .global-drawer--secondary .product-card-basic__add-button,
+    .global-drawer--secondary .product-card-basic--info--footer .text-link-animated {
+      display: block;
+      width: 100%;
+    }
+
+    .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon,
+    .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 38px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 3px;
+      background: #0a1f12;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: var(--body-font-stack);
+      transition: background-color 0.15s ease;
+    }
+
+    .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon:hover,
+    .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon:hover {
+      background: #c4933f;
+      color: #ffffff !important;
+    }
+
+    /* the theme's animated underline (background gradient + :before line)
+       would draw across the solid button — the solid background replaces the
+       gradient, this removes the line */
+    .global-drawer--secondary .product-card-basic .text-link-animated a::before,
+    .global-drawer--secondary .product-card-basic .text-link-animated .btn--underlined::before {
+      display: none;
+    }
+
+    .global-drawer--secondary .product-card-basic .btn--underlined-with-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
   .cart-recs-head span {
     display: block;
     font-size: 10px;
@@ -774,7 +872,7 @@
     display: none;
   }
   .cart-drawer__sub-footer {
-    padding: 20px 24px 10px 24px;
+    padding: 20px 24px 20px 24px;
     border-top: 1px solid #e0ddd6;
   }
   /* === Shipping Protection (Captain app) ===

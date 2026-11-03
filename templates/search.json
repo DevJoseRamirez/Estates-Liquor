@@ -52,7 +52,8 @@
         "padding_top": 25,
         "padding_bottom": 0,
         "alignment": "center"
-      }
+      },
+      "disabled": true
     },
     "cwc_search_header": {
       "type": "CWC_search_header",
@@ -82,7 +83,8 @@
         "input_border_color": "#e0ddd6",
         "show_border": true,
         "border_color": "#e0ddd6"
-      }
+      },
+      "disabled": true
     },
     "cwc_search_body": {
       "type": "CWC_search_body",
@@ -118,7 +120,8 @@
         "article_label": "Article",
         "page_label": "Page",
         "entry_link_label": "Read More"
-      }
+      },
+      "disabled": true
     },
     "cwc_trust_strip": {
       "type": "CWC_trust_strip",
@@ -171,12 +174,127 @@
         "border_color": "#e0ddd6",
         "padding_top": 20,
         "padding_bottom": 20
+      },
+      "disabled": true
+    },
+    "cwc_collection_header": {
+      "type": "CWC_collection_header",
+      "settings": {
+        "show_breadcrumb": true,
+        "show_description": true,
+        "title": "",
+        "description": "",
+        "show_all_pill": true,
+        "all_label": "All",
+        "search_crumb": "Search",
+        "search_title": "Search",
+        "search_results_title": "Results for",
+        "search_placeholder": "Search bottles, brands, collections",
+        "search_button_label": "Search",
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "subtext_color": "#343434",
+        "meta_color": "#666666",
+        "border_color": "#e0ddd6",
+        "pill_border_color": "#c9c3b5",
+        "pill_bg_color": "#ffffff",
+        "pill_text_color": "#0a1f12",
+        "pill_active_bg_color": "#0a1f12",
+        "pill_active_text_color": "#ffffff",
+        "padding_top": 36,
+        "padding_bottom": 32
+      }
+    },
+    "cwc_collection_grid": {
+      "type": "CWC_collection_grid",
+      "settings": {
+        "products_per_page": 24,
+        "columns_desktop": "4",
+        "load_more_icon": "chevron",
+        "show_filters": true,
+        "button_filters": "Bottle size, Size",
+        "filters_open_count": 3,
+        "filter_list_height": 280,
+        "show_sort": true,
+        "sticky_toolbar": true,
+        "sticky_filters": true,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "subtext_color": "#343434",
+        "meta_color": "#666666",
+        "border_color": "#e0ddd6",
+        "control_border_color": "#c9c3b5",
+        "chip_bg_color": "#f8f6f1",
+        "accent_color": "#c4933f",
+        "card_bg_color": "#ffffff",
+        "card_media_bg_color": "#f2efe8",
+        "button_bg_color": "#0a1f12",
+        "button_text_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 72,
+        "show_card_vendor": false,
+        "show_card_meta": false
+      }
+    },
+    "cwc_store_reviews": {
+      "type": "CWC_store_reviews",
+      "blocks": {
+        "cwc_store_reviews_b1": {
+          "type": "review",
+          "settings": {
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R.",
+            "meta": "Verified buyer"
+          }
+        },
+        "cwc_store_reviews_b2": {
+          "type": "review",
+          "settings": {
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K.",
+            "meta": "Verified buyer"
+          }
+        },
+        "cwc_store_reviews_b3": {
+          "type": "review",
+          "settings": {
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T.",
+            "meta": "Verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_store_reviews_b1",
+        "cwc_store_reviews_b2",
+        "cwc_store_reviews_b3"
+      ],
+      "settings": {
+        "eyebrow": "4.9 Average · 18 Store Reviews",
+        "heading": "<p>What Estates Liquor Customers Say</p>",
+        "show_rule": true,
+        "columns": 3,
+        "bg_color": "#ffffff",
+        "text_color": "#0a1f12",
+        "bold_color": "#c4933f",
+        "eyebrow_color": "#c4933f",
+        "star_color": "#c4933f",
+        "border_color": "#e0ddd6",
+        "card_bg_color": "#ffffff",
+        "card_meta_color": "#9a9a9a",
+        "padding_top": 70,
+        "padding_bottom": 70
       }
     }
   },
   "order": [
     "main",
     "cwc_breadcrumb",
+    "cwc_collection_header",
+    "cwc_collection_grid",
+    "cwc_store_reviews",
     "cwc_search_header",
     "cwc_search_body",
     "cwc_trust_strip",

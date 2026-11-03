@@ -1,0 +1,299 @@
+{% style %}
+  #cwc_contact-band-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#D8D2C4' }};
+    --icon-color: {{ section.settings.icon_color | default: '#C4933F' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --button-text: {{ section.settings.button_text_color | default: '#FFFFFF' }};
+    --outline-color: {{ section.settings.outline_color | default: '#F8F6F1' }};
+    --padding-top: {{ section.settings.padding_top | default: 36 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 36 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 36 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 36 | times: 0.5 }}px;
+    --margin-top: {{ section.settings.margin_top | default: 0 }}px;
+    --margin-top-mobile: {{ section.settings.margin_top | default: 0 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_contact_band.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_contact-band-{{ section.id }}" class="cwc_contact-band">
+  <div class="cwc_contact-band__container">
+
+    {% if section.settings.show_icon %}
+      <span class="cwc_contact-band__icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" focusable="false"><path d="M12 4c4.4 0 8 2.9 8 6.5S16.4 17 12 17c-.9 0-1.8-.1-2.6-.3L5 19l1.1-3.6C4.8 14.2 4 12.4 4 10.5 4 6.9 7.6 4 12 4z"></path></svg>
+      </span>
+    {% endif %}
+
+    {% if section.settings.heading != blank or section.settings.subtext != blank %}
+      <div class="cwc_contact-band__content">
+        {% if section.settings.heading != blank %}
+          <div class="cwc_contact-band__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_contact-band__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_contact-band__actions">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'button' %}
+              {%- liquid
+                assign phone_digits = block.settings.phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+                assign button_href = ''
+                case block.settings.action
+                  when 'call'
+                    if phone_digits != blank
+                      assign button_href = 'tel:' | append: phone_digits
+                    endif
+                  when 'email'
+                    if block.settings.email != blank
+                      assign button_href = 'mailto:' | append: block.settings.email
+                    endif
+                  when 'link'
+                    assign button_href = block.settings.link
+                  when 'chat'
+                    comment
+                      Chat falls back to the link, then the phone number, if Inbox can't open
+                    endcomment
+                    assign button_href = block.settings.link
+                    if button_href == blank and phone_digits != blank
+                      assign button_href = 'tel:' | append: phone_digits
+                    endif
+                    if button_href == blank
+                      assign button_href = '#'
+                    endif
+                endcase
+              -%}
+              {% if block.settings.label != blank and button_href != blank %}
+                <a
+                  href="{{ button_href }}"
+                  class="cwc_contact-band__button cwc_contact-band__button--{{ block.settings.style }}"
+                  {% if block.settings.action == 'chat' %}data-inbox-trigger{% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if block.settings.show_icon -%}
+                    {%- case block.settings.action -%}
+                      {%- when 'call' -%}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
+                      {%- when 'chat' -%}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+                      {%- when 'email' -%}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
+                      {%- when 'link' -%}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+                    {%- endcase -%}
+                  {%- endif -%}
+                  <span>{{- block.settings.label | escape -}}</span>
+                </a>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{{ 'CWC_inbox_trigger.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "CWC Contact Band",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show Chat Icon",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Questions about this bottle?</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>Talk to someone who knows the shelf. Our team is ready to help.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Bold Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#D8D2C4"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Solid Button Background",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Solid Button Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "outline_color",
+      "label": "Outline Button Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Space Above",
+      "info": "Gap between this band and the section above",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Call 619-791-3613"
+        },
+        {
+          "type": "select",
+          "id": "action",
+          "label": "Action",
+          "options": [
+            { "value": "call", "label": "Call phone number" },
+            { "value": "chat", "label": "Open Shopify Inbox chat" },
+            { "value": "email", "label": "Send email" },
+            { "value": "link", "label": "Go to link" }
+          ],
+          "default": "call"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "solid", "label": "Solid" },
+            { "value": "outline", "label": "Outline" }
+          ],
+          "default": "solid"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show Icon",
+          "info": "Icon matches the action (phone, chat, email or arrow)",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone Number",
+          "info": "Call: the number dialed. Chat: fallback if the chat can't open",
+          "default": "619-791-3613"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email Address",
+          "info": "Send email only"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Go to link: the destination. Chat: fallback if the chat can't open"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "CWC Contact Band",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "button", "settings": { "label": "Call 619-791-3613", "action": "call", "style": "solid" } },
+        { "type": "button", "settings": { "label": "Chat now", "action": "chat", "style": "outline" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

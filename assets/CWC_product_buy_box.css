@@ -772,6 +772,111 @@
 /* ==============================
    Tablet Responsive
    ============================== */
+/* === Help Block ===
+   Call + chat. The chat button opens Shopify Inbox through CWC_inbox_trigger.js. */
+.cwc_product-buy-box__help {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin: 0 0 26px;
+  padding: 18px;
+  background: #F8F6F1;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+}
+
+.cwc_product-buy-box__help-photo {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 2px solid var(--highlight-color);
+  background: var(--media-bg);
+  overflow: hidden;
+}
+
+.cwc_product-buy-box__help-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cwc_product-buy-box__help-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cwc_product-buy-box__help-heading {
+  margin: 0 0 4px;
+  font-family: var(--cwc-font-heading);
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.cwc_product-buy-box__help-meta {
+  margin: 0;
+  font-family: var(--cwc-font-body);
+  font-size: 0.85rem;
+  color: var(--subtext-color);
+}
+
+.cwc_product-buy-box__help-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.cwc_product-buy-box__help-actions:empty {
+  display: none;
+}
+
+.cwc_product-buy-box__help-button {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 0.75rem;
+  border: 1.5px solid var(--text-color);
+  border-radius: 3px;
+  font-family: var(--cwc-font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.cwc_product-buy-box__help-button--outline {
+  background: transparent;
+  color: var(--text-color);
+}
+
+.cwc_product-buy-box__help-button--dark {
+  background: var(--text-color);
+  color: #ffffff;
+}
+
+.cwc_product-buy-box__help-button--outline:hover {
+  border-color: var(--highlight-color);
+  color: var(--highlight-color);
+}
+
+.cwc_product-buy-box__help-button--dark:hover {
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+  color: #ffffff;
+}
+
+.cwc_product-buy-box__help-label-mobile {
+  display: none;
+}
+
 @media screen and (max-width: 1024px) {
   .cwc_product-buy-box__container {
     padding: 0 1.75rem;
@@ -904,5 +1009,70 @@
   .cwc_product-buy-box__fbt-total-price {
     justify-self: end;
     font-size: 1.625rem;
+  }
+}
+
+/* === Help Block (mobile) ===
+   Heading and hours stacked, buttons full width below. With the profile
+   image on, it sits to the left of the heading and hours. */
+@media screen and (max-width: 768px) {
+  .cwc_product-buy-box__help {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "heading"
+      "meta"
+      "actions";
+    column-gap: 10px;
+    row-gap: 0;
+    align-items: center;
+    padding: 14px;
+  }
+
+  .cwc_product-buy-box__help--photo {
+    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-areas:
+      "photo heading"
+      "photo meta"
+      "actions actions";
+  }
+
+  .cwc_product-buy-box__help-photo {
+    grid-area: photo;
+    width: 48px;
+    height: 48px;
+  }
+
+  .cwc_product-buy-box__help-body {
+    display: contents;
+  }
+
+  .cwc_product-buy-box__help-heading {
+    grid-area: heading;
+    align-self: end;
+    font-size: 1.25rem;
+  }
+
+  .cwc_product-buy-box__help-meta {
+    grid-area: meta;
+    align-self: start;
+    margin-top: 2px;
+  }
+
+  .cwc_product-buy-box__help-subtext {
+    display: none;
+  }
+
+  .cwc_product-buy-box__help-actions {
+    grid-area: actions;
+    margin-top: 12px;
+  }
+
+  .cwc_product-buy-box__help-label-desktop {
+    display: none;
+  }
+
+  .cwc_product-buy-box__help-label-mobile {
+    display: inline;
   }
 }

@@ -8,7 +8,7 @@
   {% render 'theme-icon', icon: 'close', iconSize: 12, iconClasses: 'icon icon-close-small' %}
 {% endcapture %}
 
-{% liquid 
+{% liquid
   assign content_alignment = settings.template_heading_alignment
   if settings.template_heading_alignment == 'left'
     assign content_alignment = 'flex-start'
@@ -252,7 +252,7 @@
 
       .collection-info__topbar .collection-info__description.rte {
         text-align: center;
-      } 
+      }
 
       .collection-filters > * + * {
         margin-top: 0;
@@ -365,7 +365,7 @@
         display: none;
       }
     }
-  
+
     @media screen and (min-width: 768px) {
       .facets__form-inner.mobile {
         display: none;
@@ -596,7 +596,7 @@
       align-items: center;
       justify-content: center;
     }
-  
+
     .facet-checkbox > div.filter-swatch .filter-swatch--color {
       width: 24px;
       height: 24px;
@@ -625,7 +625,7 @@
       left: 50%;
       transform: translate(-50%, -50%) rotate(-45deg);
     }
-  
+
     .facet-checkbox--disabled div.filter-swatch .filter-swatch--color .color-option-sold-out.color-option-sold-out-background {
       z-index: 1;
       background-color: var(--filter-background-color-mobile);
@@ -636,7 +636,7 @@
         background-color: var(--filter-background-color);
       }
     }
-  
+
     .facet-checkbox--disabled div.filter-swatch .filter-swatch--color .color-option-sold-out.color-option-sold-out-foreground {
       z-index: 2;
       background-color: var(--filter-text-color-mobile-transparent25);
@@ -937,7 +937,7 @@
         visibility: hidden;
         transition: opacity 0.6s cubic-bezier(0.39, 0.575, 0.565, 1), visibility 0.6s;
       }
-      
+
       .js-drawer-open-filter collection-filtering-form + .filtering-drawer-overlay {
         opacity: 0.7;
         visibility: visible;
@@ -1076,7 +1076,7 @@
       .template-search #CollectionProductGrid {
         flex: 1;
       }
-      
+
       .facets__wrapper {
         display: block !important;
       }
@@ -1242,16 +1242,13 @@
       border-radius: 50%;
       border: 1px solid var(--border-color);
     }
-    
 </style>
 
 <!-- /templates/search.json -->
 {% comment %}
-
   To return only products or pages in results:
     - http://docs.shopify.com/manual/configuration/store-customization/return-only-product-in-storefront-search-results
     - Or manually add type=product or type=page to the search URL as a parameter
-
 {% endcomment %}
 
 {% comment %}
@@ -1259,9 +1256,9 @@
 {% endcomment %}
 {% assign respond_js_secret_key = shop.domain | md5 %}
 {% unless search.terms == respond_js_secret_key %}
-{% assign color_langs = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' | join: ' ' %}
+  {% assign color_langs = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' | join: ' ' %}
 
-{% capture filters %}
+  {% capture filters %}
   <div class="facets__wrapper">
     {%- unless search.filters == empty or request.design_mode -%}
       <p class="facets__heading label-font">{{ 'sections.collection_template.filter_by_label' | t }}</p>
@@ -1479,7 +1476,7 @@
   </div>
 {% endcapture %}
 
-{% capture filters_mobile %}
+  {% capture filters_mobile %}
   <div class="facets__wrapper">
     {%- unless search.filters == empty or request.design_mode -%}
       <p class="facets__heading label-font">{{ 'sections.collection_template.filter_by_label' | t }}</p>
@@ -1697,7 +1694,7 @@
   </div>
 {% endcapture %}
 
-{% capture active_facets %}
+  {% capture active_facets %}
   <div data-filter-update="active-facets-desktop" class="active-facets active-facets-desktop">
     <a aria-label="{{ 'general.accessibility.clear_all_filters' | t }}" href="{{ routes.search_url }}?q={{ search.terms }}&sort_by={{ sort_by }}" class="active-facets__button button button--secondary js-clear-all-filters js-facet-remove" loading="false">
       <span class="active-facets__button--text">{{ 'sections.collection_template.clear_all' | t }}</span>
@@ -1769,12 +1766,13 @@
     If you do, the pagination of results will be broken.
   {% endcomment %}
   {% paginate search.results by search.results_count %}
-
     <div
       class="wrapper-spacing--v--template wrapper-spacing--h main-content page-main--wrapper"
       data-wetheme-section-type="template--search"
       data-wetheme-section-id="{{ section.id }}"
-      {% unless section.settings.desktop_position == 'sidebar' %}style="--search-content-alignment: {{ content_alignment }};"{% endunless %}
+      {% unless section.settings.desktop_position == 'sidebar' %}
+        style="--search-content-alignment: {{ content_alignment }};"
+      {% endunless %}
     >
       <div class="width--content">
         <div class="search--header">
@@ -1782,12 +1780,18 @@
           <div class="template-title--wrapper">
             {% if search.performed %}
               {% if search.results_count == 0 %}
-                <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h1>
+                <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">
+                  {{ 'general.search.no_results_html' | t: terms: search.terms }}
+                </h1>
               {% else %}
-                <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">{{ 'general.search.results_for_html' | t: terms: search.terms }}</h1>
+                <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">
+                  {{ 'general.search.results_for_html' | t: terms: search.terms }}
+                </h1>
               {% endif %}
             {% else %}
-              <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">{{ 'general.search.title' | t }}</h1>
+              <h1 class="page--title template-title" style="text-align: {{ settings.template_heading_alignment }};">
+                {{ 'general.search.title' | t }}
+              </h1>
             {% endif %}
           </div>
 
@@ -1799,9 +1803,12 @@
             {% if search.results_count > 0 %}
               <div>
                 {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
-              
-                <div class="collection-filters collection-filters__{% if section.settings.desktop_position == 'sidebar' %}sidebar{% else %}topbar{% endif %}" id="main-collection-filters" data-id="{{ section.id }}">
-              
+
+                <div
+                  class="collection-filters collection-filters__{% if section.settings.desktop_position == 'sidebar' %}sidebar{% else %}topbar{% endif %}"
+                  id="main-collection-filters"
+                  data-id="{{ section.id }}"
+                >
                   {%- unless search.filters == empty or request.design_mode -%}
                     {% unless section.settings.enable_filtering == false and section.settings.enable_sorting == false %}
                       <button type="button" class="btn mobile-facets__open" data-drawer-open-btn>
@@ -1815,7 +1822,7 @@
                       </button>
                     {% endunless %}
                   {% endunless %}
-              
+
                   {% if request.design_mode %}
                     {% unless section.settings.enable_filtering == false and section.settings.enable_sorting == false %}
                       {% if search.performed %}
@@ -1829,7 +1836,9 @@
                           {% endif %}
                         </button>
                       {% else %}
-                        <p class="facets__heading_placeholder-mobile">Perform a search or save your changes to display the filter options</p>
+                        <p class="facets__heading_placeholder-mobile">
+                          Perform a search or save your changes to display the filter options
+                        </p>
                       {% endif %}
                     {% endunless %}
                   {% endif %}
@@ -1900,28 +1909,36 @@
                   {% if section.settings.desktop_position == 'sidebar' %}
                     {{ results_type }}
                   {% endif %}
-              
+
                   {%- assign total_active_values = 0 -%}
                   {% unless section.settings.enable_filtering == false and section.settings.enable_sorting == false %}
-                    <collection-filtering-form class="facets" data-filter-form data-button-aria-label="{{ 'sections.collection_template.filter_and_sort' | t }}">
+                    <collection-filtering-form
+                      class="facets"
+                      data-filter-form
+                      data-button-aria-label="{{ 'sections.collection_template.filter_and_sort' | t }}"
+                    >
                       <form id="CollectionFiltersForm" class="facets__form" inert>
-
                         {%- if section.settings.enable_filtering == true or section.settings.enable_sorting == true -%}
                           {% if section.settings.enable_sorting == true %}
                             <input id="sort_by_input" type="hidden" name="sort_by" value="">
                           {% endif %}
 
                           <div class="drawer__close js-drawer-close">
-                            <button type="button" aria-label="{{ 'general.accessibility.dismiss.close' | t }}" class="mobile-menu--close-btn filter-drawer-btn icon-fallback-text standalone-icon--wrapper" data-drawer-close-btn>
+                            <button
+                              type="button"
+                              aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+                              class="mobile-menu--close-btn filter-drawer-btn icon-fallback-text standalone-icon--wrapper"
+                              data-drawer-close-btn
+                            >
                               <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
                               {% render 'theme-icon', icon: 'close', iconSize: 20 %}
                             </button>
                           </div>
 
                           <input type="hidden" name="type" id="page-type-input" value="article,product,page">
-              
+
                           {% for i in (1..2) %}
-                            {% liquid 
+                            {% liquid
                               capture device
                                 cycle 'desktop', 'mobile'
                               endcapture
@@ -1943,14 +1960,14 @@
                                 </div>
                               </div>
                             {% endcapture %}
-            
+
                             {% if device == 'desktop' %}
                               <div class="facets__form-inner desktop">
                                 {% if section.settings.desktop_position == 'sidebar' %}
                                   {% if section.settings.enable_sorting == true %}
                                     {{ sorting }}
                                   {% endif %}
-                
+
                                   {% if section.settings.enable_filtering == true %}
                                     {{ filters }}
                                     {{ active_facets }}
@@ -1959,24 +1976,24 @@
                                   {% if section.settings.enable_filtering == true %}
                                     {{ filters }}
                                   {% endif %}
-                
+
                                   {% if section.settings.enable_sorting == true %}
                                     {{ sorting }}
                                   {% endif %}
-                
+
                                   {% if section.settings.enable_filtering == true %}
                                     {{ active_facets }}
                                   {% endif %}
                                 {% endif %}
                               </div>
                             {% endif %}
-                          
+
                             {% if device == 'mobile' %}
                               <div class="facets__form-inner mobile">
                                 {% if section.settings.enable_sorting == true %}
                                   {{ sorting }}
                                 {% endif %}
-                
+
                                 {% if section.settings.enable_filtering == true %}
                                   {{ filters_mobile }}
                                   {{ active_facets }}
@@ -1990,23 +2007,31 @@
                   {% endunless %}
 
                   <div class="filtering-drawer-overlay" data-filtering-drawer-overlay></div>
-              
+
                   {% if section.settings.desktop_position == 'topbar' %}
                     {{ results_type }}
                   {% endif %}
                 </div>
-              
+
                 <div>
                   <div data-filter-update="active-facets-mobile" class="active-facets active-facets-mobile">
-                    <a aria-label="{{ 'general.accessibility.clear_all_filters' | t }}" href="{{ routes.search_url }}?q={{ search.terms }}&sort_by={{ sort_by }}" class="active-facets__button button button--secondary js-clear-all-filters js-facet-remove" loading="false">
-                      <span class="active-facets__button--text">{{ 'sections.collection_template.clear_all' | t }}</span>
+                    <a
+                      aria-label="{{ 'general.accessibility.clear_all_filters' | t }}"
+                      href="{{ routes.search_url }}?q={{ search.terms }}&sort_by={{ sort_by }}"
+                      class="active-facets__button button button--secondary js-clear-all-filters js-facet-remove"
+                      loading="false"
+                    >
+                      <span class="active-facets__button--text">
+                        {{- 'sections.collection_template.clear_all' | t -}}
+                      </span>
                       <div class="active-facets__button--loading-icon hidden">
-                        {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+                        {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+                        <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
                       </div>
                     </a>
-              
+
                     {%- for filter in search.filters -%}
-                      {% liquid 
+                      {% liquid
                         assign isColor = false
                         assign file_extension = 'png'
                         assign downcased_label = filter.label | downcase
@@ -2016,7 +2041,15 @@
                       %}
 
                       {%- for value in filter.active_values -%}
-                        <a aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter.label | append: ': ' | append: value.label }}" class="active-facets__button button button--tertiary js-facet-remove" href="{{ value.url_to_remove }}" {% if isColor %}data-swatch="true"{% endif %} loading="false">
+                        <a
+                          aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter.label | append: ': ' | append: value.label }}"
+                          class="active-facets__button button button--tertiary js-facet-remove"
+                          href="{{ value.url_to_remove }}"
+                          {% if isColor %}
+                            data-swatch="true"
+                          {% endif %}
+                          loading="false"
+                        >
                           <span class="active-facets__button--text inline-icon--wrapper icon--right">
                             {% if filter.type == 'boolean' %}
                               {{ filter.label | escape | append: ': ' }}
@@ -2032,32 +2065,55 @@
                                 aria-hidden="true"
                                 focusable="false"
                                 class="color-icon"
-                                {% if isColor %}style="{% if has_image_swatch %}background-image: url({{ image_url }}); background-size: cover;{% endif %} background-color: {{ value.label }};"{% endif %}
-                              >
-                              </div>
+                                {% if isColor %}
+                                  style="{% if has_image_swatch %}background-image: url({{ image_url }}); background-size: cover;{% endif %} background-color: {{ value.label }};"
+                                {% endif %}
+                              ></div>
                             {% endif %}
 
                             {{ value.label | escape }}
                             {{ icon_close }}
                           </span>
                           <div class="active-facets__button--loading-icon hidden">
-                            {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+                            {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+                            <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
                           </div>
                         </a>
                       {%- endfor -%}
-          
-                      {% if filter.type == "price_range" %}
-                        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+
+                      {% if filter.type == 'price_range' %}
+                        {%- if filter.min_value.value != null or filter.max_value.value != null -%}
                           {% assign filter_min_value = filter.min_value.value | money %}
                           {% assign filter_max_value = filter.max_value.value | money %}
-                          {% assign filter_aria_label = filter.label | append: ': ' | append: filter_min_value | append: ' - ' | append: filter_max_value %}
-                          <a aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter_aria_label }}" class="active-facets__button button button--tertiary price-filter-reset js-facet-remove" href="{{ filter.url_to_remove }}" loading="false">
+                          {% assign filter_aria_label = filter.label
+                            | append: ': '
+                            | append: filter_min_value
+                            | append: ' - '
+                            | append: filter_max_value
+                          %}
+                          <a
+                            aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter_aria_label }}"
+                            class="active-facets__button button button--tertiary price-filter-reset js-facet-remove"
+                            href="{{ filter.url_to_remove }}"
+                            loading="false"
+                          >
                             <span class="active-facets__button--text inline-icon--wrapper icon--right">
-                              {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
+                              {%- if filter.min_value.value -%}
+                                {{ filter.min_value.value | money }}
+                              {%- else -%}
+                                {{ 0 | money }}
+                              {%- endif -%}
+                              -
+                              {%- if filter.max_value.value -%}
+                                {{ filter.max_value.value | money }}
+                              {%- else -%}
+                                {{ filter.range_max | money }}
+                              {%- endif -%}
                               {{ icon_close }}
                             </span>
                             <div class="active-facets__button--loading-icon hidden">
-                              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+                              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+                              <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
                             </div>
                           </a>
                         {%- endif -%}
@@ -2068,8 +2124,8 @@
               </div>
             {% endif %}
 
-            {% assign desktop_results_per_row = section.settings.desktop-results-per-row %}
-            {% assign mobile_results_per_row = section.settings.mobile-results-per-row %}
+            {% assign desktop_results_per_row = section.settings['desktop-results-per-row'] %}
+            {% assign mobile_results_per_row = section.settings['mobile-results-per-row'] %}
 
             {% case desktop_results_per_row %}
               {% when 2 %}
@@ -2087,97 +2143,119 @@
             {% assign tablet_item_width = 'medium--one-half' %}
 
             {% case mobile_results_per_row %}
-              {% when "1" %}
+              {% when '1' %}
                 {% assign mobile_item_width = 'small--one-whole' %}
-              {% when "2" %}
+              {% when '2' %}
                 {% assign mobile_item_width = 'small--one-half' %}
             {% endcase %}
 
-            {%- assign grid_item_width = desktop_item_width | append: ' ' | append: tablet_item_width | append: ' ' | append: mobile_item_width -%}
+            {%- assign grid_item_width = desktop_item_width
+              | append: ' '
+              | append: tablet_item_width
+              | append: ' '
+              | append: mobile_item_width
+            -%}
 
-              <div id="CollectionProductGrid">
+            <div id="CollectionProductGrid">
+              <div class="collection-style--grid">
+                <div class="collection-main-body grid-uniform">
+                  <input type="hidden" id="grid_item_width_classes" value="{{ grid_item_width }}" />
 
-                <div class="collection-style--grid">
-                  <div class="collection-main-body grid-uniform">
+                  <div
+                    class="collection-main-body-inner product-grid--wrapper"
+                    data-grid-id="{{ section.id }}"
+                    id="template--collection"
+                  >
+                    {% for item in search.results %}
+                      <div class="grid__item {{ grid_item_width }} show-on-scroll">
+                        {%- liquid
+                          assign loading = 'lazy'
+                          if forloop.index <= desktop_results_per_row
+                            assign loading = 'eager'
+                          endif
 
-                    <input type="hidden" id="grid_item_width_classes" value="{{ grid_item_width }}" />
+                          assign animate_order = forloop.index | modulo: desktop_results_per_row
+                          if animate_order == 0
+                            assign animate_order = desktop_results_per_row
+                          endif
+                          assign badge_anim_order = animate_order | plus: 2
 
-                    <div
-                      class="collection-main-body-inner product-grid--wrapper"
-                      data-grid-id="{{ section.id }}"
-                      id="template--collection"
-                    >
-                      {% for item in search.results %}
-                        <div class="grid__item {{ grid_item_width }} show-on-scroll">
-                          {%- liquid
-                            assign loading = 'lazy'
-                            if forloop.index <= desktop_results_per_row
-                              assign loading = 'eager'
-                            endif
+                          assign animate_order_ipad = forloop.index | modulo: 2
+                          if animate_order_ipad == 0
+                            assign animate_order_ipad = 2
+                          endif
+                          assign badge_anim_order_ipad = animate_order_ipad | plus: 2
 
-                            assign animate_order = forloop.index | modulo: desktop_results_per_row
-                            if animate_order == 0
-                              assign animate_order = desktop_results_per_row
-                            endif
-                            assign badge_anim_order = animate_order | plus: 2
+                          assign animate_order_mobile = forloop.index | modulo: mobile_results_per_row
+                          if animate_order_mobile == 0
+                            assign animate_order_mobile = mobile_results_per_row
+                          endif
+                          assign badge_anim_order_mobile = animate_order_mobile | plus: 2
+                        -%}
+                        {% if item.object_type == 'product' %}
+                          {% render 'grid-view-item',
+                            product: item,
+                            collection: null,
+                            enable_badges: settings.show_badges,
+                            grid_count_desktop: desktop_results_per_row,
+                            grid_count_mobile: mobile_results_per_row,
+                            loading: loading,
+                            badge_anim_order: badge_anim_order,
+                            badge_anim_order_ipad: badge_anim_order_ipad,
+                            badge_anim_order_mobile: badge_anim_order_mobile,
+                            animate: true,
+                            animate_order: animate_order,
+                            animate_order_ipad: animate_order_ipad,
+                            animate_order_mobile: animate_order_mobile
+                          %}
+                        {% else %}
+                          <a href="{{ item.url }}" class="grid-item--align-{{ settings.product_card_text_alignment }}">
+                            {% if item.image %}
+                              {%- liquid
+                                assign image_stretch = false
 
-                            assign animate_order_ipad = forloop.index | modulo: 2
-                            if animate_order_ipad == 0
-                              assign animate_order_ipad = 2
-                            endif
-                            assign badge_anim_order_ipad = animate_order_ipad | plus: 2
-
-                            assign animate_order_mobile = forloop.index | modulo: mobile_results_per_row
-                            if animate_order_mobile == 0
-                              assign animate_order_mobile = mobile_results_per_row
-                            endif
-                            assign badge_anim_order_mobile = animate_order_mobile | plus: 2
-                          -%}
-                          {% if item.object_type == 'product' %}
-                            {% render 'grid-view-item', product: item, collection: null, enable_badges: settings.show_badges, grid_count_desktop: desktop_results_per_row, grid_count_mobile: mobile_results_per_row, loading: loading, badge_anim_order: badge_anim_order, badge_anim_order_ipad: badge_anim_order_ipad, badge_anim_order_mobile: badge_anim_order_mobile, animate: true, animate_order: animate_order, animate_order_ipad: animate_order_ipad, animate_order_mobile: animate_order_mobile %}
-                          {% else %}
-                            <a href="{{ item.url }}" class="grid-item--align-{{ settings.product_card_text_alignment }}">
-                              {% if item.image %}
-                                {%- liquid 
+                                assign crop_setting = settings['product-grid']
+                                if crop_setting == 'square'
+                                  assign image_crop = 'aspect-ratio--square'
+                                  assign image_stretch = true
+                                elsif crop_setting == 'tall'
+                                  assign image_crop = 'aspect-ratio--tall'
+                                  assign image_stretch = true
+                                elsif crop_setting == 'wide'
+                                  assign image_crop = 'aspect-ratio--wide'
+                                  assign image_stretch = true
+                                else
+                                  assign image_crop = false
                                   assign image_stretch = false
-
-                                  assign crop_setting = settings.product-grid
-                                  if crop_setting == "square"
-                                    assign image_crop = "aspect-ratio--square"
-                                    assign image_stretch = true
-                                  elsif crop_setting == "tall"
-                                    assign image_crop = "aspect-ratio--tall"
-                                    assign image_stretch = true
-                                  elsif crop_setting == "wide"
-                                    assign image_crop = "aspect-ratio--wide"
-                                    assign image_stretch = true
-                                  else
-                                    assign image_crop = false
-                                    assign image_stretch = false
-                                  endif
-                                -%}
-                                <div class="grid-item__image">
-                                  {% if image_crop %}<div class="aspect-ratio {{ image_crop }}">{% endif %}
-                                    {% render 'responsive-image', image: item.image, allow_stretch: image_stretch, blur: false, loading: loading %}
-                                  {% if image_crop %}</div>{% endif %}
-                                </div>
-                              {% endif %}
-                              <p class="grid-item__title grid-item--font-{{ settings.type_card_title_font }} text-truncate--line">{{ item.title }}</p>
-                              <p class="grid-item__excerpt">{{ item.content | strip_html | truncate: 80 }}</p>
-                            </a>
-                          {% endif %}
-                        </div>
-                      {% endfor %}
-                    </div>
+                                endif
+                              -%}
+                              <div class="grid-item__image">
+                                {% if image_crop %}<div class="aspect-ratio {{ image_crop }}">{% endif %}
+                                {% render 'responsive-image',
+                                  image: item.image,
+                                  allow_stretch: image_stretch,
+                                  blur: false,
+                                  loading: loading
+                                %}
+                                {% if image_crop %}</div>{% endif %}
+                              </div>
+                            {% endif %}
+                            <p class="grid-item__title grid-item--font-{{ settings.type_card_title_font }} text-truncate--line">
+                              {{ item.title }}
+                            </p>
+                            <p class="grid-item__excerpt">{{ item.content | strip_html | truncate: 80 }}</p>
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
                   </div>
                 </div>
               </div>
-
+            </div>
           </div>
         {% endif %}
       </div>
     </div>
-
   {% endpaginate %}
 
 {% else %}

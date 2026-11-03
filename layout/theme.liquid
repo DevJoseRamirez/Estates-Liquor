@@ -98,6 +98,17 @@
     }
   {% endstyle %}
 
+  {%- comment -%}
+    Shopify Inbox draws its floating bubble inside a shadow root, but marks it
+    part="activator", so ::part() can hide it from here. Inbox still loads, and
+    CWC_inbox_trigger.js clicks the hidden bubble from our own chat buttons.
+  {%- endcomment -%}
+  {%- if settings.hide_inbox_bubble -%}
+    <style>
+      shopify-chat::part(activator) { display: none !important; }
+    </style>
+  {%- endif -%}
+
   <!-- Header hook for plugins ================================================== -->
   {{ content_for_header }}
 

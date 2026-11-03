@@ -20,7 +20,7 @@
     <div class="product-card-basic__image">
       <a href="{{ card_product.url }}" tabindex="-1" aria-hidden="true">
         <div class="{% unless settings.product-grid == 'natural' %}aspect-ratio aspect-ratio--{{ settings.product-grid }}{% endunless %}">
-          {{ card_product.featured_media | image_url: width: 200 | image_tag: class: 'theme-img thumbnail-radius' }}
+          {{ card_product.featured_media | image_url: width: 300 | image_tag: class: 'theme-img thumbnail-radius' }}
         </div>
       </a>
     </div>

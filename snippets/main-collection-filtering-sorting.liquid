@@ -1,16 +1,14 @@
 {%- comment -%}
+  COLLECTION FILTERING
 
-COLLECTION FILTERING
-
-Accepts:
- - collection {Obj} Shopify's collection object
- - classes: {String} Wrapper classes
- - desktop_position: {String} Accepts 'sidebar' or 'topbar'
- - enable_collection_title: {Boolean} Enables collection title
- - enable_collection_description: {Boolean} Enables collection description
- - enable_filtering: {Boolean} Enables filtering
- - enable_sorting: {Boolean} Enables sorting
-    
+  Accepts:
+   - collection {Obj} Shopify's collection object
+   - classes: {String} Wrapper classes
+   - desktop_position: {String} Accepts 'sidebar' or 'topbar'
+   - enable_collection_title: {Boolean} Enables collection title
+   - enable_collection_description: {Boolean} Enables collection description
+   - enable_filtering: {Boolean} Enables filtering
+   - enable_sorting: {Boolean} Enables sorting
 {%- endcomment -%}
 
 <style>
@@ -302,7 +300,7 @@ Accepts:
 
     .collection-info__topbar .collection-info__description.rte {
       text-align: center;
-    } 
+    }
   }
 
   .collection-filters__label {
@@ -317,7 +315,7 @@ Accepts:
   @media screen and (min-width: 768px) {
     color: var(--filter-text-color);
   }
-    
+
   .collection-filters__summary {
     display: flex;
     align-items: center;
@@ -999,7 +997,7 @@ Accepts:
       visibility: hidden;
       transition: opacity 0.6s cubic-bezier(0.39, 0.575, 0.565, 1), visibility 0.6s;
     }
-    
+
     .js-drawer-open-filter collection-filtering-form + .filtering-drawer-overlay {
       opacity: 0.7;
       visibility: visible;
@@ -1049,7 +1047,7 @@ Accepts:
   {% render 'theme-icon', icon: 'close', iconSize: 12, iconClasses: 'icon icon-close-small' %}
 {% endcapture %}
 
-{%-liquid
+{%- liquid
   if enable_collection_title and collection.title != blank
     assign collection_title = true
   endif
@@ -1562,24 +1560,27 @@ Accepts:
   </div>
 {%- endcapture -%}
 
-
 <div class="{{ classes }}">
   {% if collection_title or collection_description %}
-  <div class="collection-info template-title--wrapper">
-    {% if collection_title %}
-      <h1 class="page--title template-title">{{ collection.title }}</h1>
-    {% endif %}
+    <div class="collection-info template-title--wrapper">
+      {% if collection_title %}
+        <h1 class="page--title template-title">{{ collection.title }}</h1>
+      {% endif %}
 
-    {% if collection_description %}
-      <div class="rte collection-info__description template-description text-link-animated">
-        {{ collection.description }}
-      </div>
-    {% endif %}
-  </div>
+      {% if collection_description %}
+        <div class="rte collection-info__description template-description text-link-animated">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+    </div>
   {% endif %}
 
   {% if collection.all_products_count > 1 %}
-    <div class="collection-filters collection-filters__{% if desktop_position == 'sidebar' %}sidebar{% else %}topbar{% endif %}" id="main-collection-filters" data-id="{{ section.id }}">
+    <div
+      class="collection-filters collection-filters__{% if desktop_position == 'sidebar' %}sidebar{% else %}topbar{% endif %}"
+      id="main-collection-filters"
+      data-id="{{ section.id }}"
+    >
       {% unless enable_filtering == false and enable_sorting == false %}
         <button type="button" class="btn mobile-facets__open" data-drawer-open-btn>
           {% if enable_filtering and enable_sorting %}
@@ -1592,24 +1593,31 @@ Accepts:
         </button>
 
         {%- assign total_active_values = 0 -%}
-        <collection-filtering-form class="facets" data-filter-form data-button-aria-label="{{ 'sections.collection_template.filter_and_sort' | t }}">
+        <collection-filtering-form
+          class="facets"
+          data-filter-form
+          data-button-aria-label="{{ 'sections.collection_template.filter_and_sort' | t }}"
+        >
           <form id="CollectionFiltersForm" class="facets__form" inert>
-
             {%- if enable_filtering == true or enable_sorting == true -%}
-
               {% if enable_sorting == true %}
                 <input id="sort_by_input" type="hidden" name="sort_by" value="">
               {% endif %}
 
               <div class="drawer__close js-drawer-close">
-                <button type="button" aria-label="{{ 'general.accessibility.dismiss.close' | t }}" class="mobile-menu--close-btn filter-drawer-btn icon-fallback-text standalone-icon--wrapper" data-drawer-close-btn>
+                <button
+                  type="button"
+                  aria-label="{{ 'general.accessibility.dismiss.close' | t }}"
+                  class="mobile-menu--close-btn filter-drawer-btn icon-fallback-text standalone-icon--wrapper"
+                  data-drawer-close-btn
+                >
                   <span class="fallback-text">{{ 'general.accessibility.dismiss.close' | t }}</span>
                   {% render 'theme-icon', icon: 'close', iconSize: 20 %}
                 </button>
               </div>
 
               {% for i in (1..2) %}
-                {% liquid 
+                {% liquid
                   capture device
                     cycle 'desktop', 'mobile'
                   endcapture
@@ -1638,7 +1646,7 @@ Accepts:
                       {% if enable_sorting == true %}
                         {{ sorting }}
                       {% endif %}
-    
+
                       {% if enable_filtering == true %}
                         {{ filters }}
                         {{ active_facets }}
@@ -1647,24 +1655,24 @@ Accepts:
                       {% if enable_filtering == true %}
                         {{ filters }}
                       {% endif %}
-    
+
                       {% if enable_sorting == true %}
                         {{ sorting }}
                       {% endif %}
-    
+
                       {% if enable_filtering == true %}
                         {{ active_facets }}
                       {% endif %}
                     {% endif %}
                   </div>
                 {% endif %}
-              
+
                 {% if device == 'mobile' %}
                   <div class="facets__form-inner mobile">
                     {% if enable_sorting == true %}
                       {{ sorting }}
                     {% endif %}
-    
+
                     {% if enable_filtering == true %}
                       {{ filters_mobile }}
                       {{ active_facets }}
@@ -1681,16 +1689,20 @@ Accepts:
 
       <div class="container">
         <div data-filter-update="active-facets-mobile" class="active-facets active-facets-mobile">
-          <a href="{{ collection.url }}?sort_by={{ sort_by }}" class="active-facets__button button button--secondary js-clear-all-filters js-facet-remove" loading="false">
+          <a
+            href="{{ collection.url }}?sort_by={{ sort_by }}"
+            class="active-facets__button button button--secondary js-clear-all-filters js-facet-remove"
+            loading="false"
+          >
             <span class="active-facets__button--text">{{ 'sections.collection_template.clear_all' | t }}</span>
             <div class="active-facets__button--loading-icon hidden">
-              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+              {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+              <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
             </div>
           </a>
 
           {%- for filter in collection.filters -%}
-
-            {% liquid 
+            {% liquid
               assign isColor = false
               assign file_extension = 'png'
               assign downcased_label = filter.label | downcase
@@ -1700,7 +1712,15 @@ Accepts:
             %}
 
             {%- for value in filter.active_values -%}
-              <a aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter.label | append: ': ' | append: value.label }}" class="active-facets__button button button--tertiary js-facet-remove" href="{{ value.url_to_remove }}" {% if isColor %}data-swatch="true"{% endif %} loading="false">
+              <a
+                aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter.label | append: ': ' | append: value.label }}"
+                class="active-facets__button button button--tertiary js-facet-remove"
+                href="{{ value.url_to_remove }}"
+                {% if isColor %}
+                  data-swatch="true"
+                {% endif %}
+                loading="false"
+              >
                 <span class="active-facets__button--text inline-icon--wrapper icon--right">
                   {% if filter.type == 'boolean' %}
                     {{ filter.label | escape | append: ': ' }}
@@ -1716,34 +1736,57 @@ Accepts:
                       aria-hidden="true"
                       focusable="false"
                       class="color-icon"
-                      {% if isColor %}style="{% if has_image_swatch %}background-image: url({{ image_url }}); background-size: cover;{% endif %} background-color: {{ value.label }};"{% endif %}
-                    >
-                    </div>
+                      {% if isColor %}
+                        style="{% if has_image_swatch %}background-image: url({{ image_url }}); background-size: cover;{% endif %} background-color: {{ value.label }};"
+                      {% endif %}
+                    ></div>
                   {% endif %}
 
                   {{ value.label | escape }}
                   {{ icon_close }}
                 </span>
                 <div class="active-facets__button--loading-icon hidden">
-                  {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+                  {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+                  <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
                 </div>
               </a>
             {%- endfor -%}
 
-            {% if filter.type == "price_range" %}
-              {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            {% if filter.type == 'price_range' %}
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
                 {% assign filter_min_value = filter.min_value.value | money %}
                 {% assign filter_max_value = filter.max_value.value | money %}
-                {% assign filter_aria_label = filter.label | append: ': ' | append: filter_min_value | append: ' - ' | append: filter_max_value %}
-                <a aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter_aria_label }}" class="active-facets__button button button--tertiary price-filter-reset js-facet-remove" href="{{ filter.url_to_remove }}" loading="false">
-                <span class="active-facets__button--text inline-icon--wrapper icon--right">
-                  {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
-                  {{ icon_close }}
-                </span>
-                <div class="active-facets__button--loading-icon hidden">
-                  {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' %}<span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
-                </div>
-              </a>
+                {% assign filter_aria_label = filter.label
+                  | append: ': '
+                  | append: filter_min_value
+                  | append: ' - '
+                  | append: filter_max_value
+                %}
+                <a
+                  aria-label="{{ 'general.accessibility.remove_filter' | t: filter: filter_aria_label }}"
+                  class="active-facets__button button button--tertiary price-filter-reset js-facet-remove"
+                  href="{{ filter.url_to_remove }}"
+                  loading="false"
+                >
+                  <span class="active-facets__button--text inline-icon--wrapper icon--right">
+                    {%- if filter.min_value.value -%}
+                      {{ filter.min_value.value | money }}
+                    {%- else -%}
+                      {{ 0 | money }}
+                    {%- endif -%}
+                    -
+                    {%- if filter.max_value.value -%}
+                      {{ filter.max_value.value | money }}
+                    {%- else -%}
+                      {{ filter.range_max | money }}
+                    {%- endif -%}
+                    {{ icon_close }}
+                  </span>
+                  <div class="active-facets__button--loading-icon hidden">
+                    {% render 'theme-icon', icon: 'circle-notch', iconClasses: 'spin js fa-2x' -%}
+                    <span class="sr-only">{{ 'collections.paginate.loading' | t }}</span>
+                  </div>
+                </a>
               {%- endif -%}
             {% endif %}
           {%- endfor -%}
@@ -1755,6 +1798,12 @@ Accepts:
 
 {% if collection.all_products_count > 1 %}
   <safe-load-scripts class="hidden">
-    <script src="{{ 'component-filtering.js' | asset_url }}" type="module" defer="defer" data-internal-script data-flow-load-key="component-filtering"></script>
+    <script
+      src="{{ 'component-filtering.js' | asset_url }}"
+      type="module"
+      defer="defer"
+      data-internal-script
+      data-flow-load-key="component-filtering"
+    ></script>
   </safe-load-scripts>
 {% endif %}
