@@ -4,11 +4,16 @@
     --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
-    --slot-bg: {{ section.settings.slot_bg_color | default: '#F8F6F1' }};
+    --heading-color: {{ section.settings.heading_color | default: '#0A1F12' }};
+    --muted-color: {{ section.settings.muted_color | default: '#9A9A9A' }};
+    --star-color: {{ section.settings.star_color | default: '#C4933F' }};
+    --bar-color: {{ section.settings.bar_color | default: '#C4933F' }};
+    --bar-track-color: {{ section.settings.bar_track_color | default: '#F0EDE6' }};
+    --badge-color: {{ section.settings.badge_color | default: '#1C6B46' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
     --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --content-width: {{ section.settings.content_width | default: 860 }}px;
-    --slot-height: {{ section.settings.slot_height | default: 160 }}px;
+    --panel-bg: {{ section.settings.panel_bg_color | default: '#F8F6F1' }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
@@ -19,48 +24,254 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_product_reviews.css' | asset_url | stylesheet_tag }}
 
-<section id="cwc_product-reviews-{{ section.id }}" class="cwc_product-reviews">
-  {% comment %}
-    Separate, stable anchor for "Read N reviews" links from the buy box. The
-    section id has to stay scoped to section.id or the {% style %} block above
-    matches nothing and every CSS variable falls back to undefined.
-  {% endcomment %}
-  <span id="cwc_product-reviews" class="cwc_product-reviews__anchor" aria-hidden="true"></span>
+{%- liquid
+  comment
+    Summary + star breakdown come from the JSON metafield Judge.me writes per product.
+    Falls back to the standard reviews.rating metafields when it isn't there yet.
+  endcomment
+  assign review_data = product.metafields.judgeme.review_widget_data.value
+  assign rating_value = review_data.average_rating | default: product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
+  assign rating_count = review_data.number_of_reviews | default: product.metafields.reviews.rating_count.value | default: 0 | plus: 0
+  assign rating_percent = rating_value | times: 20 | at_most: 100
+  assign histogram = review_data.histogram
+  assign histogram_total = 0
+
+  assign has_reviews = false
+  if rating_count > 0
+    assign has_reviews = true
+  endif
+
+  comment
+    Liquid can't always read Judge.me's product fields. With no count here, the section asks
+    Judge.me's feed in the browser: it fills in and shows when reviews exist, otherwise it
+    stays hidden (Hide mode) or shows the empty prompt (Show mode).
+  endcomment
+  assign hide_until_feed = false
+  if has_reviews == false and section.settings.empty_mode == 'hide' and request.design_mode == false
+    assign hide_until_feed = true
+  endif
+
+  assign can_write = false
+  if section.settings.enable_write_review and section.settings.button_label != blank
+    assign can_write = true
+  endif
+  assign form_id = 'cwc_product-reviews-form-' | append: section.id
+-%}
+
+<section
+  id="cwc_product-reviews-{{ section.id }}"
+  class="cwc_product-reviews{% unless has_reviews %} cwc_product-reviews--empty{% endunless %}{% if section.settings.show_top_border %} cwc_product-reviews--bordered{% endif %}"
+  {% unless has_reviews %}data-needs-feed{% endunless %}
+  {% if hide_until_feed %}hidden{% endif %}
+  data-count-singular="{{ section.settings.count_singular | escape }}"
+  data-count-plural="{{ section.settings.count_plural | escape }}"
+  data-product-id="{{ product.id }}"
+  data-shop-domain="{{ shop.permanent_domain }}"
+  data-review-total="{{ rating_count }}"
+  data-per-load="{{ section.settings.reviews_per_load | default: 5 }}"
+  data-showing-label="{{ section.settings.showing_label | default: 'Showing [shown] of [total]' | escape }}"
+  data-verified-label="{{ section.settings.verified_label | escape }}"
+  data-date-format="{{ section.settings.date_format | default: 'numeric' }}"
+>
+  {% comment %} Stable anchor for the "Read N reviews" link in the buy box {% endcomment %}
+  <span id="{{ section.settings.anchor_id | default: 'cwc_product-reviews' | escape }}" class="cwc_product-reviews__anchor" aria-hidden="true"></span>
 
   <div class="cwc_product-reviews__container">
-    <div class="cwc_product-reviews__content">
 
-      <div class="cwc_product-reviews__head">
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="cwc_product-reviews__content">
         {% if section.settings.eyebrow != blank %}
-          <p class="cwc_product-reviews__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="cwc_product-reviews__content-eyebrow">{{ section.settings.eyebrow | escape }}</p>
         {% endif %}
-
         {% if section.settings.heading != blank %}
-          <h2 class="cwc_product-reviews__heading">{{ section.settings.heading }}</h2>
+          <h2 class="cwc_product-reviews__content-heading">{{ section.settings.heading | escape }}</h2>
         {% endif %}
-
         {% if section.settings.show_rule %}
-          <span class="cwc_product-reviews__rule" aria-hidden="true"></span>
+          <span class="cwc_product-reviews__content-rule" aria-hidden="true"></span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="cwc_product-reviews__wrapper">
+
+      {% comment %} Score summary {% endcomment %}
+      <div class="cwc_product-reviews__summary">
+          <div class="cwc_product-reviews__score-group" data-has-reviews {% unless has_reviews %}hidden{% endunless %}>
+            <p class="cwc_product-reviews__score" data-score>{{ rating_value | round: 1 }}</p>
+            <div class="cwc_product-reviews__score-meta">
+              <span class="cwc_product-reviews__stars" data-score-stars style="--rating: {{ rating_percent }}%;" role="img" aria-label="{{ rating_value | round: 1 }} out of 5 stars">
+                <span aria-hidden="true">★★★★★</span>
+              </span>
+              <p class="cwc_product-reviews__count" data-count>
+                {{ rating_count }}
+                {% if rating_count == 1 %}{{ section.settings.count_singular | escape }}{% else %}{{ section.settings.count_plural | escape }}{% endif %}
+              </p>
+            </div>
+          </div>
+
+          {% if section.settings.show_histogram %}
+            <ul class="cwc_product-reviews__histogram" data-histogram data-has-reviews aria-label="Rating breakdown" {% unless has_reviews %}hidden{% endunless %}>
+              {%- for star in (1..5) reversed -%}
+                {%- liquid
+                  assign star_key = star | append: ''
+                  assign star_value = histogram[star_key]
+                  if star_value == nil and histogram
+                    for entry in histogram
+                      assign entry_rating = entry.rating | default: entry.score | plus: 0
+                      if entry_rating == star
+                        assign star_value = entry
+                        break
+                      endif
+                    endfor
+                  endif
+                  assign star_count = star_value.frequency | default: star_value.count | default: star_value.number_of_reviews | default: star_value | plus: 0
+                  assign histogram_total = histogram_total | plus: star_count
+                  assign star_percent = 0
+                  if rating_count > 0
+                    assign star_percent = star_count | times: 100 | divided_by: rating_count | at_most: 100
+                  endif
+                -%}
+                <li class="cwc_product-reviews__histogram-row" data-star="{{ star }}">
+                  <span class="cwc_product-reviews__histogram-label">{{ star }}<span aria-hidden="true">★</span><span class="visually-hidden"> stars</span></span>
+                  <span class="cwc_product-reviews__histogram-track" aria-hidden="true">
+                    <span class="cwc_product-reviews__histogram-bar" data-histogram-bar style="width: {{ star_percent }}%;"></span>
+                  </span>
+                  <span class="cwc_product-reviews__histogram-count" data-histogram-count>{{ star_count }}</span>
+                </li>
+              {%- endfor -%}
+            </ul>
+            {% comment %} Breakdown not in the metafield: JS fills it from the Judge.me feed instead {% endcomment %}
+            {% if histogram_total == 0 %}<span data-histogram-pending hidden></span>{% endif %}
+          {% endif %}
+
+          {% comment %} No reviews yet {% endcomment %}
+          <div class="cwc_product-reviews__empty" data-empty {% if has_reviews %}hidden{% endif %}>
+            <span class="cwc_product-reviews__stars cwc_product-reviews__empty-stars" style="--rating: 0%;" aria-hidden="true">
+              <span>★★★★★</span>
+            </span>
+            {% if section.settings.empty_text != blank %}
+              <p class="cwc_product-reviews__empty-title">{{ section.settings.empty_text | escape }}</p>
+            {% endif %}
+            {% if section.settings.empty_subtext != blank %}
+              <p class="cwc_product-reviews__empty-subtext">{{ section.settings.empty_subtext | escape }}</p>
+            {% endif %}
+          </div>
+
+        {% if can_write %}
+          <button
+            type="button"
+            class="cwc_product-reviews__button"
+            data-write-review
+            aria-expanded="false"
+            aria-controls="{{ form_id }}"
+          >
+            {{ section.settings.button_label | escape }}
+          </button>
         {% endif %}
       </div>
 
-      {% comment %}
-        Mount point for the review app. Paste the app's embed into the custom
-        Liquid setting below, or let the app target #cwc_product-reviews-widget.
-        The placeholder only shows while nothing is mounted.
-      {% endcomment %}
-      <div id="cwc_product-reviews-widget" class="cwc_product-reviews__slot">
-        {% if section.settings.app_embed != blank %}
-          {{ section.settings.app_embed }}
-        {% else %}
-          <div class="cwc_product-reviews__placeholder">
-            {% if section.settings.placeholder_title != blank %}
-              <span class="cwc_product-reviews__placeholder-title">{{ section.settings.placeholder_title }}</span>
-            {% endif %}
-            {% if section.settings.placeholder_text != blank %}
-              <p class="cwc_product-reviews__placeholder-text">{{ section.settings.placeholder_text }}</p>
-            {% endif %}
+      <div class="cwc_product-reviews__main">
+
+        {% comment %} Write a review: our form, sent to Judge.me (reviews go through its approval) {% endcomment %}
+        {% if can_write %}
+          <div class="cwc_product-reviews__form-panel" id="{{ form_id }}" data-review-form-panel hidden>
+            <form
+              class="cwc_product-reviews__form"
+              data-review-form
+              novalidate
+              data-error-required="{{ section.settings.form_error_required | escape }}"
+              data-error-text="{{ section.settings.form_error_text | escape }}"
+            >
+              {% if section.settings.form_heading != blank %}
+                <p class="cwc_product-reviews__form-heading">{{ section.settings.form_heading | escape }}</p>
+              {% endif %}
+
+              <fieldset class="cwc_product-reviews__form-rating">
+                <legend class="cwc_product-reviews__form-label">Your rating <span aria-hidden="true">*</span></legend>
+                <div class="cwc_product-reviews__form-stars" data-star-input>
+                  {%- for i in (1..5) -%}
+                    <input
+                      class="cwc_product-reviews__form-star-input visually-hidden"
+                      type="radio"
+                      id="{{ form_id }}-star-{{ i }}"
+                      name="rating"
+                      value="{{ i }}"
+                      required
+                    >
+                    <label class="cwc_product-reviews__form-star" for="{{ form_id }}-star-{{ i }}" data-star-value="{{ i }}">
+                      <span aria-hidden="true">★</span>
+                      <span class="visually-hidden">{{ i }} star{% if i > 1 %}s{% endif %}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+
+              <div class="cwc_product-reviews__form-row">
+                <div class="cwc_product-reviews__form-field">
+                  <label class="cwc_product-reviews__form-label" for="{{ form_id }}-name">Name <span aria-hidden="true">*</span></label>
+                  <input class="cwc_product-reviews__form-input" type="text" id="{{ form_id }}-name" name="name" autocomplete="name" maxlength="80" required value="{{ customer.name | escape }}">
+                </div>
+                <div class="cwc_product-reviews__form-field">
+                  <label class="cwc_product-reviews__form-label" for="{{ form_id }}-email">Email <span aria-hidden="true">*</span></label>
+                  <input class="cwc_product-reviews__form-input" type="email" id="{{ form_id }}-email" name="email" autocomplete="email" required value="{{ customer.email | escape }}">
+                </div>
+              </div>
+
+              <div class="cwc_product-reviews__form-field">
+                <label class="cwc_product-reviews__form-label" for="{{ form_id }}-title">Review title</label>
+                <input class="cwc_product-reviews__form-input" type="text" id="{{ form_id }}-title" name="title" maxlength="100">
+              </div>
+
+              <div class="cwc_product-reviews__form-field">
+                <label class="cwc_product-reviews__form-label" for="{{ form_id }}-body">Review <span aria-hidden="true">*</span></label>
+                <textarea class="cwc_product-reviews__form-input cwc_product-reviews__form-textarea" id="{{ form_id }}-body" name="body" rows="5" maxlength="5000" required></textarea>
+              </div>
+
+              {% if customer %}
+                <input type="hidden" name="shopify_customer_id" value="{{ customer.id }}">
+              {% endif %}
+
+              {% if section.settings.form_note != blank %}
+                <p class="cwc_product-reviews__form-note">{{ section.settings.form_note | escape }}</p>
+              {% endif %}
+
+              <p class="cwc_product-reviews__form-error" data-form-error role="alert" hidden></p>
+
+              <div class="cwc_product-reviews__form-actions">
+                <button type="submit" class="cwc_product-reviews__form-submit" data-form-submit>
+                  {{ section.settings.submit_label | default: 'Submit review' | escape }}
+                </button>
+                <button type="button" class="cwc_product-reviews__form-cancel" data-form-cancel>
+                  {{ section.settings.cancel_label | default: 'Cancel' | escape }}
+                </button>
+              </div>
+            </form>
+
+            <div class="cwc_product-reviews__form-success" data-form-success role="status" tabindex="-1" hidden>
+              {% if section.settings.success_heading != blank %}
+                <p class="cwc_product-reviews__form-heading">{{ section.settings.success_heading | escape }}</p>
+              {% endif %}
+              {% if section.settings.success_text != blank %}
+                <p class="cwc_product-reviews__form-success-text">{{ section.settings.success_text | escape }}</p>
+              {% endif %}
+            </div>
           </div>
+        {% endif %}
+
+        {% comment %} Review list (built by JS from Judge.me's public review feed) {% endcomment %}
+        <div class="cwc_product-reviews__list-head" data-list-head hidden>
+          <p class="cwc_product-reviews__showing" data-showing></p>
+        </div>
+        <div class="cwc_product-reviews__list" data-review-list aria-live="polite"></div>
+        {% if section.settings.show_more_label != blank %}
+          <button type="button" class="cwc_product-reviews__more" data-show-more hidden>
+            {{ section.settings.show_more_label | escape }}
+          </button>
+        {% endif %}
+
+        {% if section.settings.store_text != blank %}
+          <p class="cwc_product-reviews__store">{{ section.settings.store_text | escape }}</p>
         {% endif %}
       </div>
 
@@ -68,9 +279,14 @@
   </div>
 </section>
 
+<script src="{{ 'CWC_product_reviews.js' | asset_url }}" defer></script>
+
 {% schema %}
 {
   "name": "CWC Product Reviews",
+  "enabled_on": {
+    "templates": ["product"]
+  },
   "settings": [
     {
       "type": "header",
@@ -95,54 +311,181 @@
       "default": true
     },
     {
-      "type": "header",
-      "content": "Review App"
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "cwc_product-reviews",
+      "info": "The buy box rating link (#cwc_product-reviews) scrolls here"
     },
     {
-      "type": "liquid",
-      "id": "app_embed",
-      "label": "App Embed",
-      "info": "Paste your review app's snippet or app block Liquid here. Leaving this empty shows the placeholder instead."
+      "type": "header",
+      "content": "Score"
     },
     {
       "type": "paragraph",
-      "content": "Apps can also target the wrapper id #cwc_product-reviews-widget directly."
-    },
-    {
-      "type": "range",
-      "id": "slot_height",
-      "label": "Placeholder Height",
-      "min": 100,
-      "max": 400,
-      "step": 10,
-      "unit": "px",
-      "default": 160
+      "content": "Score, count and star breakdown come from the review data Judge.me writes to the product. The review list loads from Judge.me automatically. No Judge.me app block is needed."
     },
     {
       "type": "text",
-      "id": "placeholder_title",
-      "label": "Placeholder Title",
-      "default": "App Widget Slot"
+      "id": "count_singular",
+      "label": "Count Label (1 Review)",
+      "default": "verified review"
     },
     {
       "type": "text",
-      "id": "placeholder_text",
-      "label": "Placeholder Text",
-      "default": "Your product review widget renders here. When this product has no reviews, hide this section so the store reviews above carry the page."
+      "id": "count_plural",
+      "label": "Count Label (Reviews)",
+      "default": "verified reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_histogram",
+      "label": "Show Star Breakdown",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "No Reviews Yet"
+    },
+    {
+      "type": "select",
+      "id": "empty_mode",
+      "label": "When A Product Has No Reviews",
+      "options": [
+        { "value": "show", "label": "Show the section with a prompt to review" },
+        { "value": "hide", "label": "Hide the whole section" }
+      ],
+      "default": "hide",
+      "info": "The theme editor always shows the section so it can be edited"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "No Reviews Heading",
+      "default": "No reviews yet"
+    },
+    {
+      "type": "text",
+      "id": "empty_subtext",
+      "label": "No Reviews Text",
+      "default": "Reviews from customers who bought this bottle will appear here."
+    },
+    {
+      "type": "header",
+      "content": "Write A Review"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reviews are sent to Judge.me and follow its approval settings. Judge.me must allow reviews from the website (Judge.me settings) or they will be rejected."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_write_review",
+      "label": "Show Write A Review",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Write a review"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form Heading",
+      "default": "Write a review"
+    },
+    {
+      "type": "text",
+      "id": "form_note",
+      "label": "Form Note",
+      "default": "Your email won't be published. Reviews are checked before they appear."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit Label",
+      "default": "Submit review"
+    },
+    {
+      "type": "text",
+      "id": "cancel_label",
+      "label": "Cancel Label",
+      "default": "Cancel"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Thank You Heading",
+      "default": "Thanks for your review!"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Thank You Text",
+      "default": "It will show here once it has been approved."
+    },
+    {
+      "type": "text",
+      "id": "form_error_required",
+      "label": "Missing Fields Message",
+      "default": "Please choose a rating and fill in your name, email and review."
+    },
+    {
+      "type": "text",
+      "id": "form_error_text",
+      "label": "Send Failed Message",
+      "default": "Your review could not be sent. Please try again."
+    },
+    {
+      "type": "header",
+      "content": "Review List"
     },
     {
       "type": "range",
-      "id": "content_width",
-      "label": "Content Width",
-      "min": 600,
-      "max": 1100,
-      "step": 20,
-      "unit": "px",
-      "default": 860
+      "id": "reviews_per_load",
+      "label": "Reviews Shown Per Load",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "showing_label",
+      "label": "Showing Label",
+      "default": "Showing [shown] of [total]",
+      "info": "[shown] and [total] are replaced with numbers"
+    },
+    {
+      "type": "text",
+      "id": "show_more_label",
+      "label": "Show More Label",
+      "default": "Show more reviews"
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified Badge Label",
+      "default": "Verified",
+      "info": "Shown on reviews from verified buyers. Hidden when empty"
+    },
+    {
+      "type": "select",
+      "id": "date_format",
+      "label": "Date Format",
+      "options": [
+        { "value": "numeric", "label": "09/25/2022" },
+        { "value": "long", "label": "Sep 25, 2022" }
+      ],
+      "default": "numeric"
+    },
+    {
+      "type": "text",
+      "id": "store_text",
+      "label": "Store-wide Line",
+      "info": "e.g. Store-wide: 4.9 from 1,200 reviews. Hidden when empty"
     },
     {
       "type": "header",
@@ -162,6 +505,12 @@
     },
     {
       "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0A1F12"
+    },
+    {
+      "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
       "default": "#C4933F"
@@ -174,21 +523,67 @@
     },
     {
       "type": "color",
-      "id": "meta_color",
-      "label": "Placeholder Text Color",
+      "id": "muted_color",
+      "label": "Muted Text Color",
       "default": "#9A9A9A"
     },
     {
       "type": "color",
-      "id": "slot_bg_color",
-      "label": "Placeholder Background Color",
-      "default": "#F8F6F1"
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "bar_color",
+      "label": "Breakdown Bar Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "bar_track_color",
+      "label": "Breakdown Track Color",
+      "default": "#F0EDE6"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Verified Badge Color",
+      "default": "#1C6B46"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#C4933F"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
       "default": "#E0DDD6"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg_color",
+      "label": "Panel Background Color",
+      "default": "#F8F6F1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "Show Top Border",
+      "default": false
     },
     {
       "type": "header",
@@ -213,6 +608,11 @@
       "step": 5,
       "unit": "px",
       "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
     }
   ],
   "presets": [

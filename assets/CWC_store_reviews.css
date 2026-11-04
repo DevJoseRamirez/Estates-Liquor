@@ -53,39 +53,66 @@
   background-color: var(--highlight-color);
 }
 
-/* === Carousel === */
+/* === Carousel ===
+   Without JS (or with reduced motion) it is a plain swipe row.
+   JS adds --running once the set is cloned to fill the width. */
 .cwc_store-reviews__carousel {
-  position: relative;
-}
-
-/* native scroll-snap — swipes without JS, arrows are enhancement only */
-.cwc_store-reviews__track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - (var(--columns) - 1) * 16px) / var(--columns));
-  gap: 16px;
+  --sr-gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: 4px;
 }
 
-.cwc_store-reviews__track::-webkit-scrollbar {
+.cwc_store-reviews__carousel::-webkit-scrollbar {
   display: none;
 }
 
-.cwc_store-reviews__track:focus-visible {
+.cwc_store-reviews__carousel:focus-visible {
   outline: 2px solid var(--highlight-color);
   outline-offset: 4px;
 }
 
+.cwc_store-reviews__track {
+  display: flex;
+  width: max-content;
+}
+
+/* Gap on the right too, so the seam between copies matches */
+.cwc_store-reviews__set {
+  display: flex;
+  gap: var(--sr-gap);
+  padding-right: var(--sr-gap);
+}
+
+.cwc_store-reviews__carousel--running {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+}
+
+.cwc_store-reviews__carousel--running .cwc_store-reviews__track {
+  animation: cwc-store-reviews-marquee var(--sr-marquee-duration, 60s) linear infinite;
+}
+
+.cwc_store-reviews__carousel--running:hover .cwc_store-reviews__track,
+.cwc_store-reviews__carousel--running:focus-within .cwc_store-reviews__track {
+  animation-play-state: paused;
+}
+
+@keyframes cwc-store-reviews-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* === Card === */
 .cwc_store-reviews__card {
+  flex: 0 0 var(--card-width);
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
+  margin: 0;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 3px;
@@ -106,8 +133,18 @@
   display: block;
 }
 
+.cwc_store-reviews__stars .cwc_store-reviews__star--empty {
+  opacity: 0.25;
+}
+
+/* Live Judge.me reviews can run long; keep cards even */
 .cwc_store-reviews__card-text {
-  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
+  margin: 0 0 14px;
 }
 
 .cwc_store-reviews__card-text p {
@@ -119,9 +156,12 @@
   color: var(--text-color);
 }
 
+.cwc_store-reviews__card-footer {
+  margin-top: auto;
+}
+
 .cwc_store-reviews__card-author {
   display: block;
-  margin-top: auto;
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -136,51 +176,11 @@
   color: var(--card-meta-color);
 }
 
-/* === Nav (revealed by JS only when the track overflows) === */
-.cwc_store-reviews__nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 1.5rem;
-}
-
-.cwc_store-reviews__nav[hidden] {
-  display: none;
-}
-
-.cwc_store-reviews__nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  cursor: pointer;
-  color: var(--text-color);
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-}
-
-.cwc_store-reviews__nav-button:hover:not(:disabled) {
-  border-color: var(--highlight-color);
-  color: var(--highlight-color);
-}
-
-.cwc_store-reviews__nav-button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.cwc_store-reviews__nav-button:focus-visible {
-  outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
-}
-
-.cwc_store-reviews__nav-button svg {
-  width: 18px;
-  height: 18px;
+/* === Empty State (theme editor only) === */
+.cwc_store-reviews__empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--card-meta-color);
 }
 
 /* ==============================
@@ -189,10 +189,6 @@
 @media screen and (max-width: 1024px) {
   .cwc_store-reviews__container {
     padding: 0 1.75rem;
-  }
-
-  .cwc_store-reviews__track {
-    grid-auto-columns: calc((100% - 16px) / 2);
   }
 }
 
@@ -215,12 +211,22 @@
     padding: 0 1rem;
   }
 
-  .cwc_store-reviews__track {
-    grid-auto-columns: 85%;
-    gap: 12px;
+  /* Swipe row bleeds to the screen edge */
+  .cwc_store-reviews__carousel {
+    --sr-gap: 12px;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    scroll-padding: 0 1rem;
+  }
+
+  .cwc_store-reviews__carousel--running {
+    padding: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .cwc_store-reviews__card {
+    flex-basis: min(300px, 82vw);
     padding: 20px;
   }
 }

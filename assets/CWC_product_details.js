@@ -43,10 +43,14 @@
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          bar.classList.toggle('cwc_product-details__sticky--visible', !entry.isIntersecting);
+          /* Only show once the shopper has scrolled PAST the main button
+             (it's above the viewport) — not while it's still below the fold
+             on first load. */
+          var scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+          bar.classList.toggle('cwc_product-details__sticky--visible', scrolledPast);
         });
       },
-      { rootMargin: '0px 0px -20px 0px', threshold: 0 }
+      { threshold: 0 }
     );
 
     observer.observe(watched);

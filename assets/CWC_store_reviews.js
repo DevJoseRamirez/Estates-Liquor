@@ -1,53 +1,73 @@
 (function () {
   'use strict';
 
-  /* Enhancement only — the track is a native scroll-snap carousel and
-     swipes fine with this file blocked. */
+  var RUNNING_CLASS = 'cwc_store-reviews__carousel--running';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* === Carousel: seamless auto-scroll loop ===
+     The track holds two identical halves; the animation slides it by -50%,
+     so the second half lands exactly where the first began. Each half
+     repeats the set enough times to cover the visible width.
+     Without JS (or with reduced motion) the carousel is a native swipe row. */
   function initSection(sectionEl) {
-    if (!sectionEl || sectionEl.dataset.cwcStoreReviewsInit === 'true') return;
+    if (!sectionEl) return;
+    var carousel = sectionEl.querySelector('.cwc_store-reviews__carousel');
+    if (!carousel || carousel.dataset.cwcReady) return;
+    var track = carousel.querySelector('.cwc_store-reviews__track');
+    var set = track && track.querySelector('.cwc_store-reviews__set');
+    if (!set) return;
+    carousel.dataset.cwcReady = 'true';
 
-    var track = sectionEl.querySelector('.cwc_store-reviews__track');
-    var nav = sectionEl.querySelector('[data-cwc-reviews-nav]');
-    if (!track || !nav) return;
+    var speed = parseFloat(carousel.dataset.speed) || 40;
+    var lastWidth = 0;
 
-    var prev = nav.querySelector('[data-cwc-reviews-prev]');
-    var next = nav.querySelector('[data-cwc-reviews-next]');
-    if (!prev || !next) return;
-
-    sectionEl.dataset.cwcStoreReviewsInit = 'true';
-
-    function overflows() {
-      return track.scrollWidth - track.clientWidth > 2;
+    function cloneSet() {
+      var clone = set.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.setAttribute('inert', '');
+      clone.querySelectorAll('[data-shopify-editor-block]').forEach(function (el) {
+        el.removeAttribute('data-shopify-editor-block');
+      });
+      return clone;
     }
 
-    function syncNav() {
-      if (!overflows()) {
-        nav.setAttribute('hidden', '');
-        return;
+    function build() {
+      track.querySelectorAll('.cwc_store-reviews__set[aria-hidden]').forEach(function (el) {
+        el.remove();
+      });
+      carousel.classList.remove(RUNNING_CLASS);
+      if (reduceMotion.matches) return;
+
+      var setWidth = set.offsetWidth;
+      var viewWidth = carousel.offsetWidth;
+      if (!setWidth || !viewWidth) return;
+
+      var copies = Math.max(1, Math.ceil(viewWidth / setWidth));
+      // First half: original + (copies - 1) clones; second half: copies clones
+      for (var i = 1; i < copies * 2; i++) {
+        track.appendChild(cloneSet());
       }
-      nav.removeAttribute('hidden');
 
-      var maxScroll = track.scrollWidth - track.clientWidth;
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= maxScroll - 2;
+      var duration = (setWidth * copies) / speed;
+      carousel.style.setProperty('--sr-marquee-duration', duration + 's');
+      carousel.scrollLeft = 0;
+      carousel.classList.add(RUNNING_CLASS);
+      lastWidth = viewWidth;
     }
 
-    function page(direction) {
-      var card = track.querySelector('.cwc_store-reviews__card');
-      var step = card ? card.offsetWidth + 16 : track.clientWidth;
-      track.scrollBy({ left: step * direction, behavior: 'smooth' });
+    build();
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        if (carousel.offsetWidth !== lastWidth) build();
+      }, 200);
+    });
+
+    if (reduceMotion.addEventListener) {
+      reduceMotion.addEventListener('change', build);
     }
-
-    prev.addEventListener('click', function () {
-      page(-1);
-    });
-    next.addEventListener('click', function () {
-      page(1);
-    });
-    track.addEventListener('scroll', syncNav, { passive: true });
-    window.addEventListener('resize', syncNav);
-
-    syncNav();
   }
 
   function initAllSections() {

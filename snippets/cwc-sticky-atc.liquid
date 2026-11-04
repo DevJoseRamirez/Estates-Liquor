@@ -13,7 +13,7 @@
 %}
 
 <div
-  class="cwc_product-details__sticky"
+  class="cwc_product-details__sticky{% unless block.settings.show_info_mobile %} cwc_product-details__sticky--button-only{% endunless %}"
   data-cwc-sticky-atc
   data-watch="{{ block.settings.watch_selector | default: '[data-cwc-atc]' }}"
   hidden

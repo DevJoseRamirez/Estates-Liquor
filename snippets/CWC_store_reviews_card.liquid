@@ -1,0 +1,38 @@
+{% comment %}
+  Shared review card for CWC_store_reviews. Judge.me reviews and manual
+  review blocks both render through here so they look identical.
+
+  Params:
+  - rating: 1-5
+  - text_html: review text as HTML (Judge.me text is escaped before passing)
+  - author: reviewer name (optional)
+  - meta: "Verified buyer" or a note (optional)
+  - block_attrs: block.shopify_attributes for manual blocks (optional)
+{% endcomment %}
+{%- assign card_rating = rating | default: 5 | plus: 0 -%}
+<figure class="cwc_store-reviews__card" {{ block_attrs }}>
+  <span class="cwc_store-reviews__stars" role="img" aria-label="{{ card_rating }} out of 5 stars">
+    {%- for i in (1..5) -%}
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"{% if i > card_rating %} class="cwc_store-reviews__star--empty"{% endif %}>
+        <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
+      </svg>
+    {%- endfor -%}
+  </span>
+
+  {% if text_html != blank %}
+    <blockquote class="cwc_store-reviews__card-text cwc-rte">
+      {{ text_html }}
+    </blockquote>
+  {% endif %}
+
+  {% if author != blank or meta != blank %}
+    <figcaption class="cwc_store-reviews__card-footer">
+      {% if author != blank %}
+        <span class="cwc_store-reviews__card-author">{{ author | escape }}</span>
+      {% endif %}
+      {% if meta != blank %}
+        <span class="cwc_store-reviews__card-meta">{{ meta | escape }}</span>
+      {% endif %}
+    </figcaption>
+  {% endif %}
+</figure>
