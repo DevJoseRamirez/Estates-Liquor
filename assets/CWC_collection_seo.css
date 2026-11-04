@@ -1,5 +1,8 @@
 /* ==============================
    CWC Collection SEO Copy
+   Styled to _theme-styles/estates-brand-tokens.md §5: SEO copy on a tint band
+   (bg from the section setting), H2 34/26 500, body 17/16 lh 1.7, Tertiary
+   Read More button.
    ============================== */
 
 /* === Section Wrapper === */
@@ -12,9 +15,9 @@
 }
 
 .cwc_collection-seo__container {
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 .cwc_collection-seo__content {
@@ -29,27 +32,25 @@
 
 .cwc_collection-seo__card-title {
   font-family: var(--cwc-font-heading);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--text-color);
   margin: 0 0 0.625rem;
 }
 
 /* size follows the chosen heading level */
 .cwc_collection-seo__card--large .cwc_collection-seo__card-title {
-  font-size: 1.625rem;
-  /* 26px */
-  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.12;
   margin-bottom: 1rem;
 }
 
 .cwc_collection-seo__card--medium .cwc_collection-seo__card-title {
-  font-size: 1.125rem;
-  /* 18px */
+  font-size: 19px;
 }
 
 .cwc_collection-seo__card--small .cwc_collection-seo__card-title {
-  font-size: 1rem;
+  font-size: 17px;
 }
 
 /* Headings only ever arrive from the collection metafield — the block editor's
@@ -60,8 +61,8 @@
 .cwc_collection-seo__card-text h5,
 .cwc_collection-seo__card-text h6 {
   font-family: var(--cwc-font-heading);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--text-color);
   margin: 1.75rem 0 0.625rem;
 }
@@ -71,24 +72,24 @@
 }
 
 .cwc_collection-seo__card-text h2 {
-  font-size: 1.625rem;
-  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.12;
   margin-bottom: 1rem;
 }
 
 .cwc_collection-seo__card-text h3 {
-  font-size: 1.125rem;
+  font-size: 19px;
 }
 
 .cwc_collection-seo__card-text h4,
 .cwc_collection-seo__card-text h5,
 .cwc_collection-seo__card-text h6 {
-  font-size: 1rem;
+  font-size: 17px;
 }
 
 .cwc_collection-seo__card-text p {
-  font-size: 0.9375rem;
-  line-height: 1.8;
+  font-size: 17px;
+  line-height: 1.7;
   color: var(--body-text-color);
   margin: 0 0 0.875rem;
 }
@@ -103,12 +104,18 @@
 
 .cwc_collection-seo__card-text a {
   color: var(--highlight-color);
+  text-underline-offset: 3px;
+}
+
+.cwc_collection-seo__card-text a:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 .cwc_collection-seo__card-text ul,
 .cwc_collection-seo__card-text ol {
-  font-size: 0.9375rem;
-  line-height: 1.8;
+  font-size: 17px;
+  line-height: 1.7;
   color: var(--body-text-color);
   margin: 0 0 0.875rem;
   padding-left: 1.25rem;
@@ -120,25 +127,32 @@
   margin: 1.75rem auto 0;
 }
 
+/* Tertiary: white, ink text, 1px ink border; hover fills ink */
 .cwc_collection-seo__toggle {
-  height: 44px;
-  padding: 0 1.375rem;
-  border: 1px solid var(--text-color);
-  border-radius: 3px;
-  background: transparent;
-  color: var(--text-color);
+  min-height: 44px;
+  padding: 0 30px;
+  border: 1px solid #1C1C19;
+  border-radius: 0;
+  background: #FFFFFF;
+  color: #1C1C19;
   font-family: var(--cwc-font-body);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .cwc_collection-seo__toggle:hover {
-  background: var(--text-color);
-  color: var(--section-bg);
+  background: #1C1C19;
+  color: #FFFFFF;
+}
+
+.cwc_collection-seo__toggle:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 .cwc_collection-seo__toggle[hidden] {
@@ -150,13 +164,13 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_collection-seo__container {
-    padding: 0 1.75rem;
+    padding: 0 32px;
   }
 }
 
 @media screen and (max-width: 991px) {
   .cwc_collection-seo__container {
-    padding: 0 1.25rem;
+    padding: 0 20px;
   }
 }
 
@@ -170,14 +184,29 @@
   }
 
   .cwc_collection-seo__container {
-    padding: 0 1rem;
+    padding: 0 16px;
   }
 
-  .cwc_collection-seo__card--large .cwc_collection-seo__card-title {
-    font-size: 1.375rem;
+  .cwc_collection-seo__card--large .cwc_collection-seo__card-title,
+  .cwc_collection-seo__card-text h2 {
+    font-size: 26px;
   }
 
-  .cwc_collection-seo__card--medium .cwc_collection-seo__card-title {
-    font-size: 1.0625rem;
+  .cwc_collection-seo__card--medium .cwc_collection-seo__card-title,
+  .cwc_collection-seo__card-text h3 {
+    font-size: 16px;
+  }
+
+  .cwc_collection-seo__card--small .cwc_collection-seo__card-title,
+  .cwc_collection-seo__card-text h4,
+  .cwc_collection-seo__card-text h5,
+  .cwc_collection-seo__card-text h6 {
+    font-size: 15px;
+  }
+
+  .cwc_collection-seo__card-text p,
+  .cwc_collection-seo__card-text ul,
+  .cwc_collection-seo__card-text ol {
+    font-size: 16px;
   }
 }

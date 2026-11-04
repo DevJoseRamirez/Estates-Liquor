@@ -157,6 +157,7 @@
                             {% if is_disabled %}disabled{% endif %}
                           >
                           <span class="cwc_collection-grid__option-label">{{ value.label | escape }}</span>
+                          <span class="cwc_collection-grid__option-count">{{ value.count }}</span>
                         </label>
                       {% endfor %}
                     </div>

@@ -1,22 +1,22 @@
 {% style %}
   #cwc_rare-allocated-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
 
     {% comment %}
       Cards mirror the collection grid, so they carry their own light palette
       rather than inheriting the dark panel's --text-color.
     {% endcomment %}
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-text-color: {{ section.settings.card_text_color | default: '#0A1F12' }};
-    --card-meta-color: {{ section.settings.card_meta_color | default: '#9A9A9A' }};
-    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
-    --card-border-color: {{ section.settings.card_border_color | default: '#E0DDD6' }};
-    --card-button-bg: {{ section.settings.card_button_bg_color | default: '#0A1F12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#14281D' }};
+    --card-meta-color: {{ section.settings.card_meta_color | default: '#5C5C57' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
+    --card-border-color: {{ section.settings.card_border_color | default: '#DEDED8' }};
+    --card-button-bg: {{ section.settings.card_button_bg_color | default: '#E9A23B' }};
     --decor-opacity: {{ section.settings.decor_opacity | default: 16 | divided_by: 100.0 }};
     --per-view: {{ section.settings.cards_per_view | default: 2 }};
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
@@ -46,18 +46,18 @@
   {% if section.settings.show_decor %}
     <span class="cwc_rare-allocated__decor" aria-hidden="true">
       <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--1" width="28" height="72" viewBox="0 0 28 72" focusable="false">
-        <rect x="9" y="0" width="10" height="8" rx="2" fill="#bf8d3a"/>
-        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#bf8d3a"/>
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#E9A23B"/>
+        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#E9A23B"/>
       </svg>
 
       <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--2" width="28" height="86" viewBox="0 0 28 86" focusable="false">
-        <rect x="9" y="0" width="10" height="8" rx="2" fill="#a8ccb4"/>
-        <path d="M4 8 Q2 14 2 20 L2 76 Q2 82 14 82 Q26 82 26 76 L26 20 Q26 14 24 8 Z" fill="#a8ccb4"/>
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#FFFFFF"/>
+        <path d="M4 8 Q2 14 2 20 L2 76 Q2 82 14 82 Q26 82 26 76 L26 20 Q26 14 24 8 Z" fill="#FFFFFF"/>
       </svg>
 
       <svg class="cwc_rare-allocated__decor-bottle cwc_rare-allocated__decor-bottle--3" width="28" height="72" viewBox="0 0 28 72" focusable="false">
-        <rect x="9" y="0" width="10" height="8" rx="2" fill="#bf8d3a"/>
-        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#bf8d3a"/>
+        <rect x="9" y="0" width="10" height="8" rx="2" fill="#E9A23B"/>
+        <path d="M4 8 Q2 14 2 20 L2 62 Q2 68 14 68 Q26 68 26 62 L26 20 Q26 14 24 8 Z" fill="#E9A23B"/>
       </svg>
     </span>
   {% endif %}
@@ -145,8 +145,8 @@
               assign badge_label = ''
               assign badge_style = ''
               if product.compare_at_price > product.price
-                assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
-                assign badge_label = '-' | append: discount | append: '%'
+                assign saving = product.compare_at_price | minus: product.price | money_without_trailing_zeros
+                assign badge_label = 'Save ' | append: saving
                 assign badge_style = 'sale'
               elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
                 assign badge_label = 'Allocated'
@@ -340,7 +340,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -352,25 +352,25 @@
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Button Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#ffffff"
+      "default": "#14281D"
     },
     {
       "type": "header",
@@ -409,31 +409,31 @@
       "type": "color",
       "id": "card_text_color",
       "label": "Card Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "card_meta_color",
       "label": "Card Detail Line Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "card_media_bg_color",
       "label": "Card Image Background Color",
-      "default": "#F2EFE8"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "card_border_color",
       "label": "Card Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "card_button_bg_color",
       "label": "Quick Add Button Color",
-      "default": "#0A1F12"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

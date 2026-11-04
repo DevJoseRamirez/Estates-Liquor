@@ -1,5 +1,7 @@
 /* ==============================
    CWC About Banner
+   Estates green band (brand spec §5 Bands): white H1, amber eyebrow and
+   emphasis, flat overlay (no gradient), square corners, no shadows.
    ============================== */
 
 /* === Section Wrapper === */
@@ -32,15 +34,12 @@
   display: block;
 }
 
-/* wash holds full strength across the copy, then clears toward the photo */
+/* flat wash in the overlay colour keeps the copy legible over the photo
+   (brand rule: no gradients) */
 .cwc_about-banner__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right,
-      rgba(var(--overlay-rgb), 0.94) 0%,
-      rgba(var(--overlay-rgb), 0.94) var(--overlay-coverage, 0%),
-      rgba(var(--overlay-rgb), 0.72) 60%,
-      rgba(var(--overlay-rgb), 0.5) 100%);
+  background: rgba(var(--overlay-rgb), 0.86);
   opacity: var(--overlay-opacity);
 }
 
@@ -48,9 +47,9 @@
 .cwc_about-banner__container {
   position: relative;
   z-index: 2;
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 .cwc_about-banner__content {
@@ -61,19 +60,22 @@
 
 /* === Content === */
 .cwc_about-banner__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.875rem;
+  margin: 0 0 14px;
 }
 
 .cwc_about-banner__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(2rem, 4vw, 2.875rem);
-  font-weight: 700;
-  line-height: 1.15;
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
   margin: 0;
   color: inherit;
 }
@@ -83,17 +85,22 @@
   color: var(--highlight-color);
 }
 
+.cwc_about-banner__content-heading>* strong {
+  font-weight: inherit;
+}
+
 .cwc_about-banner__content-heading>* em {
   font-style: italic;
+  font-weight: 400;
 }
 
 .cwc_about-banner__content-subtext {
-  max-width: 520px;
-  margin-top: 1rem;
+  max-width: 560px;
+  margin-top: 16px;
 }
 
 .cwc_about-banner__content-subtext p {
-  font-size: 0.9375rem;
+  font-size: 17px;
   line-height: 1.7;
   margin: 0;
   color: var(--subtext-color);
@@ -106,7 +113,7 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_about-banner__container {
-    padding: 0 1.75rem;
+    padding: 0 32px;
   }
 
   .cwc_about-banner__content {
@@ -116,7 +123,7 @@
 
 @media screen and (max-width: 991px) {
   .cwc_about-banner__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -125,7 +132,15 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_about-banner__container {
-    padding: 0 1rem;
+    padding: 0 20px;
+  }
+
+  .cwc_about-banner__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_about-banner__content-heading p {
+    font-size: 32px;
   }
 
   .cwc_about-banner__content {
@@ -134,14 +149,11 @@
   }
 
   .cwc_about-banner__content-subtext p {
-    font-size: 0.875rem;
+    font-size: 16px;
   }
 
-  /* straighten the wash so the copy stays legible over a portrait crop */
+  /* a touch heavier over a portrait crop so the copy stays legible */
   .cwc_about-banner__overlay {
-    background: linear-gradient(to bottom,
-        rgba(var(--overlay-rgb), 0.94) 0%,
-        rgba(var(--overlay-rgb), 0.94) var(--overlay-coverage, 0%),
-        rgba(var(--overlay-rgb), 0.78) 100%);
+    background: rgba(var(--overlay-rgb), 0.9);
   }
 }

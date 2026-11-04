@@ -1,13 +1,13 @@
 {% style %}
   #cwc_store-reviews-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#F8F6F1' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --star-color: {{ section.settings.star_color | default: '#C4933F' }};
+    --section-bg: {{ section.settings.bg_color | default: '#FBF1E4' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --star-color: {{ section.settings.star_color | default: '#A35A12' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-meta-color: {{ section.settings.card_meta_color | default: '#9A9A9A' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --card-meta-color: {{ section.settings.card_meta_color | default: '#5C5C57' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
     --card-width: {{ section.settings.card_width | default: 360 }}px;
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
@@ -128,36 +128,38 @@
       {% endif %}
     </div>
 
-    {% comment %} Review Cards {% endcomment %}
-    {% if card_total > 0 %}
-      {%- comment -%}
-        Auto-scrolling loop. JS clones the set to fill the width and starts the
-        animation; without JS (or with reduced motion) it is a swipe row.
-      {%- endcomment -%}
-      <div
-        class="cwc_store-reviews__carousel"
-        role="region"
-        aria-label="Store reviews"
-        tabindex="0"
-        data-review-source="{{ review_source }}"
-        data-speed="{{ section.settings.carousel_speed | default: 40 }}"
-      >
-        <div class="cwc_store-reviews__track">
-          <div class="cwc_store-reviews__set">
-            {{ review_cards }}
-          </div>
+  </div>
+
+  {%- comment -%} Cards sit outside the container so the row spans the full viewport {%- endcomment -%}
+  {% if card_total > 0 %}
+    {%- comment -%}
+      Auto-scrolling loop. JS clones the set to fill the width and starts the
+      animation; without JS (or with reduced motion) it is a swipe row.
+    {%- endcomment -%}
+    <div
+      class="cwc_store-reviews__carousel"
+      role="region"
+      aria-label="Store reviews"
+      tabindex="0"
+      data-review-source="{{ review_source }}"
+      data-speed="{{ section.settings.carousel_speed | default: 40 }}"
+    >
+      <div class="cwc_store-reviews__track">
+        <div class="cwc_store-reviews__set">
+          {{ review_cards }}
         </div>
       </div>
-    {% else %}
+    </div>
+  {% else %}
+    <div class="cwc_store-reviews__container">
       <div class="cwc_store-reviews__empty">
         <p>No Judge.me reviews matched. Add review blocks as a fallback.</p>
       </div>
-    {% endif %}
-
-  </div>
+    </div>
+  {% endif %}
 </section>
 
-{{ 'CWC_store_reviews.js' | asset_url | script_tag }}
+<script src="{{ 'CWC_store_reviews.js' | asset_url }}" defer></script>
 {%- endif -%}
 
 {% schema %}
@@ -276,37 +278,37 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "star_color",
       "label": "Star Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
@@ -318,7 +320,7 @@
       "type": "color",
       "id": "card_meta_color",
       "label": "Card Meta Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "header",

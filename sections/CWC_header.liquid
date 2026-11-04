@@ -9,13 +9,13 @@
   #cwc_header-drawer-{{ section.id }},
   #cwc_header-overlay-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#2C2C2C' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --brand-color: {{ section.settings.brand_color | default: '#0A1F12' }};
-    --hover-bg: {{ section.settings.hover_bg_color | default: '#F8F6F1' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --text-color: {{ section.settings.text_color | default: '#3A3A36' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --brand-color: {{ section.settings.brand_color | default: '#14281D' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#FBF1E4' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
     --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
-    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#0A1F12' }};
+    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#14281D' }};
     --logo-width: {{ section.settings.logo_width | default: 150 }}px;
     --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 150 }}px;
     --padding-top: {{ section.settings.padding_top | default: 15 }}px;
@@ -252,6 +252,8 @@
           >
             &times;
           </button>
+
+          <button type="submit" class="cwc_header__search-submit">Search</button>
         </form>
 
         <div class="cwc_header__search-results" data-cwc-search-results></div>
@@ -490,25 +492,25 @@
       "type": "color",
       "id": "text_color",
       "label": "Link Color",
-      "default": "#2C2C2C"
+      "default": "#3A3A36"
     },
     {
       "type": "color",
       "id": "brand_color",
       "label": "Logo And Hover Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "hover_bg_color",
       "label": "Link Hover Background",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
@@ -520,13 +522,13 @@
       "type": "color",
       "id": "drawer_footer_bg_color",
       "label": "Drawer Footer Background",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",

@@ -1,25 +1,25 @@
 {% style %}
   #cwc_email-signup-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#ffffff' }};
     --disclaimer-color: {{ section.settings.disclaimer_color | default: '#8E968F' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
 
     {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
-    --input-bg: {{ section.settings.input_bg_color | default: '#1A3A25' }};
-    --input-border-color: {{ section.settings.input_border_color | default: '#3E5C48' }};
-    --input-text-color: {{ section.settings.input_text_color | default: '#ffffff' }};
-    --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#9DAEA3' }};
+    --input-bg: {{ section.settings.input_bg_color | default: '#FFFFFF' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#1C1C19' }};
+    --input-text-color: {{ section.settings.input_text_color | default: '#1C1C19' }};
+    --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#5C5C57' }};
     --section-border-color: {{ section.settings.section_border_color | default: '#36473D' }};
     --section-border-width: {{ section.settings.section_border_width | default: 1 }}px;
-    --success-bg: {{ section.settings.success_bg_color | default: '#163D22' }};
+    --success-bg: {{ section.settings.success_bg_color | default: '#14281D' }};
     --success-text-color: {{ section.settings.success_text_color | default: '#ffffff' }};
-    --error-bg: {{ section.settings.error_bg_color | default: '#5A1D1D' }};
-    --error-text-color: {{ section.settings.error_text_color | default: '#FFD9D9' }};
+    --error-bg: {{ section.settings.error_bg_color | default: '#8A4A0E' }};
+    --error-text-color: {{ section.settings.error_text_color | default: '#FBE3C4' }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
@@ -180,7 +180,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -192,13 +192,13 @@
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
@@ -216,13 +216,13 @@
       "type": "color",
       "id": "button_bg_color",
       "label": "Button Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#ffffff"
+      "default": "#14281D"
     },
     {
       "type": "header",
@@ -253,25 +253,25 @@
       "type": "color",
       "id": "input_bg_color",
       "label": "Field Background Color",
-      "default": "#1A3A25"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "input_border_color",
       "label": "Field Border Color",
-      "default": "#3E5C48"
+      "default": "#1C1C19"
     },
     {
       "type": "color",
       "id": "input_text_color",
       "label": "Field Text Color",
-      "default": "#ffffff"
+      "default": "#1C1C19"
     },
     {
       "type": "color",
       "id": "input_placeholder_color",
       "label": "Field Placeholder Color",
-      "default": "#9DAEA3"
+      "default": "#5C5C57"
     },
     {
       "type": "header",
@@ -281,7 +281,7 @@
       "type": "color",
       "id": "success_bg_color",
       "label": "Success Background Color",
-      "default": "#163D22"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -293,13 +293,13 @@
       "type": "color",
       "id": "error_bg_color",
       "label": "Error Background Color",
-      "default": "#5A1D1D"
+      "default": "#8A4A0E"
     },
     {
       "type": "color",
       "id": "error_text_color",
       "label": "Error Text Color",
-      "default": "#FFD9D9"
+      "default": "#FBE3C4"
     },
     {
       "type": "header",

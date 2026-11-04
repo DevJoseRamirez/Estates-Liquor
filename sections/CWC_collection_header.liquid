@@ -1,16 +1,16 @@
 {% style %}
   #cwc_collection-header-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --subtext-color: {{ section.settings.subtext_color | default: '#343434' }};
-    --meta-color: {{ section.settings.meta_color | default: '#666666' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --pill-border: {{ section.settings.pill_border_color | default: '#C9C3B5' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
+    --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --pill-border: {{ section.settings.pill_border_color | default: '#BDBDB6' }};
     --pill-bg: {{ section.settings.pill_bg_color | default: '#FFFFFF' }};
-    --pill-text: {{ section.settings.pill_text_color | default: '#0A1F12' }};
-    --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#0A1F12' }};
-    --pill-active-text: {{ section.settings.pill_active_text_color | default: '#FFFFFF' }};
+    --pill-text: {{ section.settings.pill_text_color | default: '#14281D' }};
+    --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#E9A23B' }};
+    --pill-active-text: {{ section.settings.pill_active_text_color | default: '#14281D' }};
     --padding-top: {{ section.settings.padding_top | default: 36 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 36 | times: 0.5 }}px;
@@ -42,6 +42,26 @@
   elsif section.blocks.size > 0
     assign pill_source = 'blocks'
   endif
+
+  # Big count beside the title: in-stock count from the availability filter
+  # when the store exposes one, else the collection's product count.
+  assign count_value = nil
+  assign count_label = 'Bottles'
+  unless is_search or current == blank
+    for filter in current.filters
+      if filter.param_name == 'filter.v.availability'
+        for value in filter.values
+          if value.value == '1'
+            assign count_value = value.count
+            assign count_label = 'Bottles in stock'
+          endif
+        endfor
+      endif
+    endfor
+    if count_value == nil
+      assign count_value = current.products_count
+    endif
+  endunless
 -%}
 
 <section id="cwc_collection-header-{{ section.id }}" class="cwc_collection-header">
@@ -64,6 +84,7 @@
       </nav>
     {% endif %}
 
+    <div class="cwc_collection-header__intro">
     <div class="cwc_collection-header__content">
       <h1 class="cwc_collection-header__content-heading">
         {%- if is_search -%}
@@ -112,6 +133,14 @@
       {% endif %}
     </div>
 
+    {% if count_value != nil %}
+      <p class="cwc_collection-header__count">
+        <span class="cwc_collection-header__count-number">{{ count_value }}</span>
+        <span class="cwc_collection-header__count-label">{{ count_label }}</span>
+      </p>
+    {% endif %}
+    </div>
+
     {% if pill_source != 'none' %}
       <ul class="cwc_collection-header__pills" role="list">
         {% if section.settings.show_all_pill and current != blank %}
@@ -125,8 +154,15 @@
         {% if pill_source == 'metafield' %}
           {% for pill_collection in meta_pills %}
             {% if pill_collection == blank or pill_collection.handle == current.handle %}{% continue %}{% endif %}
+            {%- liquid
+              assign pill_check = pill_collection.handle | append: ' ' | append: pill_collection.title | downcase
+              assign pill_allocation = false
+              if pill_check contains 'allocat'
+                assign pill_allocation = true
+              endif
+            -%}
             <li class="cwc_collection-header__pill-item">
-              <a href="{{ pill_collection.url }}" class="cwc_collection-header__pill">{{ pill_collection.title | escape }}</a>
+              <a href="{{ pill_collection.url }}" class="cwc_collection-header__pill{% if pill_allocation %} cwc_collection-header__pill--allocation{% endif %}">{{ pill_collection.title | escape }}</a>
             </li>
           {% endfor %}
         {% else %}
@@ -143,13 +179,19 @@
                   if pill_collection != blank and pill_collection.handle == current.handle
                     assign pill_active = true
                   endif
+                  # The Allocation pill gets the amber-text outline
+                  assign pill_check = pill_collection.handle | append: ' ' | append: pill_label | downcase
+                  assign pill_allocation = false
+                  if pill_check contains 'allocat'
+                    assign pill_allocation = true
+                  endif
                 -%}
                 {% if pill_collection != blank and pill_label != blank %}
                   {% unless pill_active and section.settings.show_all_pill %}
                     <li class="cwc_collection-header__pill-item" {{ block.shopify_attributes }}>
                       <a
                         href="{{ pill_collection.url }}"
-                        class="cwc_collection-header__pill{% if pill_active %} cwc_collection-header__pill--active{% endif %}"
+                        class="cwc_collection-header__pill{% if pill_active %} cwc_collection-header__pill--active{% elsif pill_allocation %} cwc_collection-header__pill--allocation{% endif %}"
                         {% if pill_active %}aria-current="page"{% endif %}
                       >
                         {{- pill_label | escape -}}
@@ -274,31 +316,31 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "subtext_color",
       "label": "Intro Text Color",
-      "default": "#343434"
+      "default": "#3A3A36"
     },
     {
       "type": "color",
       "id": "meta_color",
       "label": "Breadcrumb Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Bottom Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",
@@ -308,7 +350,7 @@
       "type": "color",
       "id": "pill_border_color",
       "label": "Pill Border Color",
-      "default": "#C9C3B5"
+      "default": "#BDBDB6"
     },
     {
       "type": "color",
@@ -320,19 +362,19 @@
       "type": "color",
       "id": "pill_text_color",
       "label": "Pill Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "pill_active_bg_color",
       "label": "Active Pill Background",
-      "default": "#0A1F12"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "pill_active_text_color",
       "label": "Active Pill Text",
-      "default": "#FFFFFF"
+      "default": "#14281D"
     },
     {
       "type": "header",

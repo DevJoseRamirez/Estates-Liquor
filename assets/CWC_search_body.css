@@ -1,7 +1,11 @@
 /* ==============================
    CWC Search Body
-   Layout, filters, grid and product cards come from CWC_collection_body.css.
-   Only search-specific pieces live here.
+   Layout, filters, chips, sort, pagination and product cards come from
+   CWC_collection_body.css + CWC_product_card.css (styled to the collection-page
+   rules in the brand spec). Only search-specific pieces live here.
+   Estates spec: square white card on a 1px line frame (from the shared card),
+   tracked uppercase type label, display-font title, text-link "read more"
+   with an amber-text underline. No shadows, no tint fill.
    ============================== */
 
 /* === Article / Page Result Card === */
@@ -10,40 +14,58 @@
   gap: 10px;
   padding: 22px 20px;
   min-height: 100%;
+  box-sizing: border-box;
   text-decoration: none;
   color: var(--text-color);
-  background-color: var(--off-white);
+  background-color: var(--card-bg, #FFFFFF);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.cwc_search-body__entry:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 .cwc_search-body__entry-type {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--highlight-color);
 }
 
 .cwc_search-body__entry-title {
   font-family: var(--cwc-font-heading);
-  font-size: 1.0625rem;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 500;
   line-height: 1.3;
+  color: #1C1C19;
 }
 
 .cwc_search-body__entry-text {
-  font-size: 0.8125rem;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--subtext-color);
 }
 
+/* text link: ink label, 1px amber-text underline */
 .cwc_search-body__entry-link {
+  align-self: flex-start;
   margin-top: auto;
   padding-top: 8px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  padding-bottom: 3px;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-color);
+  color: #1C1C19;
+  border-bottom: 1px solid var(--highlight-color);
+  transition: color 0.2s ease;
 }
 
 .cwc_search-body__entry:hover .cwc_search-body__entry-link {
@@ -52,7 +74,7 @@
 
 /* === Idle State (no query yet) === */
 .cwc_search-body--idle .cwc_collection-body__empty {
-  padding: 2rem 1rem;
+  padding: 32px 16px;
 }
 
 /* ==============================
@@ -64,10 +86,10 @@
   }
 
   .cwc_search-body__entry-title {
-    font-size: 0.9375rem;
+    font-size: 16px;
   }
 
   .cwc_search-body__entry-text {
-    font-size: 0.75rem;
+    font-size: 13px;
   }
 }

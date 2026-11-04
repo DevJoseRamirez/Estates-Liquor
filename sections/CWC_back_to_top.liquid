@@ -1,10 +1,10 @@
 {% style %}
   #cwc_back-to-top-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --hover-bg: {{ section.settings.hover_bg_color | default: '#F8F6F1' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#FBF1E4' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
     --padding-top: {{ section.settings.padding_top | default: 20 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
@@ -14,6 +14,7 @@
   }
 {% endstyle %}
 
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_back_to_top.css' | asset_url | stylesheet_tag }}
 
 <section
@@ -64,25 +65,25 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Hover Text Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "hover_bg_color",
       "label": "Hover Background Color",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",

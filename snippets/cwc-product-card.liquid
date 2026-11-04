@@ -12,14 +12,20 @@
   assign current_variant = product.selected_or_first_available_variant
 
   # Stock state is deliberately not surfaced here — a sold-out card is meant to
-  # be indistinguishable from an in-stock one in the grid.
+  # be indistinguishable from an in-stock one in the grid. The brand spec's
+  # SOLD OUT treatment (label, faded bottle, NOTIFY button) is styled and ready:
+  # set surface_sold_out to true to turn it on.
+  assign surface_sold_out = false
+  assign is_sold_out = false
+  if surface_sold_out and product.available == false
+    assign is_sold_out = true
+  endif
+
+  # Max two labels: one top-left (status), one top-right (savings / sold out).
+  # Savings show as a dollar amount, never a percent.
   assign badge_label = ''
   assign badge_style = ''
-  if product.compare_at_price > product.price
-    assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
-    assign badge_label = '-' | append: discount | append: '%'
-    assign badge_style = 'sale'
-  elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
+  if product.tags contains 'Allocated' or product.tags contains 'allocated'
     assign badge_label = 'Allocated'
     assign badge_style = 'allocated'
   elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
@@ -28,6 +34,17 @@
   elsif product.tags contains 'New' or product.tags contains 'new'
     assign badge_label = 'New'
     assign badge_style = 'new'
+  endif
+
+  assign corner_label = ''
+  assign corner_style = ''
+  if is_sold_out
+    assign corner_label = 'Sold Out'
+    assign corner_style = 'soldout'
+  elsif product.compare_at_price > product.price
+    assign saving = product.compare_at_price | minus: product.price | money_without_trailing_zeros
+    assign corner_label = 'Save ' | append: saving
+    assign corner_style = 'save'
   endif
 
   assign show_vendor = true
@@ -46,7 +63,7 @@
   endif
 %}
 
-<div class="cwc_collection-body__card">
+<div class="cwc_collection-body__card{% if is_sold_out %} cwc_collection-body__card--soldout{% endif %}">
   <a href="{{ product.url }}" class="cwc_collection-body__card-media" tabindex="-1" aria-hidden="true">
     {% if product.featured_image != blank %}
       <img
@@ -71,6 +88,12 @@
         {{ badge_label }}
       </span>
     {% endif %}
+
+    {% if corner_label != blank %}
+      <span class="cwc_collection-body__card-badge cwc_collection-body__card-badge--corner cwc_collection-body__card-badge--{{ corner_style }}">
+        {{ corner_label }}
+      </span>
+    {% endif %}
   </a>
 
   <div class="cwc_collection-body__card-body">
@@ -90,11 +113,11 @@
       lives — so the control never silently fails.
     {% endcomment %}
     <div class="cwc_collection-body__card-footer">
-      <div class="cwc_collection-body__card-price">
+      <div class="cwc_collection-body__card-price{% if product.compare_at_price > product.price %} cwc_collection-body__card-price--sale{% endif %}">
         {% if product.compare_at_price > product.price %}
           <span class="cwc_collection-body__card-price-was">{{ product.compare_at_price | money }}</span>
         {% endif %}
-        {{ product.price | money }}
+        <span class="cwc_collection-body__card-price-now">{{ product.price | money }}</span>
       </div>
 
       {%- capture cart_icon -%}
@@ -115,6 +138,14 @@
           {% comment %} {{ cart_icon }} {% endcomment %}
           Add
         </button>
+      {% elsif is_sold_out %}
+        <a
+          href="{{ product.url }}"
+          class="cwc_collection-body__card-button cwc_collection-body__card-button--notify"
+          aria-label="Get notified when {{ product.title | escape }} is back"
+        >
+          Notify
+        </a>
       {% else %}
         <a
           href="{{ product.url }}"

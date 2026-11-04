@@ -1,9 +1,17 @@
 /* ==============================
    CWC Subcategory Rail
+   Styled to _theme-styles/estates-brand-tokens.md §5 (sub-collection pills):
+   36px square pills, 11px tracked uppercase; active = amber bg + green text;
+   inactive = 1px #BDBDB6; highlighted (e.g. The Allocation) = amber-text outline.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_subcategory-rail {
+  --sr-ink: #1C1C19;
+  --sr-line-strong: #BDBDB6;
+  --sr-amber: #E9A23B;
+  --sr-green: #14281D;
+
   background-color: var(--section-bg);
   color: var(--text-color);
   font-family: var(--cwc-font-body);
@@ -12,13 +20,13 @@
 }
 
 .cwc_subcategory-rail--bordered {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--sr-ink);
 }
 
 .cwc_subcategory-rail__container {
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Rail === */
@@ -26,44 +34,59 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 /* === Pill === */
 .cwc_subcategory-rail__pill {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   white-space: nowrap;
   text-decoration: none;
   color: var(--pill-text-color);
   background-color: var(--pill-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 100px;
-  padding: 9px 18px;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  border: 1px solid var(--sr-line-strong);
+  border-radius: 0;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .cwc_subcategory-rail__pill:hover {
-  border-color: var(--highlight-color);
-  background-color: var(--highlight-color);
-  color: #ffffff;
+  border-color: var(--sr-ink);
+  color: var(--sr-ink);
 }
 
+/* highlighted by the merchant (e.g. The Allocation): amber-text outline */
 .cwc_subcategory-rail__pill--highlight {
   border-color: var(--highlight-color);
   color: var(--highlight-color);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cwc_subcategory-rail__pill--highlight:hover {
   background-color: var(--highlight-color);
-  color: #ffffff;
+  border-color: var(--highlight-color);
+  color: #FFFFFF;
+}
+
+/* the collection being viewed: amber bg, green text */
+.cwc_subcategory-rail__pill[aria-current='page'],
+.cwc_subcategory-rail__pill[aria-current='page']:hover {
+  background-color: var(--sr-amber);
+  border-color: var(--sr-amber);
+  color: var(--sr-green);
+  font-weight: 600;
 }
 
 .cwc_subcategory-rail__pill:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 /* ==============================
@@ -71,13 +94,13 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_subcategory-rail__container {
-    padding: 0 1.75rem;
+    padding: 0 32px;
   }
 }
 
 @media screen and (max-width: 991px) {
   .cwc_subcategory-rail__container {
-    padding: 0 1.25rem;
+    padding: 0 20px;
   }
 }
 
@@ -111,6 +134,6 @@
 
   .cwc_subcategory-rail__pill {
     flex-shrink: 0;
-    padding: 9px 16px;
+    padding: 0 12px;
   }
 }

@@ -1,23 +1,28 @@
 {% style %}
   #cwc_product-reviews-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --heading-color: {{ section.settings.heading_color | default: '#0A1F12' }};
-    --muted-color: {{ section.settings.muted_color | default: '#9A9A9A' }};
-    --star-color: {{ section.settings.star_color | default: '#C4933F' }};
-    --bar-color: {{ section.settings.bar_color | default: '#C4933F' }};
-    --bar-track-color: {{ section.settings.bar_track_color | default: '#F0EDE6' }};
-    --badge-color: {{ section.settings.badge_color | default: '#1C6B46' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --panel-bg: {{ section.settings.panel_bg_color | default: '#F8F6F1' }};
-    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
-    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
-    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
-    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#3A3A36' }};
+    --heading-color: {{ section.settings.heading_color | default: '#14281D' }};
+    --bold-color: {{ section.settings.bold_color | default: '#1C1C19' }};
+    --highlight-color: {{ section.settings.highlight_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --muted-color: {{ section.settings.muted_color | default: '#5C5C57' }};
+    --star-color: {{ section.settings.star_color | default: '#A35A12' }};
+    --bar-color: {{ section.settings.bar_color | default: '#E9A23B' }};
+    --bar-track-color: {{ section.settings.bar_track_color | default: '#DEDED8' }};
+    --badge-color: {{ section.settings.badge_color | default: '#14281D' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-hover-bg: {{ section.settings.button_hover_color | default: '#D68F27' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --panel-bg: {{ section.settings.panel_bg_color | default: '#FBF1E4' }};
+    --panel-line-color: {{ section.settings.panel_line_color | default: '#F0D9B8' }};
+    --alert-bg: {{ section.settings.alert_bg_color | default: '#FBE3C4' }};
+    --alert-text-color: {{ section.settings.alert_text_color | default: '#8A4A0E' }};
+    --padding-top: {{ section.settings.padding_top | default: 88 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 88 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 88 | times: 0.64 | round }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 88 | times: 0.64 | round }}px;
   }
 {% endstyle %}
 
@@ -285,7 +290,9 @@
 {
   "name": "CWC Product Reviews",
   "enabled_on": {
-    "templates": ["product"]
+    "templates": [
+      "product"
+    ]
   },
   "settings": [
     {
@@ -352,8 +359,14 @@
       "id": "empty_mode",
       "label": "When A Product Has No Reviews",
       "options": [
-        { "value": "show", "label": "Show the section with a prompt to review" },
-        { "value": "hide", "label": "Hide the whole section" }
+        {
+          "value": "show",
+          "label": "Show the section with a prompt to review"
+        },
+        {
+          "value": "hide",
+          "label": "Hide the whole section"
+        }
       ],
       "default": "hide",
       "info": "The theme editor always shows the section so it can be edited"
@@ -476,8 +489,14 @@
       "id": "date_format",
       "label": "Date Format",
       "options": [
-        { "value": "numeric", "label": "09/25/2022" },
-        { "value": "long", "label": "Sep 25, 2022" }
+        {
+          "value": "numeric",
+          "label": "09/25/2022"
+        },
+        {
+          "value": "long",
+          "label": "Sep 25, 2022"
+        }
       ],
       "default": "numeric"
     },
@@ -492,88 +511,122 @@
       "content": "Colors"
     },
     {
+      "type": "paragraph",
+      "content": "Defaults follow the Estates brand tokens (Green + Amber)."
+    },
+    {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
-      "default": "#0A1F12"
+      "label": "Body Text Color",
+      "default": "#3A3A36"
     },
     {
       "type": "color",
       "id": "heading_color",
       "label": "Heading Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
-      "label": "Highlight Color",
-      "default": "#C4933F"
+      "label": "Strong Text & Outline Button Color",
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Accent Color (rule, focus, errors)",
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "muted_color",
       "label": "Muted Text Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "star_color",
       "label": "Star Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "bar_color",
       "label": "Breakdown Bar Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "bar_track_color",
       "label": "Breakdown Track Color",
-      "default": "#F0EDE6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "badge_color",
       "label": "Verified Badge Color",
-      "default": "#1C6B46"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "button_bg_color",
-      "label": "Button Background Color",
-      "default": "#C4933F"
+      "label": "Submit Button Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Submit Button Hover Color",
+      "default": "#D68F27"
     },
     {
       "type": "color",
       "id": "button_text_color",
-      "label": "Button Text Color",
-      "default": "#ffffff"
+      "label": "Submit Button Text Color",
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "border_color",
-      "label": "Border Color",
-      "default": "#E0DDD6"
+      "label": "Line Color",
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "panel_bg_color",
       "label": "Panel Background Color",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
+    },
+    {
+      "type": "color",
+      "id": "panel_line_color",
+      "label": "Panel Line Color",
+      "default": "#F0D9B8"
+    },
+    {
+      "type": "color",
+      "id": "alert_bg_color",
+      "label": "Form Message Background",
+      "default": "#FBE3C4"
+    },
+    {
+      "type": "color",
+      "id": "alert_text_color",
+      "label": "Form Message Text Color",
+      "default": "#8A4A0E"
     },
     {
       "type": "header",
@@ -597,7 +650,7 @@
       "max": 120,
       "step": 5,
       "unit": "px",
-      "default": 70
+      "default": 90
     },
     {
       "type": "range",
@@ -607,7 +660,7 @@
       "max": 120,
       "step": 5,
       "unit": "px",
-      "default": 70
+      "default": 90
     }
   ],
   "blocks": [

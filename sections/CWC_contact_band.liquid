@@ -1,12 +1,12 @@
 {% style %}
   #cwc_contact-band-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0A1F12' }};
+    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
     --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#D8D2C4' }};
-    --icon-color: {{ section.settings.icon_color | default: '#C4933F' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
-    --button-text: {{ section.settings.button_text_color | default: '#FFFFFF' }};
+    --icon-color: {{ section.settings.icon_color | default: '#E9A23B' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text: {{ section.settings.button_text_color | default: '#14281D' }};
     --outline-color: {{ section.settings.outline_color | default: '#F8F6F1' }};
     --padding-top: {{ section.settings.padding_top | default: 36 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 36 }}px;
@@ -25,7 +25,7 @@
 
     {% if section.settings.show_icon %}
       <span class="cwc_contact-band__icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" focusable="false"><path d="M12 4c4.4 0 8 2.9 8 6.5S16.4 17 12 17c-.9 0-1.8-.1-2.6-.3L5 19l1.1-3.6C4.8 14.2 4 12.4 4 10.5 4 6.9 7.6 4 12 4z"></path></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" focusable="false"><path d="M12 4c4.4 0 8 2.9 8 6.5S16.4 17 12 17c-.9 0-1.8-.1-2.6-.3L5 19l1.1-3.6C4.8 14.2 4 12.4 4 10.5 4 6.9 7.6 4 12 4z"></path></svg>
       </span>
     {% endif %}
 
@@ -86,13 +86,13 @@
                   {%- if block.settings.show_icon -%}
                     {%- case block.settings.action -%}
                       {%- when 'call' -%}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
                       {%- when 'chat' -%}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"></path></svg>
                       {%- when 'email' -%}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
                       {%- when 'link' -%}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
                     {%- endcase -%}
                   {%- endif -%}
                   <span>{{- block.settings.label | escape -}}</span>
@@ -142,7 +142,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -154,7 +154,7 @@
       "type": "color",
       "id": "bold_color",
       "label": "Bold Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
@@ -166,19 +166,19 @@
       "type": "color",
       "id": "icon_color",
       "label": "Icon Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Solid Button Background",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Solid Button Text",
-      "default": "#FFFFFF"
+      "default": "#14281D"
     },
     {
       "type": "color",

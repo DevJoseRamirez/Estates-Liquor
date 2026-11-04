@@ -1,15 +1,16 @@
 {% style %}
   #cwc_search-body-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
-    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
+    --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --off-white: {{ section.settings.muted_bg_color | default: '#F8F6F1' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --card-button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --off-white: {{ section.settings.muted_bg_color | default: '#FBF1E4' }};
     --columns: {{ section.settings.columns | default: 4 }};
     --sidebar-width: {{ section.settings.sidebar_width | default: 250 }}px;
     --padding-top: {{ section.settings.padding_top | default: 35 }}px;
@@ -630,37 +631,37 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "subtext_color",
       "label": "Subtext Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "meta_color",
       "label": "Meta Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "muted_bg_color",
       "label": "Chip Background Color",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
     },
     {
       "type": "header",
@@ -676,13 +677,13 @@
       "type": "color",
       "id": "card_media_bg_color",
       "label": "Card Image Background Color",
-      "default": "#F2EFE8"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Add To Cart Button Color",
-      "default": "#0A1F12"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

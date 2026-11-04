@@ -1,49 +1,63 @@
 /* ==============================
    CWC Reviews
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   white cards with 1px lines, radius 0, no shadows; amber-text stars;
+   tracked uppercase data in the body font.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_reviews {
+  --rv-gutter: 48px;
+
   background-color: var(--section-bg);
   color: var(--text-color);
   font-family: var(--cwc-font-body);
-  padding-top: var(--padding-top);
-  padding-bottom: var(--padding-bottom);
+  padding-top: var(--padding-top, 88px);
+  padding-bottom: var(--padding-bottom, 88px);
 }
 
 .cwc_reviews__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--rv-gutter);
 }
 
 /* === Section Header === */
 .cwc_reviews__content {
   max-width: 900px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 40px;
   width: 100%;
   text-align: center;
 }
 
 .cwc_reviews__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  margin: 0 0 12px;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.625rem;
 }
 
-.cwc_reviews__content-heading p {
-  font-family: var(--cwc-font-heading);
-  font-size: clamp(1.625rem, 3vw, 2.375rem);
-  font-weight: 700;
-  line-height: 1.2;
+.cwc_reviews__content-heading > * {
   margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   color: inherit;
 }
 
-.cwc_reviews__content-heading>* strong {
+.cwc_reviews__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_reviews__content-heading > * em {
+  font-style: italic;
+  font-weight: 400;
   color: var(--highlight-color);
 }
 
@@ -54,21 +68,24 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 1rem;
+  margin-top: 16px;
 }
 
 .cwc_reviews__rating-score {
   font-family: var(--cwc-font-heading);
-  font-size: 1.625rem;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
   color: var(--text-color);
 }
 
 .cwc_reviews__rating-meta {
-  font-size: 0.75rem;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--card-meta-color);
-  color: var(--text-color);
 }
 
 /* === Stars (always five) === */
@@ -86,73 +103,124 @@
   display: block;
 }
 
+.cwc_reviews__stars .cwc_reviews__star--empty {
+  opacity: 0.25;
+}
+
 .cwc_reviews__stars--large svg {
   width: 18px;
   height: 18px;
 }
 
-/* === Carousel === */
+/* === Carousel ===
+   Without JS (or with reduced motion) it is a plain swipe row.
+   JS adds --running once the set is cloned to fill the width. */
 .cwc_reviews__carousel {
-  position: relative;
-}
-
-/* native scroll-snap — swipes without JS, arrows are enhancement only */
-.cwc_reviews__track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - (var(--columns) - 1) * 24px) / var(--columns));
-  gap: 24px;
+  --rv-gap: 24px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: 4px;
+  /* Full-bleed: no max-width, row runs edge to edge of the viewport.
+     Gutter padding only applies to the no-JS / reduced-motion swipe row. */
+  width: 100%;
+  padding: 0 var(--rv-gutter);
+  scroll-padding: 0 var(--rv-gutter);
 }
 
-.cwc_reviews__track::-webkit-scrollbar {
+.cwc_reviews__carousel::-webkit-scrollbar {
   display: none;
 }
 
-.cwc_reviews__track:focus-visible {
+.cwc_reviews__carousel:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 4px;
+  outline-offset: 3px;
+}
+
+.cwc_reviews__track {
+  display: flex;
+  width: max-content;
+}
+
+/* Gap on the right too, so the seam between copies matches */
+.cwc_reviews__set {
+  display: flex;
+  gap: var(--rv-gap);
+  padding-right: var(--rv-gap);
+}
+
+/* Hard edges — no gradient fade mask (lines, not gradients) */
+.cwc_reviews__carousel--running {
+  overflow: hidden;
+  padding: 0;
+}
+
+.cwc_reviews__carousel--running .cwc_reviews__track {
+  animation: cwc-reviews-marquee var(--rv-marquee-duration, 60s) linear infinite;
+}
+
+.cwc_reviews__carousel--running:hover .cwc_reviews__track,
+.cwc_reviews__carousel--running:focus-within .cwc_reviews__track {
+  animation-play-state: paused;
+}
+
+@keyframes cwc-reviews-marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* === Card === */
 .cwc_reviews__card {
+  flex: 0 0 var(--card-width);
+  margin: 0;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 3px;
+  border-radius: 0;
+  box-shadow: none;
   padding: 28px;
+  transition: border-color 0.2s ease;
+}
+
+.cwc_reviews__card:hover {
+  border-color: #1C1C19;
 }
 
 .cwc_reviews__card .cwc_reviews__stars {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
+/* Live Judge.me reviews can run long; keep cards even */
 .cwc_reviews__card-text {
-  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
+  margin: 0 0 24px;
 }
 
 .cwc_reviews__card-text p {
+  margin: 0;
   font-family: var(--cwc-font-heading);
   font-style: italic;
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  margin: 0;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
   color: var(--card-text-color);
 }
 
-/* author pins to the bottom so ragged quotes still line up */
+/* author pins to the bottom so ragged quotes still line up; hairline above */
 .cwc_reviews__card-author {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
 }
 
 .cwc_reviews__card-avatar {
@@ -162,13 +230,13 @@
   flex-shrink: 0;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 0;
   overflow: hidden;
   background-color: var(--avatar-bg);
   font-family: var(--cwc-font-heading);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--highlight-color);
+  font-size: 15px;
+  font-weight: 500;
+  color: #E9A23B;
 }
 
 .cwc_reviews__card-avatar--image img {
@@ -176,84 +244,47 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 0;
 }
 
 .cwc_reviews__card-name {
   display: block;
-  font-size: 0.8125rem;
+  font-family: var(--cwc-font-body);
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1.3;
   color: var(--text-color);
 }
 
 .cwc_reviews__card-location {
   display: block;
-  font-size: 0.6875rem;
+  margin-top: 2px;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--card-meta-color);
 }
 
-/* === Nav (revealed by JS only when the track overflows) === */
-.cwc_reviews__nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 1.5rem;
-}
-
-.cwc_reviews__nav[hidden] {
-  display: none;
-}
-
-.cwc_reviews__nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  cursor: pointer;
-  color: var(--text-color);
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-}
-
-.cwc_reviews__nav-button:hover:not(:disabled) {
-  border-color: var(--highlight-color);
-  color: var(--highlight-color);
-}
-
-.cwc_reviews__nav-button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.cwc_reviews__nav-button:focus-visible {
-  outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
-}
-
-.cwc_reviews__nav-button svg {
-  width: 18px;
-  height: 18px;
+/* === Empty State (theme editor only) === */
+.cwc_reviews__empty {
+  text-align: center;
+  padding: 32px;
+  color: var(--card-meta-color);
 }
 
 /* ==============================
    Tablet Responsive
    ============================== */
 @media screen and (max-width: 1024px) {
-  .cwc_reviews__container {
-    padding: 0 1.75rem;
-  }
-
-  .cwc_reviews__track {
-    grid-auto-columns: calc((100% - 24px) / 2);
+  .cwc_reviews {
+    --rv-gutter: 32px;
   }
 }
 
 @media screen and (max-width: 991px) {
-  .cwc_reviews__container {
-    padding: 0 1.25rem;
+  .cwc_reviews {
+    --rv-gutter: 24px;
   }
 }
 
@@ -262,24 +293,34 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_reviews {
-    padding-top: var(--padding-top-mobile);
-    padding-bottom: var(--padding-bottom-mobile);
-  }
-
-  .cwc_reviews__container {
-    padding: 0 1rem;
+    --rv-gutter: 18px;
+    padding-top: var(--padding-top-mobile, 56px);
+    padding-bottom: var(--padding-bottom-mobile, 56px);
   }
 
   .cwc_reviews__content {
-    margin-bottom: 2rem;
+    margin-bottom: 32px;
   }
 
-  .cwc_reviews__track {
-    grid-auto-columns: 85%;
-    gap: 12px;
+  .cwc_reviews__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_reviews__content-heading > * {
+    font-size: 26px;
+  }
+
+  /* Swipe row bleeds to the screen edge */
+  .cwc_reviews__carousel {
+    --rv-gap: 12px;
   }
 
   .cwc_reviews__card {
+    flex-basis: min(300px, 82vw);
     padding: 22px;
+  }
+
+  .cwc_reviews__card-text p {
+    font-size: 16px;
   }
 }

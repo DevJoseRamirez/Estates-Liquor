@@ -1,5 +1,7 @@
 /* ==============================
    CWC About Richtext
+   Estates white band: amber-text eyebrow, green H2, long-form body at
+   17/16px lh 1.7, display-font pull-quote lead.
    ============================== */
 
 /* === Section Wrapper === */
@@ -12,37 +14,41 @@
 }
 
 .cwc_about-richtext__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Section Header === */
 .cwc_about-richtext__content {
   max-width: var(--column-width);
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 28px;
 }
 
+/* no eyebrow colour setting on this section — brand amber-text */
 .cwc_about-richtext__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--lead-color);
-  margin: 0 0 0.625rem;
+  color: var(--eyebrow-color, #A35A12);
+  margin: 0 0 12px;
 }
 
 .cwc_about-richtext__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   margin: 0;
   color: var(--highlight-color);
 }
 
 .cwc_about-richtext__content-heading>* strong {
   color: var(--highlight-color);
+  font-weight: inherit;
 }
 
 /* === Copy Column === */
@@ -52,7 +58,7 @@
 }
 
 .cwc_about-richtext__text+.cwc_about-richtext__text {
-  margin-top: 1.125rem;
+  margin-top: 18px;
 }
 
 .cwc_about-richtext__text p {
@@ -60,34 +66,34 @@
 }
 
 .cwc_about-richtext__text p+p {
-  margin-top: 1.125rem;
+  margin-top: 18px;
 }
 
-/* bold inside body copy is the brand dark, not a colour accent */
+/* bold inside body copy is brand ink, not a colour accent */
 .cwc_about-richtext__text strong {
-  color: #2C2C2C;
+  color: #1C1C19;
   font-weight: 600;
 }
 
 /* === Body Style === */
 .cwc_about-richtext__text--body p {
-  font-size: 1rem;
-  line-height: 1.85;
+  font-size: 17px;
+  line-height: 1.7;
   color: var(--text-color);
 }
 
 /* === Lead Style === */
 .cwc_about-richtext__text--lead+.cwc_about-richtext__text {
-  margin-top: 1.625rem;
+  margin-top: 28px;
 }
 
-/* the opening statement reads as a pull quote — serif, italic, brand dark */
+/* the opening statement reads as a pull quote — display font, italic, brand green */
 .cwc_about-richtext__text--lead p {
   font-family: var(--cwc-font-heading);
   font-style: italic;
   font-weight: 400;
-  font-size: 1.5625rem;
-  line-height: 1.5;
+  font-size: 24px;
+  line-height: 1.45;
   color: var(--lead-color);
 }
 
@@ -100,8 +106,9 @@
   max-width: var(--column-width);
   margin: 0 auto;
   text-align: center;
-  padding: 2rem;
-  color: #999;
+  padding: 32px;
+  border: 1px dashed #DEDED8;
+  color: #5C5C57;
 }
 
 /* ==============================
@@ -109,7 +116,7 @@
    ============================== */
 @media screen and (max-width: 991px) {
   .cwc_about-richtext__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -123,23 +130,31 @@
   }
 
   .cwc_about-richtext__container {
-    padding: 0 1rem;
+    padding: 0 20px;
+  }
+
+  .cwc_about-richtext__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_about-richtext__content-heading p {
+    font-size: 26px;
   }
 
   .cwc_about-richtext__text+.cwc_about-richtext__text {
-    margin-top: 1.25rem;
+    margin-top: 20px;
   }
 
   .cwc_about-richtext__text--body p {
-    /* font-size: 0.9375rem; */
-    line-height: 1.75;
+    font-size: 16px;
+    line-height: 1.7;
   }
 
   .cwc_about-richtext__text--lead p {
-    font-size: 1.25rem;
+    font-size: 20px;
   }
 
   .cwc_about-richtext__text--lead+.cwc_about-richtext__text {
-    margin-top: 1.25rem;
+    margin-top: 20px;
   }
 }

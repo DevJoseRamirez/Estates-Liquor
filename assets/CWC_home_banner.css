@@ -1,5 +1,7 @@
 /* ==============================
    CWC Home Banner
+   Styled to _theme-styles/estates-brand-tokens.md: square image + arrows,
+   1px framed arrows, no shadows; round pagination dots only.
    ============================== */
 
 /* === Section Wrapper === */
@@ -62,7 +64,7 @@
 }
 
 a.cwc_home-banner__slide-link:focus-visible {
-  outline: 3px solid var(--dot-active-color);
+  outline: 2px solid var(--dot-active-color);
   outline-offset: -3px;
 }
 
@@ -78,6 +80,7 @@ a.cwc_home-banner__slide-link:focus-visible {
   height: 100%;
   object-fit: var(--image-fit);
   object-position: center;
+  border-radius: 0;
   user-select: none;
 }
 
@@ -85,13 +88,15 @@ a.cwc_home-banner__slide-link:focus-visible {
 .cwc_home-banner__placeholder {
   width: 100%;
   height: 100%;
-  background: #f5f5f5;
-  border: 2px dashed #ddd;
+  background: #FBF1E4;
+  border: 1px dashed #DEDED8;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  font-size: 0.9rem;
+  color: #5C5C57;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* === Arrows === */
@@ -109,13 +114,14 @@ a.cwc_home-banner__slide-link:focus-visible {
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  border: none;
-  border-radius: 50%;
+  border: 1px solid #DEDED8;
+  border-radius: 0;
+  box-shadow: none;
   background-color: var(--arrow-bg);
   color: var(--arrow-icon-color);
   cursor: pointer;
-  opacity: 0.9;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0.94;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
   z-index: 2;
 }
 
@@ -124,13 +130,19 @@ a.cwc_home-banner__slide-link:focus-visible {
   height: 1.25rem;
 }
 
+/* line icon weight per spec */
+.cwc_home-banner__arrow svg path {
+  stroke-width: 1.5;
+}
+
 .cwc_home-banner__arrow:hover {
   opacity: 1;
+  border-color: #1C1C19;
 }
 
 .cwc_home-banner__arrow:focus-visible {
-  outline: 3px solid var(--dot-active-color);
-  outline-offset: 2px;
+  outline: 2px solid var(--dot-active-color);
+  outline-offset: 3px;
 }
 
 .cwc_home-banner__arrow[disabled] {
@@ -175,13 +187,12 @@ a.cwc_home-banner__slide-link:focus-visible {
 }
 
 .cwc_home-banner__dot:focus-visible {
-  outline: 3px solid var(--dot-active-color);
-  outline-offset: 2px;
+  outline: 2px solid var(--dot-active-color);
+  outline-offset: 3px;
 }
 
+/* active dot: amber fill, same round dot (no pill) */
 .cwc_home-banner__dot--active {
-  width: 1.5rem;
-  border-radius: 999px;
   background-color: var(--dot-active-color);
   opacity: 1;
 }
@@ -190,7 +201,7 @@ a.cwc_home-banner__slide-link:focus-visible {
 .cwc_home-banner__empty {
   text-align: center;
   padding: 2rem;
-  color: #999;
+  color: #5C5C57;
 }
 
 /* ==============================
@@ -242,10 +253,6 @@ a.cwc_home-banner__slide-link:focus-visible {
   .cwc_home-banner__dot {
     width: 0.5rem;
     height: 0.5rem;
-  }
-
-  .cwc_home-banner__dot--active {
-    width: 1.25rem;
   }
 }
 

@@ -1,18 +1,18 @@
 {% style %}
   #cwc_barrel-picks-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
-    --card-bg: {{ section.settings.card_bg_color | default: '#F2EFE8' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#FBF1E4' }};
     --card-media-bg: {{ section.settings.card_media_bg_color | default: '#ffffff' }};
-    --card-title-color: {{ section.settings.card_title_color | default: '#0A1F12' }};
-    --card-text-color: {{ section.settings.card_text_color | default: '#9A9A9A' }};
-    --card-brand-color: {{ section.settings.card_brand_color | default: '#C4933F' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#0A1F12' }};
-    --button-bg: {{ section.settings.card_button_bg_color | default: '#0A1F12' }};
+    --card-title-color: {{ section.settings.card_title_color | default: '#14281D' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#5C5C57' }};
+    --card-brand-color: {{ section.settings.card_brand_color | default: '#A35A12' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
+    --button-bg: {{ section.settings.card_button_bg_color | default: '#E9A23B' }};
     --per-view: {{ section.settings.columns | default: 3 }};
     --per-view-mobile: {{ section.settings.columns_mobile | default: 2 }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
@@ -104,8 +104,8 @@
               assign badge_label = ''
               assign badge_style = ''
               if product.compare_at_price > product.price
-                assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
-                assign badge_label = '-' | append: discount | append: '%'
+                assign saving = product.compare_at_price | minus: product.price | money_without_trailing_zeros
+                assign badge_label = 'Save ' | append: saving
                 assign badge_style = 'sale'
               elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
                 assign badge_label = 'Allocated'
@@ -319,37 +319,37 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "subtext_color",
       "label": "Subtext Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "header",
@@ -359,7 +359,7 @@
       "type": "color",
       "id": "card_bg_color",
       "label": "Card Background Color",
-      "default": "#F2EFE8"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
@@ -371,25 +371,25 @@
       "type": "color",
       "id": "card_title_color",
       "label": "Card Title Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "card_text_color",
       "label": "Card Detail Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "card_brand_color",
       "label": "Card Brand Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "card_button_bg_color",
       "label": "Add To Cart Button Color",
-      "default": "#0A1F12"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

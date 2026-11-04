@@ -2,44 +2,56 @@
    CWC Product Card
    Shared by CWC Collection Body, CWC Search Body and CWC Collection Grid.
    Markup: snippets/cwc-product-card.liquid. Add to cart: CWC_product_card.js.
+   Styled to _theme-styles/estates-brand-tokens.md §5 (Product card):
+   white, 1px line, square, no shadow; hover border → ink (no lift).
    Reads the calling section's variables: --card-bg, --card-media-bg,
-   --border-color, --text-color, --highlight-color, --meta-color, --button-bg.
+   --border-color, --text-color, --highlight-color, --meta-color.
+   The card button is the spec's Primary card button (amber / green). The
+   sections' --button-bg setting drives their own controls, so the card reads
+   --card-button-bg / --card-button-text and falls back to the brand values.
    ============================== */
 
 .cwc_collection-body__card {
+  --card-ink: #1C1C19;
+  --card-line-strong: #BDBDB6;
+  --card-amber: var(--card-button-bg, #E9A23B);
+  --card-amber-hover: var(--card-button-hover-bg, #D68F27);
+  --card-green: var(--card-button-text, #14281D);
+
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 3px;
+  background-color: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, #DEDED8);
+  border-radius: 0;
   overflow: hidden;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  font-family: var(--cwc-font-body);
+  transition: border-color 0.2s ease;
 }
 
 .cwc_collection-body__card:hover {
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.14);
-  transform: translateY(-3px);
+  border-color: var(--card-ink);
 }
 
+/* === Image === */
 .cwc_collection-body__card-media {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 3 / 4;
-  background-color: var(--card-media-bg);
+  padding: 12px;
+  background-color: var(--card-media-bg, #FFFFFF);
+  border-bottom: 1px solid var(--border-color, #DEDED8);
   overflow: hidden;
-  /* testing */
-  background: white;
-  border-bottom: 1px solid #e0ddd6;
-  padding-bottom: 6px;
 }
 
+/* bottles are never cropped */
 .cwc_collection-body__card-media img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  object-fit: contain;
+  border-radius: 0;
 }
 
 .cwc_collection-body__card-placeholder {
@@ -57,130 +69,164 @@
   fill: var(--text-color);
 }
 
+/* === Labels (max two: status top-left, savings / sold out top-right) === */
 .cwc_collection-body__card-badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  font-size: 0.625rem;
-  font-weight: 700;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 0;
+  font-family: var(--cwc-font-body);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.3;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 2px;
+}
+
+.cwc_collection-body__card-badge--corner {
+  left: auto;
+  right: 10px;
 }
 
 .cwc_collection-body__card-badge--allocated,
-.cwc_collection-body__card-badge--barrel {
-  background-color: var(--text-color);
-  color: var(--highlight-color);
-}
-
 .cwc_collection-body__card-badge--new {
-  background-color: var(--highlight-color);
-  color: #ffffff;
+  background-color: #14281D;
+  color: #E9A23B;
 }
 
-.cwc_collection-body__card-badge--sale {
-  background-color: #c0392b;
-  color: #ffffff;
-  right: 12px;
-  left: auto;
+.cwc_collection-body__card-badge--barrel {
+  background-color: #E9A23B;
+  color: #14281D;
 }
 
+.cwc_collection-body__card-badge--save {
+  background-color: #FBE3C4;
+  color: #8A4A0E;
+}
+
+.cwc_collection-body__card-badge--soldout {
+  background-color: #FFFFFF;
+  color: var(--meta-color, #5C5C57);
+  border: 1px solid var(--card-line-strong);
+}
+
+/* === Body === */
 .cwc_collection-body__card-body {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  padding: 16px;
+  padding: 14px;
 }
 
 .cwc_collection-body__card-brand {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--highlight-color);
-  margin-bottom: 5px;
+  color: var(--highlight-color, #A35A12);
 }
 
 .cwc_collection-body__card-title {
   display: block;
+  min-height: calc(2em * 1.3);
+  margin-bottom: 6px;
   font-family: var(--cwc-font-heading);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 500;
   line-height: 1.3;
-  margin-bottom: 8px;
+  color: var(--card-ink);
   text-decoration: none;
-  color: var(--text-color);
 }
 
 .cwc_collection-body__card-title:hover {
-  color: var(--highlight-color);
+  color: var(--card-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--highlight-color, #A35A12);
+  text-underline-offset: 3px;
 }
 
 .cwc_collection-body__card-text {
-  font-size: 0.75rem;
-  color: var(--meta-color);
   margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--meta-color, #5C5C57);
 }
 
 /* footer pins to the bottom so ragged titles still line up */
 .cwc_collection-body__card-footer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 10px;
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color, #DEDED8);
 }
 
+/* compare-at sits struck through above the price */
 .cwc_collection-body__card-price {
-  font-family: var(--cwc-font-heading);
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-family: var(--cwc-font-body);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--card-ink);
+}
+
+.cwc_collection-body__card-price--sale .cwc_collection-body__card-price-now {
+  color: var(--highlight-color, #A35A12);
 }
 
 .cwc_collection-body__card-price-was {
-  font-family: var(--cwc-font-body);
-  font-size: 0.8125rem;
+  font-size: 12px;
   font-weight: 400;
-  color: var(--meta-color);
+  color: var(--meta-color, #5C5C57);
   text-decoration: line-through;
-  margin-right: 6px;
 }
 
-/* renders as a <button> in stock and as an <a> to the product page when sold
-   out, so it carries the reset both elements need */
+/* Primary card button. Renders as a <button> in stock and as an <a> to the
+   product page when sold out, so it carries the reset both elements need */
 .cwc_collection-body__card-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: 36px;
-  padding: 0;
+  min-height: 40px;
+  padding: 0 16px;
   border: 0;
-  border-radius: 3px;
-  background-color: var(--button-bg);
-  color: #ffffff;
+  border-radius: 0;
+  background-color: var(--card-amber);
+  color: var(--card-green);
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s ease, opacity 0.15s ease;
-  /* text pill rather than a square icon button — mirrors CWC_barrel_picks */
-  flex: 1;
-  max-width: 90px;
-  font-weight: bold;
-  text-transform: uppercase;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
 .cwc_collection-body__card-button:hover {
-  background-color: var(--highlight-color);
+  background-color: var(--card-amber-hover);
+  color: var(--card-green);
 }
 
 .cwc_collection-body__card-button:focus-visible {
-  outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline: 2px solid var(--highlight-color, #A35A12);
+  outline-offset: 3px;
 }
 
 .cwc_collection-body__card-button svg {
@@ -194,7 +240,24 @@
 }
 
 .cwc_collection-body__card-button--added {
-  background-color: var(--highlight-color);
+  background-color: var(--card-amber-hover);
+}
+
+/* === Sold out (only when the snippet's surface_sold_out is on) === */
+.cwc_collection-body__card--soldout .cwc_collection-body__card-media img {
+  opacity: 0.3;
+}
+
+/* Tertiary: white, ink text, 1px ink border */
+.cwc_collection-body__card-button--notify {
+  background-color: #FFFFFF;
+  color: var(--card-ink);
+  border: 1px solid var(--card-ink);
+}
+
+.cwc_collection-body__card-button--notify:hover {
+  background-color: var(--card-ink);
+  color: #FFFFFF;
 }
 
 
@@ -202,38 +265,46 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_collection-body__card-media {
+    padding: 8px;
+  }
+
+  .cwc_collection-body__card-badge {
+    top: 6px;
+    left: 6px;
+    padding: 4px 6px;
+  }
+
+  .cwc_collection-body__card-badge--corner {
+    left: auto;
+    right: 6px;
+  }
+
   .cwc_collection-body__card-body {
-    padding: 14px 12px 16px;
+    padding: 12px;
   }
 
   .cwc_collection-body__card-title {
-    font-size: 0.9375rem;
-    line-height: 1.35;
-  }
-
-  .cwc_collection-body__card-brand {
-    font-size: 0.5625rem;
+    font-size: 15px;
   }
 
   .cwc_collection-body__card-text {
-    font-size: 0.625rem;
+    font-size: 10px;
   }
 
   .cwc_collection-body__card-price {
-    font-size: 1rem;
+    font-size: 16px;
   }
 
-  /* narrow cards can't hold price and pill side by side — stack them and let
-     the button run full width. Mirrors CWC_barrel_picks. */
+  /* narrow 2-up cards can't hold price and button side by side — stack them
+     and let the button run full width (still a 40px / 44px-wide target) */
   .cwc_collection-body__card-footer {
     flex-direction: column;
-    width: 100%;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .cwc_collection-body__card-button {
     width: 100%;
-    max-width: 100%;
-    padding: 2px;
+    min-height: 44px;
   }
 }

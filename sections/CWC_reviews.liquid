@@ -1,16 +1,16 @@
 {% style %}
   #cwc_reviews-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#F2EFE8' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --star-color: {{ section.settings.star_color | default: '#C4933F' }};
+    --section-bg: {{ section.settings.bg_color | default: '#FBF1E4' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --star-color: {{ section.settings.star_color | default: '#A35A12' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-text-color: {{ section.settings.card_text_color | default: '#2C2C2C' }};
-    --card-meta-color: {{ section.settings.card_meta_color | default: '#9A9A9A' }};
-    --avatar-bg: {{ section.settings.avatar_bg_color | default: '#0A1F12' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --columns: {{ section.settings.columns | default: 3 }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#3A3A36' }};
+    --card-meta-color: {{ section.settings.card_meta_color | default: '#5C5C57' }};
+    --avatar-bg: {{ section.settings.avatar_bg_color | default: '#14281D' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --card-width: {{ section.settings.card_width | default: 380 }}px;
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
@@ -18,9 +18,101 @@
   }
 {% endstyle %}
 
+{%- comment -%}
+  Review source: Judge.me store reviews when the toggle is on and at least one
+  review passes the filters, otherwise the manual review blocks.
+  judgeme.reviews_grid only carries Judge.me's featured subset (~25) of store reviews.
+{%- endcomment -%}
+{%- liquid
+  assign judgeme_count = 0
+  assign judgeme_cards = ''
+
+  if section.settings.use_judgeme
+    assign judgeme_reviews = shop.metafields.judgeme.reviews_grid.value.store_reviews.reviews
+    assign judgeme_limit = section.settings.judgeme_limit | default: 25
+    assign judgeme_min_rating = section.settings.judgeme_min_rating | default: 4
+
+    capture judgeme_cards
+      for review in judgeme_reviews
+        if judgeme_count >= judgeme_limit
+          break
+        endif
+        assign review_rating = review.rating | plus: 0
+        if review_rating < judgeme_min_rating
+          continue
+        endif
+        assign review_body = review.body | strip_html | strip
+        if review_body == blank
+          continue
+        endif
+        assign review_html = review_body | escape | prepend: '<p>' | append: '</p>'
+        assign review_meta = ''
+        if section.settings.judgeme_show_verified and review.verified_buyer
+          assign review_meta = 'Verified buyer'
+        endif
+        render 'CWC_reviews_card', rating: review_rating, text_html: review_html, name: review.reviewer_name, meta: review_meta
+        assign judgeme_count = judgeme_count | plus: 1
+      endfor
+    endcapture
+  endif
+
+  assign manual_count = 0
+  for block in section.blocks
+    if block.type == 'review' and block.settings.text != blank
+      assign manual_count = manual_count | plus: 1
+    endif
+  endfor
+
+  # Rating strip: live Judge.me numbers, falling back to the manual score/caption
+  assign rating_score = section.settings.rating_score
+  assign rating_meta = section.settings.rating_meta
+  assign summary_source = section.settings.summary_source | default: 'store'
+  assign summary_count = 0
+  if summary_source == 'store'
+    assign summary_count = shop.metafields.judgeme.shop_reviews_count.value | plus: 0
+    assign summary_rating = shop.metafields.judgeme.shop_reviews_rating.value | plus: 0
+  elsif summary_source == 'all'
+    assign summary_count = shop.metafields.judgeme.all_reviews_count.value | plus: 0
+    assign summary_rating = shop.metafields.judgeme.all_reviews_rating.value | plus: 0
+  endif
+
+  if summary_count > 0
+    # 1922 -> 1,922 (Liquid has no number delimiter filter)
+    assign count_display = summary_count | append: ''
+    if summary_count >= 1000
+      assign count_thousands = summary_count | divided_by: 1000
+      assign count_rest = summary_count | modulo: 1000 | plus: 1000 | append: '' | slice: 1, 3
+      assign count_display = count_thousands | append: ',' | append: count_rest
+    endif
+    assign rating_score = summary_rating | round: 1 | append: ''
+    if section.settings.rating_meta_template != blank
+      assign rating_meta = section.settings.rating_meta_template | replace: '[count]', count_display
+    endif
+  endif
+
+  assign card_total = 0
+  assign review_source = 'blocks'
+  if judgeme_count > 0
+    assign card_total = judgeme_count
+    assign review_source = 'judgeme'
+    assign review_cards = judgeme_cards
+  elsif manual_count > 0
+    assign card_total = manual_count
+    capture review_cards
+      for block in section.blocks
+        if block.type != 'review' or block.settings.text == blank
+          continue
+        endif
+        render 'CWC_reviews_card', rating: block.settings.rating, text_html: block.settings.text, name: block.settings.name, meta: block.settings.location, avatar: block.settings.avatar, avatar_alt: block.settings.avatar_alt, block_attrs: block.shopify_attributes
+      endfor
+    endcapture
+  endif
+-%}
+
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_reviews.css' | asset_url | stylesheet_tag }}
 
+{%- if card_total > 0 or request.design_mode -%}
 <section id="cwc_reviews-{{ section.id }}" class="cwc_reviews" data-section-id="{{ section.id }}">
   <div class="cwc_reviews__container">
 
@@ -38,8 +130,8 @@
 
       {% if section.settings.show_rating %}
         <div class="cwc_reviews__rating">
-          {% if section.settings.rating_score != blank %}
-            <span class="cwc_reviews__rating-score">{{ section.settings.rating_score }}</span>
+          {% if rating_score != blank %}
+            <span class="cwc_reviews__rating-score">{{ rating_score | escape }}</span>
           {% endif %}
 
           <span class="cwc_reviews__stars cwc_reviews__stars--large" role="img" aria-label="5 out of 5 stars">
@@ -50,85 +142,46 @@
             {% endfor %}
           </span>
 
-          {% if section.settings.rating_meta != blank %}
-            <span class="cwc_reviews__rating-meta">{{ section.settings.rating_meta }}</span>
+          {% if rating_meta != blank %}
+            <span class="cwc_reviews__rating-meta">{{ rating_meta | escape }}</span>
           {% endif %}
         </div>
       {% endif %}
     </div>
 
-    {% comment %} Reviews — scroll-snap track, swipeable with no JS {% endcomment %}
-    {% if section.blocks.size > 0 %}
-      <div class="cwc_reviews__carousel">
-        <div class="cwc_reviews__track" tabindex="0" role="group" aria-label="Customer reviews">
-          {% for block in section.blocks %}
-            {% case block.type %}
-              {% when 'review' %}
-                <div class="cwc_reviews__card" {{ block.shopify_attributes }}>
-                  <span class="cwc_reviews__stars" role="img" aria-label="5 out of 5 stars">
-                    {% for i in (1..5) %}
-                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
-                      </svg>
-                    {% endfor %}
-                  </span>
+  </div>
 
-                  {% if block.settings.text != blank %}
-                    <div class="cwc_reviews__card-text cwc-rte">
-                      {{ block.settings.text }}
-                    </div>
-                  {% endif %}
-
-                  <div class="cwc_reviews__card-author">
-                    {% if block.settings.avatar != blank %}
-                      <span class="cwc_reviews__card-avatar cwc_reviews__card-avatar--image">
-                        <img
-                          src="{{ block.settings.avatar | image_url: width: 96 }}"
-                          alt="{{ block.settings.avatar_alt | default: block.settings.name | escape }}"
-                          loading="lazy"
-                          width="36"
-                          height="36"
-                        >
-                      </span>
-                    {% elsif block.settings.name != blank %}
-                      <span class="cwc_reviews__card-avatar" aria-hidden="true">
-                        {{ block.settings.name | slice: 0 | upcase }}
-                      </span>
-                    {% endif %}
-
-                    <span class="cwc_reviews__card-author-body">
-                      {% if block.settings.name != blank %}
-                        <span class="cwc_reviews__card-name">{{ block.settings.name }}</span>
-                      {% endif %}
-                      {% if block.settings.location != blank %}
-                        <span class="cwc_reviews__card-location">{{ block.settings.location }}</span>
-                      {% endif %}
-                    </span>
-                  </div>
-                </div>
-            {% endcase %}
-          {% endfor %}
-        </div>
-
-        <div class="cwc_reviews__nav" data-cwc-reviews-nav hidden>
-          <button type="button" class="cwc_reviews__nav-button" data-cwc-reviews-prev aria-label="Previous reviews">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <path d="M15 5l-7 7 7 7" />
-            </svg>
-          </button>
-          <button type="button" class="cwc_reviews__nav-button" data-cwc-reviews-next aria-label="Next reviews">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+  {%- comment -%} Cards sit outside the container so the row spans the full viewport {%- endcomment -%}
+  {% if card_total > 0 %}
+    {%- comment -%}
+      Auto-scrolling loop. JS clones the set to fill the width and starts the
+      animation; without JS (or with reduced motion) it is a swipe row.
+    {%- endcomment -%}
+    <div
+      class="cwc_reviews__carousel"
+      role="region"
+      aria-label="Customer reviews"
+      tabindex="0"
+      data-review-source="{{ review_source }}"
+      data-speed="{{ section.settings.carousel_speed | default: 40 }}"
+    >
+      <div class="cwc_reviews__track">
+        <div class="cwc_reviews__set">
+          {{ review_cards }}
         </div>
       </div>
-    {% endif %}
-
-  </div>
+    </div>
+  {% else %}
+    <div class="cwc_reviews__container">
+      <div class="cwc_reviews__empty">
+        <p>No Judge.me reviews matched. Add review blocks as a fallback.</p>
+      </div>
+    </div>
+  {% endif %}
 </section>
 
 <script src="{{ 'CWC_reviews.js' | asset_url }}" defer></script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -161,30 +214,97 @@
       "default": true
     },
     {
+      "type": "select",
+      "id": "summary_source",
+      "label": "Rating Source",
+      "info": "Judge.me numbers update live. Falls back to the score and caption below if Judge.me has no count.",
+      "options": [
+        { "value": "store", "label": "Judge.me: store reviews only" },
+        { "value": "all", "label": "Judge.me: all reviews (product + store)" },
+        { "value": "manual", "label": "Score and caption below" }
+      ],
+      "default": "store"
+    },
+    {
+      "type": "text",
+      "id": "rating_meta_template",
+      "label": "Judge.me Caption Format",
+      "info": "[count] is replaced with the live Judge.me review count",
+      "default": "[count] verified store reviews"
+    },
+    {
       "type": "text",
       "id": "rating_score",
-      "label": "Rating Score",
+      "label": "Fallback Rating Score",
       "default": "4.9"
     },
     {
       "type": "text",
       "id": "rating_meta",
-      "label": "Rating Caption",
+      "label": "Fallback Rating Caption",
       "default": "Verified store rating · Judge.me"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "Review Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_judgeme",
+      "label": "Use Judge.me Store Reviews",
+      "info": "Pulls featured store reviews from Judge.me. The review blocks show instead when this is off or no Judge.me review matches the filters below.",
+      "default": true
     },
     {
       "type": "range",
-      "id": "columns",
-      "label": "Cards Per View",
+      "id": "judgeme_limit",
+      "label": "Max Judge.me Reviews",
+      "info": "Judge.me shares about 25 featured store reviews",
       "min": 1,
-      "max": 4,
+      "max": 25,
       "step": 1,
-      "default": 3,
-      "info": "Extra reviews scroll horizontally."
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "judgeme_min_rating",
+      "label": "Minimum Star Rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "judgeme_show_verified",
+      "label": "Show \"Verified buyer\" on Judge.me Reviews",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "range",
+      "id": "carousel_speed",
+      "label": "Scroll Speed",
+      "info": "Pauses on hover; stays still for visitors who prefer reduced motion.",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Card Width",
+      "info": "Desktop. Mobile cards fit the screen.",
+      "min": 260,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "default": 380
     },
     {
       "type": "header",
@@ -194,37 +314,37 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#F2EFE8"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "star_color",
       "label": "Star Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",
@@ -240,19 +360,19 @@
       "type": "color",
       "id": "card_text_color",
       "label": "Card Quote Color",
-      "default": "#2C2C2C"
+      "default": "#3A3A36"
     },
     {
       "type": "color",
       "id": "card_meta_color",
       "label": "Card Location Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "avatar_bg_color",
       "label": "Avatar Background Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "header",
@@ -285,11 +405,23 @@
       "name": "Review",
       "settings": [
         {
+          "type": "paragraph",
+          "content": "Fallback review. Shows only when Judge.me is off or has no matching reviews."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
           "type": "richtext",
           "id": "text",
           "label": "Review Text",
-          "default": "<p>Found a Pappy 15 here when nowhere else had it. Shipping was fast, bottle arrived perfectly packed.</p>",
-          "info": "Every review shows five stars."
+          "default": "<p>Found a Pappy 15 here when nowhere else had it. Shipping was fast, bottle arrived perfectly packed.</p>"
         },
         {
           "type": "text",
@@ -317,6 +449,7 @@
       ]
     }
   ],
+  "max_blocks": 12,
   "presets": [
     {
       "name": "Reviews",

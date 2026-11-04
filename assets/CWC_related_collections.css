@@ -1,5 +1,8 @@
 /* ==============================
    CWC Related Collections
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   square tiles, flat overlay (no gradient), 1px lines, heading-font titles,
+   tracked uppercase counts.
    ============================== */
 
 /* === Section Wrapper === */
@@ -12,64 +15,71 @@
 }
 
 .cwc_related-collections__container {
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Section Header === */
 .cwc_related-collections__content {
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
 }
 
 .cwc_related-collections__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.625rem;
+  margin: 0 0 12px;
 }
 
 .cwc_related-collections__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.625rem, 3vw, 2.375rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   margin: 0;
   color: inherit;
 }
 
-.cwc_related-collections__content-heading>* strong {
+.cwc_related-collections__content-heading > * strong,
+.cwc_related-collections__content-heading > * em {
   color: var(--highlight-color);
+}
+
+.cwc_related-collections__content-heading > * strong {
+  font-weight: 500;
 }
 
 .cwc_related-collections__rule {
   display: block;
   width: 48px;
-  height: 2px;
-  margin: 1rem 0 0;
+  height: 1px;
+  margin: 16px 0 0;
   background-color: var(--highlight-color);
 }
 
 .cwc_related-collections__content-subtext {
-  margin-top: 1rem;
+  margin-top: 16px;
   max-width: 700px;
 }
 
 .cwc_related-collections__content-subtext p {
-  font-size: 1.125rem;
-  line-height: 1.5;
+  font-size: 17px;
+  line-height: 1.7;
   margin: 0;
-  color: #343434;
+  color: #3A3A36;
 }
 
 /* === Grid === */
 .cwc_related-collections__grid {
   display: grid;
   grid-template-columns: repeat(var(--columns), 1fr);
-  gap: 14px;
+  gap: 20px;
 }
 
 /* === Card === */
@@ -78,9 +88,15 @@
   display: block;
   height: var(--card-height);
   overflow: hidden;
-  border-radius: 3px;
+  border: 1px solid var(--card-bg);
+  border-radius: 0;
   background-color: var(--card-bg);
   text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+
+.cwc_related-collections__card:hover {
+  border-color: var(--highlight-color);
 }
 
 .cwc_related-collections__card-image {
@@ -95,11 +111,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
-}
-
-.cwc_related-collections__card:hover .cwc_related-collections__card-image img {
-  transform: scale(1.06);
 }
 
 .cwc_related-collections__card-content {
@@ -110,33 +121,35 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1rem;
-  background: linear-gradient(to top,
-      var(--card-overlay-color) 0%,
-      rgba(0, 0, 0, 0.28) 100%);
+  padding: 16px;
+  /* flat tint over the dimmed image for legibility — no gradient */
+  background-color: color-mix(in srgb, var(--card-overlay-color) 35%, transparent);
 }
 
 .cwc_related-collections__card-title {
   display: block;
   font-family: var(--cwc-font-heading);
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--card-title-color);
 }
 
 .cwc_related-collections__card-text {
   display: block;
-  margin-top: 5px;
-  font-size: 0.625rem;
-  letter-spacing: 0.14em;
+  margin-top: 6px;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--card-text-color);
 }
 
 .cwc_related-collections__card:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 /* ==============================
@@ -144,7 +157,7 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_related-collections__container {
-    padding: 0 1.75rem;
+    padding: 0 32px;
   }
 
   .cwc_related-collections__grid {
@@ -154,7 +167,7 @@
 
 @media screen and (max-width: 991px) {
   .cwc_related-collections__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -168,15 +181,27 @@
   }
 
   .cwc_related-collections__container {
-    padding: 0 1rem;
+    padding: 0 16px;
   }
 
   .cwc_related-collections__content {
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .cwc_related-collections__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_related-collections__content-heading p {
+    font-size: 26px;
   }
 
   .cwc_related-collections__content-subtext p {
-    font-size: 1rem;
+    font-size: 16px;
+  }
+
+  .cwc_related-collections__grid {
+    gap: 12px;
   }
 
   .cwc_related-collections__card {
@@ -184,6 +209,6 @@
   }
 
   .cwc_related-collections__card-title {
-    font-size: 1rem;
+    font-size: 16px;
   }
 }

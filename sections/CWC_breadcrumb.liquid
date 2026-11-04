@@ -1,11 +1,11 @@
 {% style %}
   #cwc_breadcrumb-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --link-color: {{ section.settings.link_color | default: '#666666' }};
-    --separator-color: {{ section.settings.separator_color | default: '#E0DDD6' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --link-color: {{ section.settings.link_color | default: '#5C5C57' }};
+    --separator-color: {{ section.settings.separator_color | default: '#DEDED8' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
     --padding-top: {{ section.settings.padding_top | default: 15 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
@@ -151,25 +151,25 @@
       "type": "color",
       "id": "text_color",
       "label": "Current Page Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "link_color",
       "label": "Link Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Link Hover Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "separator_color",
       "label": "Separator Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "checkbox",
@@ -181,7 +181,7 @@
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",

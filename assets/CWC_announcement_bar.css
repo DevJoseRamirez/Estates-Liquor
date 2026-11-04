@@ -1,12 +1,20 @@
 /* ==============================
    CWC Announcement Bar
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   green bar, white 11px uppercase 0.1em text, amber middle-dot separators,
+   36px desktop / 32px mobile, square arrows.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_announcement-bar {
   --ab-font-body: var(--cwc-font-body);
   --ab-arrow-size: 32px;
+  --ab-height: 36px;
 
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: var(--ab-height);
   background-color: var(--section-bg);
   color: var(--text-color);
   padding-top: var(--padding-top);
@@ -15,9 +23,11 @@
 }
 
 .cwc_announcement-bar__container {
-  max-width: 1500px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,10 +67,11 @@
 .cwc_announcement-bar__text {
   display: block;
   color: var(--text-color);
-  font-size: var(--text-size);
+  font-size: var(--text-size, 11px);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.1em;
   line-height: 1.4;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
@@ -70,7 +81,7 @@
 
 .cwc_announcement-bar__text strong {
   color: var(--highlight-color);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cwc_announcement-bar__text a {
@@ -80,6 +91,19 @@
 .cwc_announcement-bar__text--link:hover {
   color: var(--text-color);
   opacity: 0.85;
+}
+
+.cwc_announcement-bar__text--link:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
+}
+
+/* Middle-dot separators between items */
+.cwc_announcement-bar__dot {
+  display: inline-block;
+  margin: 0 0.6em;
+  color: var(--highlight-color);
+  font-weight: 700;
 }
 
 /* === Arrows === */
@@ -92,6 +116,7 @@
   height: var(--ab-arrow-size);
   padding: 0;
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--arrow-color);
   cursor: pointer;
@@ -102,9 +127,14 @@
   opacity: 0.7;
 }
 
+.cwc_announcement-bar__arrow:focus-visible {
+  outline: 2px solid var(--arrow-color);
+  outline-offset: -2px;
+}
+
 .cwc_announcement-bar__arrow svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -119,7 +149,7 @@
    ============================== */
 @media screen and (max-width: 991px) {
   .cwc_announcement-bar__container {
-    padding: 0 1.25rem;
+    padding: 0 20px;
   }
 }
 
@@ -129,16 +159,17 @@
 @media screen and (max-width: 768px) {
   .cwc_announcement-bar {
     --ab-arrow-size: 28px;
+    --ab-height: 32px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
   }
 
   .cwc_announcement-bar__container {
-    padding: 0 0.5rem;
+    padding: 0 8px;
     gap: 0.25rem;
   }
 
   .cwc_announcement-bar__text {
-    font-size: calc(var(--text-size) - 1px);
+    font-size: var(--text-size, 11px);
   }
 }

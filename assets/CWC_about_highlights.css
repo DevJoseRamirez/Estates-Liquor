@@ -1,5 +1,7 @@
 /* ==============================
    CWC About Highlights
+   Estates green band (brand spec §5 Bands): white H2, amber eyebrow,
+   values in the display font, tracked uppercase labels, 1px dividers.
    ============================== */
 
 /* === Section Wrapper === */
@@ -12,37 +14,41 @@
 }
 
 .cwc_about-highlights__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Section Header === */
 .cwc_about-highlights__content {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
 }
 
 .cwc_about-highlights__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--highlight-color);
-  margin: 0 0 0.625rem;
+  margin: 0 0 12px;
 }
 
 .cwc_about-highlights__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   margin: 0;
   color: inherit;
 }
 
-.cwc_about-highlights__content-heading>* strong {
+.cwc_about-highlights__content-heading>* strong,
+.cwc_about-highlights__content-heading>* em {
   color: var(--highlight-color);
+  font-weight: inherit;
 }
 
 /* === Grid === */
@@ -71,26 +77,29 @@
 .cwc_about-highlights__card-value {
   display: block;
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.5625rem, 2.4vw, 1.875rem);
-  font-weight: 700;
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  font-weight: 500;
   line-height: 1;
+  letter-spacing: -0.01em;
   color: var(--value-color);
 }
 
 .cwc_about-highlights__card-label {
   display: block;
-  margin-top: 0.5625rem;
+  margin-top: 10px;
 }
 
+/* labels read in the band's text colour (white); --label-color stays the
+   theme-editor hook for the empty-state note */
 .cwc_about-highlights__card-label-line {
   display: block;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1.5;
-  color: var(--label-color);
-  color: white;
+  color: var(--text-color);
 }
 
 /* === Empty State === */
@@ -105,7 +114,7 @@
    ============================== */
 @media screen and (max-width: 991px) {
   .cwc_about-highlights__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -119,7 +128,15 @@
   }
 
   .cwc_about-highlights__container {
-    padding: 0 1rem;
+    padding: 0 20px;
+  }
+
+  .cwc_about-highlights__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_about-highlights__content-heading p {
+    font-size: 26px;
   }
 
   /* two per row — four across is unreadable at phone width */

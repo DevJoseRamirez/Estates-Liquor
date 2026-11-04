@@ -1,19 +1,23 @@
 {% style %}
   #cwc_collection-grid-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --subtext-color: {{ section.settings.subtext_color | default: '#343434' }};
-    --meta-color: {{ section.settings.meta_color | default: '#666666' }};
-    --card-meta-color: {{ section.settings.meta_color | default: '#666666' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --control-border: {{ section.settings.control_border_color | default: '#C9C3B5' }};
-    --chip-bg: {{ section.settings.chip_bg_color | default: '#F8F6F1' }};
-    --accent-color: {{ section.settings.accent_color | default: '#C4933F' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
+    --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
+    --card-meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --control-border: {{ section.settings.control_border_color | default: '#BDBDB6' }};
+    --chip-bg: {{ section.settings.chip_bg_color | default: '#FBF1E4' }};
+    --accent-color: {{ section.settings.accent_color | default: '#A35A12' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#FFFFFF' }};
-    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
-    --button-text: {{ section.settings.button_text_color | default: '#FFFFFF' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text: {{ section.settings.button_text_color | default: '#14281D' }};
+    --cg-primary-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --cg-primary-text: {{ section.settings.button_text_color | default: '#14281D' }};
+    --card-button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --card-button-text: {{ section.settings.button_text_color | default: '#14281D' }};
     --filter-list-height: {{ section.settings.filter_list_height | default: 280 }}px;
     --columns-desktop: {{ section.settings.columns_desktop | default: 4 }};
     --columns-wide: {{ section.settings.columns_desktop | default: 4 | plus: 1 }};
@@ -400,50 +404,50 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "subtext_color",
       "label": "Body Text Color",
-      "default": "#343434"
+      "default": "#3A3A36"
     },
     {
       "type": "color",
       "id": "meta_color",
       "label": "Muted Text Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Divider Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "control_border_color",
       "label": "Input / Button Border Color",
-      "default": "#C9C3B5"
+      "default": "#BDBDB6"
     },
     {
       "type": "color",
       "id": "chip_bg_color",
       "label": "Active Filter Chip Background",
-      "default": "#F8F6F1"
+      "default": "#FBF1E4"
     },
     {
       "type": "color",
       "id": "accent_color",
       "label": "Accent Color",
       "info": "Checkboxes, links, filter count",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "header",
@@ -459,20 +463,20 @@
       "type": "color",
       "id": "card_media_bg_color",
       "label": "Card Image Background Color",
-      "default": "#F2EFE8"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Button Background",
-      "default": "#0A1F12",
+      "default": "#E9A23B",
       "info": "Add to cart on cards and Show results in the mobile filter sheet."
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text",
-      "default": "#FFFFFF"
+      "default": "#14281D"
     },
     {
       "type": "header",

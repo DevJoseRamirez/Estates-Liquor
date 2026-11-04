@@ -1,9 +1,9 @@
 {% style %}
   #cwc_announcement-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0E2119' }};
-    --section-bg-end: {{ section.settings.bg_end_color | default: '#1C3B2A' }};
+    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
+    --section-bg-end: {{ section.settings.bg_end_color | default: '#14281D' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C9974A' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --padding-top: {{ section.settings.padding_top | default: 10 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 10 | times: 0.5 }}px;
@@ -28,7 +28,8 @@
 
     <div class="cwc_announcement__container">
       <div class="cwc_announcement__text cwc-rte">
-        {{ section.settings.text }}
+        {%- assign cwc_dot = '<span class="cwc_announcement__dot" aria-hidden="true">&middot;</span>' -%}
+        {{ section.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot }}
       </div>
     </div>
 
@@ -97,13 +98,13 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0E2119"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bg_end_color",
       "label": "Gradient End Color",
-      "default": "#1C3B2A"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -115,7 +116,7 @@
       "type": "color",
       "id": "bold_color",
       "label": "Bold Text Color",
-      "default": "#C9974A"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

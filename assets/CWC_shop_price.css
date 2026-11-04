@@ -1,9 +1,15 @@
 /* ==============================
    CWC Shop By Price
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   square white tiles (green variant for the "dark" tile), 1px lines,
+   hover border ink (no shadow), heading-font amounts, tracked uppercase labels.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_shop-price {
+  --sp-ink: #1C1C19;
+  --sp-amber: #E9A23B;
+
   background-color: var(--section-bg);
   color: var(--text-color);
   font-family: var(--cwc-font-body);
@@ -12,15 +18,15 @@
 }
 
 .cwc_shop-price__container {
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Section Header === */
 .cwc_shop-price__content {
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
 }
 
 .cwc_shop-price--align-center .cwc_shop-price__content {
@@ -31,33 +37,40 @@
 }
 
 .cwc_shop-price__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.625rem;
+  margin: 0 0 12px;
 }
 
 .cwc_shop-price__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.625rem, 3vw, 2.375rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   margin: 0;
   color: inherit;
 }
 
-.cwc_shop-price__content-heading>* strong {
+.cwc_shop-price__content-heading > * strong,
+.cwc_shop-price__content-heading > * em {
   color: var(--highlight-color);
+}
+
+.cwc_shop-price__content-heading > * strong {
+  font-weight: 500;
 }
 
 /* rule tracks the header alignment */
 .cwc_shop-price__rule {
   display: block;
   width: 48px;
-  height: 2px;
-  margin: 1rem 0 0;
+  height: 1px;
+  margin: 16px 0 0;
   background-color: var(--highlight-color);
 }
 
@@ -67,7 +80,7 @@
 }
 
 .cwc_shop-price__content-subtext {
-  margin-top: 1rem;
+  margin-top: 16px;
   max-width: 700px;
 }
 
@@ -77,10 +90,10 @@
 }
 
 .cwc_shop-price__content-subtext p {
-  font-size: 1.125rem;
-  line-height: 1.5;
+  font-size: 17px;
+  line-height: 1.7;
   margin: 0;
-  color: #343434;
+  color: #3A3A36;
 }
 
 /* === Grid === */
@@ -90,7 +103,7 @@
   gap: 16px;
 }
 
-/* === Card === */
+/* === Card — square tile, 1px line, hover border ink === */
 .cwc_shop-price__card {
   display: flex;
   flex-direction: column;
@@ -100,18 +113,17 @@
   padding: 36px 24px;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 3px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0;
+  transition: border-color 0.2s ease;
 }
 
 .cwc_shop-price__card:hover {
-  border-color: var(--highlight-color);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  border-color: var(--sp-ink);
 }
 
 .cwc_shop-price__card:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .cwc_shop-price__card--dark {
@@ -119,45 +131,51 @@
   border-color: var(--card-bg-dark);
 }
 
+.cwc_shop-price__card--dark:hover {
+  border-color: var(--sp-amber);
+}
+
 /* === Card Content === */
 .cwc_shop-price__card-amount {
   display: block;
   font-family: var(--cwc-font-heading);
-  font-size: 2.125rem;
-  /* 34px */
-  font-weight: 700;
+  font-size: 34px;
+  font-weight: 500;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: var(--card-title-color);
 }
 
+/* amber reads on green; the amber-text tone is for white grounds only */
 .cwc_shop-price__card--dark .cwc_shop-price__card-amount {
-  color: var(--highlight-color);
+  color: var(--sp-amber);
 }
 
 .cwc_shop-price__card-title {
   display: block;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 12px;
   color: var(--highlight-color);
 }
 
 .cwc_shop-price__card--dark .cwc_shop-price__card-title {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .cwc_shop-price__card-text {
   display: block;
-  font-size: 0.8125rem;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--card-text-color);
 }
 
 .cwc_shop-price__card--dark .cwc_shop-price__card-text {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* ==============================
@@ -165,7 +183,7 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_shop-price__container {
-    padding: 0 1.75rem;
+    padding: 0 32px;
   }
 
   .cwc_shop-price__grid {
@@ -175,7 +193,7 @@
 
 @media screen and (max-width: 991px) {
   .cwc_shop-price__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -189,19 +207,27 @@
   }
 
   .cwc_shop-price__container {
-    padding: 0 1rem;
+    padding: 0 16px;
   }
 
   .cwc_shop-price__content {
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .cwc_shop-price__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_shop-price__content-heading p {
+    font-size: 26px;
   }
 
   .cwc_shop-price__content-subtext p {
-    font-size: 1rem;
+    font-size: 16px;
   }
 
   .cwc_shop-price__grid {
-    gap: 10px;
+    gap: 12px;
   }
 
   .cwc_shop-price__card {
@@ -209,10 +235,6 @@
   }
 
   .cwc_shop-price__card-amount {
-    font-size: 1.6875rem;
-  }
-
-  .cwc_shop-price__card-text {
-    font-size: 0.75rem;
+    font-size: 27px;
   }
 }

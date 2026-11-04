@@ -1,55 +1,68 @@
 /* ==============================
    CWC Why Buy
+   Styled to _theme-styles/estates-brand-tokens.md: one 1px frame with internal
+   rules, radius 0, no shadows; line icons (1.5 stroke); eyebrow → H2 → 1px rule.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_why-buy {
+  --wb-gutter: 48px;
+
   background-color: var(--section-bg);
   color: var(--text-color);
   font-family: var(--cwc-font-body);
-  padding-top: var(--padding-top);
-  padding-bottom: var(--padding-bottom);
+  padding-top: var(--padding-top, 88px);
+  padding-bottom: var(--padding-bottom, 88px);
 }
 
 .cwc_why-buy__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--wb-gutter);
 }
 
 /* === Section Header === */
 .cwc_why-buy__content {
   text-align: center;
-  margin-bottom: 1.875rem;
+  margin-bottom: 40px;
 }
 
 .cwc_why-buy__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  margin: 0 0 12px;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.625rem;
 }
 
-.cwc_why-buy__content-heading p {
-  font-family: var(--cwc-font-heading);
-  font-size: clamp(1.5rem, 3vw, 1.75rem);
-  font-weight: 700;
-  line-height: 1.2;
+.cwc_why-buy__content-heading > * {
   margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   color: inherit;
 }
 
-.cwc_why-buy__content-heading>* strong {
+.cwc_why-buy__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_why-buy__content-heading > * em {
+  font-style: italic;
+  font-weight: 400;
   color: var(--highlight-color);
 }
 
 .cwc_why-buy__rule {
   display: block;
   width: 48px;
-  height: 2px;
-  margin: 1rem auto 0;
+  height: 1px;
+  margin: 16px auto 0;
   background-color: var(--highlight-color);
 }
 
@@ -61,13 +74,14 @@
   gap: 0;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 3px;
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
 }
 
 /* === Card === */
 .cwc_why-buy__card {
-  padding: 30px 24px;
+  padding: 32px 28px;
   border-right: 1px solid var(--border-color);
 }
 
@@ -80,7 +94,7 @@
   display: block;
   width: 22px;
   height: 22px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   color: var(--icon-color);
 }
 
@@ -93,32 +107,32 @@
 
 .cwc_why-buy__card-image img {
   object-fit: contain;
+  border-radius: 0;
 }
 
 .cwc_why-buy__card-title {
-  font-family: var(--cwc-font-heading);
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3;
   margin: 0 0 8px;
+  font-family: var(--cwc-font-heading);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--text-color);
 }
 
 .cwc_why-buy__card-text p {
-  font-size: 0.9rem;
-  line-height: 1.7;
   margin: 0;
+  font-family: var(--cwc-font-body);
+  font-size: 16px;
+  line-height: 1.7;
   color: var(--card-text-color);
-  color: var(--text-color);
-
 }
 
 /* ==============================
    Tablet Responsive
    ============================== */
 @media screen and (max-width: 1024px) {
-  .cwc_why-buy__container {
-    padding: 0 1.75rem;
+  .cwc_why-buy {
+    --wb-gutter: 32px;
   }
 
   .cwc_why-buy__grid {
@@ -139,8 +153,8 @@
 }
 
 @media screen and (max-width: 991px) {
-  .cwc_why-buy__container {
-    padding: 0 1.25rem;
+  .cwc_why-buy {
+    --wb-gutter: 24px;
   }
 }
 
@@ -149,12 +163,21 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_why-buy {
-    padding-top: var(--padding-top-mobile);
-    padding-bottom: var(--padding-bottom-mobile);
+    --wb-gutter: 18px;
+    padding-top: var(--padding-top-mobile, 56px);
+    padding-bottom: var(--padding-bottom-mobile, 56px);
   }
 
-  .cwc_why-buy__container {
-    padding: 0 1rem;
+  .cwc_why-buy__content {
+    margin-bottom: 32px;
+  }
+
+  .cwc_why-buy__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_why-buy__content-heading > * {
+    font-size: 26px;
   }
 
   .cwc_why-buy__grid {
@@ -169,5 +192,9 @@
 
   .cwc_why-buy__card:last-child {
     border-bottom: none;
+  }
+
+  .cwc_why-buy__card-title {
+    font-size: 16px;
   }
 }

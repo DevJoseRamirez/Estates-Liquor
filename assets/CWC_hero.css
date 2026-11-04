@@ -1,9 +1,14 @@
 /* ==============================
    CWC Hero
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   display type in the heading font, italic amber emphasis, flat overlays
+   (no gradients), square amber Primary + on-dark Secondary buttons.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_hero {
+  --hero-gutter: 48px;
+
   position: relative;
   display: flex;
   align-items: center;
@@ -21,7 +26,7 @@
   z-index: 0;
 }
 
-/* photo layer — faded on its own so the overlay wash keeps full strength */
+/* photo layer — faded on its own so the overlay keeps full strength */
 .cwc_hero__image {
   position: absolute;
   inset: 0;
@@ -40,19 +45,36 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 0;
 }
 
-/* Diagonal wash — holds full strength across --overlay-coverage so the copy
-   sits on solid colour, then clears toward the image */
+/* Flat overlay, two layers (no gradients):
+   ::before — solid panel holding full strength across --overlay-coverage so the copy sits on colour
+   ::after  — lighter flat wash over the whole image for legibility past the panel edge */
 .cwc_hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg,
-      var(--overlay-color) 0%,
-      var(--overlay-color) var(--overlay-coverage, 35%),
-      rgba(0, 0, 0, 0.45) calc(var(--overlay-coverage, 35%) + 30%),
-      rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+}
+
+.cwc_hero__overlay::before,
+.cwc_hero__overlay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--overlay-color);
+}
+
+.cwc_hero__overlay::before {
+  width: var(--overlay-coverage, 35%);
   opacity: var(--overlay-opacity);
+}
+
+.cwc_hero__overlay::after {
+  right: 0;
+  opacity: calc(var(--overlay-opacity) * 0.45);
 }
 
 /* === Container === */
@@ -60,117 +82,123 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1500px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--hero-gutter);
 }
 
 /* === Content === */
 .cwc_hero__content {
-  max-width: 600px;
+  max-width: 640px;
 }
 
 .cwc_hero__content-eyebrow {
-  font-size: 0.6875rem;
-  /* 11px */
-  font-weight: 600;
-  letter-spacing: 0.24em;
+  margin: 0 0 16px;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 1rem;
 }
 
 .cwc_hero__content-heading {
-  margin-bottom: 1.25rem;
+  margin-bottom: 20px;
 }
 
-.cwc_hero__content-heading p {
-  font-family: var(--cwc-font-heading);
-  font-size: clamp(2.25rem, 5vw, 3.75rem);
-  font-weight: 700;
-  line-height: 1.1;
+.cwc_hero__content-heading > * {
   margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   color: inherit;
 }
 
-.cwc_hero__content-heading>* strong,
-.cwc_hero__content-heading>* em {
+.cwc_hero__content-heading > * strong {
+  font-weight: 500;
   color: var(--highlight-color);
 }
 
-.cwc_hero__content-heading>* em {
+/* Display emphasis: italic, regular weight, amber on green */
+.cwc_hero__content-heading > * em {
   font-style: italic;
+  font-weight: 400;
+  color: var(--highlight-color);
 }
 
 .cwc_hero__content-subtext {
   max-width: 480px;
-  margin-bottom: 2.25rem;
+  margin-bottom: 36px;
 }
 
 .cwc_hero__content-subtext p {
-  font-size: 1rem;
-  line-height: 1.7;
   margin: 0;
-  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--cwc-font-body);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.7;
   color: var(--text-color);
-  /*  */
-  font-size: 1rem;
-  font-weight: bold;
 }
 
 /* === Buttons === */
 .cwc_hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.875rem;
+  gap: 14px;
 }
 
 .cwc_hero__button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 30px;
   font-family: var(--cwc-font-body);
-  font-size: 0.75rem;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  line-height: 1;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: 3px;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
+/* Primary: amber, green text, no border */
 .cwc_hero__button--primary {
   background-color: var(--button-bg);
   color: var(--button-text-color);
-  border: 1.5px solid var(--button-bg);
-  padding: 13px 32px;
+  border: none;
 }
 
 .cwc_hero__button--primary:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
+  background-color: var(--button-hover-bg, #D68F27);
 }
 
+/* On-dark Secondary: transparent, white text, soft white hairline */
 .cwc_hero__button--outline {
-  background: transparent;
+  background-color: transparent;
   color: var(--text-color);
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  padding: 13px 30px;
-  background: white;
-  color: black
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .cwc_hero__button--outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: var(--text-color);
-  color: white;
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  color: var(--section-bg);
 }
 
 .cwc_hero__button:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-/* === Badge === */
+/* === Badge (square stat tile) === */
 .cwc_hero__badge {
   position: absolute;
   right: 80px;
@@ -184,30 +212,28 @@
   height: 120px;
   padding: 12px;
   text-align: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.86);
-  background: white;
+  border-radius: 0;
+  background-color: #FFFFFF;
   border: 1px solid var(--highlight-color);
 }
 
 .cwc_hero__badge-number {
   font-family: var(--cwc-font-heading);
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 500;
   line-height: 1;
-  color: var(--highlight-color);
+  color: #A35A12;
 }
 
 .cwc_hero__badge-text {
-  margin-top: 4px;
-  font-size: 0.5625rem;
-  /* 9px */
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  margin-top: 6px;
+  font-family: var(--cwc-font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.7);
-  color: black;
+  color: #1C1C19;
 }
 
 /* ==============================
@@ -215,6 +241,7 @@
    ============================== */
 @media screen and (max-width: 1024px) {
   .cwc_hero {
+    --hero-gutter: 32px;
     height: auto;
     padding-top: var(--padding-top);
     padding-bottom: var(--padding-bottom);
@@ -224,10 +251,6 @@
     max-width: 100%;
   }
 
-  .cwc_hero__container {
-    padding: 0 1.75rem;
-  }
-
   .cwc_hero__badge {
     right: 40px;
     bottom: 32px;
@@ -235,8 +258,8 @@
 }
 
 @media screen and (max-width: 991px) {
-  .cwc_hero__container {
-    padding: 0 1.25rem;
+  .cwc_hero {
+    --hero-gutter: 24px;
   }
 }
 
@@ -244,38 +267,40 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
-  .cwc_hero__content-heading p {
-    font-size: clamp(2.5rem, 5vw, 3.75rem);
-  }
-
   .cwc_hero {
+    --hero-gutter: 18px;
     min-height: 480px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
   }
 
-  .cwc_hero__container {
-    padding: 0 1rem;
+  .cwc_hero__content-eyebrow {
+    font-size: 11px;
   }
 
-  /* straighten the wash so the copy stays legible over a portrait crop */
-  .cwc_hero__overlay {
-    background: linear-gradient(165deg,
-        var(--overlay-color) 0%,
-        var(--overlay-color) var(--overlay-coverage, 35%),
-        rgba(0, 0, 0, 0.55) 100%);
+  .cwc_hero__content-heading > * {
+    font-size: 40px;
+  }
+
+  /* copy spans the full width on a portrait crop — one even flat wash, no panel edge */
+  .cwc_hero__overlay::before {
+    display: none;
+  }
+
+  .cwc_hero__overlay::after {
+    opacity: calc(var(--overlay-opacity) * 0.7);
   }
 
   .cwc_hero__content-heading {
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
   }
 
   .cwc_hero__content-subtext {
-    margin-bottom: 1.75rem;
+    margin-bottom: 28px;
   }
 
   .cwc_hero__content-subtext p {
-    font-size: 0.9375rem;
+    font-size: 16px;
   }
 
   .cwc_hero__actions {

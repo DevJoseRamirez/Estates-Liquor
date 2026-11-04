@@ -1,15 +1,15 @@
 {% style %}
   #cwc_product-buy-box-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --subtext-color: {{ section.settings.subtext_color | default: '#666666' }};
-    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
-    --media-bg: {{ section.settings.media_bg_color | default: '#F2EFE8' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#C4933F' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#ffffff' }};
-    --stock-color: {{ section.settings.stock_color | default: '#2E7D47' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
+    --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
+    --media-bg: {{ section.settings.media_bg_color | default: '#FFFFFF' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
+    --stock-color: {{ section.settings.stock_color | default: '#A35A12' }};
     --media-width: {{ section.settings.media_width | default: 45 }}%;
     --padding-top: {{ section.settings.padding_top | default: 30 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
@@ -77,7 +77,7 @@
           %}
 
           {% if badge_label != blank %}
-            <span class="cwc_product-buy-box__media-badge">{{ badge_label }}</span>
+            <span class="cwc_product-buy-box__media-badge cwc_product-buy-box__media-badge--{{ badge_label | handleize }}">{{ badge_label }}</span>
           {% endif %}
         </div>
 
@@ -724,55 +724,55 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "subtext_color",
       "label": "Subtext Color",
-      "default": "#666666"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "meta_color",
       "label": "Meta Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "media_bg_color",
       "label": "Gallery Background Color",
-      "default": "#F2EFE8"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Add To Cart Color",
-      "default": "#C4933F"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Add To Cart Text Color",
-      "default": "#ffffff"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "stock_color",
       "label": "In Stock Color",
-      "default": "#2E7D47"
+      "default": "#A35A12"
     },
     {
       "type": "header",

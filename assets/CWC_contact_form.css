@@ -1,5 +1,11 @@
 /* ==============================
    CWC Contact Form
+   Estates form spec (brand §5 Forms): white 48px inputs with a 1px ink
+   border, radius 0, 16px text, muted 11px tracked labels, amber-text
+   checkbox/radio accent, Primary amber submit, soft-amber messages (no red).
+   Where a colour setting still holds a pre-spec value (button green, input
+   tint, hairline input border, pale-green success) the brand value is used
+   directly — see the brief report.
    ============================== */
 
 /* === Section Wrapper === */
@@ -12,50 +18,54 @@
 }
 
 .cwc_contact-form__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 48px;
 }
 
 /* === Section Header === */
 .cwc_contact-form__content {
   max-width: var(--form-width);
-  margin: 0 auto 2.25rem;
+  margin: 0 auto 40px;
   width: 100%;
   text-align: center;
 }
 
 .cwc_contact-form__content-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 0.625rem;
+  margin: 0 0 12px;
 }
 
 .cwc_contact-form__content-heading {
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .cwc_contact-form__content-heading p {
   font-family: var(--cwc-font-heading);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.12;
   margin: 0;
   color: inherit;
 }
 
-.cwc_contact-form__content-heading > * strong {
+.cwc_contact-form__content-heading > * strong,
+.cwc_contact-form__content-heading > * em {
   color: var(--highlight-color);
+  font-weight: inherit;
 }
 
 .cwc_contact-form__rule {
   display: block;
-  width: 60px;
-  height: 2px;
-  margin: 0 auto 1.25rem;
+  width: 48px;
+  height: 1px;
+  margin: 0 auto 20px;
   background-color: var(--highlight-color);
 }
 
@@ -65,8 +75,8 @@
 }
 
 .cwc_contact-form__content-subtext p {
-  font-size: 0.9375rem;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.7;
   margin: 0;
   color: var(--subtext-color);
 }
@@ -79,25 +89,29 @@
 }
 
 /* === Messages === */
+/* both states use the soft-amber notice — no red, no pale green */
 .cwc_contact-form__message {
-  margin: 0 0 1.5rem;
+  margin: 0 0 24px;
   padding: 14px 18px;
-  border-radius: 3px;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 1.55;
   text-align: center;
+  background-color: #FBE3C4;
+  color: #8A4A0E;
+  border: 1px solid #8A4A0E;
 }
 
 .cwc_contact-form__message--success {
   background-color: var(--success-bg);
   color: var(--success-text-color);
-  border: 1px solid var(--highlight-color);
+  border-color: var(--success-text-color);
 }
 
 .cwc_contact-form__message--error {
   background-color: var(--error-bg);
   color: var(--error-text-color);
-  border: 1px solid var(--error-text-color);
+  border-color: var(--error-text-color);
 }
 
 /* === Fields === */
@@ -105,7 +119,7 @@
 .cwc_contact-form__fields {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem 1.25rem;
+  gap: 20px 20px;
 }
 
 .cwc_contact-form__field {
@@ -118,12 +132,14 @@
 }
 
 .cwc_contact-form__label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-family: var(--cwc-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
+  color: var(--meta-color);
+  margin-bottom: 8px;
 }
 
 .cwc_contact-form__input,
@@ -132,86 +148,103 @@
   width: 100%;
   box-sizing: border-box;
   font-family: var(--cwc-font-body);
-  font-size: 0.9375rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--input-text-color);
   background-color: var(--input-bg);
   border: 1px solid var(--input-border-color);
-  border-radius: 3px;
-  padding: 12px 14px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 14px;
+  transition: border-color 0.15s ease;
+}
+
+.cwc_contact-form__input,
+.cwc_contact-form__select {
+  height: 48px;
 }
 
 .cwc_contact-form__textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 140px;
+  padding: 12px 14px;
 }
 
-/* the select needs its own reset — browsers ignore the shared padding otherwise */
+/* the select needs its own reset — chevron is a line icon in ink */
 .cwc_contact-form__select {
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
-  padding-right: 36px;
-  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
-    linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position: calc(100% - 18px) calc(50% + 2px), calc(100% - 13px) calc(50% + 2px);
-  background-size: 5px 5px, 5px 5px;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%231C1C19' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-position: right 14px center;
+  background-size: 12px 8px;
   background-repeat: no-repeat;
 }
 
 .cwc_contact-form__input::placeholder,
 .cwc_contact-form__textarea::placeholder {
   color: var(--input-placeholder-color);
+  opacity: 1;
 }
 
 .cwc_contact-form__input:focus,
 .cwc_contact-form__select:focus,
 .cwc_contact-form__textarea:focus {
-  outline: none;
-  border-color: var(--highlight-color);
-  box-shadow: 0 0 0 2px rgba(196, 147, 63, 0.18);
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 2px;
+  border-color: var(--input-border-color);
+}
+
+.cwc_contact-form input[type="checkbox"],
+.cwc_contact-form input[type="radio"] {
+  accent-color: #A35A12;
 }
 
 /* === Actions === */
 .cwc_contact-form__actions {
-  margin-top: 1.75rem;
-  padding-top: 1.5rem;
+  margin-top: 28px;
+  padding-top: 24px;
   border-top: 1px solid var(--border-color);
   text-align: center;
 }
 
+/* Primary: amber fill, green label, no border */
 .cwc_contact-form__button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
   font-family: var(--cwc-font-body);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--button-text-color);
   background-color: var(--button-bg);
   border: 0;
-  border-radius: 3px;
-  padding: 15px 42px;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 30px;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .cwc_contact-form__button:hover {
-  background-color: var(--highlight-color);
-  transform: translateY(-1px);
+  background-color: var(--button-hover-bg, #D68F27);
 }
 
 .cwc_contact-form__button:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .cwc_contact-form__disclaimer {
-  font-size: 0.75rem;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--meta-color);
-  margin: 1rem 0 0;
+  margin: 16px 0 0;
 }
 
 /* ==============================
@@ -219,7 +252,7 @@
    ============================== */
 @media screen and (max-width: 991px) {
   .cwc_contact-form__container {
-    padding: 0 1.25rem;
+    padding: 0 24px;
   }
 }
 
@@ -233,29 +266,42 @@
   }
 
   .cwc_contact-form__container {
-    padding: 0 1rem;
+    padding: 0 20px;
   }
 
   .cwc_contact-form__content {
-    margin-bottom: 1.75rem;
+    margin-bottom: 28px;
+  }
+
+  .cwc_contact-form__content-eyebrow {
+    font-size: 11px;
   }
 
   .cwc_contact-form__content-heading {
-    margin-bottom: 0.75rem;
+    margin-bottom: 12px;
+  }
+
+  .cwc_contact-form__content-heading p {
+    font-size: 26px;
   }
 
   .cwc_contact-form__content-subtext p {
-    font-size: 0.875rem;
+    font-size: 16px;
   }
 
   /* one field per row — side-by-side inputs get too narrow to type in */
   .cwc_contact-form__fields {
     grid-template-columns: 1fr;
-    gap: 0.875rem;
+    gap: 16px;
+  }
+
+  .cwc_contact-form__input,
+  .cwc_contact-form__select {
+    height: 46px;
   }
 
   .cwc_contact-form__button {
     width: 100%;
-    padding: 15px 20px;
+    padding: 0 20px;
   }
 }

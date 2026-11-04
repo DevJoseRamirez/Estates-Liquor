@@ -1,0 +1,58 @@
+{% comment %}
+  Shared review card for CWC_reviews. Judge.me reviews and manual review
+  blocks both render through here so they look identical.
+
+  Params:
+  - rating: 1-5
+  - text_html: review text as HTML (Judge.me text is escaped before passing)
+  - name: reviewer name (optional)
+  - meta: location or "Verified buyer" (optional)
+  - avatar: image object (optional, manual blocks only)
+  - avatar_alt: avatar alt text (optional)
+  - block_attrs: block.shopify_attributes for manual blocks (optional)
+{% endcomment %}
+{%- assign card_rating = rating | default: 5 | plus: 0 -%}
+<figure class="cwc_reviews__card" {{ block_attrs }}>
+  <span class="cwc_reviews__stars" role="img" aria-label="{{ card_rating }} out of 5 stars">
+    {%- for i in (1..5) -%}
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"{% if i > card_rating %} class="cwc_reviews__star--empty"{% endif %}>
+        <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
+      </svg>
+    {%- endfor -%}
+  </span>
+
+  {% if text_html != blank %}
+    <blockquote class="cwc_reviews__card-text cwc-rte">
+      {{ text_html }}
+    </blockquote>
+  {% endif %}
+
+  {% if name != blank or meta != blank or avatar != blank %}
+    <figcaption class="cwc_reviews__card-author">
+      {% if avatar != blank %}
+        <span class="cwc_reviews__card-avatar cwc_reviews__card-avatar--image">
+          <img
+            src="{{ avatar | image_url: width: 96 }}"
+            alt="{{ avatar_alt | default: name | escape }}"
+            loading="lazy"
+            width="36"
+            height="36"
+          >
+        </span>
+      {% elsif name != blank %}
+        <span class="cwc_reviews__card-avatar" aria-hidden="true">
+          {{- name | strip | slice: 0 | upcase | escape -}}
+        </span>
+      {% endif %}
+
+      <span class="cwc_reviews__card-author-body">
+        {% if name != blank %}
+          <span class="cwc_reviews__card-name">{{ name | escape }}</span>
+        {% endif %}
+        {% if meta != blank %}
+          <span class="cwc_reviews__card-location">{{ meta | escape }}</span>
+        {% endif %}
+      </span>
+    </figcaption>
+  {% endif %}
+</figure>

@@ -1,9 +1,13 @@
 /* ==============================
    CWC Trust Bar
+   Styled to _theme-styles/estates-brand-tokens.md: tint band, 1px dividers,
+   line icons, heading-font titles over small muted support copy. No shadows.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_trust-bar {
+  --tb-gutter: 48px;
+
   background-color: var(--section-bg);
   color: var(--text-color);
   font-family: var(--cwc-font-body);
@@ -14,9 +18,9 @@
 }
 
 .cwc_trust-bar__container {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--tb-gutter);
 }
 
 /* === Grid === */
@@ -29,9 +33,13 @@
 .cwc_trust-bar__card {
   display: flex;
   align-items: center;
-  gap: 0.875rem;
-  padding: var(--padding-top) 2rem var(--padding-bottom);
+  gap: 14px;
+  padding: var(--padding-top) 28px var(--padding-bottom);
   border-right: 1px solid var(--border-color);
+}
+
+.cwc_trust-bar__card:first-child {
+  padding-left: 0;
 }
 
 /* no rule against the container edge */
@@ -40,7 +48,7 @@
   border-right: none;
 }
 
-/* === Card Icon === */
+/* === Card Icon (line icon, 1.5 stroke) === */
 .cwc_trust-bar__card-icon,
 .cwc_trust-bar__card-image {
   display: flex;
@@ -56,6 +64,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  stroke-width: 1.5;
 }
 
 .cwc_trust-bar__card-image img {
@@ -63,22 +72,23 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 0;
 }
 
 /* === Card Text === */
 .cwc_trust-bar__card-title {
-  font-size: 0.8125rem;
-  /* 13px */
-  font-weight: 600;
+  margin-bottom: 4px;
+  font-family: var(--cwc-font-heading);
+  font-size: 17px;
+  font-weight: 500;
   line-height: 1.3;
-  margin-bottom: 2px;
   color: var(--text-color);
 }
 
 .cwc_trust-bar__card-text {
-  font-size: 0.75rem;
-  /* 12px */
-  line-height: 1.4;
+  font-family: var(--cwc-font-body);
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--subtext-color);
 }
 
@@ -86,17 +96,18 @@
    Tablet Responsive
    ============================== */
 @media screen and (max-width: 1024px) {
-  .cwc_trust-bar__container {
-    padding: 0 1.75rem;
+  .cwc_trust-bar {
+    --tb-gutter: 32px;
   }
 
   .cwc_trust-bar__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .cwc_trust-bar__card {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .cwc_trust-bar__card,
+  .cwc_trust-bar__card:first-child {
+    padding-left: 16px;
+    padding-right: 16px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
   }
@@ -112,8 +123,8 @@
 }
 
 @media screen and (max-width: 991px) {
-  .cwc_trust-bar__container {
-    padding: 0 1.25rem;
+  .cwc_trust-bar {
+    --tb-gutter: 24px;
   }
 }
 
@@ -121,22 +132,23 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
-  .cwc_trust-bar__container {
-    padding: 0 1rem;
+  .cwc_trust-bar {
+    --tb-gutter: 16px;
   }
 
-  .cwc_trust-bar__card {
+  .cwc_trust-bar__card,
+  .cwc_trust-bar__card:first-child {
     flex-direction: column;
     text-align: center;
-    gap: 0.5rem;
-    padding: var(--padding-top-mobile) 0.75rem var(--padding-bottom-mobile);
+    gap: 8px;
+    padding: var(--padding-top-mobile) 12px var(--padding-bottom-mobile);
   }
 
   .cwc_trust-bar__card-title {
-    font-size: 0.75rem;
+    font-size: 15px;
   }
 
   .cwc_trust-bar__card-text {
-    font-size: 0.6875rem;
+    font-size: 13px;
   }
 }

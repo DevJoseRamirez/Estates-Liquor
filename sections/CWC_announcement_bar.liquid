@@ -1,10 +1,10 @@
 {% style %}
   #cwc_announcement-bar-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#0E2119' }};
+    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
     --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C9974A' }};
-    --arrow-color: {{ section.settings.arrow_color | default: '#C9974A' }};
-    --text-size: {{ section.settings.text_size | default: 14 }}px;
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
+    --arrow-color: {{ section.settings.arrow_color | default: '#E9A23B' }};
+    --text-size: {{ section.settings.text_size | default: 11 }}px;
     --padding-top: {{ section.settings.padding_top | default: 10 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 10 | times: 0.5 }}px;
@@ -50,6 +50,7 @@
 
       <div class="cwc_announcement-bar__track" {% if rotates %}aria-live="off"{% endif %}>
         {% assign slide_index = 0 %}
+        {%- assign cwc_dot = '<span class="cwc_announcement-bar__dot" aria-hidden="true">&middot;</span>' -%}
         {% for block in section.blocks %}
           {% case block.type %}
             {% when 'announcement' %}
@@ -68,11 +69,11 @@
                 >
                   {% if block.settings.link != blank %}
                     <a href="{{ block.settings.link }}" class="cwc_announcement-bar__text cwc_announcement-bar__text--link cwc-rte"{% if slide_index != 1 %} tabindex="-1"{% endif %}>
-                      {{ block.settings.text }}
+                      {{ block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot }}
                     </a>
                   {% else %}
                     <div class="cwc_announcement-bar__text cwc-rte">
-                      {{ block.settings.text }}
+                      {{ block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot }}
                     </div>
                   {% endif %}
                 </div>
@@ -140,7 +141,7 @@
       "max": 20,
       "step": 1,
       "unit": "px",
-      "default": 14
+      "default": 11
     },
     {
       "type": "header",
@@ -150,7 +151,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#0E2119"
+      "default": "#14281D"
     },
     {
       "type": "color",
@@ -162,13 +163,13 @@
       "type": "color",
       "id": "bold_color",
       "label": "Bold And Link Color",
-      "default": "#C9974A"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "arrow_color",
       "label": "Arrow Color",
-      "default": "#C9974A"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

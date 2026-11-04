@@ -1,14 +1,14 @@
 {% style %}
   #cwc_related-products-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#0A1F12' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#C4933F' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#C4933F' }};
-    --meta-color: {{ section.settings.meta_color | default: '#9A9A9A' }};
+    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#F2EFE8' }};
-    --button-bg: {{ section.settings.button_bg_color | default: '#0A1F12' }};
-    --border-color: {{ section.settings.border_color | default: '#E0DDD6' }};
+    --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
     --columns: {{ section.settings.columns | default: 4 }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
@@ -112,8 +112,8 @@
               assign badge_label = ''
               assign badge_style = ''
               if related.compare_at_price > related.price
-                assign discount = related.compare_at_price | minus: related.price | times: 100 | divided_by: related.compare_at_price
-                assign badge_label = '-' | append: discount | append: '%'
+                assign saving = related.compare_at_price | minus: related.price | money_without_trailing_zeros
+                assign badge_label = 'Save ' | append: saving
                 assign badge_style = 'sale'
               elsif related.tags contains 'Allocated' or related.tags contains 'allocated'
                 assign badge_label = 'Allocated'
@@ -317,31 +317,31 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#0A1F12"
+      "default": "#14281D"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#C4933F"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "meta_color",
       "label": "Meta Color",
-      "default": "#9A9A9A"
+      "default": "#5C5C57"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#E0DDD6"
+      "default": "#DEDED8"
     },
     {
       "type": "header",
@@ -357,13 +357,13 @@
       "type": "color",
       "id": "card_media_bg_color",
       "label": "Card Image Background Color",
-      "default": "#F2EFE8"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_bg_color",
       "label": "Add To Cart Button Color",
-      "default": "#0A1F12"
+      "default": "#E9A23B"
     },
     {
       "type": "header",

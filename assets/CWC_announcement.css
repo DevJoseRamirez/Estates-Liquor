@@ -1,26 +1,35 @@
 /* ==============================
    CWC Announcement
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   green bar, white 11px uppercase tracked text, amber middle-dot separators,
+   36px desktop / 32px mobile, no gradients.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_announcement {
-  font-size: 16px;
-  /* section anchor — all type below is em relative to this */
+  --an-font-body: var(--cwc-font-body);
+  --an-height: 36px;
+
   position: relative;
   background-color: var(--section-bg);
   color: var(--text-color);
-  font-family: var(--cwc-font-body);
+  font-family: var(--an-font-body);
   text-align: center;
 }
 
+/* Flat colour only (spec: no gradients). The setting is kept so saved data stays valid. */
 .cwc_announcement--gradient {
-  background: linear-gradient(90deg, var(--section-bg) 0%, var(--section-bg-end) 100%);
+  background: var(--section-bg);
 }
 
 /* === Inner Wrapper (holds padding so the full bar is clickable when linked) === */
 .cwc_announcement__inner,
 .cwc_announcement__link {
-  display: block;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--an-height);
   padding-top: var(--padding-top);
   padding-bottom: var(--padding-bottom);
 }
@@ -37,57 +46,70 @@
 }
 
 .cwc_announcement__link:focus-visible {
-  outline: 2px solid var(--text-color);
-  outline-offset: -2px;
+  outline: 2px solid var(--highlight-color);
+  outline-offset: -3px;
 }
 
 .cwc_announcement__container {
-  max-width: 1300px;
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 48px;
+  box-sizing: border-box;
 }
 
 /* Symmetric inset keeps the text optically centered next to the close button */
 .cwc_announcement--dismissible .cwc_announcement__container {
-  padding-right: 44px;
-  padding-left: 44px;
+  padding-right: 48px;
+  padding-left: 48px;
 }
 
 /* === Announcement Text === */
 .cwc_announcement__text p {
-  font-size: 0.875em;
-  /* 14px */
-  letter-spacing: 0.2px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   line-height: 1.4;
+  text-transform: uppercase;
   margin: 0;
   color: inherit;
 }
 
 .cwc_announcement__text strong {
   color: var(--highlight-color);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cwc_announcement__text a {
   color: inherit;
 }
 
-/* === Close Button === */
+/* Middle-dot separators between items */
+.cwc_announcement__dot {
+  display: inline-block;
+  margin: 0 0.6em;
+  color: var(--highlight-color);
+  font-weight: 700;
+}
+
+/* === Close Button (44px touch target) === */
 .cwc_announcement__close {
   position: absolute;
   top: 50%;
-  right: 16px;
+  right: 4px;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 100%;
+  max-height: 44px;
   padding: 0;
   border: 0;
+  border-radius: 0;
   background: none;
   color: var(--text-color);
-  opacity: 0.55;
+  opacity: 0.6;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -97,13 +119,15 @@
 }
 
 .cwc_announcement__close:focus-visible {
-  outline: 2px solid var(--text-color);
-  outline-offset: 0;
+  outline: 2px solid var(--highlight-color);
+  outline-offset: -3px;
   opacity: 1;
 }
 
 .cwc_announcement__close svg {
   display: block;
+  width: 12px;
+  height: 12px;
 }
 
 /* === Dismissed State === */
@@ -112,24 +136,33 @@
 }
 
 /* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_announcement__container {
+    padding: 0 20px;
+  }
+}
+
+/* ==============================
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
-  /* rescale the whole section from one anchor */
   .cwc_announcement {
-    font-size: 14px;
+    --an-height: 32px;
   }
 
   .cwc_announcement__container {
-    padding: 0 12px;
+    padding: 0 16px;
   }
 
   .cwc_announcement--dismissible .cwc_announcement__container {
-    padding-right: 36px;
-    padding-left: 36px;
+    padding-right: 40px;
+    padding-left: 40px;
   }
 
   .cwc_announcement__close {
-    right: 8px;
+    right: 0;
+    width: 40px;
   }
 }

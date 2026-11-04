@@ -1,5 +1,8 @@
 /* ==============================
    CWC Brand Marquee
+   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
+   uppercase tracked label, heading-font brand names at 500, square amber
+   separators, hard edges (no gradient fade masks).
    ============================== */
 
 /* === Section Wrapper === */
@@ -30,15 +33,16 @@
   padding: var(--padding-top) 20px var(--padding-bottom);
   background-color: var(--label-bg);
   color: var(--label-text-color);
-  font-size: 0.625em;
-  /* 10px */
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-size: 0.6875em;
+  /* 11px */
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* === Viewport (clips the track and fades both edges) === */
+/* === Viewport (clips the track) === */
 .cwc_brand-marquee__viewport {
   flex: 1 1 auto;
   min-width: 0;
@@ -48,8 +52,6 @@
 
 .cwc_brand-marquee--scroll .cwc_brand-marquee__viewport {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%);
 }
 
 /* === Track === */
@@ -97,16 +99,17 @@
   align-items: center;
   flex-shrink: 0;
   font-family: var(--cwc-font-heading);
-  font-size: 0.9375em;
-  /* 15px */
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 1.0625em;
+  /* 17px */
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
   white-space: nowrap;
   color: inherit;
   text-decoration: none;
 }
 
-/* gold dot sits centred in the gap that follows each brand */
+/* square amber marker sits centred in the gap that follows each brand */
 .cwc_brand-marquee__item::after {
   content: '';
   position: absolute;
@@ -115,7 +118,7 @@
   transform: translate(50%, -50%);
   width: 4px;
   height: 4px;
-  border-radius: 50%;
+  border-radius: 0;
   background-color: var(--highlight-color);
 }
 
@@ -125,6 +128,11 @@
 
 a.cwc_brand-marquee__item:hover {
   color: var(--highlight-color);
+}
+
+a.cwc_brand-marquee__item:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 /* === Reduced Motion === */
@@ -155,10 +163,5 @@ a.cwc_brand-marquee__item:hover {
   .cwc_brand-marquee__viewport {
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
-  }
-
-  .cwc_brand-marquee--scroll .cwc_brand-marquee__viewport {
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
   }
 }
