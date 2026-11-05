@@ -61,21 +61,81 @@
     }, 1600);
   }
 
+  /* Gallery: a scroll-snap track of slides. Thumbs (desktop) and progress bars
+     (tablet/mobile) follow the track as it scrolls or swipes; a thumb click or
+     a variant change scrolls the track to that image. */
   function initGallery(sectionEl) {
-    var main = sectionEl.querySelector("[data-cwc-media-image]");
-    var thumbs = sectionEl.querySelectorAll("[data-cwc-thumb]");
-    if (!main || !thumbs.length) return;
+    var track = sectionEl.querySelector("[data-cwc-gallery-track]");
+    if (!track) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll("[data-cwc-slide]"));
+    var thumbs = Array.prototype.slice.call(sectionEl.querySelectorAll("[data-cwc-thumb]"));
+    var dots = Array.prototype.slice.call(sectionEl.querySelectorAll("[data-cwc-dot]"));
+    if (slides.length < 2) return;
+
+    var current = 0;
+
+    function setActive(index) {
+      current = index;
+      thumbs.forEach(function (thumb, i) {
+        thumb.classList.toggle("cwc_product-buy-box__thumb--active", i === index);
+        if (i === index) {
+          thumb.setAttribute("aria-current", "true");
+        } else {
+          thumb.removeAttribute("aria-current");
+        }
+      });
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle("cwc_product-buy-box__dot--active", i === index);
+      });
+    }
+
+    function goTo(index) {
+      var slide = slides[index];
+      if (!slide) return;
+      track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: "smooth" });
+      setActive(index);
+    }
 
     thumbs.forEach(function (thumb) {
       thumb.addEventListener("click", function () {
-        var full = thumb.dataset.full;
-        if (full) main.src = full;
-        thumbs.forEach(function (t) {
-          t.classList.remove("cwc_product-buy-box__thumb--active");
-        });
-        thumb.classList.add("cwc_product-buy-box__thumb--active");
+        goTo(parseInt(thumb.dataset.index, 10) || 0);
       });
     });
+
+    var frame = null;
+    track.addEventListener(
+      "scroll",
+      function () {
+        if (frame) return;
+        frame = window.requestAnimationFrame(function () {
+          frame = null;
+          var width = track.clientWidth || 1;
+          setActive(Math.round(track.scrollLeft / width));
+        });
+      },
+      { passive: true }
+    );
+
+    /* A resize changes the slide width, so re-pin the slide being shown */
+    window.addEventListener("resize", function () {
+      var slide = slides[current];
+      if (slide) track.scrollLeft = slide.offsetLeft - track.offsetLeft;
+    });
+
+    /* Show the variant's own image when one is picked */
+    var select = sectionEl.querySelector("[data-cwc-variant-select]");
+    if (select) {
+      select.addEventListener("change", function () {
+        var option = select.options[select.selectedIndex];
+        var mediaId = option && option.dataset.mediaId;
+        if (!mediaId) return;
+        var index = slides.findIndex(function (s) {
+          return s.dataset.mediaId === String(mediaId);
+        });
+        if (index > -1) goTo(index);
+      });
+    }
   }
 
   function initQuantity(sectionEl) {
@@ -749,6 +809,169 @@
     }
   }
 
+  /* ---------- Delivery Estimate ----------
+     Dates are plain calendar days in store (Pacific) time, held as UTC
+     midnights so the math never shifts with the shopper's own time zone. */
+  var STORE_TIME_ZONE = "America/Los_Angeles";
+
+  function initDeliveryEstimate(sectionEl) {
+    var estimate = sectionEl.querySelector("[data-delivery-estimate]");
+    if (!estimate) return;
+    var dateEl = estimate.querySelector("[data-estimate-date]");
+    if (!dateEl) return;
+
+    var data = estimate.dataset;
+    var closed = (data.closedDates || "").split(",").filter(function (date) {
+      return /^\d{4}-\d{2}-\d{2}$/.test(date);
+    });
+    var isBusinessDay = function (date) {
+      var day = date.getUTCDay();
+      return day !== 0 && day !== 6 && closed.indexOf(date.toISOString().slice(0, 10)) === -1;
+    };
+
+    // Ordered on a business day before the cutoff: processing counts from
+    // today, otherwise from the next business day
+    var now = storeNow();
+    var start = now.date;
+    if (!isBusinessDay(start) || now.hour >= (parseInt(data.cutoffHour, 10) || 0)) {
+      start = addBusinessDays(start, 1, isBusinessDay);
+    }
+
+    var processingMin = parseInt(data.processingMin, 10) || 0;
+    var processingMax = Math.max(parseInt(data.processingMax, 10) || 0, processingMin);
+    var transitMin = parseInt(data.transitMin, 10) || 0;
+    var transitMax = Math.max(parseInt(data.transitMax, 10) || 0, transitMin);
+
+    var earliest = addBusinessDays(addBusinessDays(start, processingMin, isBusinessDay), transitMin, isBusinessDay);
+    var latest = addBusinessDays(addBusinessDays(start, processingMax, isBusinessDay), transitMax, isBusinessDay);
+
+    var format = function (date) {
+      return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+    };
+    dateEl.textContent =
+      earliest.getTime() === latest.getTime() ? format(latest) : format(earliest) + " \u2013 " + format(latest);
+    estimate.hidden = false;
+  }
+
+  function storeNow() {
+    var parts = {};
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: STORE_TIME_ZONE,
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      hourCycle: "h23",
+    })
+      .formatToParts(new Date())
+      .forEach(function (part) {
+        parts[part.type] = parseInt(part.value, 10);
+      });
+    return {
+      date: new Date(Date.UTC(parts.year, parts.month - 1, parts.day)),
+      hour: parts.hour,
+    };
+  }
+
+  // Counts forward over business days only; the start day itself never counts
+  function addBusinessDays(date, days, isBusinessDay) {
+    var result = new Date(date);
+    var added = 0;
+    while (added < days) {
+      result.setUTCDate(result.getUTCDate() + 1);
+      if (isBusinessDay(result)) added += 1;
+    }
+    return result;
+  }
+
+  /* ---------- Gallery Testimonial ---------- */
+
+  // Judge.me's public review feed (the same one CWC Product Reviews reads); no API key
+  var REVIEW_FEED_URL = "https://cdn.judge.me/reviews/reviews_for_widget";
+  // The testimonial only shows on desktop; matches the CSS breakpoint
+  var TESTIMONIAL_QUERY = "(min-width: 1025px)";
+
+  function initTestimonial(sectionEl) {
+    var card = sectionEl.querySelector(".cwc_product-buy-box__testimonial[data-product-review]");
+    if (!card || !window.fetch) return;
+
+    // Hidden below desktop, so only fetch once the screen is wide enough
+    var query = window.matchMedia(TESTIMONIAL_QUERY);
+    if (query.matches) {
+      loadProductReview(card);
+      return;
+    }
+    var onChange = function (event) {
+      if (!event.matches) return;
+      query.removeEventListener("change", onChange);
+      loadProductReview(card);
+    };
+    query.addEventListener("change", onChange);
+  }
+
+  function loadProductReview(card) {
+    var domain = card.dataset.shopDomain;
+    var minRating = parseFloat(card.dataset.minRating) || 4;
+    var params = new URLSearchParams({
+      url: domain,
+      shop_domain: domain,
+      platform: "shopify",
+      product_id: card.dataset.productId,
+      page: "1",
+      per_page: "20",
+    });
+
+    fetch(REVIEW_FEED_URL + "?" + params.toString())
+      .then(function (response) {
+        if (!response.ok) throw new Error("Judge.me feed " + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        var match = (data.reviews || []).map(normalizeReview).find(function (review) {
+          return review.rating >= minRating && review.body && review.author;
+        });
+        if (match) applyReview(card, match);
+      })
+      .catch(function () {
+        // Feed unreachable: keep the default review
+      });
+  }
+
+  // Judge.me sends names HTML-escaped and bodies as HTML; reduce both to plain text
+  function normalizeReview(review) {
+    var decode = function (html) {
+      return new DOMParser()
+        .parseFromString(html || "", "text/html")
+        .body.textContent.replace(/\s+/g, " ")
+        .trim();
+    };
+    return {
+      rating: parseFloat(review.rating) || 0,
+      author: review.is_anonymous_reviewer ? "" : decode(review.reviewer_name),
+      verified: review.verified_buyer === true,
+      body: decode(review.body_html),
+    };
+  }
+
+  function applyReview(card, review) {
+    var stars = card.querySelector("[data-testimonial-stars]");
+    var quote = card.querySelector("[data-testimonial-quote]");
+    var name = card.querySelector("[data-testimonial-name]");
+    var photo = card.querySelector("[data-testimonial-photo]");
+    var verified = card.querySelector("[data-testimonial-verified]");
+
+    if (stars) {
+      stars.style.setProperty("--rating", Math.min(review.rating * 20, 100) + "%");
+      stars.setAttribute("aria-label", review.rating + " out of 5 stars");
+    }
+    if (quote) quote.textContent = "\u201C" + review.body + "\u201D";
+    if (name) name.textContent = review.author;
+    // The default photo belongs to the default reviewer
+    if (photo) photo.remove();
+    if (verified) verified.hidden = !review.verified;
+    card.hidden = false;
+  }
+
   function initSection(sectionEl) {
     if (!sectionEl || sectionEl.dataset.cwcBuyBoxInit === "true") return;
     sectionEl.dataset.cwcBuyBoxInit = "true";
@@ -758,6 +981,8 @@
     initVariantSelect(sectionEl);
     initAddToCart(sectionEl);
     initFbt(sectionEl);
+    initDeliveryEstimate(sectionEl);
+    initTestimonial(sectionEl);
   }
 
   function initAllSections() {

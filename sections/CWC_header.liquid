@@ -1,27 +1,57 @@
 {% comment %}
-  The drawer and overlay are siblings of the header, not children — nesting a
-  fixed drawer inside the sticky header would trap it in that header's
-  z-index: 500 stacking context. They are named in the selector below so the
-  section's variables still reach them.
+  Two rows: a top bar (logo, search, icons) and a nav row under it. A
+  top-level menu link with children opens a full-width mega panel.
+
+  The mobile menu is a sibling of the header, not a child. The header slides
+  on scroll with a transform, and a transformed ancestor becomes the containing
+  block for position:fixed children, which would pin the full-screen menu to
+  the header instead of the viewport. Both ids are named below so the section's
+  variables still reach the menu.
 {% endcomment %}
 {% style %}
   #cwc_header-{{ section.id }},
-  #cwc_header-drawer-{{ section.id }},
-  #cwc_header-overlay-{{ section.id }} {
+  #cwc_header-menu-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --text-color: {{ section.settings.text_color | default: '#3A3A36' }};
     --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
     --brand-color: {{ section.settings.brand_color | default: '#14281D' }};
-    --hover-bg: {{ section.settings.hover_bg_color | default: '#FBF1E4' }};
-    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
+    --promo-bg: {{ section.settings.promo_bg_color | default: '#F6F6F3' }};
+    --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#14281D' }};
+    --promo-label-text: {{ section.settings.promo_label_text_color | default: '#E9A23B' }};
     --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#14281D' }};
     --logo-width: {{ section.settings.logo_width | default: 150 }}px;
-    --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 150 }}px;
+    --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 130 }}px;
     --padding-top: {{ section.settings.padding_top | default: 15 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 15 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 15 | times: 0.5 }}px;
     --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 15 | times: 0.5 }}px;
+  }
+
+  #cwc_header-overlay-{{ section.id }} {
+    --overlay-color: {{ section.settings.search_overlay_color | default: '#14281D' }};
+    --overlay-opacity: {{ section.settings.search_overlay_opacity | default: 45 | divided_by: 100.0 }};
+  }
+
+  {% comment %}
+    The section wrapper is what sticks; the header inside it is only as tall as
+    itself. When a row slides away the wrapper keeps its full height, so the
+    wrapper ignores the pointer and only the header rows and the menu take
+    clicks, or the empty strip left behind would block the page beneath it.
+    The wrapper also turns overflow back on so the mega panel is not clipped.
+  {% endcomment %}
+  #shopify-section-{{ section.id }} {
+    position: {% if section.settings.enable_sticky %}sticky{% else %}relative{% endif %};
+    top: 0;
+    z-index: 500;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} > *:not(.cwc_header) {
+    pointer-events: auto;
   }
 {% endstyle %}
 
@@ -29,304 +59,348 @@
 {{ 'CWC_header.css' | asset_url | stylesheet_tag }}
 
 {% liquid
-  assign main_menu = section.settings.main_menu
+  assign desktop_menu = section.settings.main_menu
+  assign mobile_menu = section.settings.mobile_menu
+  if mobile_menu == blank or mobile_menu.links.size == 0
+    assign mobile_menu = desktop_menu
+  endif
+
   assign highlights = section.settings.highlight_links | downcase | split: ','
+
+  assign scroll_mode = section.settings.scroll_mode | default: 'hide_nav'
+
+  assign logo_alt = section.settings.logo_alt | default: shop.name
+  assign logo_sizes = section.settings.logo_width | default: 150 | append: 'px'
 %}
+
+{%- capture logo_markup -%}
+  {%- if section.settings.logo != blank -%}
+    <picture>
+      {%- if section.settings.logo_mobile != blank -%}
+        <source
+          media="(max-width: 991px)"
+          srcset="{{ section.settings.logo_mobile | image_url: width: 260 }} 1x, {{ section.settings.logo_mobile | image_url: width: 520 }} 2x"
+        >
+      {%- endif -%}
+      {{
+        section.settings.logo
+        | image_url: width: 600
+        | image_tag:
+          class: 'cwc_header__logo-image',
+          alt: logo_alt,
+          loading: 'eager',
+          widths: '200, 300, 450, 600',
+          sizes: logo_sizes
+      }}
+    </picture>
+  {%- else -%}
+    {%- if section.settings.show_logo_mark -%}
+      <svg class="cwc_header__logo-mark" viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+        <rect x="16" y="0" width="20" height="6" rx="2" />
+        <rect x="18" y="6" width="16" height="11" />
+        <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+      </svg>
+    {%- endif -%}
+    <span class="cwc_header__wordmark">
+      {%- if section.settings.wordmark_top != blank -%}
+        <span class="cwc_header__wordmark-top">{{ section.settings.wordmark_top | escape }}</span>
+      {%- endif -%}
+      <span class="cwc_header__wordmark-rule" aria-hidden="true"></span>
+      {%- if section.settings.wordmark_bottom != blank -%}
+        <span class="cwc_header__wordmark-bottom">{{ section.settings.wordmark_bottom | escape }}</span>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture cart_icon -%}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 10a4 4 0 0 1-8 0" />
+  </svg>
+{%- endcapture -%}
+
+{%- capture search_icon -%}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+    <circle cx="11" cy="11" r="7" />
+    <path d="M20 20l-3.5-3.5" />
+  </svg>
+{%- endcapture -%}
+
+{%- capture menu_icon -%}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+{%- endcapture -%}
 
 <header
   id="cwc_header-{{ section.id }}"
-  class="cwc_header{% if section.settings.enable_sticky %} cwc_header--sticky{% endif %}{% if section.settings.show_border %} cwc_header--bordered{% endif %}"
+  class="cwc_header cwc_header--mode-{{ scroll_mode }}{% if section.settings.enable_sticky %} cwc_header--sticky{% endif %}{% if section.settings.show_border %} cwc_header--bordered{% endif %}"
   data-section-id="{{ section.id }}"
+  data-sticky="{{ section.settings.enable_sticky }}"
+  data-hide-on-scroll="{{ section.settings.hide_on_scroll }}"
+  data-scroll-mode="{{ scroll_mode }}"
 >
-  <div class="cwc_header__container">
-    <div class="cwc_header__inner">
+  {% comment %}
+    Top bar: logo, search, icons. On scroll down either the nav row tucks
+    under this bar (keep logo and search) or this bar slides away (keep menu).
+  {% endcomment %}
+  <div class="cwc_header__top" data-cwc-header-top>
+    <div class="cwc_header__container cwc_header__top-inner">
 
-      {% comment %}
-        Menu toggle sits first in the DOM so it lands in the left column once
-        the header goes three-up. Hidden on desktop, where the nav takes over.
-      {% endcomment %}
-      <button type="button" class="cwc_header__icon cwc_header__toggle" data-cwc-drawer-open aria-label="Open menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+      <div class="cwc_header__mobile-actions">
+        <button
+          type="button"
+          class="cwc_header__icon"
+          data-cwc-menu-open
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="cwc_header-menu-{{ section.id }}"
+        >
+          {{ menu_icon }}
+        </button>
 
-      {% comment %} Logo {% endcomment %}
-      <a href="{{ routes.root_url }}" class="cwc_header__logo">
-        {% if section.settings.logo != blank %}
-          <img
-            src="{{ section.settings.logo | image_url: width: 500 }}"
-            alt="{{ section.settings.logo_alt | default: shop.name | escape }}"
-            loading="eager"
-            width="150"
-            height="50"
+        {% if section.settings.show_search %}
+          <button
+            type="button"
+            class="cwc_header__icon"
+            data-cwc-menu-open
+            data-cwc-menu-search-focus
+            aria-label="Search"
+            aria-expanded="false"
+            aria-controls="cwc_header-menu-{{ section.id }}"
           >
-        {% else %}
-          {% comment %} Bottle mark + stacked wordmark when no logo is set {% endcomment %}
-          {% if section.settings.show_logo_mark %}
-            <svg class="cwc_header__logo-mark" viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-              <rect x="16" y="0" width="20" height="6" rx="2" />
-              <rect x="18" y="6" width="16" height="11" />
-              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
-            </svg>
-          {% endif %}
-
-          <span class="cwc_header__wordmark">
-            {% if section.settings.wordmark_top != blank %}
-              <span class="cwc_header__wordmark-top">{{ section.settings.wordmark_top }}</span>
-            {% endif %}
-            <span class="cwc_header__wordmark-rule" aria-hidden="true"></span>
-            {% if section.settings.wordmark_bottom != blank %}
-              <span class="cwc_header__wordmark-bottom">{{ section.settings.wordmark_bottom }}</span>
-            {% endif %}
-          </span>
+            {{ search_icon }}
+          </button>
         {% endif %}
+      </div>
+
+      {% comment %} Desktop: shown once the nav row has tucked away, brings it back {% endcomment %}
+      {% if section.settings.hide_on_scroll and scroll_mode == 'hide_nav' and desktop_menu != blank %}
+        <button
+          type="button"
+          class="cwc_header__nav-toggle"
+          data-cwc-nav-toggle
+          aria-label="Show menu"
+          aria-expanded="false"
+          aria-controls="cwc_header-nav-{{ section.id }}"
+        >
+          {{ menu_icon }}
+        </button>
+      {% endif %}
+
+      <a href="{{ routes.root_url }}" class="cwc_header__logo" aria-label="{{ shop.name | escape }} home">
+        {{ logo_markup }}
       </a>
 
       {% comment %}
-        Desktop nav. Second-level links in the chosen Shopify menu become the
-        mega panel; a top-level link with no children renders as a plain link.
+        A plain GET form to the search page, so searching works with no JS.
+        CWC_header.js adds the suggestions dropdown on top of it.
       {% endcomment %}
-      {% if main_menu != blank and main_menu.links.size > 0 %}
-        <nav class="cwc_header__nav" aria-label="{{ section.settings.nav_label | escape | default: 'Main' }}">
-          {% for link in main_menu.links %}
+      {% if section.settings.show_search %}
+        <div class="cwc_header__search" data-cwc-search data-predictive="{{ section.settings.enable_predictive }}">
+          <form action="{{ routes.search_url }}" method="get" role="search" class="cwc_header__search-form">
+            <input type="hidden" name="type" value="product">
+            <input type="hidden" name="options[prefix]" value="last">
+            <label class="cwc_header__visually-hidden" for="cwc_header-search-{{ section.id }}">Search the store</label>
+            <input
+              id="cwc_header-search-{{ section.id }}"
+              type="search"
+              name="q"
+              class="cwc_header__search-input"
+              data-cwc-search-input
+              value="{{ search.terms | escape }}"
+              placeholder="{{ section.settings.search_placeholder | default: 'Search bottles, brands, collections' | escape }}"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <button
+              type="submit"
+              class="cwc_header__search-submit"
+              aria-label="{{ section.settings.search_button_label | default: 'Search' | escape }}"
+            >
+              {{ search_icon }}
+            </button>
+          </form>
+          <div class="cwc_header__search-results" id="cwc_header-search-results-{{ section.id }}" data-cwc-search-results hidden></div>
+          <span class="cwc_header__visually-hidden" data-cwc-search-status aria-live="polite"></span>
+        </div>
+      {% endif %}
+
+      <div class="cwc_header__icons">
+        {% if section.settings.show_account %}
+          <a
+            href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.root_url }}{% endif %}"
+            class="cwc_header__icon cwc_header__icon--account{% if section.settings.show_icon_labels %} cwc_header__icon--labeled{% endif %}"
+            aria-label="{{ section.settings.account_label | default: 'Account' | escape }}"
+          >
+            <span class="cwc_header__icon-glyph">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1" />
+              </svg>
+            </span>
+            {% if section.settings.show_icon_labels %}
+              <span class="cwc_header__icon-label" aria-hidden="true">{{ section.settings.account_label | default: 'Account' | escape }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        {% comment %}
+          A real link to /cart. When the theme's cart drawer is listening, the
+          JS opens that instead, so the link still works if the drawer never loads.
+        {% endcomment %}
+        {% if section.settings.show_cart %}
+          <a href="{{ routes.cart_url }}" class="cwc_header__icon cwc_header__icon--cart{% if section.settings.show_icon_labels %} cwc_header__icon--labeled{% endif %}" data-cwc-cart aria-label="Cart, {{ cart.item_count }} items">
+            <span class="cwc_header__icon-glyph">
+              {{ cart_icon }}
+              <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+            </span>
+            {% if section.settings.show_icon_labels %}
+              <span class="cwc_header__icon-label" aria-hidden="true">{{ section.settings.cart_label | default: 'Cart' | escape }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  {% comment %}
+    Desktop nav. A top-level link with children opens a mega panel: its
+    children become column headings and their children the links under them.
+    A "Mega Menu Panel" block, matched by title, adds the column footer links
+    and the featured tile.
+  {% endcomment %}
+  {% if desktop_menu != blank and desktop_menu.links.size > 0 %}
+    <nav class="cwc_header__nav" id="cwc_header-nav-{{ section.id }}" aria-label="{{ section.settings.nav_label | default: 'Main' | escape }}">
+      <div class="cwc_header__container cwc_header__nav-inner">
+        <ul class="cwc_header__nav-list">
+          {% for link in desktop_menu.links %}
             {% liquid
-              assign is_highlight = false
               assign link_key = link.title | downcase | strip
+              assign is_highlight = false
               for entry in highlights
-                # filters are not allowed inside an if, so strip first
                 assign entry_key = entry | strip
                 if entry_key == link_key
                   assign is_highlight = true
                 endif
               endfor
+
+              assign panel_block = nil
+              for block in section.blocks
+                if block.type == 'mega_panel'
+                  assign block_key = block.settings.menu_item | downcase | strip
+                  if block_key == link_key
+                    assign panel_block = block
+                    break
+                  endif
+                endif
+              endfor
+
+              assign has_promo = false
+              if panel_block != nil
+                if panel_block.settings.promo_heading != blank or panel_block.settings.promo_text != blank or panel_block.settings.promo_image != blank
+                  assign has_promo = true
+                endif
+              endif
+
+              assign has_panel = false
+              if link.links.size > 0 or has_promo
+                assign has_panel = true
+              endif
+
+              assign panel_id = 'cwc_header-mega-' | append: section.id | append: '-' | append: forloop.index
             %}
 
-            {% if link.links.size > 0 %}
-              <div class="cwc_header__nav-item">
-                <a
-                  href="{{ link.url }}"
-                  class="cwc_header__nav-link{% if is_highlight %} cwc_header__nav-link--highlight{% endif %}"
-                  aria-haspopup="true"
-                >
-                  {{ link.title }}
+            <li class="cwc_header__nav-item{% if has_panel %} cwc_header__nav-item--has-mega{% endif %}" data-cwc-nav-item>
+              <a
+                href="{{ link.url }}"
+                class="cwc_header__nav-link{% if is_highlight %} cwc_header__nav-link--highlight{% endif %}{% if link.active or link.child_active %} cwc_header__nav-link--current{% endif %}"
+                {% if has_panel %}aria-controls="{{ panel_id }}"{% endif %}
+                {% if link.current %}aria-current="page"{% endif %}
+              >
+                {{ link.title | escape }}
+                {% if has_panel %}
                   <span class="cwc_header__chevron" aria-hidden="true"></span>
-                </a>
+                {% endif %}
+              </a>
 
-                <div class="cwc_header__mega">
-                  <span class="cwc_header__mega-title">{{ link.title }}</span>
-                  <ul class="cwc_header__mega-list">
-                    {% for child in link.links %}
-                      <li><a href="{{ child.url }}">{{ child.title }}</a></li>
-                    {% endfor %}
-                    <li>
-                      <a href="{{ link.url }}" class="cwc_header__mega-all">
-                        {{ section.settings.view_all_label | default: 'View All' }} {{ link.title }} &rarr;
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            {% else %}
-              <div class="cwc_header__nav-item">
-                <a
-                  href="{{ link.url }}"
-                  class="cwc_header__nav-link{% if is_highlight %} cwc_header__nav-link--highlight{% endif %}"
-                >
-                  {{ link.title }}
-                </a>
-              </div>
-            {% endif %}
+              {% if has_panel %}
+                {% render 'CWC_header-mega',
+                  link: link,
+                  block: panel_block,
+                  panel_id: panel_id,
+                  has_promo: has_promo,
+                  view_all_label: section.settings.view_all_label
+                %}
+              {% endif %}
+            </li>
           {% endfor %}
-        </nav>
-      {% endif %}
+        </ul>
 
-      {% comment %} Icons {% endcomment %}
-      <div class="cwc_header__icons">
-        {% comment %}
-          A real link to the search page. JS upgrades it into the predictive
-          dropdown below, so with scripts blocked it still reaches search.
-        {% endcomment %}
-        {% if section.settings.show_search %}
-          <a
-            href="{{ routes.search_url }}"
-            class="cwc_header__icon"
-            aria-label="Search"
-            data-cwc-search-open
-            aria-expanded="false"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M20 20l-3.5-3.5" />
-            </svg>
-          </a>
-        {% endif %}
-
-        {% if section.settings.show_account %}
-          <a
-            href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.root_url }}{% endif %}"
-            class="cwc_header__icon"
-            aria-label="Account"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1" />
-            </svg>
-          </a>
-        {% endif %}
-
-        {% comment %}
-          Stays a real link to /cart. When the theme's cart type is Drawer the
-          hook below lets the JS intercept the click and open that drawer
-          instead — so it still works if the drawer never loads.
-        {% endcomment %}
+        {% comment %} Only shown once the top bar has slid away, so the cart stays reachable {% endcomment %}
         {% if section.settings.show_cart %}
-          <a
-            href="{{ routes.cart_url }}"
-            class="cwc_header__icon"
-            aria-label="Cart"
-            {% if settings.cart_type == 'drawer' %}
-              data-cwc-cart-drawer
-              aria-haspopup="dialog"
-            {% endif %}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
-              {{ cart.item_count }}
-            </span>
+          <a href="{{ routes.cart_url }}" class="cwc_header__icon cwc_header__nav-cart" data-cwc-cart aria-label="Cart, {{ cart.item_count }} items" tabindex="-1">
+            {{ cart_icon }}
+            <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
           </a>
         {% endif %}
       </div>
-
-    </div>
-
-    {% comment %}
-      Predictive search panel. The form is a plain GET to the search page, so
-      submitting works with no JS; the results below are fetched from
-      /search/suggest.json and rendered by CWC_header.js.
-    {% endcomment %}
-    {% if section.settings.show_search %}
-      <div class="cwc_header__search" data-cwc-search hidden>
-        <form
-          action="{{ routes.search_url }}"
-          method="get"
-          role="search"
-          class="cwc_header__search-form"
-        >
-          {% comment %}
-            The search page grid only lists products — keep results (and the
-            result count) to products, and match partial words as you type.
-          {% endcomment %}
-          <input type="hidden" name="type" value="product">
-          <input type="hidden" name="options[prefix]" value="last">
-          <span class="cwc_header__search-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M20 20l-3.5-3.5" />
-            </svg>
-          </span>
-
-          <input
-            type="search"
-            name="q"
-            class="cwc_header__search-input"
-            data-cwc-search-input
-            placeholder="{{ section.settings.search_placeholder | default: 'Search bottles, brands, collections' | escape }}"
-            aria-label="Search"
-            autocomplete="off"
-            autocorrect="off"
-            spellcheck="false"
-          >
-
-          <button
-            type="button"
-            class="cwc_header__search-close"
-            data-cwc-search-close
-            aria-label="Close search"
-          >
-            &times;
-          </button>
-
-          <button type="submit" class="cwc_header__search-submit">Search</button>
-        </form>
-
-        <div class="cwc_header__search-results" data-cwc-search-results></div>
-      </div>
-    {% endif %}
-  </div>
+    </nav>
+  {% endif %}
 </header>
 
-{% comment %} Mobile drawer — groups are native details so they open with no JS {% endcomment %}
-<div
-  id="cwc_header-drawer-{{ section.id }}"
-  class="cwc_header__drawer"
-  data-cwc-drawer
-  aria-label="Menu"
-  hidden
->
-  <div class="cwc_header__drawer-head">
-    <span class="cwc_header__drawer-title">{{ section.settings.drawer_title | default: 'Menu' }}</span>
-    <button type="button" class="cwc_header__drawer-close" data-cwc-drawer-close aria-label="Close menu">&times;</button>
-  </div>
+{% comment %}
+  Tints the page under the header while the search is in use or a mega panel
+  is open (each switched on in settings). A sibling of the
+  header for the same reason as the menu: the header's transform would pin a
+  fixed child to the header. JS sets its top edge to the header's bottom edge,
+  so the whole header stays clear and only the page below is dimmed.
+{% endcomment %}
+{% liquid
+  assign overlay_search = false
+  if section.settings.show_search and section.settings.enable_search_overlay
+    assign overlay_search = true
+  endif
+  assign overlay_mega = false
+  if section.settings.enable_mega_overlay and desktop_menu != blank
+    assign overlay_mega = true
+  endif
+%}
+{% if overlay_search or overlay_mega %}
+  <div
+    class="cwc_header__overlay"
+    id="cwc_header-overlay-{{ section.id }}"
+    data-cwc-search-overlay
+    data-search="{{ overlay_search }}"
+    data-mega="{{ overlay_mega }}"
+    aria-hidden="true"
+  ></div>
+{% endif %}
 
-  {% if main_menu != blank and main_menu.links.size > 0 %}
-    <div class="cwc_header__drawer-list">
-      {% for link in main_menu.links %}
-        {% if link.links.size > 0 %}
-          <details class="cwc_header__drawer-group">
-            <summary class="cwc_header__drawer-parent">
-              {{ link.title }}
-              <span class="cwc_header__drawer-sign" aria-hidden="true"></span>
-            </summary>
-            <ul class="cwc_header__drawer-sub">
-              {% for child in link.links %}
-                <li><a href="{{ child.url }}">{{ child.title }}</a></li>
-              {% endfor %}
-              <li>
-                <a href="{{ link.url }}" class="cwc_header__drawer-all">
-                  {{ section.settings.view_all_label | default: 'View All' }} {{ link.title }} &rarr;
-                </a>
-              </li>
-            </ul>
-          </details>
-        {% else %}
-          <a href="{{ link.url }}" class="cwc_header__drawer-single">{{ link.title }}</a>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  <div class="cwc_header__drawer-footer">
-    {% if section.settings.drawer_menu != blank and section.settings.drawer_menu.links.size > 0 %}
-      {% for link in section.settings.drawer_menu.links %}
-        <a href="{{ link.url }}" class="cwc_header__drawer-foot-link">{{ link.title }}</a>
-      {% endfor %}
-    {% endif %}
-
-    {% if section.settings.drawer_note != blank %}
-      <p class="cwc_header__drawer-note">{{ section.settings.drawer_note }}</p>
-    {% endif %}
-  </div>
-</div>
-
-<div
-  id="cwc_header-overlay-{{ section.id }}"
-  class="cwc_header__overlay"
-  data-cwc-drawer-overlay
-  hidden
-></div>
+{% render 'CWC_header-mobile',
+  section: section,
+  nav_menu: mobile_menu,
+  highlights: highlights,
+  logo_markup: logo_markup,
+  cart_icon: cart_icon,
+  search_icon: search_icon
+%}
 
 <script src="{{ 'CWC_header.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
   "name": "CWC Header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
   "settings": [
     {
       "type": "header",
@@ -339,9 +413,16 @@
       "info": "Leave empty to use the text wordmark below."
     },
     {
+      "type": "image_picker",
+      "id": "logo_mobile",
+      "label": "Mobile Logo",
+      "info": "Optional. Uses the logo when blank."
+    },
+    {
       "type": "text",
       "id": "logo_alt",
-      "label": "Logo Alt Text"
+      "label": "Logo Alt Text",
+      "info": "Defaults to the store name."
     },
     {
       "type": "range",
@@ -361,8 +442,8 @@
       "max": 240,
       "step": 10,
       "unit": "px",
-      "default": 150,
-      "info": "Applies at 768px and below."
+      "default": 130,
+      "info": "Applies at 991px and below."
     },
     {
       "type": "checkbox",
@@ -385,13 +466,19 @@
     },
     {
       "type": "header",
-      "content": "Navigation"
+      "content": "Menus"
     },
     {
       "type": "link_list",
       "id": "main_menu",
-      "label": "Main Menu",
-      "info": "Top-level links with sub-links become dropdown panels. Set this up in Online Store > Navigation."
+      "label": "Desktop Menu",
+      "info": "Top level = nav links. Second level = mega panel column headings. Third level = links under each heading. A menu with only two levels shows the second level as one list across the panel."
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_menu",
+      "label": "Mobile Menu",
+      "info": "Optional. Uses the desktop menu when blank. Top level = accordion rows, second level = links inside."
     },
     {
       "type": "text",
@@ -410,11 +497,12 @@
       "type": "text",
       "id": "view_all_label",
       "label": "View All Prefix",
-      "default": "View All"
+      "default": "View All",
+      "info": "Adds a last link to two-level panels and mobile accordions, e.g. \"View All Whiskey\". Leave blank for none."
     },
     {
       "type": "header",
-      "content": "Icons"
+      "content": "Search"
     },
     {
       "type": "checkbox",
@@ -429,6 +517,53 @@
       "default": "Search bottles, brands, collections"
     },
     {
+      "type": "text",
+      "id": "search_button_label",
+      "label": "Search Button Label",
+      "info": "The button shows an icon only; this is read out by screen readers",
+      "default": "Search"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_predictive",
+      "label": "Show Suggestions While Typing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_search_overlay",
+      "label": "Dim Page While Searching",
+      "info": "Tints everything below the header while the search box is in use",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mega_overlay",
+      "label": "Dim Page While Mega Menu Is Open",
+      "info": "Same overlay color and opacity as the search",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "search_overlay_color",
+      "label": "Overlay Color",
+      "default": "#14281D"
+    },
+    {
+      "type": "range",
+      "id": "search_overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
       "type": "checkbox",
       "id": "show_account",
       "label": "Show Account",
@@ -441,36 +576,77 @@
       "default": true
     },
     {
-      "type": "header",
-      "content": "Mobile Drawer"
+      "type": "checkbox",
+      "id": "show_icon_labels",
+      "label": "Show Account And Cart Labels",
+      "info": "Desktop only. Text next to the icons.",
+      "default": true
     },
     {
       "type": "text",
-      "id": "drawer_title",
-      "label": "Drawer Title",
-      "default": "Menu"
-    },
-    {
-      "type": "link_list",
-      "id": "drawer_menu",
-      "label": "Drawer Footer Menu",
-      "info": "Account, order status, FAQ."
+      "id": "account_label",
+      "label": "Account Label",
+      "default": "Account"
     },
     {
       "type": "text",
-      "id": "drawer_note",
-      "label": "Drawer Note",
-      "default": "support@estatesliquor.com · 619-791-3613"
+      "id": "cart_label",
+      "label": "Cart Label",
+      "default": "Cart"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "Scroll Behavior"
     },
     {
       "type": "checkbox",
       "id": "enable_sticky",
       "label": "Stick To Top On Scroll",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_scroll",
+      "label": "Shrink Header When Scrolling Down",
+      "info": "Desktop only.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "scroll_mode",
+      "label": "When Shrunk",
+      "options": [
+        {
+          "value": "hide_nav",
+          "label": "Keep logo and search, hide menu row"
+        },
+        {
+          "value": "hide_top",
+          "label": "Keep menu row, hide logo and search"
+        }
+      ],
+      "default": "hide_nav",
+      "info": "Scrolling back up brings the hidden row back. With the menu row hidden, a menu icon left of the logo also brings it back."
+    },
+    {
+      "type": "header",
+      "content": "Mobile Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "drawer_menu",
+      "label": "Footer Links Menu",
+      "info": "Account, order status, FAQ."
+    },
+    {
+      "type": "text",
+      "id": "drawer_note",
+      "label": "Footer Note",
+      "default": "support@estatesliquor.com · 619-791-3613"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "checkbox",
@@ -504,31 +680,58 @@
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
+      "info": "Open and current links, highlighted links, column headings.",
       "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "hover_bg_color",
-      "label": "Link Hover Background",
-      "default": "#FBF1E4"
-    },
-    {
-      "type": "color",
-      "id": "menu_bg_color",
-      "label": "Dropdown Background Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "drawer_footer_bg_color",
-      "label": "Drawer Footer Background",
-      "default": "#14281D"
+      "label": "Hover Background",
+      "default": "#F6F6F3"
     },
     {
       "type": "color",
       "id": "border_color",
-      "label": "Border Color",
-      "default": "#DEDED8"
+      "label": "Divider Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "header",
+      "content": "Mega Menu Colors"
+    },
+    {
+      "type": "color",
+      "id": "menu_bg_color",
+      "label": "Panel Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "promo_bg_color",
+      "label": "Featured Tile Background",
+      "default": "#F6F6F3"
+    },
+    {
+      "type": "color",
+      "id": "promo_label_bg_color",
+      "label": "Featured Label Background",
+      "default": "#14281D"
+    },
+    {
+      "type": "color",
+      "id": "promo_label_text_color",
+      "label": "Featured Label Text",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Menu Colors"
+    },
+    {
+      "type": "color",
+      "id": "drawer_footer_bg_color",
+      "label": "Footer Background",
+      "default": "#14281D"
     },
     {
       "type": "header",
@@ -537,7 +740,7 @@
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Padding Top",
+      "label": "Top Bar Padding Top",
       "min": 0,
       "max": 60,
       "step": 5,
@@ -547,7 +750,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Padding Bottom",
+      "label": "Top Bar Padding Bottom",
       "min": 0,
       "max": 60,
       "step": 5,
@@ -555,10 +758,121 @@
       "default": 15
     }
   ],
+  "blocks": [
+    {
+      "type": "mega_panel",
+      "name": "Mega Menu Panel",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu Item Title",
+          "info": "Must match a top-level item in the desktop menu, e.g. Whiskey.",
+          "default": "Whiskey"
+        },
+        {
+          "type": "header",
+          "content": "Column Footer Links"
+        },
+        {
+          "type": "paragraph",
+          "content": "Optional link under each column, e.g. \"All Bourbon\". Leave the label blank for no link. The link defaults to the column heading's page."
+        },
+        {
+          "type": "text",
+          "id": "col1_label",
+          "label": "Column 1 Label"
+        },
+        {
+          "type": "url",
+          "id": "col1_link",
+          "label": "Column 1 Link"
+        },
+        {
+          "type": "text",
+          "id": "col2_label",
+          "label": "Column 2 Label"
+        },
+        {
+          "type": "url",
+          "id": "col2_link",
+          "label": "Column 2 Link"
+        },
+        {
+          "type": "text",
+          "id": "col3_label",
+          "label": "Column 3 Label"
+        },
+        {
+          "type": "url",
+          "id": "col3_link",
+          "label": "Column 3 Link"
+        },
+        {
+          "type": "text",
+          "id": "col4_label",
+          "label": "Column 4 Label"
+        },
+        {
+          "type": "url",
+          "id": "col4_link",
+          "label": "Column 4 Link"
+        },
+        {
+          "type": "header",
+          "content": "Featured Tile"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image",
+          "label": "Image",
+          "info": "A bottle shot works best. Shown whole, never cropped."
+        },
+        {
+          "type": "text",
+          "id": "promo_label",
+          "label": "Label",
+          "default": "Just Listed"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading",
+          "label": "Heading",
+          "default": "New Allocated Arrivals"
+        },
+        {
+          "type": "text",
+          "id": "promo_text",
+          "label": "Text",
+          "default": "Fresh drops from the vault, while they last."
+        },
+        {
+          "type": "text",
+          "id": "promo_cta",
+          "label": "Button Label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "promo_link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
   "presets": [
     {
-      "name": "Header",
-      "category": "CWC Custom"
+      "name": "CWC Header",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Whiskey"
+          }
+        }
+      ]
     }
   ]
 }

@@ -239,9 +239,9 @@
         "text_color": "#14281d",
         "link_color": "#5c5c57",
         "bold_color": "#a35a12",
-        "separator_color": "#deded8",
+        "separator_color": "#ecece8",
         "show_border": true,
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "padding_top": 15,
         "padding_bottom": 15
       }
@@ -367,6 +367,21 @@
             "chat_action": "inbox",
             "chat_url": ""
           }
+        },
+        "delivery_estimate": {
+          "type": "delivery_estimate",
+          "settings": {
+            "label": "Order today, estimated delivery",
+            "cutoff_hour": 16,
+            "processing_min": 3,
+            "processing_max": 5,
+            "transit_min": 1,
+            "transit_max": 5,
+            "closed_dates": "",
+            "bg_color": "#fbefdd",
+            "text_color": "#14281d",
+            "accent_color": "#a35a12"
+          }
         }
       },
       "block_order": [
@@ -376,12 +391,13 @@
         "judge_me_reviews_preview_badge_pgXwLn",
         "cwc_product_buy_box_b4",
         "cwc_product_buy_box_b5",
-        "globo_product_options_app_block_QzHjiw",
         "cwc_product_buy_box_b6",
-        "cwc_product_buy_box_b7",
+        "globo_product_options_app_block_QzHjiw",
         "cwc_product_buy_box_b9",
-        "cwc_product_buy_box_b10",
+        "delivery_estimate",
+        "cwc_product_buy_box_b7",
         "help",
+        "cwc_product_buy_box_b10",
         "cwc_product_buy_box_b11",
         "frequently_bought_app_block_Bgewk8"
       ],
@@ -396,7 +412,7 @@
         "subtext_color": "#5c5c57",
         "meta_color": "#5c5c57",
         "media_bg_color": "#ffffff",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "button_bg_color": "#e9a23b",
         "button_text_color": "#14281d",
         "stock_color": "#a35a12",
@@ -437,7 +453,7 @@
         "bold_color": "#a35a12",
         "eyebrow_color": "#a35a12",
         "meta_color": "#5c5c57",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "button_bg_color": "#e9a23b",
         "padding_top": 70,
         "padding_bottom": 70
@@ -494,12 +510,12 @@
         "heading": "<p>Why Buy From Estates</p>",
         "show_rule": true,
         "columns": 4,
-        "bg_color": "#fbf1e4",
+        "bg_color": "#ffffff",
         "text_color": "#14281d",
         "bold_color": "#a35a12",
         "eyebrow_color": "#a35a12",
         "icon_color": "#1c1c19",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
         "card_text_color": "#5c5c57",
         "padding_top": 70,
@@ -591,58 +607,16 @@
         "show_rule": true,
         "button_label": "",
         "button_link": "",
-        "bg_color": "#fbf1e4",
+        "bg_color": "#ffffff",
         "text_color": "#14281d",
         "bold_color": "#a35a12",
         "eyebrow_color": "#a35a12",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "button_text_color": "#14281d",
         "card_title_color": "#14281d",
         "card_text_color": "#5c5c57",
         "padding_top": 80,
         "padding_bottom": 80
-      }
-    },
-    "cwc_product_questions": {
-      "type": "CWC_product_questions",
-      "blocks": {
-        "cwc_product_questions_b1": {
-          "type": "action",
-          "settings": {
-            "link_type": "phone",
-            "value": "619-791-3613",
-            "link": "",
-            "label": "Call 619-791-3613",
-            "style": "primary"
-          }
-        },
-        "cwc_product_questions_b2": {
-          "type": "action",
-          "settings": {
-            "link_type": "email",
-            "value": "Support@estatesliquor.com",
-            "link": "",
-            "label": "Email Us",
-            "style": "outline"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_product_questions_b1",
-        "cwc_product_questions_b2"
-      ],
-      "settings": {
-        "show_icon": true,
-        "heading": "Questions about this bottle?",
-        "subtext": "<p>Talk to someone who has actually tasted it. Our team is in the store six days a week and answers the phone.</p>",
-        "bg_color": "#14281d",
-        "text_color": "#ffffff",
-        "bold_color": "#e9a23b",
-        "body_text_color": "#a6ada8",
-        "button_bg_color": "#e9a23b",
-        "button_text_color": "#14281d",
-        "padding_top": 45,
-        "padding_bottom": 45
       }
     },
     "cwc_store_reviews": {
@@ -682,12 +656,12 @@
         "eyebrow": "4.9 Average · 18 Store Reviews",
         "heading": "<p>What Estates Liquor Customers Say</p>",
         "show_rule": true,
-        "bg_color": "#fbf1e4",
+        "bg_color": "#ffffff",
         "text_color": "#14281d",
         "bold_color": "#a35a12",
         "eyebrow_color": "#a35a12",
         "star_color": "#a35a12",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
         "card_meta_color": "#5c5c57",
         "padding_top": 70,
@@ -735,7 +709,7 @@
         "bold_color": "#a35a12",
         "eyebrow_color": "#a35a12",
         "meta_color": "#5c5c57",
-        "border_color": "#deded8",
+        "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
         "card_media_bg_color": "#ffffff",
         "button_bg_color": "#e9a23b",
@@ -787,11 +761,11 @@
       ],
       "settings": {
         "icon_size": 20,
-        "bg_color": "#fbf1e4",
+        "bg_color": "#ffffff",
         "text_color": "#14281d",
         "bold_color": "#a35a12",
         "icon_color": "#1c1c19",
-        "border_color": "#f0d9b8",
+        "border_color": "#ecece8",
         "padding_top": 20,
         "padding_bottom": 20
       }
@@ -834,7 +808,6 @@
     "cwc_product_details",
     "cwc_why_buy",
     "cwc_product_faq",
-    "cwc_product_questions",
     "cwc_store_reviews",
     "cwc_product_reviews",
     "cwc_related_products",

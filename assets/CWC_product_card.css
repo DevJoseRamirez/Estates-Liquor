@@ -13,7 +13,7 @@
 
 .cwc_collection-body__card {
   --card-ink: #1C1C19;
-  --card-line-strong: #BDBDB6;
+  --card-line-strong: #DDDDD7;
   --card-amber: var(--card-button-bg, #E9A23B);
   --card-amber-hover: var(--card-button-hover-bg, #D68F27);
   --card-green: var(--card-button-text, #14281D);
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg, #FFFFFF);
-  border: 1px solid var(--border-color, #DEDED8);
+  border: 1px solid var(--border-color, #ECECE8);
   border-radius: 0;
   overflow: hidden;
   font-family: var(--cwc-font-body);
@@ -41,7 +41,7 @@
   aspect-ratio: 3 / 4;
   padding: 12px;
   background-color: var(--card-media-bg, #FFFFFF);
-  border-bottom: 1px solid var(--border-color, #DEDED8);
+  border-bottom: 1px solid var(--border-color, #ECECE8);
   overflow: hidden;
 }
 
@@ -103,8 +103,8 @@
 }
 
 .cwc_collection-body__card-badge--save {
-  background-color: #FBE3C4;
-  color: #8A4A0E;
+  background-color: #A35A12;
+  color: #FFFFFF;
 }
 
 .cwc_collection-body__card-badge--soldout {
@@ -168,14 +168,17 @@
   gap: 10px;
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid var(--border-color, #DEDED8);
+  border-top: 1px solid var(--border-color, #ECECE8);
 }
 
-/* compare-at sits struck through above the price */
+/* final price first, struck-through compare-at after it on one line;
+   wraps under it only if the card is too narrow for both */
 .cwc_collection-body__card-price {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
   min-width: 0;
   font-family: var(--cwc-font-body);
   font-size: 17px;
@@ -306,5 +309,131 @@
   .cwc_collection-body__card-button {
     width: 100%;
     min-height: 44px;
+  }
+}
+
+/* ==============================
+   Search-style card
+   Matches the header search panel's bottle cards: square image on the
+   brand image ground (Sage Mist, multiply), soft scale on hover, brand
+   line, 2-line title, price, then a full-width Add button. No card outline,
+   no detail line. Overrides the card rules above.
+   ============================== */
+.cwc_collection-body__card {
+  background-color: transparent;
+  border: 0;
+  overflow: visible;
+}
+
+.cwc_collection-body__card:hover {
+  border-color: transparent;
+}
+
+.cwc_collection-body__card-media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-bottom: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+}
+
+.cwc_collection-body__card-media img {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform 0.3s ease;
+}
+
+.cwc_collection-body__card:hover .cwc_collection-body__card-media img {
+  transform: scale(1.03);
+}
+
+/* Labels sit flush to the image edge */
+.cwc_collection-body__card-badge {
+  top: 12px;
+  left: 0;
+}
+
+.cwc_collection-body__card-badge--corner {
+  left: auto;
+  right: 0;
+}
+
+.cwc_collection-body__card-body {
+  padding: 18px 4px 0;
+}
+
+/* Vendor → title → price → button: even, roomier steps */
+.cwc_collection-body__card-brand {
+  margin-bottom: 10px;
+}
+
+.cwc_collection-body__card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.56em;
+  margin-bottom: 16px;
+  font-size: 17px;
+  line-height: 1.28;
+}
+
+.cwc_collection-body__card-text {
+  display: none;
+}
+
+/* Price, then the button full width, pinned to the bottom so rows align */
+.cwc_collection-body__card-footer {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cwc_collection-body__card-button {
+  width: 100%;
+  min-height: 48px;
+  font-size: 13px;
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_collection-body__card-badge {
+    top: 8px;
+    left: 0;
+  }
+
+  .cwc_collection-body__card-badge--corner {
+    left: auto;
+    right: 0;
+  }
+
+  .cwc_collection-body__card-body {
+    padding: 14px 2px 0;
+  }
+
+  .cwc_collection-body__card-brand {
+    margin-bottom: 8px;
+  }
+
+  .cwc_collection-body__card-title {
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .cwc_collection-body__card-footer {
+    gap: 12px;
+  }
+
+  .cwc_collection-body__card-button {
+    min-height: 44px;
+    font-size: 12px;
   }
 }

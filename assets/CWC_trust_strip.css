@@ -2,14 +2,14 @@
    CWC Trust Strip
    Lighter sibling of CWC Trust Bar — single line of text, smaller icon.
    Styled to _theme-styles/estates-brand-tokens.md §5 (PDP trust strip):
-   tint band, 4 columns, heading-font 18px lines, dividers in tint-line #F0D9B8.
+   tint band, 4 columns, heading-font 18px lines, dividers in tint-line #E6E6E1.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_trust-strip {
   --ts-gutter: 48px;
   /* dividers inside a tint band use the tint-line token */
-  --ts-divider: var(--border-color, #F0D9B8);
+  --ts-divider: var(--border-color, #E6E6E1);
 
   background-color: var(--section-bg);
   color: var(--text-color);
@@ -19,7 +19,7 @@
 }
 
 .cwc_trust-strip__container {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 var(--ts-gutter);
 }

@@ -25,7 +25,7 @@
 .cwc_announcement-bar__container {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 48px;
   display: flex;
@@ -77,6 +77,11 @@
 
 .cwc_announcement-bar__text p {
   margin: 0;
+}
+
+/* Desktop / mobile message pair: one shows per breakpoint */
+.cwc_announcement-bar__copy--mobile {
+  display: none;
 }
 
 .cwc_announcement-bar__text strong {
@@ -171,5 +176,13 @@
 
   .cwc_announcement-bar__text {
     font-size: var(--text-size, 11px);
+  }
+
+  .cwc_announcement-bar__copy--desktop {
+    display: none;
+  }
+
+  .cwc_announcement-bar__copy--mobile {
+    display: block;
   }
 }

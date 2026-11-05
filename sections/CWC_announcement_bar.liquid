@@ -67,13 +67,31 @@
                   {% endif %}
                   {{ block.shopify_attributes }}
                 >
+                  {% comment %}
+                    Desktop message is the default. When a mobile message is set,
+                    both render and CSS shows one per breakpoint; they share the
+                    same link.
+                  {% endcomment %}
+                  {%- capture message -%}
+                    {%- if block.settings.text_mobile != blank -%}
+                      <div class="cwc_announcement-bar__copy cwc_announcement-bar__copy--desktop">
+                        {{- block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot -}}
+                      </div>
+                      <div class="cwc_announcement-bar__copy cwc_announcement-bar__copy--mobile">
+                        {{- block.settings.text_mobile | replace: '&middot;', cwc_dot | replace: '·', cwc_dot -}}
+                      </div>
+                    {%- else -%}
+                      {{- block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot -}}
+                    {%- endif -%}
+                  {%- endcapture -%}
+
                   {% if block.settings.link != blank %}
                     <a href="{{ block.settings.link }}" class="cwc_announcement-bar__text cwc_announcement-bar__text--link cwc-rte"{% if slide_index != 1 %} tabindex="-1"{% endif %}>
-                      {{ block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot }}
+                      {{ message }}
                     </a>
                   {% else %}
                     <div class="cwc_announcement-bar__text cwc-rte">
-                      {{ block.settings.text | replace: '&middot;', cwc_dot | replace: '·', cwc_dot }}
+                      {{ message }}
                     </div>
                   {% endif %}
                 </div>
@@ -204,9 +222,15 @@
         {
           "type": "richtext",
           "id": "text",
-          "label": "Message",
-          "info": "Bold text uses the bold and link color",
+          "label": "Desktop Message",
+          "info": "Bold text uses the bold and link color. Also shows on mobile when the mobile message is blank",
           "default": "<p>Use Code <strong>WELCOME15</strong> for $15 Off your first order of $150+</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "text_mobile",
+          "label": "Mobile Message",
+          "info": "Optional. A shorter version for 768px and below. Uses the same link"
         },
         {
           "type": "url",

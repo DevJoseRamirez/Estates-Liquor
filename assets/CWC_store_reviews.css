@@ -10,7 +10,7 @@
   background-color: var(--section-bg);
   --sr-font-display: var(--cwc-font-heading);
   --sr-font-body: var(--cwc-font-body);
-  --sr-font-mono: var(--cwc-font-body);
+  --sr-font-mono: var(--cwc-font-mono);
   --sr-ink: #1C1C19;
   --sr-body: #3A3A36;
   --sr-gutter: 48px;
@@ -22,7 +22,7 @@
 }
 
 .cwc_store-reviews__container {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 var(--sr-gutter);
 }
@@ -95,9 +95,11 @@
   width: max-content;
 }
 
-/* Gap on the right too, so the seam between copies matches */
+/* Gap on the right too, so the seam between copies matches.
+   flex-start: each card is as tall as its own review, not the longest one */
 .cwc_store-reviews__set {
   display: flex;
+  align-items: flex-start;
   gap: var(--sr-gap);
   padding-right: var(--sr-gap);
 }
@@ -161,13 +163,8 @@
   color: var(--border-color);
 }
 
-/* Live Judge.me reviews can run long; keep cards even */
+/* Full review text, no line clamp; the card grows to fit it */
 .cwc_store-reviews__card-text {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
-  line-clamp: 6;
-  overflow: hidden;
   margin: 0 0 14px;
 }
 

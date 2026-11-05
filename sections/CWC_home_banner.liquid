@@ -48,7 +48,7 @@
   #cwc_home-banner-{{ section.id }} {
     --banner-ratio: {{ ratio_desktop }};
     --banner-ratio-mobile: {{ ratio_mobile }};
-    --banner-max-width: {% if section.settings.full_width %}100%{% else %}1300px{% endif %};
+    --banner-max-width: {% if section.settings.full_width %}100%{% else %}1500px{% endif %};
     --banner-radius: {{ section.settings.border_radius | default: 0 }}px;
     --image-fit: {{ section.settings.image_fit | default: 'cover' }};
     --arrow-bg: {{ section.settings.arrow_bg_color | default: '#ffffff' }};
@@ -280,7 +280,7 @@
       "id": "full_width",
       "label": "Full Width",
       "default": true,
-      "info": "Uncheck to constrain the banner to 1300px."
+      "info": "Uncheck to constrain the banner to 1500px."
     },
     {
       "type": "select",

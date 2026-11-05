@@ -19,7 +19,7 @@
 }
 
 .cwc_barrel-picks__container {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 48px;
 }
@@ -273,8 +273,8 @@
 
 /* savings: soft amber, top-right, opposite the tag labels */
 .cwc_barrel-picks__card-badge--sale {
-  background-color: #FBE3C4;
-  color: #8A4A0E;
+  background-color: #A35A12;
+  color: #FFFFFF;
   right: 12px;
   left: auto;
 }
@@ -543,5 +543,115 @@
 
   .cwc_barrel-picks__card-button {
     width: 100%;
+  }
+}
+
+/* ==============================
+   Search-style card
+   Matches the header search panel's bottle cards: square image on the
+   brand image ground (Sage Mist, multiply), soft scale on hover, brand
+   line, 2-line title, price, then a full-width Add button. No card outline,
+   no detail line. Overrides the card rules above.
+   ============================== */
+.cwc_barrel-picks__card {
+  background-color: transparent;
+  border: 0;
+  overflow: visible;
+}
+
+.cwc_barrel-picks__card:hover {
+  border-color: transparent;
+}
+
+.cwc_barrel-picks__card-image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-bottom: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+}
+
+.cwc_barrel-picks__card-image img {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform 0.3s ease;
+}
+
+.cwc_barrel-picks__card:hover .cwc_barrel-picks__card-image img {
+  transform: scale(1.03);
+}
+
+/* Labels sit flush to the image edge */
+.cwc_barrel-picks__card-badge {
+  top: 12px;
+  left: 0;
+}
+
+.cwc_barrel-picks__card-badge--corner {
+  left: auto;
+  right: 0;
+}
+
+.cwc_barrel-picks__card-body {
+  padding: 14px 0 0;
+}
+
+.cwc_barrel-picks__card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.56em;
+  margin-bottom: 8px;
+  font-size: 17px;
+  line-height: 1.28;
+}
+
+.cwc_barrel-picks__card-text {
+  display: none;
+}
+
+/* Price, then the button full width, pinned to the bottom so rows align */
+.cwc_barrel-picks__card-footer {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cwc_barrel-picks__card-button {
+  width: 100%;
+  min-height: 46px;
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_barrel-picks__card-badge {
+    top: 8px;
+    left: 0;
+  }
+
+  .cwc_barrel-picks__card-badge--corner {
+    left: auto;
+    right: 0;
+  }
+
+  .cwc_barrel-picks__card-body {
+    padding: 12px 0 0;
+  }
+
+  .cwc_barrel-picks__card-title {
+    font-size: 15px;
+  }
+
+  .cwc_barrel-picks__card-button {
+    min-height: 44px;
   }
 }

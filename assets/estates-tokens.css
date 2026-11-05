@@ -1,0 +1,96 @@
+/* ==============================
+   Estates Tokens
+   Generated from _theme-styles/estates-brand-tokens.md v1.2 (section 6).
+   Global --el-* custom properties + .el-* helpers. Edit the spec first,
+   then mirror the change here. Breakpoints aligned to CWC (991 / 768).
+   ============================== */
+
+:root {
+  /* Color */
+  --el-green: #14281D;
+  --el-green-hover: #0D1C14;
+  --el-amber: #E9A23B;
+  --el-amber-hover: #D68F27;
+  --el-amber-text: #A35A12;
+  --el-tint: #F6F6F3;
+  --el-tint-line: #E6E6E1;
+  --el-ground-edge: #E4EBE6;
+  --el-white: #FFFFFF;
+  --el-ink: #1C1C19;
+  --el-body: #3A3A36;
+  --el-muted: #5C5C57;
+  --el-line: #ECECE8;
+  --el-line-input: #D9D9D3;
+  --el-line-strong: #DDDDD7;
+  --el-brass: #A8834A;
+  --el-footer: #0F1F16;
+
+  /* Type */
+  --el-font-display: 'Fraunces', Georgia, serif;
+  --el-font-body: 'Inter', Arial, sans-serif;
+  --el-font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  /* Space */
+  --el-space-1: 4px;  --el-space-2: 8px;  --el-space-3: 12px;
+  --el-space-4: 16px; --el-space-5: 24px; --el-space-6: 40px;
+  --el-space-7: 56px; --el-space-8: 88px; --el-space-9: 112px;
+  --el-container: 1440px;
+  --el-gutter: 80px;
+  --el-section-y: 112px;
+
+  /* Shape */
+  --el-radius: 0;
+  --el-border: 1px solid var(--el-line);
+  --el-border-input: 1px solid var(--el-line-input);
+
+  /* Buttons */
+  --el-btn-h: 54px;
+  --el-btn-h-card: 46px;
+  --el-btn-font-size: 13px;
+  --el-btn-tracking: 0.14em;
+}
+
+@media screen and (max-width: 991px) { :root { --el-gutter: 32px; --el-section-y: 88px; } }
+@media screen and (max-width: 768px) { :root { --el-gutter: 18px; --el-section-y: 56px; --el-btn-h-card: 40px; } }
+
+/* Image ground */
+.el-media { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, var(--el-ground-edge) 100%); }
+.el-media img { position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: contain; mix-blend-mode: multiply; transition: transform .3s; }
+.el-card:hover .el-media img { transform: scale(1.03); }
+
+/* Card */
+.el-card { display: flex; flex-direction: column; gap: 16px; }
+.el-card__title { font-family: var(--el-font-display); font-size: 18px; font-weight: 500; line-height: 1.28; min-height: 2.56em; color: var(--el-ink); }
+.el-card__btn { margin-top: auto; width: 100%; height: var(--el-btn-h-card); }
+
+/* Text helpers */
+.el-eyebrow { font-family: var(--el-font-mono); font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--el-amber-text); }
+.el-price { font-family: var(--el-font-mono); font-weight: 600; color: var(--el-ink); }
+.el-price--sale { color: var(--el-amber-text); }
+.el-price--compare { font-weight: 400; color: var(--el-muted); text-decoration: line-through; }
+.el-stock { display: inline-flex; align-items: center; gap: 6px; font-family: var(--el-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--el-amber-text); }
+.el-stock::before { content: ''; width: 6px; height: 6px; background: var(--el-amber); }
+.el-link { font-family: var(--el-font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--el-ink); text-decoration: none; border-bottom: 1px solid var(--el-amber); padding-bottom: 3px; }
+
+/* Buttons */
+.el-btn { display: inline-flex; align-items: center; justify-content: center; height: var(--el-btn-h); padding: 0 34px; border-radius: 0; font-family: var(--el-font-body); font-size: var(--el-btn-font-size); font-weight: 600; letter-spacing: var(--el-btn-tracking); text-transform: uppercase; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.el-btn--primary { background: var(--el-amber); color: var(--el-green); border: none; }
+.el-btn--primary:hover { background: var(--el-amber-hover); }
+.el-btn--secondary { background: var(--el-white); color: var(--el-amber-text); border: 1px solid var(--el-amber-text); }
+.el-btn--secondary:hover { background: var(--el-amber-text); color: var(--el-white); }
+.el-btn--outline { background: var(--el-white); color: var(--el-green); border: 1px solid var(--el-green); }
+.el-btn--outline:hover { background: var(--el-green); color: var(--el-white); }
+.el-btn:focus-visible { outline: 2px solid var(--el-amber-text); outline-offset: 3px; }
+
+/* Labels */
+.el-badge { position: absolute; font-family: var(--el-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; border-radius: 0; z-index: 1; }
+.el-badge--tl { left: 0; top: 12px; }
+.el-badge--br { right: 0; bottom: 12px; }
+.el-badge--allocated, .el-badge--new { background: var(--el-green); color: var(--el-amber); }
+.el-badge--save { background: var(--el-amber-text); color: var(--el-white); }
+.el-badge--pick { background: var(--el-amber); color: var(--el-green); }
+.el-badge--soldout { background: var(--el-white); color: var(--el-muted); border: 1px solid var(--el-line-strong); }
+
+/* Bands */
+.el-band--green { background: var(--el-green); color: var(--el-white); }
+.el-band--tint { background: var(--el-tint); }

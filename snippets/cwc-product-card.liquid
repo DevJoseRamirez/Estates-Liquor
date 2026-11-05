@@ -114,10 +114,10 @@
     {% endcomment %}
     <div class="cwc_collection-body__card-footer">
       <div class="cwc_collection-body__card-price{% if product.compare_at_price > product.price %} cwc_collection-body__card-price--sale{% endif %}">
+        <span class="cwc_collection-body__card-price-now">{{ product.price | money }}</span>
         {% if product.compare_at_price > product.price %}
           <span class="cwc_collection-body__card-price-was">{{ product.compare_at_price | money }}</span>
         {% endif %}
-        <span class="cwc_collection-body__card-price-now">{{ product.price | money }}</span>
       </div>
 
       {%- capture cart_icon -%}
@@ -136,7 +136,7 @@
           aria-label="Add {{ product.title | escape }} to cart"
         >
           {% comment %} {{ cart_icon }} {% endcomment %}
-          Add
+          Add to Cart
         </button>
       {% elsif is_sold_out %}
         <a
@@ -153,7 +153,7 @@
           aria-label="View {{ product.title | escape }}"
         >
           {% comment %} {{ cart_icon }} {% endcomment %}
-          Add
+          Add to Cart
         </a>
       {% endif %}
     </div>

@@ -284,15 +284,17 @@
                     -%}
                     <div class="cart-drawer__product-card--price {{ price_font }}">
                       {% if on_sale %}
-                        <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
-                        <span class="cart-drawer__product-card--price--compare">
-                          {{- compare_price | money | replace: ' ', '&nbsp;' -}}
-                        </span>
                         <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
                       {% endif %}
                       <span class="{% if on_sale %}cart-drawer__product-card--price--sale{% endif %}">
                         {{- item.final_price | money | replace: ' ', '&nbsp;' -}}
                       </span>
+                      {% if on_sale %}
+                        <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+                        <span class="cart-drawer__product-card--price--compare">
+                          {{- compare_price | money | replace: ' ', '&nbsp;' -}}
+                        </span>
+                      {% endif %}
                     </div>
                   </div>
 
@@ -658,6 +660,15 @@
       line-height: 1.35;
     }
 
+    /* long titles: cap at 2 lines with an ellipsis to keep rec rows short */
+    .global-drawer--secondary .product-card-basic__title {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+
     .global-drawer--secondary .product-card-basic__price .money,
     .global-drawer--secondary .product-card-basic__price .product-price--sale {
       font-size: 14px;
@@ -763,8 +774,12 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--green);
-    margin-bottom: 8px;
     color: #0a1f12;
+  }
+  /* Same gap under the price whether or not there is a compare-at price */
+  .product-card-basic__price .product-price--sale,
+  .product-card-basic__price .product-price--regular {
+    margin-bottom: 8px;
   }
   .cart-drawer__subtotal--compare,
   .product-card-basic--info {
@@ -801,9 +816,10 @@
     letter-spacing: 0;
     color: #0a1f12;
   }
+  /* compare-at now follows the final price, so the space goes on its left */
   .price-line-through.price--compare-at-price,
   .cart-drawer__product-card--price--compare {
-    margin-right: 4px;
+    margin-left: 4px;
   }
 
   .btn--underlined.btn--underlined-with-icon {

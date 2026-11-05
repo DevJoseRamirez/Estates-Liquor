@@ -16,8 +16,9 @@
   --cg-option-height: 40px;
   --cg-chip-height: 36px;
   --cg-text-size: 14px;
-  --cg-grid-gap: 20px 16px;
-  --cg-sidebar-width: 240px;
+  /* row gap 32px / column gap 20px, per the Liquor on Broadway reference */
+  --cg-grid-gap: 32px 20px;
+  --cg-sidebar-width: 250px;
   --cg-gutter: 48px;
   --cg-ink: #1C1C19;
   --cg-amber: var(--cg-primary-bg, #E9A23B);
@@ -32,7 +33,7 @@
 }
 
 .cwc_collection-grid__container {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 28px var(--cg-gutter) 0;
 }
@@ -60,7 +61,7 @@
 }
 
 .cwc_collection-grid__toolbar-inner {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 12px var(--cg-gutter);
   display: flex;
@@ -211,7 +212,7 @@
 .cwc_collection-grid__wrapper {
   display: grid;
   grid-template-columns: var(--cg-sidebar-width) minmax(0, 1fr);
-  gap: 40px;
+  gap: 36px;
   align-items: start;
 }
 
@@ -1060,7 +1061,7 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_collection-grid {
-    --cg-grid-gap: 12px 10px;
+    --cg-grid-gap: 22px 10px;
     --cg-gutter: 16px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);

@@ -1,0 +1,173 @@
+{% comment %}
+  One mega panel, for one top-level desktop menu item.
+
+  The link columns come from the Shopify menu: the item's children are the
+  column headings and their children the links under them. An item whose
+  children have no children of their own has nothing to split into columns, so
+  its children become one list under the item's own title, flowed across the
+  panel in up to four columns, with a "View All" link at the end.
+
+  The column footer links ("All Bourbon →") and the featured tile come from the
+  matching "Mega Menu Panel" block, since neither exists in a Shopify menu.
+
+  Accepts:
+  - link {Object} - the top-level menu link this panel belongs to
+  - block {Object} - the matching mega_panel block, or nil
+  - panel_id {String} - id for the panel, referenced by the nav link
+  - has_promo {Boolean} - whether the block has featured tile content
+  - view_all_label {String} - prefix for the two-level "View All" link
+
+  Usage:
+  {% render 'CWC_header-mega', link: link, block: panel_block, panel_id: panel_id, has_promo: has_promo, view_all_label: section.settings.view_all_label %}
+{% endcomment %}
+
+{%- liquid
+  assign has_columns = false
+  for child in link.links
+    if child.links.size > 0
+      assign has_columns = true
+      break
+    endif
+  endfor
+-%}
+
+<div
+  id="{{ panel_id }}"
+  class="cwc_header__mega"
+  data-cwc-mega
+  {% if block != nil %}{{ block.shopify_attributes }}{% endif %}
+>
+  <div class="cwc_header__container cwc_header__mega-inner">
+    {%- if link.links.size > 0 -%}
+      <div class="cwc_header__mega-columns">
+        {%- if has_columns -%}
+          {%- for child in link.links -%}
+            {%- liquid
+              assign footer_label = nil
+              assign footer_url = child.url
+              if block != nil
+                assign key = 'col' | append: forloop.index | append: '_label'
+                assign footer_label = block.settings[key]
+                assign key = 'col' | append: forloop.index | append: '_link'
+                assign footer_url = block.settings[key] | default: child.url
+              endif
+            -%}
+            <div class="cwc_header__mega-col">
+              {%- if child.url != blank and child.url != '#' -%}
+                <a href="{{ child.url }}" class="cwc_header__mega-heading">{{ child.title | escape }}</a>
+              {%- else -%}
+                <span class="cwc_header__mega-heading">{{ child.title | escape }}</span>
+              {%- endif -%}
+
+              {%- if child.links.size > 0 or footer_label != blank -%}
+                <ul class="cwc_header__mega-list">
+                  {%- for grandchild in child.links -%}
+                    <li>
+                      <a
+                        href="{{ grandchild.url }}"
+                        class="cwc_header__mega-link{% if grandchild.active %} cwc_header__mega-link--active{% endif %}"
+                        {% if grandchild.current %}aria-current="page"{% endif %}
+                      >
+                        {{- grandchild.title | escape -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+
+                  {%- if footer_label != blank -%}
+                    <li class="cwc_header__mega-foot">
+                      <a href="{{ footer_url }}" class="cwc_header__mega-all">
+                        {{- footer_label | escape }} <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          {%- liquid
+            assign footer_label = nil
+            assign footer_url = link.url
+            if block != nil
+              assign footer_label = block.settings.col1_label
+              assign footer_url = block.settings.col1_link | default: link.url
+            endif
+            if footer_label == blank and view_all_label != blank
+              assign footer_label = view_all_label | append: ' ' | append: link.title
+            endif
+          -%}
+          <div class="cwc_header__mega-col cwc_header__mega-col--flow">
+            <span class="cwc_header__mega-heading">{{ link.title | escape }}</span>
+            <ul class="cwc_header__mega-list cwc_header__mega-list--flow">
+              {%- for child in link.links -%}
+                <li>
+                  <a
+                    href="{{ child.url }}"
+                    class="cwc_header__mega-link{% if child.active %} cwc_header__mega-link--active{% endif %}"
+                    {% if child.current %}aria-current="page"{% endif %}
+                  >
+                    {{- child.title | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+
+            {%- if footer_label != blank -%}
+              <div class="cwc_header__mega-foot">
+                <a href="{{ footer_url }}" class="cwc_header__mega-all">
+                  {{- footer_label | escape }} <span aria-hidden="true">&rarr;</span>
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if has_promo -%}
+      {%- if block.settings.promo_link != blank -%}
+        <a href="{{ block.settings.promo_link }}" class="cwc_header__mega-promo">
+      {%- else -%}
+        <div class="cwc_header__mega-promo">
+      {%- endif -%}
+
+        {%- if block.settings.promo_image != blank -%}
+          <span class="cwc_header__mega-promo-media">
+            {{
+              block.settings.promo_image
+              | image_url: width: 600
+              | image_tag:
+                class: 'cwc_header__mega-promo-image',
+                alt: '',
+                loading: 'lazy',
+                widths: '300, 450, 600',
+                sizes: '280px'
+            }}
+            {%- if block.settings.promo_label != blank -%}
+              <span class="cwc_header__mega-promo-label">{{ block.settings.promo_label | escape }}</span>
+            {%- endif -%}
+          </span>
+        {%- elsif block.settings.promo_label != blank -%}
+          <span class="cwc_header__mega-promo-label cwc_header__mega-promo-label--inline">{{ block.settings.promo_label | escape }}</span>
+        {%- endif -%}
+
+        <span class="cwc_header__mega-promo-body">
+          {%- if block.settings.promo_heading != blank -%}
+            <span class="cwc_header__mega-promo-title">{{ block.settings.promo_heading | escape }}</span>
+          {%- endif -%}
+          {%- if block.settings.promo_text != blank -%}
+            <span class="cwc_header__mega-promo-text">{{ block.settings.promo_text | escape }}</span>
+          {%- endif -%}
+          {%- if block.settings.promo_cta != blank -%}
+            <span class="cwc_header__mega-promo-cta">{{ block.settings.promo_cta | escape }}</span>
+          {%- endif -%}
+        </span>
+
+      {%- if block.settings.promo_link != blank -%}
+        </a>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>

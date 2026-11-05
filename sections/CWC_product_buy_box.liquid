@@ -6,7 +6,7 @@
     --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
     --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --media-bg: {{ section.settings.media_bg_color | default: '#FFFFFF' }};
-    --border-color: {{ section.settings.border_color | default: '#DEDED8' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
     --button-text-color: {{ section.settings.button_text_color | default: '#14281D' }};
     --stock-color: {{ section.settings.stock_color | default: '#A35A12' }};
@@ -41,26 +41,60 @@
   <div class="cwc_product-buy-box__container">
     <div class="cwc_product-buy-box__layout">
       {% comment %} Media gallery {% endcomment %}
-      <div class="cwc_product-buy-box__media">
+      {% comment %}
+        Gallery: one swipeable track of slides (scroll-snap), thumbnails under
+        it on desktop, progress bars over it on tablet and mobile. Works as a
+        plain swipe/scroll strip with no JS; the JS syncs thumbs and bars and
+        jumps to the chosen variant's image.
+      {% endcomment %}
+      {% liquid
+        assign gallery_media = buy_product.media | slice: 0, section.settings.gallery_limit
+        assign media_count = gallery_media.size
+      %}
+      <div class="cwc_product-buy-box__media{% if section.settings.sticky_gallery %} cwc_product-buy-box__media--sticky{% endif %}{% if section.settings.media_spotlight %} cwc_product-buy-box__media--spotlight{% endif %}">
         <div class="cwc_product-buy-box__media-main" data-cwc-media-main>
-          {% if buy_product.featured_media != blank %}
-            <img
-              src="{{ buy_product.featured_media | image_url: width: 1200 }}"
-              alt="{{ buy_product.featured_media.alt | default: buy_product.title | escape }}"
-              loading="eager"
-              fetchpriority="high"
-              width="1200"
-              height="1200"
-              data-cwc-media-image
-            >
-          {% else %}
-            <span class="cwc_product-buy-box__media-placeholder">
-              <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-                <rect x="16" y="0" width="20" height="6" rx="2" />
-                <rect x="18" y="6" width="16" height="11" />
-                <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
-              </svg>
-            </span>
+          <div class="cwc_product-buy-box__track" data-cwc-gallery-track tabindex="0" aria-label="{{ buy_product.title | escape }} images">
+            {% if media_count > 0 %}
+              {% for media in gallery_media %}
+                {%- assign media_image = media.preview_image -%}
+                <div
+                  class="cwc_product-buy-box__slide"
+                  data-cwc-slide
+                  data-media-id="{{ media.id }}"
+                  data-index="{{ forloop.index0 }}"
+                >
+                  {% if media_image != blank %}
+                    <img
+                      src="{{ media_image | image_url: width: 1100 }}"
+                      srcset="{{ media_image | image_url: width: 550 }} 550w, {{ media_image | image_url: width: 800 }} 800w, {{ media_image | image_url: width: 1100 }} 1100w, {{ media_image | image_url: width: 1500 }} 1500w"
+                      sizes="(max-width: 1024px) 100vw, {{ section.settings.media_width | default: 45 }}vw"
+                      alt="{{ media.alt | default: buy_product.title | escape }}"
+                      width="{{ media_image.width }}"
+                      height="{{ media_image.height }}"
+                      {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                    >
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="cwc_product-buy-box__slide" data-index="0">
+                <span class="cwc_product-buy-box__media-placeholder">
+                  <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                    <rect x="16" y="0" width="20" height="6" rx="2" />
+                    <rect x="18" y="6" width="16" height="11" />
+                    <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                  </svg>
+                </span>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if media_count > 1 %}
+            <div class="cwc_product-buy-box__dots" aria-hidden="true">
+              {% for media in gallery_media %}
+                <span class="cwc_product-buy-box__dot{% if forloop.first %} cwc_product-buy-box__dot--active{% endif %}" data-cwc-dot></span>
+              {% endfor %}
+            </div>
           {% endif %}
 
           {% liquid
@@ -82,22 +116,23 @@
         </div>
 
         {% comment %} Thumb strip hides itself when there is only one image {% endcomment %}
-        {% if buy_product.media.size > 1 %}
+        {% if media_count > 1 and section.settings.show_thumbnails %}
           <div class="cwc_product-buy-box__thumbs" role="group" aria-label="Product images">
-            {% for media in buy_product.media limit: section.settings.gallery_limit %}
+            {% for media in gallery_media %}
               <button
                 type="button"
                 class="cwc_product-buy-box__thumb{% if forloop.first %} cwc_product-buy-box__thumb--active{% endif %}"
                 data-cwc-thumb
-                data-full="{{ media | image_url: width: 1200 }}"
+                data-index="{{ forloop.index0 }}"
                 aria-label="Show image {{ forloop.index }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
               >
                 <img
-                  src="{{ media | image_url: width: 200 }}"
+                  src="{{ media.preview_image | image_url: width: 180 }}"
                   alt=""
                   loading="lazy"
-                  width="200"
-                  height="200"
+                  width="88"
+                  height="88"
                 >
               </button>
             {% endfor %}
@@ -106,6 +141,66 @@
           {% if section.settings.thumb_note != blank %}
             <p class="cwc_product-buy-box__thumb-note">{{ section.settings.thumb_note }}</p>
           {% endif %}
+        {% endif %}
+
+        {%- liquid
+          comment
+            Default review comes from the section settings (shared across products). With the
+            product review toggle on, the browser asks Judge.me's feed for this product and swaps
+            in its first review at or above the minimum rating. Desktop only.
+          endcomment
+          assign use_product_review = section.settings.testimonial_use_product_review
+          assign show_testimonial = false
+          if section.settings.show_testimonial
+            if section.settings.testimonial_quote != blank or use_product_review
+              assign show_testimonial = true
+            endif
+          endif
+        -%}
+        {% if show_testimonial %}
+          {%- assign testimonial_percent = section.settings.testimonial_rating | times: 20 -%}
+          <figure
+            class="cwc_product-buy-box__testimonial"
+            {% if section.settings.testimonial_quote == blank %}hidden{% endif %}
+            {% if use_product_review %}
+              data-product-review
+              data-product-id="{{ buy_product.id }}"
+              data-shop-domain="{{ shop.permanent_domain }}"
+              data-min-rating="{{ section.settings.testimonial_min_rating | default: 4 }}"
+            {% endif %}
+          >
+            <span
+              class="cwc_product-buy-box__testimonial-stars"
+              data-testimonial-stars
+              style="--rating: {{ testimonial_percent }}%;"
+              role="img"
+              aria-label="{{ section.settings.testimonial_rating }} out of 5 stars"
+            >★★★★★</span>
+            <blockquote class="cwc_product-buy-box__testimonial-quote">
+              <p data-testimonial-quote>&ldquo;{{ section.settings.testimonial_quote | escape }}&rdquo;</p>
+            </blockquote>
+            <figcaption class="cwc_product-buy-box__testimonial-footer">
+              <span class="cwc_product-buy-box__testimonial-author">
+                {% if section.settings.testimonial_photo != blank %}
+                  <img
+                    data-testimonial-photo
+                    src="{{ section.settings.testimonial_photo | image_url: width: 120 }}"
+                    alt=""
+                    loading="lazy"
+                    width="40"
+                    height="40"
+                  >
+                {% endif %}
+                <span class="cwc_product-buy-box__testimonial-name" data-testimonial-name>{{ section.settings.testimonial_name | escape }}</span>
+              </span>
+              {% if section.settings.testimonial_verified_label != blank %}
+                <span class="cwc_product-buy-box__testimonial-verified" data-testimonial-verified>
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="12" fill="currentColor"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  {{ section.settings.testimonial_verified_label | escape }}
+                </span>
+              {% endif %}
+            </figcaption>
+          </figure>
         {% endif %}
       </div>
 
@@ -203,6 +298,40 @@
                 </p>
               {% endif %}
 
+            {% when 'delivery_estimate' %}
+              {%- liquid
+                comment
+                  Delivery = processing (counted from today if ordered on a business day
+                  before the cutoff, otherwise from the next business day) + UPS transit,
+                  in business days. CWC_product_buy_box.js fills in the dates in store
+                  (Pacific) time and unhides the line; without JS it stays hidden.
+                endcomment
+                assign processing_min = block.settings.processing_min | default: 3
+                assign processing_max = block.settings.processing_max | default: 5 | at_least: processing_min
+                assign transit_min = block.settings.transit_min | default: 1
+                assign transit_max = block.settings.transit_max | default: 5 | at_least: transit_min
+                assign closed_dates = block.settings.closed_dates | newline_to_br | strip_newlines | replace: '<br />', ',' | remove: ' '
+              -%}
+              <p
+                class="cwc_product-buy-box__estimate"
+                data-delivery-estimate
+                data-processing-min="{{ processing_min }}"
+                data-processing-max="{{ processing_max }}"
+                data-transit-min="{{ transit_min }}"
+                data-transit-max="{{ transit_max }}"
+                data-cutoff-hour="{{ block.settings.cutoff_hour }}"
+                data-closed-dates="{{ closed_dates | escape }}"
+                style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#14281D' }}; --estimate-accent: {{ block.settings.accent_color | default: '#A35A12' }};"
+                hidden
+                {{ block.shopify_attributes }}
+              >
+                <svg class="cwc_product-buy-box__estimate-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor"></circle><path d="M12 6.5V12l3.75 3.4" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>
+                  {% if block.settings.label != blank %}{{ block.settings.label | escape }} {% endif -%}
+                  <strong class="cwc_product-buy-box__estimate-date" data-estimate-date></strong>
+                </span>
+              </p>
+
             {% when 'buy_buttons' %}
               <div class="cwc_product-buy-box__buy" {{ block.shopify_attributes }}>
                 {% form 'product', buy_product, class: 'cwc_product-buy-box__form' %}
@@ -219,6 +348,7 @@
                         {% for variant in buy_product.variants %}
                           <option
                             value="{{ variant.id }}"
+                            {% if variant.featured_media != blank %}data-media-id="{{ variant.featured_media.id }}"{% endif %}
                             {% if variant == current_variant %}
                               selected
                             {% endif %}
@@ -696,9 +826,30 @@
       "default": 45
     },
     {
+      "type": "checkbox",
+      "id": "sticky_gallery",
+      "label": "Sticky Gallery (Desktop)",
+      "default": true,
+      "info": "The gallery stays in view under the header while the buy column scrolls."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show Thumbnails (Desktop)",
+      "default": true,
+      "info": "Tablet and mobile swipe between images, with progress bars instead."
+    },
+    {
+      "type": "checkbox",
+      "id": "media_spotlight",
+      "label": "Spotlight Background",
+      "default": false,
+      "info": "Soft spotlight behind the bottle, tinted with the gallery background color. Off uses the same image background as the collection cards."
+    },
+    {
       "type": "range",
       "id": "gallery_limit",
-      "label": "Maximum Thumbnails",
+      "label": "Maximum Images",
       "min": 2,
       "max": 12,
       "step": 1,
@@ -709,6 +860,66 @@
       "id": "thumb_note",
       "label": "Thumbnail Note",
       "default": "Thumbnail strip hides automatically when a product has only one image."
+    },
+    {
+      "type": "header",
+      "content": "Gallery Testimonial (Desktop)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_testimonial",
+      "label": "Show Testimonial Under Gallery",
+      "default": true,
+      "info": "Desktop only. Connect the fields to product metafields for a per-product review."
+    },
+    {
+      "type": "range",
+      "id": "testimonial_rating",
+      "label": "Star Rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_quote",
+      "label": "Quote",
+      "default": "I was nervous ordering online due to how hard it was to find at retail stores but this company is LEGIT. Packaging was great and bottle in perfect shape"
+    },
+    {
+      "type": "image_picker",
+      "id": "testimonial_photo",
+      "label": "Customer Photo"
+    },
+    {
+      "type": "text",
+      "id": "testimonial_name",
+      "label": "Customer Name",
+      "default": "Justyn King"
+    },
+    {
+      "type": "text",
+      "id": "testimonial_verified_label",
+      "label": "Verified Label",
+      "default": "Verified buyer",
+      "info": "Leave blank to hide"
+    },
+    {
+      "type": "checkbox",
+      "id": "testimonial_use_product_review",
+      "label": "Use Product Review When Available",
+      "default": true,
+      "info": "Swaps in this product's own Judge.me review when one meets the minimum rating. Otherwise the review above shows."
+    },
+    {
+      "type": "range",
+      "id": "testimonial_min_rating",
+      "label": "Product Review Minimum Rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4
     },
     {
       "type": "header",
@@ -754,7 +965,7 @@
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#DEDED8"
+      "default": "#ECECE8"
     },
     {
       "type": "color",
@@ -1070,6 +1281,98 @@
       ]
     },
     {
+      "type": "delivery_estimate",
+      "name": "Delivery Estimate",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Order today, estimated delivery"
+        },
+        {
+          "type": "paragraph",
+          "content": "Estimated delivery = processing time + UPS transit time, in business days (Mon–Fri). Uses store time (Pacific)."
+        },
+        {
+          "type": "range",
+          "id": "cutoff_hour",
+          "label": "Same-Day Cutoff (Pacific, 24h)",
+          "min": 0,
+          "max": 23,
+          "step": 1,
+          "default": 16,
+          "info": "Orders after this hour, on weekends or closed dates count from the next business day. 16 = 4 PM."
+        },
+        {
+          "type": "range",
+          "id": "processing_min",
+          "label": "Processing Time, Fastest (business days)",
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "processing_max",
+          "label": "Processing Time, Slowest (business days)",
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "range",
+          "id": "transit_min",
+          "label": "UPS Transit, Fastest (business days)",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "transit_max",
+          "label": "UPS Transit, Slowest (business days)",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "info": "UPS Ground from Southern California: about 1 day in-state, up to 5 coast to coast"
+        },
+        {
+          "type": "textarea",
+          "id": "closed_dates",
+          "label": "Closed Dates",
+          "info": "Holidays with no processing or delivery. One per line as YYYY-MM-DD, e.g. 2026-11-26"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#FBEFDD"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#14281D"
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Icon And Underline Color",
+          "default": "#A35A12"
+        }
+      ]
+    },
+    {
       "type": "help",
       "name": "Help Block",
       "limit": 1,
@@ -1278,7 +1581,9 @@
         { "type": "price" },
         { "type": "meta" },
         { "type": "stock" },
+        { "type": "delivery_estimate" },
         { "type": "buy_buttons" },
+        { "type": "help" },
         { "type": "nudge" },
         { "type": "protection" },
         { "type": "trust_row" },

@@ -11,15 +11,15 @@
 
     {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
     --input-bg: {{ section.settings.input_bg_color | default: '#FFFFFF' }};
-    --input-border-color: {{ section.settings.input_border_color | default: '#1C1C19' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#D9D9D3' }};
     --input-text-color: {{ section.settings.input_text_color | default: '#1C1C19' }};
     --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#5C5C57' }};
     --section-border-color: {{ section.settings.section_border_color | default: '#36473D' }};
     --section-border-width: {{ section.settings.section_border_width | default: 1 }}px;
     --success-bg: {{ section.settings.success_bg_color | default: '#14281D' }};
     --success-text-color: {{ section.settings.success_text_color | default: '#ffffff' }};
-    --error-bg: {{ section.settings.error_bg_color | default: '#8A4A0E' }};
-    --error-text-color: {{ section.settings.error_text_color | default: '#FBE3C4' }};
+    --error-bg: {{ section.settings.error_bg_color | default: '#A35A12' }};
+    --error-text-color: {{ section.settings.error_text_color | default: '#FFFFFF' }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
@@ -293,13 +293,13 @@
       "type": "color",
       "id": "error_bg_color",
       "label": "Error Background Color",
-      "default": "#8A4A0E"
+      "default": "#A35A12"
     },
     {
       "type": "color",
       "id": "error_text_color",
       "label": "Error Text Color",
-      "default": "#FBE3C4"
+      "default": "#FFFFFF"
     },
     {
       "type": "header",

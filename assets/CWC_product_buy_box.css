@@ -10,14 +10,14 @@
   /* Theme fonts: heading = display roles, body = everything else (incl. the spec's mono roles) */
   --bb-font-display: var(--cwc-font-heading);
   --bb-font-body: var(--cwc-font-body);
-  --bb-font-mono: var(--cwc-font-body);
+  --bb-font-mono: var(--cwc-font-mono);
   /* Brand tokens with no section setting behind them */
   --bb-ink: #1C1C19;
-  --bb-tint: #FBF1E4;
-  --bb-tint-line: #F0D9B8;
-  --bb-line-strong: #BDBDB6;
-  --bb-soft: #FBE3C4;
-  --bb-soft-text: #8A4A0E;
+  --bb-tint: #F6F6F3;
+  --bb-tint-line: #E6E6E1;
+  --bb-line-strong: #DDDDD7;
+  --bb-soft: #A35A12;
+  --bb-soft-text: #FFFFFF;
   --bb-gutter: 48px;
 
   background-color: var(--section-bg);
@@ -28,7 +28,7 @@
 }
 
 .cwc_product-buy-box__container {
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 var(--bb-gutter);
 }
@@ -44,29 +44,110 @@
    Media
    ============================== */
 .cwc_product-buy-box__media {
-  position: sticky;
-  top: 1.5rem;
+  min-width: 0;
 }
 
-/* White frame, 1px hairline, bottle contained — never cropped */
+/* Sits under whatever part of the sticky header is showing (CWC_header
+   publishes --cwc-header-height on <html>) */
+.cwc_product-buy-box__media--sticky {
+  position: sticky;
+  top: calc(var(--cwc-header-height, 0px) + 1.5rem);
+  transition: top 0.3s ease;
+}
+
+/* Same ground as the collection cards: no frame, square slides on the
+   white-to-sage radial, bottle contained — never cropped */
 .cwc_product-buy-box__media-main {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 4 / 5;
-  padding: 24px;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-color);
+  background-color: var(--media-bg);
+  border: 0;
   border-radius: 0;
   overflow: hidden;
 }
 
-.cwc_product-buy-box__media-main img {
+/* One swipeable row of slides */
+.cwc_product-buy-box__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.cwc_product-buy-box__track::-webkit-scrollbar {
+  display: none;
+}
+
+.cwc_product-buy-box__track:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: -2px;
+}
+
+.cwc_product-buy-box__slide {
+  position: relative;
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: start;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+}
+
+/* Same inset as the card image (9% each side) */
+.cwc_product-buy-box__slide img {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  padding: 0;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  display: block;
+}
+
+/* Optional spotlight: light centre fading into the gallery background, with a
+   soft floor under the bottle. Multiply drops white image grounds into it. */
+.cwc_product-buy-box__media--spotlight .cwc_product-buy-box__slide {
+  background:
+    radial-gradient(ellipse 34% 4.5% at 50% 90%, rgba(20, 40, 29, 0.14), transparent 100%),
+    radial-gradient(ellipse 55% 75% at 50% 28%, #FFFFFF 0%, color-mix(in srgb, var(--media-bg) 40%, #FFFFFF) 45%, var(--media-bg) 100%);
+}
+
+.cwc_product-buy-box__media--spotlight .cwc_product-buy-box__slide img,
+.cwc_product-buy-box__media--spotlight .cwc_product-buy-box__thumb img {
+  mix-blend-mode: multiply;
+}
+
+/* Progress bars over the image — tablet and mobile only */
+.cwc_product-buy-box__dots {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.cwc_product-buy-box__dot {
+  width: 22px;
+  height: 3px;
+  background-color: var(--bb-line-strong);
+  transition: background-color 0.2s ease;
+}
+
+.cwc_product-buy-box__dot--active {
+  background-color: var(--text-color);
+}
+
+.cwc_product-buy-box__media-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  display: block;
 }
 
 .cwc_product-buy-box__media-placeholder svg {
@@ -106,31 +187,25 @@
 }
 
 /* === Thumbs === */
+/* Wrapping row of squares under the image */
 .cwc_product-buy-box__thumbs {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 }
 
-.cwc_product-buy-box__thumbs::-webkit-scrollbar {
-  display: none;
-}
-
-/* Square; 1px border + 4px padding = 2px border + 3px padding, so the active
+/* Square; 1px border + 6px padding = 2px border + 5px padding, so the active
    state does not shift the image */
 .cwc_product-buy-box__thumb {
-  scroll-snap-align: start;
   flex-shrink: 0;
-  width: 72px;
-  height: 72px;
-  padding: 4px;
+  width: 88px;
+  height: 88px;
+  padding: 6px;
+  box-sizing: border-box;
   cursor: pointer;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-color);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+  border: 1px solid transparent;
   border-radius: 0;
   transition: border-color 0.15s ease;
 }
@@ -139,6 +214,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  mix-blend-mode: multiply;
   display: block;
 }
 
@@ -148,7 +224,7 @@
 
 .cwc_product-buy-box__thumb--active,
 .cwc_product-buy-box__thumb--active:hover {
-  padding: 3px;
+  padding: 5px;
   border: 2px solid var(--text-color);
 }
 
@@ -303,6 +379,11 @@
 }
 
 /* === Stock === */
+/* Stock notice tucked right under the category line */
+.cwc_product-buy-box__meta:has(+ .cwc_product-buy-box__stock) {
+  margin-bottom: 10px;
+}
+
 .cwc_product-buy-box__stock {
   display: flex;
   align-items: center;
@@ -435,7 +516,7 @@
   min-height: 56px;
   padding: 0 30px;
   font-family: var(--bb-font-body);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.14em;
@@ -500,6 +581,11 @@
   font-size: 13px;
   line-height: 1.55;
   color: var(--subtext-color);
+}
+
+/* Sitting right above the delivery estimate: pull the two together */
+.cwc_product-buy-box__protect:has(+ .cwc_product-buy-box__estimate:not([hidden])) {
+  margin-bottom: 12px;
 }
 
 .cwc_product-buy-box__protect svg {
@@ -869,17 +955,72 @@
   outline-offset: 3px;
 }
 
+/* === Delivery Estimate ===
+   Full-width info block above Add to Cart, after the Broadway pattern: filled
+   clock icon, label, bold date range with an amber underline. Square, soft
+   amber ground so it reads as the next thing to notice after the price.
+   Hidden until JS fills in the dates. */
+.cwc_product-buy-box__estimate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  background-color: var(--estimate-bg, #FBEFDD);
+  border-radius: 0;
+  font-family: var(--bb-font-body);
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--estimate-text, #14281D);
+}
+
+.cwc_product-buy-box__estimate[hidden] {
+  display: none;
+}
+
+.cwc_product-buy-box__estimate-icon {
+  flex: 0 0 auto;
+  display: block;
+  color: var(--estimate-accent, #A35A12);
+}
+
+.cwc_product-buy-box__estimate-date {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--estimate-accent, #A35A12);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_product-buy-box__estimate {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
 /* === Help Block ===
-   "Questions about this bottle?" row. Call + chat as Tertiary buttons.
+   Open block (no box): Fraunces heading, small meta line, then Call and Chat
+   side by side. Call = Secondary (amber outline), Chat = solid green.
    The chat button opens Shopify Inbox through CWC_inbox_trigger.js. */
 .cwc_product-buy-box__help {
+  --help-green: #14281D;
+  --help-green-hover: #0D1C14;
+  --help-amber-text: #A35A12;
+
   display: flex;
   gap: 16px;
   align-items: flex-start;
   margin: 0 0 26px;
-  padding: 18px;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-color);
+  padding: 18px 0 0;
+  background-color: transparent;
+  border: 0;
   border-radius: 0;
 }
 
@@ -908,10 +1049,10 @@
 .cwc_product-buy-box__help-heading {
   margin: 0 0 4px;
   font-family: var(--bb-font-display);
-  font-size: 19px;
+  font-size: 24px;
   font-weight: 500;
-  line-height: 1.3;
-  color: var(--text-color);
+  line-height: 1.15;
+  color: var(--help-green);
 }
 
 .cwc_product-buy-box__help-meta {
@@ -924,7 +1065,7 @@
 
 .cwc_product-buy-box__help-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-top: 14px;
 }
 
@@ -932,16 +1073,15 @@
   display: none;
 }
 
-/* Tertiary — white, ink outline; fills ink on hover */
 .cwc_product-buy-box__help-button {
   flex: 1;
-  min-height: 46px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 0 16px;
-  border: 1px solid var(--bb-ink);
+  border: 1px solid transparent;
   border-radius: 0;
   font-family: var(--bb-font-body);
   font-size: 13px;
@@ -950,37 +1090,138 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
+/* Secondary — white, amber-text outline; fills amber-text on hover */
 .cwc_product-buy-box__help-button--outline {
   background-color: #FFFFFF;
-  color: var(--bb-ink);
+  border-color: var(--help-amber-text);
+  color: var(--help-amber-text);
 }
 
 .cwc_product-buy-box__help-button--outline:hover {
-  background-color: var(--bb-ink);
+  background-color: var(--help-amber-text);
   color: #FFFFFF;
 }
 
-/* Chat — the filled partner of the pair: ink fill, inverts on hover */
+/* Chat — solid green, white text */
 .cwc_product-buy-box__help-button--dark {
-  background-color: var(--bb-ink);
+  background-color: var(--help-green);
+  border-color: var(--help-green);
   color: #FFFFFF;
 }
 
 .cwc_product-buy-box__help-button--dark:hover {
-  background-color: #FFFFFF;
-  color: var(--bb-ink);
+  background-color: var(--help-green-hover);
+  border-color: var(--help-green-hover);
 }
 
 .cwc_product-buy-box__help-button:focus-visible {
-  outline: 2px solid var(--highlight-color);
+  outline: 2px solid var(--help-amber-text);
   outline-offset: 3px;
 }
 
 .cwc_product-buy-box__help-label-mobile {
   display: none;
+}
+
+/* === Gallery Testimonial (desktop only) ===
+   Open card under the gallery: 1px line, square, amber stars, Fraunces quote */
+.cwc_product-buy-box__testimonial {
+  margin: 24px 0 0;
+  padding: 20px 22px;
+  font-family: var(--bb-font-body);
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+}
+
+.cwc_product-buy-box__testimonial[hidden] {
+  display: none;
+}
+
+/* Fill the stars to --rating with the amber, the rest in the line color */
+.cwc_product-buy-box__testimonial-stars {
+  display: inline-block;
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #E9A23B var(--rating, 100%), #D9D9D3 var(--rating, 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cwc_product-buy-box__testimonial-quote {
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+  quotes: none;
+}
+
+.cwc_product-buy-box__testimonial-quote p {
+  margin: 0;
+  font-family: var(--bb-font-display);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: normal;
+  color: var(--bb-ink);
+}
+
+.cwc_product-buy-box__testimonial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.cwc_product-buy-box__testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cwc_product-buy-box__testimonial-author img {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.cwc_product-buy-box__testimonial-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bb-ink);
+}
+
+.cwc_product-buy-box__testimonial-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-family: var(--bb-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5C5C57;
+}
+
+.cwc_product-buy-box__testimonial-verified[hidden] {
+  display: none;
+}
+
+.cwc_product-buy-box__testimonial-verified svg {
+  color: #14281D;
+  display: block;
 }
 
 /* ==============================
@@ -996,8 +1237,19 @@
     gap: 32px;
   }
 
-  .cwc_product-buy-box__media {
+  .cwc_product-buy-box__media--sticky {
     position: static;
+  }
+
+  /* Swipe with progress bars instead of thumbnails */
+  .cwc_product-buy-box__thumbs,
+  .cwc_product-buy-box__thumb-note,
+  .cwc_product-buy-box__testimonial {
+    display: none;
+  }
+
+  .cwc_product-buy-box__dots {
+    display: flex;
   }
 }
 
@@ -1021,8 +1273,13 @@
     gap: 24px;
   }
 
-  .cwc_product-buy-box__media-main {
-    padding: 16px;
+  /* Edge to edge, fixed height, like the Broadway mobile gallery */
+  .cwc_product-buy-box__media {
+    margin: 0 calc(var(--bb-gutter) * -1);
+  }
+
+  .cwc_product-buy-box__slide {
+    aspect-ratio: 1 / 1;
   }
 
   .cwc_product-buy-box__brand {
@@ -1144,7 +1401,7 @@
     column-gap: 10px;
     row-gap: 0;
     align-items: center;
-    padding: 14px;
+    padding: 14px 0 0;
   }
 
   .cwc_product-buy-box__help--photo {
@@ -1168,7 +1425,7 @@
   .cwc_product-buy-box__help-heading {
     grid-area: heading;
     align-self: end;
-    font-size: 17px;
+    font-size: 21px;
   }
 
   .cwc_product-buy-box__help-meta {

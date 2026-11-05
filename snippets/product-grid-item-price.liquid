@@ -102,8 +102,8 @@
     {% if price_product.price_varies and settings.when_card_price_varies == 'show_from_price' %}
         {{ from_text }}
     {% endif %}
-    {{ product_compare_at_price }}
     {{ product_sale_price }}
+    {{ product_compare_at_price }}
   </div>
 
   {% comment %} Regular {% endcomment %}

@@ -25,11 +25,18 @@
 
   /* === Sticky filters sit under the sticky toolbar, so publish its height ===
      The toolbar itself sits under the site header when that header is sticky.
-     CWC_header doesn't publish its height, so measure it here. */
+     CWC_header publishes the height of whatever part of it is showing as
+     --cwc-header-height on <html>; fall back to measuring its section. */
   function siteHeaderHeight() {
+    const published = parseFloat(
+      document.documentElement.style.getPropertyValue('--cwc-header-height')
+    );
+    if (!isNaN(published)) return published;
+
     const header = document.querySelector('.cwc_header--sticky');
     if (!header) return 0;
-    const position = window.getComputedStyle(header).position;
+    const wrapper = header.closest('.shopify-section') || header;
+    const position = window.getComputedStyle(wrapper).position;
     if (position !== 'sticky' && position !== 'fixed') return 0;
     return header.offsetHeight;
   }
@@ -39,7 +46,13 @@
     if (!toolbar || !sectionEl.classList.contains('cwc_collection-grid--sticky')) return;
 
     function measure() {
-      sectionEl.style.setProperty('--cwc-header-height', siteHeaderHeight() + 'px');
+      // When the header publishes its height on <html>, inherit it live so the
+      // toolbar follows the header as it shrinks on scroll
+      if (document.documentElement.style.getPropertyValue('--cwc-header-height')) {
+        sectionEl.style.removeProperty('--cwc-header-height');
+      } else {
+        sectionEl.style.setProperty('--cwc-header-height', siteHeaderHeight() + 'px');
+      }
       sectionEl.style.setProperty('--cg-toolbar-height', toolbar.offsetHeight + 'px');
     }
 

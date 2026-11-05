@@ -1,0 +1,162 @@
+{% comment %}
+  Full-screen mobile menu.
+
+  Built from its own menu (the header's "Mobile Menu" setting, falling back to
+  the desktop menu), so mobile can be ordered and grouped differently. A
+  top-level item with children becomes an accordion with its children in two
+  columns; an item with no children is a plain row. Accordions are native
+  details/summary, so they open with no JS.
+
+  Accepts:
+  - section {Object} - the header section, for its settings
+  - nav_menu {Object} - the resolved mobile menu
+  - highlights {Array} - lowercased menu titles to color
+  - logo_markup {String} - the header's logo markup
+  - cart_icon {String} - cart icon svg
+  - search_icon {String} - search icon svg
+
+  Usage:
+  {% render 'CWC_header-mobile', section: section, nav_menu: mobile_menu, highlights: highlights, logo_markup: logo_markup, cart_icon: cart_icon, search_icon: search_icon %}
+{% endcomment %}
+
+<div
+  id="cwc_header-menu-{{ section.id }}"
+  class="cwc_header__menu"
+  data-cwc-menu
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+  hidden
+>
+  <div class="cwc_header__menu-top">
+    <div class="cwc_header__menu-bar">
+      <button type="button" class="cwc_header__icon" data-cwc-menu-close aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+
+      <a href="{{ routes.root_url }}" class="cwc_header__logo cwc_header__menu-logo" aria-label="{{ shop.name | escape }} home">
+        {{ logo_markup }}
+      </a>
+
+      {% if section.settings.show_cart %}
+        <a href="{{ routes.cart_url }}" class="cwc_header__icon cwc_header__icon--cart" data-cwc-cart aria-label="Cart, {{ cart.item_count }} items">
+          {{ cart_icon }}
+          <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+        </a>
+      {% else %}
+        <span class="cwc_header__icon" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_search %}
+      <div class="cwc_header__menu-search-wrap" data-cwc-search data-predictive="{{ section.settings.enable_predictive }}">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="cwc_header__menu-search">
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
+          <label class="cwc_header__visually-hidden" for="cwc_header-menu-search-{{ section.id }}">Search the store</label>
+          <input
+            id="cwc_header-menu-search-{{ section.id }}"
+            type="search"
+            name="q"
+            class="cwc_header__menu-search-input"
+            data-cwc-menu-search
+            data-cwc-search-input
+            placeholder="{{ section.settings.search_placeholder | default: 'Search bottles, brands, collections' | escape }}"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          >
+          <button type="submit" class="cwc_header__menu-search-submit" aria-label="Submit search">
+            {{ search_icon }}
+          </button>
+        </form>
+        <div class="cwc_header__search-results cwc_header__menu-search-results" id="cwc_header-menu-search-results-{{ section.id }}" data-cwc-search-results hidden></div>
+        <span class="cwc_header__visually-hidden" data-cwc-search-status aria-live="polite"></span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if nav_menu != blank and nav_menu.links.size > 0 %}
+    <nav class="cwc_header__menu-nav" aria-label="{{ section.settings.nav_label | default: 'Main' | escape }}">
+      {% for link in nav_menu.links %}
+        {% liquid
+          assign link_key = link.title | downcase | strip
+          assign is_highlight = false
+          for entry in highlights
+            assign entry_key = entry | strip
+            if entry_key == link_key
+              assign is_highlight = true
+            endif
+          endfor
+        %}
+
+        {% if link.links.size > 0 %}
+          <details class="cwc_header__menu-group">
+            <summary class="cwc_header__menu-row{% if is_highlight %} cwc_header__menu-row--highlight{% endif %}">
+              {{ link.title | escape }}
+              <span class="cwc_header__menu-sign" aria-hidden="true"></span>
+            </summary>
+
+            <ul class="cwc_header__menu-sub">
+              {% for child in link.links %}
+                <li>
+                  <a href="{{ child.url }}" class="cwc_header__menu-link"{% if child.current %} aria-current="page"{% endif %}>
+                    {{- child.title | escape -}}
+                  </a>
+                </li>
+              {% endfor %}
+
+              {% if section.settings.view_all_label != blank %}
+                <li class="cwc_header__menu-sub-all">
+                  <a href="{{ link.url }}" class="cwc_header__menu-link cwc_header__menu-link--all">
+                    {{- section.settings.view_all_label | escape }} {{ link.title | escape }} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </details>
+        {% else %}
+          <a
+            href="{{ link.url }}"
+            class="cwc_header__menu-row{% if is_highlight %} cwc_header__menu-row--highlight{% endif %}"
+            {% if link.current %}aria-current="page"{% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+  {% endif %}
+
+  {% liquid
+    assign footer_menu = section.settings.drawer_menu
+    assign has_footer_links = false
+    if footer_menu != blank and footer_menu.links.size > 0
+      assign has_footer_links = true
+    endif
+  %}
+
+  {% if section.settings.show_account or has_footer_links or section.settings.drawer_note != blank %}
+    <div class="cwc_header__menu-footer">
+      {% if section.settings.show_account or has_footer_links %}
+        <p class="cwc_header__menu-footer-links">
+          {% if section.settings.show_account and shop.customer_accounts_enabled %}
+            <a href="{{ routes.account_url }}">Account</a>
+          {% endif %}
+          {% if has_footer_links %}
+            {% for link in footer_menu.links %}
+              <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% endfor %}
+          {% endif %}
+        </p>
+      {% endif %}
+
+      {% if section.settings.drawer_note != blank %}
+        <p class="cwc_header__menu-note">{{ section.settings.drawer_note | escape }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
