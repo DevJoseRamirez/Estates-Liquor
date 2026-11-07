@@ -1,9 +1,10 @@
 {% style %}
   #cwc_announcement-bar-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
-    --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
-    --arrow-color: {{ section.settings.arrow_color | default: '#E9A23B' }};
+    --section-bg: {{ section.settings.bg_color | default: '#E9A23B' }};
+    --text-color: {{ section.settings.text_color | default: '#221813' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#221813' }};
+    --arrow-color: {{ section.settings.arrow_color | default: '#221813' }};
+    --dot-color: {{ section.settings.dot_color | default: '#A35A12' }};
     --text-size: {{ section.settings.text_size | default: 11 }}px;
     --padding-top: {{ section.settings.padding_top | default: 10 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
@@ -169,25 +170,31 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#14281D"
+      "default": "#E9A23B"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#FFFFFF"
+      "default": "#221813"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Bold And Link Color",
-      "default": "#E9A23B"
+      "default": "#221813"
     },
     {
       "type": "color",
       "id": "arrow_color",
       "label": "Arrow Color",
-      "default": "#E9A23B"
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Separator Dot Color",
+      "default": "#A35A12"
     },
     {
       "type": "header",

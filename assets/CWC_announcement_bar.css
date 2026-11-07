@@ -1,15 +1,15 @@
 /* ==============================
    CWC Announcement Bar
-   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber):
-   green bar, white 11px uppercase 0.1em text, amber middle-dot separators,
+   Styled to _theme-styles/estates-brand-tokens.md (Cask Espresso):
+   accent bar, dark mono 11px uppercase 0.12em text, brown middle-dot separators,
    36px desktop / 32px mobile, square arrows.
    ============================== */
 
 /* === Section Wrapper === */
 .cwc_announcement-bar {
-  --ab-font-body: var(--cwc-font-body);
-  --ab-arrow-size: 32px;
-  --ab-height: 36px;
+  --ab-font-body: var(--cwc-font-mono);
+  --ab-arrow-size: 28px;
+  --ab-height: 32px;
 
   box-sizing: border-box;
   display: flex;
@@ -69,7 +69,7 @@
   color: var(--text-color);
   font-size: var(--text-size, 11px);
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   line-height: 1.4;
   text-transform: uppercase;
   text-decoration: none;
@@ -107,7 +107,7 @@
 .cwc_announcement-bar__dot {
   display: inline-block;
   margin: 0 0.6em;
-  color: var(--highlight-color);
+  color: var(--dot-color, var(--highlight-color));
   font-weight: 700;
 }
 
@@ -163,8 +163,8 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_announcement-bar {
-    --ab-arrow-size: 28px;
-    --ab-height: 32px;
+    --ab-arrow-size: 24px;
+    --ab-height: 28px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
   }

@@ -93,7 +93,7 @@
   aspect-ratio: 1 / 1;
   scroll-snap-align: start;
   overflow: hidden;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #EEE7DF 100%);
 }
 
 /* Same inset as the card image (9% each side) */
@@ -112,7 +112,7 @@
    soft floor under the bottle. Multiply drops white image grounds into it. */
 .cwc_product-buy-box__media--spotlight .cwc_product-buy-box__slide {
   background:
-    radial-gradient(ellipse 34% 4.5% at 50% 90%, rgba(20, 40, 29, 0.14), transparent 100%),
+    radial-gradient(ellipse 34% 4.5% at 50% 90%, rgba(34, 24, 19, 0.14), transparent 100%),
     radial-gradient(ellipse 55% 75% at 50% 28%, #FFFFFF 0%, color-mix(in srgb, var(--media-bg) 40%, #FFFFFF) 45%, var(--media-bg) 100%);
 }
 
@@ -204,7 +204,7 @@
   padding: 6px;
   box-sizing: border-box;
   cursor: pointer;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #EEE7DF 100%);
   border: 1px solid transparent;
   border-radius: 0;
   transition: border-color 0.15s ease;
@@ -975,7 +975,7 @@
   font-size: 15px;
   line-height: 1.4;
   text-align: center;
-  color: var(--estimate-text, #14281D);
+  color: var(--estimate-text, #221813);
 }
 
 .cwc_product-buy-box__estimate[hidden] {
@@ -1010,8 +1010,8 @@
    side by side. Call = Secondary (amber outline), Chat = solid green.
    The chat button opens Shopify Inbox through CWC_inbox_trigger.js. */
 .cwc_product-buy-box__help {
-  --help-green: #14281D;
-  --help-green-hover: #0D1C14;
+  --help-green: #221813;
+  --help-green-hover: #140E0B;
   --help-amber-text: #A35A12;
 
   display: flex;
@@ -1220,7 +1220,7 @@
 }
 
 .cwc_product-buy-box__testimonial-verified svg {
-  color: #14281D;
+  color: #221813;
   display: block;
 }
 

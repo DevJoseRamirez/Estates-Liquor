@@ -2,7 +2,8 @@
    CWC Header
    Structure: top bar (logo · search · icons) over a nav row, full-width mega
    panels, full-screen mobile menu, shrink on scroll.
-   Styled to _theme-styles/estates-brand-tokens.md (Green + Amber): square
+   Styled to _theme-styles/estates-brand-tokens.md (Cask Espresso): dark top
+   bar and nav row over white panels; square
    corners, 1px lines (no shadows), tracked uppercase nav, hairline-bordered search
    with a Primary amber SEARCH button, amber-square cart count.
    ============================== */
@@ -17,7 +18,7 @@
   --hd-muted: #5C5C57;
   --hd-amber: #E9A23B;
   --hd-amber-hover: #D68F27;
-  --hd-on-amber: #14281D;
+  --hd-on-amber: #221813;
   --hd-gutter: 48px;
   --hd-icon-size: 44px;
   --hd-search-height: 48px;
@@ -494,7 +495,7 @@
   width: 52px;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #EEE7DF 100%);
 }
 
 .cwc_header__search-thumb {
@@ -512,7 +513,8 @@
 }
 
 /* Stacked (mobile menu): divider between the two halves */
-.cwc_header__search-aside + .cwc_header__search-main {
+.cwc_header__search-aside + .cwc_header__search-main,
+.cwc_header__search-main + .cwc_header__search-aside {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--border-color);
@@ -1276,7 +1278,7 @@ a.cwc_header__menu-row {
   right: 0;
   bottom: 0;
   z-index: -1;
-  background-color: var(--overlay-color, #14281D);
+  background-color: var(--overlay-color, #221813);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1344,6 +1346,86 @@ html.cwc-menu-locked {
    The header's results drop full width under the top bar like a mega panel:
    suggestions + collections left, a grid of bottles right.
    ============================== */
+/* ==============================
+   Dark bars (Cask Espresso)
+   The top bar and nav row take the bar colors by re-pointing the shared
+   variables; everything that drops out of them (search results, mega panel)
+   points them back at the panel colors. The mobile drawer is a sibling, so it
+   never sees the bar colors.
+   ============================== */
+.cwc_header__top,
+.cwc_header__nav {
+  --section-bg: var(--bar-bg);
+  --text-color: var(--bar-text);
+  --brand-color: var(--bar-text);
+  --highlight-color: var(--bar-accent);
+  --hover-bg: rgba(255, 255, 255, 0.06);
+  --border-color: var(--bar-line);
+  --hd-line: var(--bar-line);
+  --hd-line-input: var(--bar-field-line);
+  --hd-ink: var(--bar-text);
+  --hd-muted: rgba(255, 255, 255, 0.6);
+  color: var(--bar-text);
+}
+
+.cwc_header__search-results,
+.cwc_header__mega {
+  --section-bg: var(--pn-bg);
+  --text-color: var(--pn-text);
+  --brand-color: var(--pn-brand);
+  --highlight-color: var(--pn-highlight);
+  --hover-bg: var(--pn-hover);
+  --border-color: var(--pn-line);
+  --hd-line: var(--pn-line);
+  --hd-line-input: #D9D9D3;
+  --hd-ink: #1C1C19;
+  --hd-muted: #5C5C57;
+}
+
+/* One-color logo in the accent */
+.cwc_header__top .cwc_header__wordmark-top,
+.cwc_header__top .cwc_header__wordmark-bottom {
+  color: var(--bar-accent);
+}
+
+.cwc_header__top .cwc_header__wordmark-rule {
+  background-color: var(--bar-accent);
+}
+
+.cwc_header__top .cwc_header__logo-mark {
+  fill: var(--bar-accent);
+}
+
+/* Search field on dark */
+.cwc_header__search-form,
+.cwc_header__top .cwc_header__search-form {
+  background-color: var(--bar-field-bg);
+}
+
+/* Primary search button: square accent fill, dark icon */
+.cwc_header__search-submit {
+  background-color: var(--bar-accent);
+  color: var(--bar-bg);
+  transition: background-color 0.2s ease;
+}
+
+.cwc_header__search-submit:hover {
+  background-color: var(--hd-amber-hover);
+  color: var(--bar-bg);
+}
+
+.cwc_header__search-submit:focus-visible {
+  outline: 2px solid var(--bar-text);
+  outline-offset: -4px;
+}
+
+/* Compact MENU button: invert to accent on hover instead of white-on-white */
+.cwc_header__nav-toggle:hover,
+.cwc_header__nav-toggle--active {
+  background-color: var(--bar-accent);
+  color: var(--bar-bg);
+}
+
 @media screen and (min-width: 992px) {
   .cwc_header__top .cwc_header__search {
     position: static;

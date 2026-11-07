@@ -233,6 +233,8 @@
 
     let debounce = null;
     let controller = null;
+    // Mobile menu search: bottles first, no query suggestions
+    const isMenuSearch = wrapper.classList.contains('cwc_header__menu-search-wrap');
 
     input.setAttribute('aria-controls', results.id);
     input.setAttribute('aria-expanded', 'false');
@@ -330,7 +332,10 @@
 
     function render(data, query) {
       const res = (data && data.resources && data.resources.results) || {};
-      const queries = res.queries || [];
+      // Mobile (menu search or below the desktop breakpoint): max 3 text suggestions
+      const isMobile = isMenuSearch || window.matchMedia('(max-width: 991px)').matches;
+      const maxItems = isMobile ? 3 : undefined;
+      const queries = (res.queries || []).slice(0, maxItems);
       // Products tagged no_feed (e.g. shipping protection) never show
       const products = (res.products || [])
         .filter(function (product) {
@@ -340,7 +345,7 @@
           return tags.indexOf('no_feed') === -1 && tags.indexOf('no-feed') === -1;
         })
         .slice(0, 8);
-      const collections = res.collections || [];
+      const collections = (res.collections || []).slice(0, maxItems);
 
       results.textContent = '';
 
@@ -349,7 +354,7 @@
       const aside = el('div', 'cwc_header__search-aside');
       const main = el('div', 'cwc_header__search-main');
 
-      if (queries.length) {
+      if (queries.length && !isMenuSearch) {
         aside.appendChild(
           group(
             'Suggestions',
@@ -388,9 +393,17 @@
       all.href = searchUrl(query);
       main.appendChild(all);
 
-      if (aside.childElementCount) panel.appendChild(aside);
-      else panel.classList.add('cwc_header__search-panel--single');
-      panel.appendChild(main);
+      if (!aside.childElementCount) {
+        panel.classList.add('cwc_header__search-panel--single');
+        panel.appendChild(main);
+      } else if (isMenuSearch) {
+        // Mobile: bottles lead, collections follow underneath
+        panel.appendChild(main);
+        panel.appendChild(aside);
+      } else {
+        panel.appendChild(aside);
+        panel.appendChild(main);
+      }
       results.appendChild(panel);
 
       if (status) status.textContent = products.length + ' bottles found';

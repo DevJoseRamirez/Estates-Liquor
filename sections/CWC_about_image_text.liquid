@@ -1,12 +1,12 @@
 {% style %}
   #cwc_about-image-text-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#F6F6F3' }};
-    --text-color: {{ section.settings.text_color | default: '#14281D' }};
+    --text-color: {{ section.settings.text_color | default: '#221813' }};
     --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
     --panel-bg: {{ section.settings.panel_bg_color | default: '#F6F6F3' }};
     --body-color: {{ section.settings.body_color | default: '#5C5C57' }};
-    --media-bg: {{ section.settings.media_bg_color | default: '#14281D' }};
+    --media-bg: {{ section.settings.media_bg_color | default: '#221813' }};
     --media-ratio: {{ section.settings.media_ratio | default: 100 | divided_by: 100.0 }};
     --media-opacity: {{ section.settings.media_opacity | default: 55 | divided_by: 100.0 }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
@@ -174,7 +174,7 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",
@@ -204,7 +204,7 @@
       "type": "color",
       "id": "media_bg_color",
       "label": "Image Background Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",

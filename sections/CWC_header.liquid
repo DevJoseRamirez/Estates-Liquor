@@ -14,14 +14,26 @@
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --text-color: {{ section.settings.text_color | default: '#3A3A36' }};
     --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --brand-color: {{ section.settings.brand_color | default: '#14281D' }};
+    --brand-color: {{ section.settings.brand_color | default: '#221813' }};
     --hover-bg: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
     --promo-bg: {{ section.settings.promo_bg_color | default: '#F6F6F3' }};
-    --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#14281D' }};
+    --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#221813' }};
     --promo-label-text: {{ section.settings.promo_label_text_color | default: '#E9A23B' }};
-    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#14281D' }};
+    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#221813' }};
+    --bar-bg: {{ section.settings.bar_bg_color | default: '#221813' }};
+    --bar-text: {{ section.settings.bar_text_color | default: '#ffffff' }};
+    --bar-accent: {{ section.settings.bar_accent_color | default: '#E9A23B' }};
+    --bar-field-bg: {{ section.settings.bar_field_bg_color | default: '#2E221B' }};
+    --bar-field-line: {{ section.settings.bar_field_border_color | default: '#453D39' }};
+    --bar-line: {{ section.settings.bar_line_color | default: '#342B26' }};
+    --pn-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
+    --pn-text: {{ section.settings.text_color | default: '#3A3A36' }};
+    --pn-brand: {{ section.settings.brand_color | default: '#221813' }};
+    --pn-highlight: {{ section.settings.bold_color | default: '#A35A12' }};
+    --pn-hover: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
+    --pn-line: {{ section.settings.border_color | default: '#ECECE8' }};
     --logo-width: {{ section.settings.logo_width | default: 150 }}px;
     --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 130 }}px;
     --padding-top: {{ section.settings.padding_top | default: 15 }}px;
@@ -31,7 +43,7 @@
   }
 
   #cwc_header-overlay-{{ section.id }} {
-    --overlay-color: {{ section.settings.search_overlay_color | default: '#14281D' }};
+    --overlay-color: {{ section.settings.search_overlay_color | default: '#221813' }};
     --overlay-opacity: {{ section.settings.search_overlay_opacity | default: 45 | divided_by: 100.0 }};
   }
 
@@ -547,7 +559,7 @@
       "type": "color",
       "id": "search_overlay_color",
       "label": "Overlay Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "range",
@@ -674,7 +686,7 @@
       "type": "color",
       "id": "brand_color",
       "label": "Logo And Hover Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",
@@ -697,6 +709,48 @@
     },
     {
       "type": "header",
+      "content": "Bar Colors",
+      "info": "The top bar and nav row. Menus, search results and the mobile drawer use the colors above."
+    },
+    {
+      "type": "color",
+      "id": "bar_bg_color",
+      "label": "Bar Background",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "bar_text_color",
+      "label": "Bar Text And Icons",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bar_accent_color",
+      "label": "Bar Accent",
+      "info": "Logo wordmark, search button, highlighted link, underline.",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "bar_field_bg_color",
+      "label": "Search Field Background",
+      "default": "#2E221B"
+    },
+    {
+      "type": "color",
+      "id": "bar_field_border_color",
+      "label": "Search Field Border",
+      "default": "#453D39"
+    },
+    {
+      "type": "color",
+      "id": "bar_line_color",
+      "label": "Bar Divider",
+      "default": "#342B26"
+    },
+    {
+      "type": "header",
       "content": "Mega Menu Colors"
     },
     {
@@ -715,7 +769,7 @@
       "type": "color",
       "id": "promo_label_bg_color",
       "label": "Featured Label Background",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",
@@ -731,7 +785,7 @@
       "type": "color",
       "id": "drawer_footer_bg_color",
       "label": "Footer Background",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "header",

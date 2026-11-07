@@ -1,6 +1,6 @@
 {% style %}
   #cwc_footer-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
+    --section-bg: {{ section.settings.bg_color | default: '#221813' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --body-text-color: {{ section.settings.body_text_color | default: '#ffffff' }};
@@ -8,10 +8,10 @@
     --link-hover-color: {{ section.settings.link_hover_color | default: '#ffffff' }};
     --heading-color: {{ section.settings.heading_color | default: '#E9A23B' }};
     --bottom-text-color: {{ section.settings.bottom_text_color | default: '#A8B0AA' }};
-    --border-color: {{ section.settings.border_color | default: '#0D1C14' }};
+    --border-color: {{ section.settings.border_color | default: '#140E0B' }};
 
     {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
-    --input-bg: {{ section.settings.input_bg_color | default: '#0D1C14' }};
+    --input-bg: {{ section.settings.input_bg_color | default: '#140E0B' }};
     --input-border-color: {{ section.settings.input_border_color | default: '#2E3A32' }};
 
     --footer-text-size: {{ section.settings.text_size | default: 14 }}px;
@@ -315,7 +315,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",
@@ -363,7 +363,7 @@
       "type": "color",
       "id": "border_color",
       "label": "Divider Color",
-      "default": "#0D1C14"
+      "default": "#140E0B"
     },
     {
       "type": "header",
@@ -373,7 +373,7 @@
       "type": "color",
       "id": "input_bg_color",
       "label": "Field Background Color",
-      "default": "#0D1C14"
+      "default": "#140E0B"
     },
     {
       "type": "color",

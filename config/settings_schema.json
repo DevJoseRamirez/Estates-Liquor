@@ -11,6 +11,18 @@
     "name": "t:settings_schema.Colors.name",
     "settings": [
       {
+        "type": "select",
+        "id": "el_palette",
+        "label": "Brand palette",
+        "info": "Switches the --el-* brand tokens. Section color pickers keep their own saved colors.",
+        "options": [
+          { "value": "espresso", "label": "Cask Espresso" },
+          { "value": "green", "label": "Estate Green" },
+          { "value": "navy", "label": "Coronado Navy" }
+        ],
+        "default": "espresso"
+      },
+      {
         "type": "header",
         "content": "t:settings_schema.Colors.settings.scheme_group.content",
         "info": "t:settings_schema.Colors.settings.scheme_group.info"

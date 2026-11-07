@@ -1,20 +1,43 @@
 /* ==============================
    Estates Tokens
-   Generated from _theme-styles/estates-brand-tokens.md v1.2 (section 6).
+   Generated from _theme-styles/estates-brand-tokens.md v1.3 (section 6).
    Global --el-* custom properties + .el-* helpers. Edit the spec first,
    then mirror the change here. Breakpoints aligned to CWC (991 / 768).
+   Active palette: Cask Espresso. Switch via Theme settings → Brand palette.
    ============================== */
 
+/* Palettes (role tokens) */
+:root,
+:root[data-el-palette="espresso"] {
+  --el-dark: #221813;
+  --el-dark-hover: #140E0B;
+  --el-dark-field: #2E221B;
+  --el-footer: #18110D;
+  --el-ground-edge: #EEE7DF;
+}
+:root[data-el-palette="green"] {
+  --el-dark: #14281D;
+  --el-dark-hover: #0D1C14;
+  --el-dark-field: #1D3628;
+  --el-footer: #0F1F16;
+  --el-ground-edge: #E4EBE6;
+}
+:root[data-el-palette="navy"] {
+  --el-dark: #13213A;
+  --el-dark-hover: #0C1628;
+  --el-dark-field: #1C2C48;
+  --el-footer: #0D1729;
+  --el-ground-edge: #E3E8EF;
+}
+
 :root {
-  /* Color */
-  --el-green: #14281D;
-  --el-green-hover: #0D1C14;
-  --el-amber: #E9A23B;
-  --el-amber-hover: #D68F27;
-  --el-amber-text: #A35A12;
+  /* Shared color */
+  --el-accent: #E9A23B;
+  --el-accent-hover: #D68F27;
+  --el-accent-text: #A35A12;
+  --el-logo: var(--el-accent);
   --el-tint: #F6F6F3;
   --el-tint-line: #E6E6E1;
-  --el-ground-edge: #E4EBE6;
   --el-white: #FFFFFF;
   --el-ink: #1C1C19;
   --el-body: #3A3A36;
@@ -22,8 +45,16 @@
   --el-line: #ECECE8;
   --el-line-input: #D9D9D3;
   --el-line-strong: #DDDDD7;
+  --el-line-dark: rgba(255,255,255,0.08);
+  --el-line-dark-input: rgba(255,255,255,0.16);
+
+  /* Legacy v1.2 names, kept so existing code follows the palette */
+  --el-green: var(--el-dark);
+  --el-green-hover: var(--el-dark-hover);
+  --el-amber: var(--el-accent);
+  --el-amber-hover: var(--el-accent-hover);
+  --el-amber-text: var(--el-accent-text);
   --el-brass: #A8834A;
-  --el-footer: #0F1F16;
 
   /* Type */
   --el-font-display: 'Fraunces', Georgia, serif;
@@ -80,6 +111,7 @@
 .el-btn--secondary:hover { background: var(--el-amber-text); color: var(--el-white); }
 .el-btn--outline { background: var(--el-white); color: var(--el-green); border: 1px solid var(--el-green); }
 .el-btn--outline:hover { background: var(--el-green); color: var(--el-white); }
+.el-btn--on-dark { background: transparent; color: var(--el-white); border: 1px solid rgba(255,255,255,.4); }
 .el-btn:focus-visible { outline: 2px solid var(--el-amber-text); outline-offset: 3px; }
 
 /* Labels */
@@ -91,6 +123,16 @@
 .el-badge--pick { background: var(--el-amber); color: var(--el-green); }
 .el-badge--soldout { background: var(--el-white); color: var(--el-muted); border: 1px solid var(--el-line-strong); }
 
+/* Chrome */
+.el-announce { background: var(--el-accent); color: var(--el-dark); font-family: var(--el-font-mono); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+.el-announce__dot { color: var(--el-accent-text); }
+.el-header { background: var(--el-dark); color: var(--el-white); }
+.el-header__nav { border-top: 1px solid var(--el-line-dark); }
+.el-header__search { background: var(--el-dark-field); border: 1px solid var(--el-line-dark-input); color: var(--el-white); }
+.el-logo, .el-logo svg { color: var(--el-logo); fill: currentColor; stroke: currentColor; }
+.el-footer { background: var(--el-footer); }
+
 /* Bands */
-.el-band--green { background: var(--el-green); color: var(--el-white); }
+.el-band--dark,
+.el-band--green { background: var(--el-dark); color: var(--el-white); }
 .el-band--tint { background: var(--el-tint); }

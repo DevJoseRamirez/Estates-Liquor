@@ -1,16 +1,16 @@
 {% style %}
   #cwc_about-banner-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#14281D' }};
+    --section-bg: {{ section.settings.bg_color | default: '#221813' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#C9D2CC' }};
-    --overlay-color: {{ section.settings.overlay_color | default: '#14281D' }};
+    --overlay-color: {{ section.settings.overlay_color | default: '#221813' }};
     {% comment %}
       The wash steps down in the overlay colour itself, not black — so the rgb
       channels are pulled out once here and reused at three alphas.
     {% endcomment %}
-    {%- assign overlay_hex = section.settings.overlay_color | default: '#14281D' -%}
+    {%- assign overlay_hex = section.settings.overlay_color | default: '#221813' -%}
     --overlay-rgb: {{ overlay_hex | color_extract: 'red' }}, {{ overlay_hex | color_extract: 'green' }}, {{ overlay_hex | color_extract: 'blue' }};
     --overlay-opacity: {{ section.settings.overlay_opacity | default: 100 | divided_by: 100.0 }};
     --overlay-coverage: {{ section.settings.overlay_coverage | default: 0 }}%;
@@ -168,7 +168,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "color",
@@ -198,7 +198,7 @@
       "type": "color",
       "id": "overlay_color",
       "label": "Overlay Color",
-      "default": "#14281D"
+      "default": "#221813"
     },
     {
       "type": "header",
