@@ -4,58 +4,8 @@
   /* Enhancement only. With a collection override the grid is already server
      rendered; this file only fetches Shopify's automatic recommendations. */
 
-  /* The theme's cart drawer listens on the shared eventBus — re-render it with
-     the new line, then open it. Returns false when nothing is listening (the
-     store is set to cart page rather than drawer), so the caller can fall back
-     to its own inline confirmation. Mirrors CWC_product_buy_box.js. */
-  function openCartDrawer() {
-    var bus = window.eventBus;
-    var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
-    if (!listeners || listeners.size === 0) return false;
-
-    bus.emit('render:cart:drawer');
-    bus.emit('open:cart:drawer', { scrollToTop: true });
-    return true;
-  }
-
-  function bindAddToCart(sectionEl) {
-    sectionEl.querySelectorAll('.cwc_related-products__card-button').forEach(function (button) {
-      if (button.dataset.cwcBound === 'true') return;
-      button.dataset.cwcBound = 'true';
-
-      button.addEventListener('click', function () {
-        var variantId = button.dataset.variantId;
-        if (!variantId) return;
-
-        button.classList.add('cwc_related-products__card-button--loading');
-
-        fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
-        })
-          .then(function (response) {
-            if (!response.ok) throw new Error('Add to cart failed');
-            return response.json();
-          })
-          .then(function () {
-            button.classList.remove('cwc_related-products__card-button--loading');
-            document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
-
-            /* the drawer is the confirmation — don't also flash the button */
-            if (openCartDrawer()) return;
-
-            button.classList.add('cwc_related-products__card-button--added');
-            window.setTimeout(function () {
-              button.classList.remove('cwc_related-products__card-button--added');
-            }, 1600);
-          })
-          .catch(function () {
-            button.classList.remove('cwc_related-products__card-button--loading');
-          });
-      });
-    });
-  }
+  /* Add to cart is handled by CWC_product_card.js (one delegated listener on
+     the document), so cards fetched below work without re-binding. */
 
   /* The rail scrolls natively with scroll-snap, so this only drives the arrows
      and hides them when everything already fits. Safe to call again after the
@@ -137,7 +87,6 @@
         }
 
         slot.replaceWith(grid);
-        bindAddToCart(sectionEl);
         initCarousel(sectionEl);
       })
       .catch(function () {
@@ -149,7 +98,6 @@
     if (!sectionEl || sectionEl.dataset.cwcRelatedInit === 'true') return;
     sectionEl.dataset.cwcRelatedInit = 'true';
 
-    bindAddToCart(sectionEl);
     initCarousel(sectionEl);
     loadRecommendations(sectionEl);
   }

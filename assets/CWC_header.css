@@ -513,8 +513,8 @@
 }
 
 /* Stacked (mobile menu): divider between the two halves */
-.cwc_header__search-aside + .cwc_header__search-main,
-.cwc_header__search-main + .cwc_header__search-aside {
+.cwc_header__search-aside+.cwc_header__search-main,
+.cwc_header__search-main+.cwc_header__search-aside {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--border-color);
@@ -592,6 +592,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  justify-content: space-between;
   gap: 0 4px;
   margin: 0;
   padding: 0;
@@ -1294,6 +1295,7 @@ a.cwc_header__menu-row {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .cwc_header__overlay,
   .cwc_header__overlay--active {
     transition: none;
@@ -1402,16 +1404,18 @@ html.cwc-menu-locked {
   background-color: var(--bar-field-bg);
 }
 
-/* Primary search button: square accent fill, dark icon */
+/* Search button blends into the field: same ground, field-line divider,
+   muted icon that lifts to the text colour on hover */
 .cwc_header__search-submit {
-  background-color: var(--bar-accent);
-  color: var(--bar-bg);
-  transition: background-color 0.2s ease;
+  background-color: var(--bar-field-bg);
+  border-left: 1px solid var(--bar-field-line);
+  color: var(--hd-muted);
+  transition: color 0.2s ease;
 }
 
 .cwc_header__search-submit:hover {
-  background-color: var(--hd-amber-hover);
-  color: var(--bar-bg);
+  background-color: var(--bar-field-bg);
+  color: var(--bar-text);
 }
 
 .cwc_header__search-submit:focus-visible {
@@ -1419,11 +1423,30 @@ html.cwc-menu-locked {
   outline-offset: -4px;
 }
 
-/* Compact MENU button: invert to accent on hover instead of white-on-white */
+/* Compact MENU button: bare icon, no outline or fill; accent on hover/open */
+.cwc_header__nav-toggle {
+  box-shadow: none;
+  background: transparent;
+  color: var(--bar-text);
+}
+
 .cwc_header__nav-toggle:hover,
 .cwc_header__nav-toggle--active {
-  background-color: var(--bar-accent);
-  color: var(--bar-bg);
+  background-color: transparent;
+  color: var(--bar-accent);
+}
+
+/* Hamburger reads stronger than the other icons: bigger, heavier lines */
+.cwc_header--compact .cwc_header__nav-toggle {
+  max-width: 48px;
+  padding: 0 11px;
+}
+
+.cwc_header__nav-toggle svg,
+.cwc_header__mobile-actions [data-cwc-menu-open]:not([data-cwc-menu-search-focus]) svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 2;
 }
 
 @media screen and (min-width: 992px) {
@@ -1456,7 +1479,7 @@ html.cwc-menu-locked {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .cwc_header__top .cwc_header__search-aside + .cwc_header__search-main {
+  .cwc_header__top .cwc_header__search-aside+.cwc_header__search-main {
     margin-top: 0;
     padding-top: 0;
     border-top: 0;
@@ -1466,7 +1489,7 @@ html.cwc-menu-locked {
     padding: 0 0 12px;
   }
 
-  .cwc_header__top .cwc_header__search-aside .cwc_header__search-group + .cwc_header__search-group {
+  .cwc_header__top .cwc_header__search-aside .cwc_header__search-group+.cwc_header__search-group {
     margin-top: 24px;
     padding-top: 20px;
   }
@@ -1484,18 +1507,25 @@ html.cwc-menu-locked {
     text-underline-offset: 5px;
   }
 
-  /* Bottles: flex row, 4 to a row; a short last row stays left-aligned */
+  /* Bottles: flex row, 5 to a row; a short last row stays left-aligned */
   .cwc_header__top .cwc_header__search-list--products {
-    --search-cols: 4;
+    --search-cols: 5;
     --search-gap: 24px;
     display: flex;
     flex-wrap: wrap;
     gap: 28px var(--search-gap);
   }
 
-  .cwc_header__top .cwc_header__search-list--products > li {
+  .cwc_header__top .cwc_header__search-list--products>li {
     flex: 0 0 calc((100% - (var(--search-cols) - 1) * var(--search-gap)) / var(--search-cols));
     min-width: 0;
+  }
+
+  /* Laptops: 4 to a row */
+  @media (max-width: 1365px) {
+    .cwc_header__top .cwc_header__search-list--products {
+      --search-cols: 4;
+    }
   }
 
   /* Small laptops: 3 to a row so cards keep a usable width */
@@ -1650,6 +1680,7 @@ html.cwc-menu-locked {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .cwc_header,
   .cwc_header__nav,
   .cwc_header__nav-toggle,

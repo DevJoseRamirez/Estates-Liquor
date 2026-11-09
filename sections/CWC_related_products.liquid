@@ -8,6 +8,9 @@
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
     --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --card-button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --card-button-text: {{ section.settings.button_text_color | default: '#221813' }};
+    --card-meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --columns: {{ section.settings.columns | default: 4 }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
@@ -18,6 +21,7 @@
 {% endstyle %}
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_related_products.css' | asset_url | stylesheet_tag }}
 
 {% liquid
@@ -104,105 +108,12 @@
           {%- assign related_tag_list = related.tags | join: ',' | downcase | prepend: ',' | append: ',' -%}
           {% unless related.id == source_product.id or excluded_handles contains related.handle or related_tag_list contains ',no_feed,' %}
             {%- assign rendered_count = rendered_count | plus: 1 -%}
-            {% liquid
-              assign related_variant = related.selected_or_first_available_variant
-
-              # Same badge ladder as the collection grid — stock state is
-              # deliberately not surfaced here
-              assign badge_label = ''
-              assign badge_style = ''
-              if related.compare_at_price > related.price
-                assign saving = related.compare_at_price | minus: related.price | money_without_trailing_zeros
-                assign badge_label = 'Save ' | append: saving
-                assign badge_style = 'sale'
-              elsif related.tags contains 'Allocated' or related.tags contains 'allocated'
-                assign badge_label = 'Allocated'
-                assign badge_style = 'allocated'
-              elsif related.tags contains 'Barrel Pick' or related.tags contains 'barrel pick'
-                assign badge_label = 'Barrel Pick'
-                assign badge_style = 'barrel'
-              elsif related.tags contains 'New' or related.tags contains 'new'
-                assign badge_label = 'New'
-                assign badge_style = 'new'
-              endif
-
-              assign related_meta = related.metafields.custom.details
-              if related_meta == blank
-                assign related_meta = related.type
-              endif
-            %}
-
+            {% comment %}
+              Same card as the collection grid (snippets/cwc-product-card.liquid).
+              The wrapper is only the carousel slot.
+            {% endcomment %}
             <div class="cwc_related-products__card">
-              <a href="{{ related.url }}" class="cwc_related-products__card-media" tabindex="-1" aria-hidden="true">
-                {% if related.featured_image != blank %}
-                  <img
-                    src="{{ related.featured_image | image_url: width: 600 }}"
-                    alt="{{ related.featured_image.alt | default: related.title | escape }}"
-                    loading="lazy"
-                    width="600"
-                    height="800"
-                  >
-                {% else %}
-                  <span class="cwc_related-products__card-placeholder">
-                    <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-                      <rect x="16" y="0" width="20" height="6" rx="2" />
-                      <rect x="18" y="6" width="16" height="11" />
-                      <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
-                    </svg>
-                  </span>
-                {% endif %}
-
-                {% if badge_label != blank %}
-                  <span class="cwc_related-products__card-badge cwc_related-products__card-badge--{{ badge_style }}">
-                    {{ badge_label }}
-                  </span>
-                {% endif %}
-              </a>
-
-              <div class="cwc_related-products__card-body">
-                {% if related.vendor != blank %}
-                  <div class="cwc_related-products__card-brand">{{ related.vendor }}</div>
-                {% endif %}
-
-                <a href="{{ related.url }}" class="cwc_related-products__card-title">{{ related.title }}</a>
-
-                {% if related_meta != blank %}
-                  <div class="cwc_related-products__card-text">{{ related_meta }}</div>
-                {% endif %}
-
-                <div class="cwc_related-products__card-footer">
-                  <div class="cwc_related-products__card-price">
-                    <span class="cwc_related-products__card-price-now">{{ related.price | money }}</span>
-                    {% if related.compare_at_price > related.price %}
-                      <span class="cwc_related-products__card-price-was">{{ related.compare_at_price | money }}</span>
-                    {% endif %}
-                  </div>
-
-                  {% comment %}
-                    Same footer in and out of stock — matches the collection
-                    grid card. Sold-out swaps the add-to-cart button for a
-                    visually identical link to the product page.
-                  {% endcomment %}
-                  {% if related.available %}
-                    <button
-                      type="button"
-                      class="cwc_related-products__card-button"
-                      data-variant-id="{{ related_variant.id }}"
-                      aria-label="Add {{ related.title | escape }} to cart"
-                    >
-                      Add
-                    </button>
-                  {% else %}
-                    <a
-                      href="{{ related.url }}"
-                      class="cwc_related-products__card-button"
-                      aria-label="View {{ related.title | escape }}"
-                    >
-                      Add
-                    </a>
-                  {% endif %}
-                </div>
-              </div>
+              {% render 'cwc-product-card', product: related, section_settings: section.settings %}
             </div>
           {% endunless %}
         {% endfor %}
@@ -224,6 +135,7 @@
   </div>
 </section>
 
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
 <script src="{{ 'CWC_related_products.js' | asset_url }}" defer></script>
 
 {% schema %}
@@ -277,6 +189,18 @@
       "max": 12,
       "step": 1,
       "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_vendor",
+      "label": "Show Brand On Cards",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_meta",
+      "label": "Show Detail Line On Cards",
+      "default": false
     },
     {
       "type": "text",
@@ -364,6 +288,12 @@
       "id": "button_bg_color",
       "label": "Add To Cart Button Color",
       "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Add To Cart Text Color",
+      "default": "#221813"
     },
     {
       "type": "header",

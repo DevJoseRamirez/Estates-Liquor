@@ -344,32 +344,32 @@
           });
           return tags.indexOf('no_feed') === -1 && tags.indexOf('no-feed') === -1;
         })
-        .slice(0, 8);
+        .slice(0, 10);
       const collections = (res.collections || []).slice(0, maxItems);
 
       results.textContent = '';
 
-      // Panel: suggestions + collections on the left, bottles on the right
+      // Panel: collections + suggestions on the left, bottles on the right
       const panel = el('div', 'cwc_header__search-panel');
       const aside = el('div', 'cwc_header__search-aside');
       const main = el('div', 'cwc_header__search-main');
 
-      if (queries.length && !isMenuSearch) {
-        aside.appendChild(
-          group(
-            'Suggestions',
-            queries.map(function (q) {
-              return textItem(q.url, q.text);
-            })
-          )
-        );
-      }
       if (collections.length) {
         aside.appendChild(
           group(
             'Collections',
             collections.map(function (c) {
               return textItem(c.url, c.title);
+            })
+          )
+        );
+      }
+      if (queries.length && !isMenuSearch) {
+        aside.appendChild(
+          group(
+            'Suggestions',
+            queries.map(function (q) {
+              return textItem(q.url, q.text);
             })
           )
         );

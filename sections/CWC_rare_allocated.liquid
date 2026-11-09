@@ -27,6 +27,7 @@
 {% endstyle %}
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_rare_allocated.css' | asset_url | stylesheet_tag }}
 
 {% liquid
@@ -137,115 +138,8 @@
       <div class="cwc_rare-allocated__grid" data-cwc-track>
         {% if feature_collection != blank and feature_collection.products_count > 0 %}
           {% for product in feature_collection.products limit: section.settings.products_to_show %}
-            {% liquid
-              assign current_variant = product.selected_or_first_available_variant
-
-              # Same badge ladder as the collection grid — stock state is
-              # deliberately not surfaced, so a sold-out card looks identical.
-              assign badge_label = ''
-              assign badge_style = ''
-              if product.compare_at_price > product.price
-                assign saving = product.compare_at_price | minus: product.price | money_without_trailing_zeros
-                assign badge_label = 'Save ' | append: saving
-                assign badge_style = 'sale'
-              elsif product.tags contains 'Allocated' or product.tags contains 'allocated'
-                assign badge_label = 'Allocated'
-                assign badge_style = 'allocated'
-              elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
-                assign badge_label = 'Barrel Pick'
-                assign badge_style = 'barrel'
-              elsif product.tags contains 'New' or product.tags contains 'new'
-                assign badge_label = 'New'
-                assign badge_style = 'new'
-              endif
-
-              # Detail line: metafield first, product type as the fallback
-              assign product_meta = product.metafields.custom.details
-              if product_meta == blank
-                assign product_meta = product.type
-              endif
-            %}
-
             <div class="cwc_rare-allocated__card">
-              <a href="{{ product.url }}" class="cwc_rare-allocated__card-media" tabindex="-1" aria-hidden="true">
-                {% if product.featured_image != blank %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 500 }}"
-                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                    loading="lazy"
-                    width="500"
-                    height="667"
-                  >
-                {% else %}
-                  <span class="cwc_rare-allocated__card-placeholder">
-                    <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-                      <rect x="16" y="0" width="20" height="6" rx="2" />
-                      <rect x="18" y="6" width="16" height="11" />
-                      <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
-                    </svg>
-                  </span>
-                {% endif %}
-
-                {% if badge_label != blank %}
-                  <span class="cwc_rare-allocated__card-badge cwc_rare-allocated__card-badge--{{ badge_style }}">
-                    {{ badge_label }}
-                  </span>
-                {% endif %}
-              </a>
-
-              <div class="cwc_rare-allocated__card-body">
-                {% if product.vendor != blank %}
-                  <div class="cwc_rare-allocated__card-brand">{{ product.vendor }}</div>
-                {% endif %}
-
-                <a href="{{ product.url }}" class="cwc_rare-allocated__card-title">{{ product.title }}</a>
-
-                {% if product_meta != blank %}
-                  <div class="cwc_rare-allocated__card-text">{{ product_meta }}</div>
-                {% endif %}
-
-                {% comment %}
-                  Sold-out swaps the add-to-cart button for a visually identical
-                  link to the product page, so the control never silently fails.
-                {% endcomment %}
-                <div class="cwc_rare-allocated__card-footer">
-                  <div class="cwc_rare-allocated__card-price">
-                    {% if product.compare_at_price > product.price %}
-                      <span class="cwc_rare-allocated__card-price-was">{{ product.compare_at_price | money }}</span>
-                    {% endif %}
-                    {{ product.price | money }}
-                  </div>
-
-                  {%- capture cart_icon -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                      <line x1="3" y1="6" x2="21" y2="6" />
-                      <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                  {%- endcapture -%}
-
-                  {% if product.available %}
-                    <button
-                      type="button"
-                      class="cwc_rare-allocated__card-button"
-                      data-variant-id="{{ current_variant.id }}"
-                      aria-label="Add {{ product.title | escape }} to cart"
-                    >
-                      {% comment %} {{ cart_icon }} {% endcomment %}
-                      Add
-                    </button>
-                  {% else %}
-                    <a
-                      href="{{ product.url }}"
-                      class="cwc_rare-allocated__card-button"
-                      aria-label="View {{ product.title | escape }}"
-                    >
-                      {% comment %} {{ cart_icon }} {% endcomment %}
-                      Add
-                    </a>
-                  {% endif %}
-                </div>
-              </div>
+              {% render 'cwc-product-card', product: product, section_settings: section.settings %}
             </div>
           {% endfor %}
         {% else %}
@@ -259,6 +153,7 @@
   </div>
 </section>
 
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
 <script src="{{ 'CWC_rare_allocated.js' | asset_url }}" defer></script>
 
 {% schema %}
@@ -306,6 +201,18 @@
       "step": 1,
       "default": 6,
       "info": "How many load into the rail. Anything past Cards In View is reached by scrolling."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_vendor",
+      "label": "Show Brand On Cards",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_meta",
+      "label": "Show Detail Line On Cards",
+      "default": false
     },
     {
       "type": "range",

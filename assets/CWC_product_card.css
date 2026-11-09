@@ -1,6 +1,8 @@
 /* ==============================
    CWC Product Card
-   Shared by CWC Collection Body, CWC Search Body and CWC Collection Grid.
+   Shared by CWC Collection Body, CWC Search Body, CWC Collection Grid,
+   CWC Related Products, CWC Featured Products, CWC Rare Allocated and
+   CWC Barrel Picks.
    Markup: snippets/cwc-product-card.liquid. Add to cart: CWC_product_card.js.
    Styled to _theme-styles/estates-brand-tokens.md §5 (Product card):
    white, 1px line, square, no shadow; hover border → ink (no lift).
@@ -435,5 +437,18 @@
   .cwc_collection-body__card-button {
     min-height: 44px;
     font-size: 12px;
+  }
+}
+
+/* Savings label sits bottom-right of the image; sold out stays top-right */
+.cwc_collection-body__card-badge--save {
+  top: auto;
+  bottom: 12px;
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_collection-body__card-badge--save {
+    top: auto;
+    bottom: 8px;
   }
 }

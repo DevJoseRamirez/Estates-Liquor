@@ -1128,14 +1128,15 @@
 }
 
 /* === Gallery Testimonial (desktop only) ===
-   Open card under the gallery: 1px line, square, amber stars, Fraunces quote */
+   Layout follows the reference: stars, display-font quote, then one row with
+   the name left and the verified badge right. No divider. Estates colours. */
 .cwc_product-buy-box__testimonial {
   margin: 24px 0 0;
-  padding: 20px 22px;
+  padding: 22px 22px 20px;
   font-family: var(--bb-font-body);
   background-color: #FFFFFF;
   border: 1px solid var(--border-color);
-  border-radius: 0;
+  border-radius: 3px;
 }
 
 .cwc_product-buy-box__testimonial[hidden] {
@@ -1148,28 +1149,31 @@
   font-size: 17px;
   line-height: 1;
   letter-spacing: 2px;
-  background: linear-gradient(90deg, #E9A23B var(--rating, 100%), #D9D9D3 var(--rating, 100%));
+  background: linear-gradient(90deg, #A35A12 var(--rating, 100%), #D9D9D3 var(--rating, 100%));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.cwc_product-buy-box__testimonial-quote {
-  margin: 12px 0 0;
+.cwc_product-buy-box__testimonial-quote.cwc_product-buy-box__testimonial-quote {
+  margin: 14px 0 0;
   padding: 0;
   border: 0;
+  font-size: inherit;
+  font-style: normal;
+  line-height: inherit;
   quotes: none;
 }
 
 .cwc_product-buy-box__testimonial-quote p {
   margin: 0;
   font-family: var(--bb-font-display);
-  font-size: 20px;
+  font-size: 19px;
   font-style: normal;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.55;
   letter-spacing: normal;
-  color: var(--bb-ink);
+  color: var(--bb-ink, #1C1C19);
 }
 
 .cwc_product-buy-box__testimonial-footer {
@@ -1188,8 +1192,8 @@
 }
 
 .cwc_product-buy-box__testimonial-author img {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   flex: 0 0 auto;
   border-radius: 50%;
   object-fit: cover;
@@ -1199,20 +1203,20 @@
 .cwc_product-buy-box__testimonial-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--bb-ink);
+  line-height: 1.3;
+  color: var(--bb-ink, #1C1C19);
 }
 
 .cwc_product-buy-box__testimonial-verified {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: 0 0 auto;
-  font-family: var(--bb-font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #5C5C57;
+  font-family: var(--bb-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--bb-ink, #1C1C19);
 }
 
 .cwc_product-buy-box__testimonial-verified[hidden] {
@@ -1220,7 +1224,9 @@
 }
 
 .cwc_product-buy-box__testimonial-verified svg {
-  color: #221813;
+  width: 18px;
+  height: 18px;
+  color: #A35A12;
   display: block;
 }
 

@@ -30,7 +30,7 @@
 /* === Section Header === */
 .cwc_store-reviews__content {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .cwc_store-reviews__content-eyebrow {
@@ -41,7 +41,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--eyebrow-color);
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
 .cwc_store-reviews__content-heading p {
@@ -61,7 +61,7 @@
   display: block;
   width: 48px;
   height: 1px;
-  margin: 16px auto 0;
+  margin: 12px auto 0;
   background-color: var(--highlight-color);
 }
 
@@ -136,7 +136,7 @@
   border: 1px solid var(--border-color);
   border-radius: 0;
   box-shadow: none;
-  padding: 24px;
+  padding: 18px 20px;
   transition: border-color 0.2s ease;
 }
 
@@ -147,13 +147,13 @@
 .cwc_store-reviews__stars {
   display: inline-flex;
   gap: 2px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   color: var(--star-color);
 }
 
 .cwc_store-reviews__stars svg {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
   display: block;
 }
@@ -163,23 +163,30 @@
   color: var(--border-color);
 }
 
-/* Full review text, no line clamp; the card grows to fit it */
-.cwc_store-reviews__card-text {
-  margin: 0 0 14px;
+/* Full review text, no line clamp; the card grows to fit it.
+   Doubled class beats the theme's global blockquote rule
+   (left line, 30px indent, italic, 30px bottom margin). */
+.cwc_store-reviews__card-text.cwc_store-reviews__card-text {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  font-style: normal;
+  line-height: inherit;
 }
 
 .cwc_store-reviews__card-text p {
   font-family: var(--sr-font-body);
   font-style: normal;
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.55;
   margin: 0;
   color: var(--sr-body);
 }
 
 .cwc_store-reviews__card-footer {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 10px;
   border-top: 1px solid var(--border-color);
 }
 
@@ -252,6 +259,6 @@
 
   .cwc_store-reviews__card {
     flex-basis: min(300px, 82vw);
-    padding: 20px;
+    padding: 16px;
   }
 }

@@ -43,71 +43,14 @@
     });
   }
 
-  /* The theme's cart drawer listens on the shared eventBus — re-render it with
-     the new line, then open it. Returns false when nothing is listening (the
-     store is set to cart page rather than drawer), so the caller can fall back
-     to its own inline confirmation. Mirrors CWC_product_buy_box.js. */
-  function openCartDrawer() {
-    var bus = window.eventBus;
-    var listeners = bus && bus.listeners && bus.listeners['open:cart:drawer'];
-    if (!listeners || listeners.size === 0) return false;
-
-    bus.emit('render:cart:drawer');
-    bus.emit('open:cart:drawer', { scrollToTop: true });
-    return true;
-  }
-
-  function addToCart(variantId) {
-    return fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
-    }).then(function (response) {
-      if (!response.ok) throw new Error('Add to cart failed');
-      return response.json();
-    });
-  }
-
-  function initAddToCart(sectionEl) {
-    /* scoped to <button> — sold-out cards reuse the class on an <a> that just
-       navigates to the product page */
-    var buttons = sectionEl.querySelectorAll('button.cwc_featured-products__card-button');
-
-    buttons.forEach(function (button) {
-      button.addEventListener('click', function () {
-        var variantId = button.dataset.variantId;
-        if (!variantId) return;
-
-        button.classList.add('cwc_featured-products__card-button--loading');
-
-        addToCart(variantId)
-          .then(function () {
-            button.classList.remove('cwc_featured-products__card-button--loading');
-
-            /* refreshes the header count bubble */
-            document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
-
-            /* the drawer is the confirmation — don't also flash the button */
-            if (openCartDrawer()) return;
-
-            button.classList.add('cwc_featured-products__card-button--added');
-            window.setTimeout(function () {
-              button.classList.remove('cwc_featured-products__card-button--added');
-            }, 1600);
-          })
-          .catch(function () {
-            button.classList.remove('cwc_featured-products__card-button--loading');
-          });
-      });
-    });
-  }
+  /* Add to cart is handled by CWC_product_card.js (one delegated listener on
+     the document) — the cards are the shared collection card. */
 
   function initSection(sectionEl) {
     if (!sectionEl || sectionEl.dataset.cwcFeaturedProductsInit === 'true') return;
     sectionEl.dataset.cwcFeaturedProductsInit = 'true';
 
     initTabs(sectionEl);
-    initAddToCart(sectionEl);
   }
 
   function initAllSections() {
