@@ -284,6 +284,47 @@
   </div>
 
   {% comment %}
+    Mobile search row: full width under the top bar. It slides up behind the
+    bar once the shopper scrolls down and
+    comes back at the top of the page. Hidden on desktop.
+  {% endcomment %}
+  {% if section.settings.show_search %}
+    <div class="cwc_header__msearch" data-cwc-msearch>
+      <div class="cwc_header__container">
+        <div class="cwc_header__search" data-cwc-search data-predictive="{{ section.settings.enable_predictive }}">
+          <form action="{{ routes.search_url }}" method="get" role="search" class="cwc_header__search-form">
+            <input type="hidden" name="type" value="product">
+            <input type="hidden" name="options[prefix]" value="last">
+            <label class="cwc_header__visually-hidden" for="cwc_header-msearch-{{ section.id }}">Search the store</label>
+            <input
+              id="cwc_header-msearch-{{ section.id }}"
+              type="search"
+              name="q"
+              class="cwc_header__search-input"
+              data-cwc-search-input
+              value="{{ search.terms | escape }}"
+              placeholder="{{ section.settings.search_placeholder | default: 'Search bottles, brands, collections' | escape }}"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <button
+              type="submit"
+              class="cwc_header__search-submit"
+              aria-label="{{ section.settings.search_button_label | default: 'Search' | escape }}"
+            >
+              {{ search_icon }}
+            </button>
+          </form>
+          <div class="cwc_header__search-results" id="cwc_header-msearch-results-{{ section.id }}" data-cwc-search-results hidden></div>
+          <span class="cwc_header__visually-hidden" data-cwc-search-status aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% comment %}
     Desktop nav. A top-level link with children opens a mega panel: its
     children become column headings and their children the links under them.
     A "Mega Menu Panel" block, matched by title, adds the column footer links

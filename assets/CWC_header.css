@@ -1356,6 +1356,7 @@ html.cwc-menu-locked {
    never sees the bar colors.
    ============================== */
 .cwc_header__top,
+.cwc_header__msearch,
 .cwc_header__nav {
   --section-bg: var(--bar-bg);
   --text-color: var(--bar-text);
@@ -1660,6 +1661,53 @@ html.cwc-menu-locked {
 
   .cwc_header__icon-label {
     display: none;
+  }
+}
+
+/* ==============================
+   Mobile search row
+   Full-width field under the top bar. Scrolling down slides it up behind
+   the bar (same move as the desktop nav row), so the page never jumps.
+   ============================== */
+.cwc_header__msearch {
+  display: none;
+}
+
+@media screen and (max-width: 991px) {
+  .cwc_header__msearch {
+    position: relative;
+    z-index: 1;
+    display: block;
+    padding: 0 0 12px;
+    background-color: var(--section-bg);
+    pointer-events: auto;
+    transition: transform var(--hd-scroll-speed) var(--hd-ease), visibility 0s linear 0s;
+  }
+
+  .cwc_header__msearch .cwc_header__search {
+    display: block;
+    max-width: none;
+    --hd-search-height: 46px;
+  }
+
+  .cwc_header__msearch .cwc_header__search-input {
+    font-size: 16px; /* 16px stops iOS zooming on focus */
+  }
+
+  .cwc_header--msearch-hidden .cwc_header__msearch {
+    transform: translateY(-100%);
+    visibility: hidden;
+    transition: transform var(--hd-scroll-speed) var(--hd-ease), visibility 0s linear var(--hd-scroll-speed);
+  }
+
+  /* The row carries the divider while it's showing; the bar takes it back
+     once the row has tucked away */
+  .cwc_header--bordered .cwc_header__top {
+    border-bottom-color: transparent;
+  }
+
+  .cwc_header--bordered.cwc_header--msearch-hidden .cwc_header__top {
+    border-bottom-color: var(--hd-line);
   }
 }
 

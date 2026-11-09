@@ -234,7 +234,10 @@
     let debounce = null;
     let controller = null;
     // Mobile menu search: bottles first, no query suggestions
-    const isMenuSearch = wrapper.classList.contains('cwc_header__menu-search-wrap');
+    // (the mobile search row under the bar gets the same treatment)
+    const isMenuSearch =
+      wrapper.classList.contains('cwc_header__menu-search-wrap') ||
+      Boolean(wrapper.closest('.cwc_header__msearch'));
 
     input.setAttribute('aria-controls', results.id);
     input.setAttribute('aria-expanded', 'false');
@@ -831,8 +834,9 @@
   /* ------------------------------
      Sticky height + shrink on scroll
      ------------------------------ */
-  function initScroll(sectionEl, mega, search, signal) {
+  function initScroll(sectionEl, mega, search, mobileSearch, signal) {
     const top = sectionEl.querySelector('[data-cwc-header-top]');
+    const msearch = sectionEl.querySelector('[data-cwc-msearch]');
     const nav = sectionEl.querySelector('.cwc_header__nav');
     const sticky = sectionEl.dataset.sticky === 'true';
     const hideOnScroll = sticky && sectionEl.dataset.hideOnScroll === 'true' && Boolean(nav);
@@ -855,6 +859,9 @@
       let height = 0;
       if (sticky) {
         height = sectionEl.offsetHeight;
+        if (msearch && sectionEl.classList.contains('cwc_header--msearch-hidden')) {
+          height -= msearch.offsetHeight;
+        }
         if (sectionEl.classList.contains('cwc_header--compact')) {
           if (hideNav) {
             if (nav && !sectionEl.classList.contains('cwc_header--nav-open')) height -= nav.offsetHeight;
@@ -893,13 +900,34 @@
       publishHeight();
     }
 
+    // Mobile: the search row tucks behind the bar on the way down and comes
+    // back once the shopper is at the top of the page again
+    function setSearchHidden(hidden) {
+      if (!msearch || sectionEl.classList.contains('cwc_header--msearch-hidden') === hidden) return;
+      sectionEl.classList.toggle('cwc_header--msearch-hidden', hidden);
+      if (hidden && mobileSearch) mobileSearch.hide();
+      publishHeight();
+    }
+
     function onScroll() {
       ticking = false;
       const y = Math.max(window.scrollY, 0);
       const delta = y - lastY;
       lastY = y;
 
-      if (!hideOnScroll || !DESKTOP.matches) {
+      if (!DESKTOP.matches) {
+        setCompact(false);
+        if (!sticky) return;
+        // Hold still while the shopper is typing in it
+        if (mobileSearch && mobileSearch.isActive()) return;
+        if (y <= HIDE_AFTER) setSearchHidden(false);
+        else if (delta > 1) setSearchHidden(true);
+        return;
+      }
+
+      setSearchHidden(false);
+
+      if (!hideOnScroll) {
         setCompact(false);
         return;
       }
@@ -972,6 +1000,7 @@
       'change',
       function () {
         setCompact(false);
+        setSearchHidden(false);
         measure();
       },
       { signal: signal }
@@ -993,11 +1022,12 @@
 
     const mega = initMega(sectionEl, signal);
     const search = initSearch(sectionEl.querySelector('[data-cwc-search]'), signal);
+    const mobileSearch = initSearch(sectionEl.querySelector('[data-cwc-msearch] [data-cwc-search]'), signal);
     const menu = initMenu(sectionEl, signal);
     const menuEl = document.getElementById('cwc_header-menu-' + sectionEl.dataset.sectionId);
     if (menuEl) initSearch(menuEl.querySelector('[data-cwc-search]'), signal);
     initCart(sectionEl, menu, signal);
-    initScroll(sectionEl, mega, search, signal);
+    initScroll(sectionEl, mega, search, mobileSearch, signal);
     initOverlay(sectionEl, search, mega, signal);
   }
 

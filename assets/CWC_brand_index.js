@@ -21,7 +21,78 @@
     sectionEl.dataset.cwcBrandIndexInit = 'true';
 
     initToolbarOffset(sectionEl);
+    initJumpLinks(sectionEl);
     initSearch(sectionEl);
+  }
+
+  /* Letter links centre their group in the space below the header + sticky
+     toolbar. A group taller than that space lines up at its top instead, so
+     its first brands are never cut off. */
+  function initJumpLinks(sectionEl) {
+    const links = sectionEl.querySelectorAll('a[data-jump-letter]');
+    if (!links.length) return;
+
+    const toolbar = sectionEl.querySelector('[data-brand-toolbar]');
+    const isSticky = sectionEl.classList.contains('cwc_brand-index--sticky-jump');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function headerHeight() {
+      const value = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--cwc-header-height')
+      );
+      return isNaN(value) ? 0 : value;
+    }
+
+    function scrollToGroup(group) {
+      // Everything pinned at the top of the screen while scrolling
+      const covered = headerHeight() + (isSticky && toolbar ? toolbar.offsetHeight : 0);
+      const visible = window.innerHeight - covered;
+      const rect = group.getBoundingClientRect();
+      const groupTop = rect.top + window.pageYOffset;
+
+      let target;
+      if (rect.height < visible) {
+        target = groupTop - covered - (visible - rect.height) / 2;
+      } else {
+        target = groupTop - covered - 16;
+      }
+
+      window.scrollTo({
+        top: Math.max(0, target),
+        behavior: reduceMotion.matches ? 'auto' : 'smooth'
+      });
+    }
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        const id = (link.getAttribute('href') || '').slice(1);
+        const group = id && document.getElementById(id);
+        if (!group || group.hidden) return;
+
+        event.preventDefault();
+        scrollToGroup(group);
+
+        // Keep the letter in the URL without the browser's own top-aligned jump
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '#' + id);
+        }
+
+        // Move keyboard focus to the group for screen reader / tab users
+        if (!group.hasAttribute('tabindex')) group.setAttribute('tabindex', '-1');
+        group.focus({ preventScroll: true });
+      });
+    });
+
+    // Arriving with a letter in the URL (e.g. /pages/brands#…-M)
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const group = document.getElementById(hash);
+      if (group && sectionEl.contains(group)) {
+        window.requestAnimationFrame(function () {
+          scrollToGroup(group);
+        });
+      }
+    }
   }
 
   /* Anchored letter groups land just below the sticky toolbar */

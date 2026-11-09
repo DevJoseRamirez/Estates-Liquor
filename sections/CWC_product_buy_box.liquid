@@ -252,14 +252,20 @@
                 <span class="cwc_product-buy-box__price" data-cwc-price>
                   {{ current_variant.price | money }}
                 </span>
-                {% if current_variant.compare_at_price > current_variant.price %}
-                  <span class="cwc_product-buy-box__price-was" data-cwc-compare>
-                    {{ current_variant.compare_at_price | money }}
-                  </span>
-                  <span class="cwc_product-buy-box__save" data-cwc-save>
-                    Save {{ current_variant.compare_at_price | minus: current_variant.price | money }}
-                  </span>
-                {% endif %}
+                {% comment %}
+                  Always rendered (hidden when not on sale) so switching to an
+                  option that is on sale can show them without a reload.
+                {% endcomment %}
+                {%- assign on_sale = false -%}
+                {%- if current_variant.compare_at_price > current_variant.price -%}
+                  {%- assign on_sale = true -%}
+                {%- endif -%}
+                <span class="cwc_product-buy-box__price-was" data-cwc-compare{% unless on_sale %} hidden{% endunless %}>
+                  {%- if on_sale -%}{{ current_variant.compare_at_price | money }}{%- endif -%}
+                </span>
+                <span class="cwc_product-buy-box__save" data-cwc-save{% unless on_sale %} hidden{% endunless %}>
+                  {%- if on_sale -%}Save {{ current_variant.compare_at_price | minus: current_variant.price | money }}{%- endif -%}
+                </span>
               </div>
 
             {% when 'meta' %}
@@ -346,6 +352,8 @@
                           <option
                             value="{{ variant.id }}"
                             {% if variant.featured_media != blank %}data-media-id="{{ variant.featured_media.id }}"{% endif %}
+                            data-price="{{ variant.price }}"
+                            data-compare-at="{{ variant.compare_at_price | default: 0 }}"
                             {% if variant == current_variant %}
                               selected
                             {% endif %}

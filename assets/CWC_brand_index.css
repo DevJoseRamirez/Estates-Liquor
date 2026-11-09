@@ -188,6 +188,11 @@ a.cwc_brand-index__jump-letter:focus-visible {
   scroll-margin-top: calc(var(--cwc-header-height, 0px) + var(--bi-toolbar-offset));
 }
 
+/* Focus lands here after a letter jump; no outline box around the whole group */
+.cwc_brand-index__group:focus {
+  outline: none;
+}
+
 .cwc_brand-index__group[hidden],
 .cwc_brand-index__item[hidden] {
   display: none;

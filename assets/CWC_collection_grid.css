@@ -847,6 +847,11 @@
     display: none;
   }
 
+  /* No count and no active chips: drop the empty row */
+  .cwc_collection-grid__toolbar-chips:not(:has(*)) {
+    display: none;
+  }
+
   .cwc_collection-grid__toolbar-chips-count {
     flex: 0 0 auto;
     font-weight: 500;

@@ -11,6 +11,7 @@
     --pill-text: {{ section.settings.pill_text_color | default: '#221813' }};
     --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#E9A23B' }};
     --pill-active-text: {{ section.settings.pill_active_text_color | default: '#221813' }};
+    --description-lines-mobile: {{ section.settings.description_lines_mobile | default: 2 }};
     --padding-top: {{ section.settings.padding_top | default: 36 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 36 | times: 0.5 }}px;
@@ -47,7 +48,8 @@
   # when the store exposes one, else the collection's product count.
   assign count_value = nil
   assign count_label = 'Bottles'
-  unless is_search or current == blank
+  # Skipped entirely (no filter loop) when the count is switched off
+  unless is_search or current == blank or section.settings.show_count == false
     for filter in current.filters
       if filter.param_name == 'filter.v.availability'
         for value in filter.values
@@ -122,14 +124,37 @@
             {{- section.settings.search_button_label | default: 'Search' | escape -}}
           </button>
         </form>
-      {% elsif section.settings.show_description and section.settings.description != blank %}
-        <div class="cwc_collection-header__content-subtext cwc-rte">
-          {{ section.settings.description }}
+      {% elsif section.settings.show_description and section.settings.description != blank or section.settings.show_description and current.description != blank %}
+        {%- liquid
+          if section.settings.description != blank
+            assign description_html = section.settings.description
+          else
+            assign description_html = current.description
+          endif
+        -%}
+        {% comment %} Mobile: clamped to a few lines, the button reveals the rest {% endcomment %}
+        <div class="cwc_collection-header__description cwc_collection-header__description--clamped" data-description>
+          <div
+            class="cwc_collection-header__content-subtext cwc-rte"
+            id="cwc_collection-header-description-{{ section.id }}"
+            data-description-text
+          >
+            {{ description_html }}
+          </div>
+          <button
+            type="button"
+            class="cwc_collection-header__description-toggle"
+            aria-controls="cwc_collection-header-description-{{ section.id }}"
+            aria-expanded="false"
+            data-description-toggle
+            data-label-more="{{ section.settings.description_more_label | default: 'Load More' | escape }}"
+            data-label-less="{{ section.settings.description_less_label | default: 'Show Less' | escape }}"
+            hidden
+          >
+            {{- section.settings.description_more_label | default: 'Load More' | escape -}}
+          </button>
         </div>
-      {% elsif section.settings.show_description and current.description != blank %}
-        <div class="cwc_collection-header__content-subtext cwc-rte">
-          {{ current.description }}
-        </div>
+        {%- assign has_description = true -%}
       {% endif %}
     </div>
 
@@ -208,6 +233,10 @@
   </div>
 </section>
 
+{% if has_description %}
+  <script src="{{ 'CWC_collection_header.js' | asset_url }}" defer></script>
+{% endif %}
+
 {% schema %}
 {
   "name": "CWC Collection Header",
@@ -233,6 +262,13 @@
       "default": true
     },
     {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show bottle count",
+      "info": "The big \"Bottles in stock\" number beside the title",
+      "default": true
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Title Override",
@@ -243,6 +279,28 @@
       "id": "description",
       "label": "Description Override",
       "info": "Leave empty to use the collection description."
+    },
+    {
+      "type": "range",
+      "id": "description_lines_mobile",
+      "label": "Description Lines Shown (Mobile)",
+      "info": "Longer descriptions are cut to this many lines on mobile with a button to show the rest",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "description_more_label",
+      "label": "Show More Button Label",
+      "default": "Load More"
+    },
+    {
+      "type": "text",
+      "id": "description_less_label",
+      "label": "Show Less Button Label",
+      "default": "Show Less"
     },
     {
       "type": "header",

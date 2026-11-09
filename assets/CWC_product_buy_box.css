@@ -352,6 +352,12 @@
 }
 
 /* "Save $X" — soft amber label, dollar amount, never a red/% tag */
+/* Hidden until the chosen option is on sale (display rules below would override [hidden]) */
+.cwc_product-buy-box__price-was[hidden],
+.cwc_product-buy-box__save[hidden] {
+  display: none;
+}
+
 .cwc_product-buy-box__save {
   align-self: center;
   display: inline-flex;

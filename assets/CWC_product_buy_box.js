@@ -163,6 +163,50 @@
       url.searchParams.set("variant", select.value);
       window.history.replaceState({}, "", url.toString());
     });
+
+    /* Price, was-price and Save follow the chosen option. Each <option>
+       carries its own prices (cents), so no product JSON is needed. */
+    var priceEl = sectionEl.querySelector("[data-cwc-price]");
+    var compareEl = sectionEl.querySelector("[data-cwc-compare]");
+    var saveEl = sectionEl.querySelector("[data-cwc-save]");
+
+    function syncPrice() {
+      var option = select.options[select.selectedIndex];
+      if (!option || option.dataset.price == null) return;
+
+      var price = parseInt(option.dataset.price, 10) || 0;
+      var compareAt = parseInt(option.dataset.compareAt, 10) || 0;
+      var onSale = compareAt > price;
+
+      if (priceEl) priceEl.textContent = moneyFormat(price);
+      if (compareEl) {
+        compareEl.textContent = onSale ? moneyFormat(compareAt) : "";
+        compareEl.hidden = !onSale;
+      }
+      if (saveEl) {
+        saveEl.textContent = onSale ? "Save " + moneyFormat(compareAt - price) : "";
+        saveEl.hidden = !onSale;
+      }
+
+      /* Frequently Bought Together: "This item" adds the chosen option at its price */
+      var self = sectionEl.querySelector("[data-cwc-fbt-self]");
+      if (self) {
+        self.dataset.variantId = select.value;
+        self.dataset.price = String(price);
+        var row = self.closest("label");
+        var rowPrice = row && row.querySelector(".cwc_product-buy-box__fbt-price");
+        if (rowPrice) rowPrice.textContent = moneyFormat(price);
+        /* the bundle total listens for change on its checkboxes */
+        self.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+
+    select.addEventListener("change", syncPrice);
+
+    /* Back/forward cache can restore a different option than the page printed */
+    if (select.options[select.selectedIndex] && !select.options[select.selectedIndex].defaultSelected) {
+      syncPrice();
+    }
   }
 
   function initAddToCart(sectionEl) {

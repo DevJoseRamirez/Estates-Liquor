@@ -28,7 +28,9 @@
 
     <div class="cwc_collection-grid__toolbar-stock" data-cwc-region="stock">{{ stock_html }}</div>
 
-    <p class="cwc_collection-grid__count" data-cwc-region="count" aria-live="polite">{{ results_label }}</p>
+    {% if section.settings.show_results_count != false %}
+      <p class="cwc_collection-grid__count" data-cwc-region="count" aria-live="polite">{{ results_label }}</p>
+    {% endif %}
 
     {% if section.settings.show_sort and grid_source.sort_options.size > 0 %}
       <div class="cwc_collection-grid__sort">
@@ -47,11 +49,15 @@
     {% endif %}
   </div>
 
-  {% comment %} Mobile: results + active chips row {% endcomment %}
-  <div class="cwc_collection-grid__toolbar-chips" data-cwc-region="chips-mobile">
-    <span class="cwc_collection-grid__toolbar-chips-count">{{ results_label }}</span>
-    {{ chips_html }}
-  </div>
+  {% if section.settings.show_mobile_results_row != false %}
+    {% comment %} Mobile: results + active chips row {% endcomment %}
+    <div class="cwc_collection-grid__toolbar-chips" data-cwc-region="chips-mobile">
+      {% if section.settings.show_results_count != false %}
+        <span class="cwc_collection-grid__toolbar-chips-count">{{ results_label }}</span>
+      {% endif %}
+      {{ chips_html }}
+    </div>
+  {% endif %}
 </div>
 
 <div class="cwc_collection-grid__container">
@@ -157,7 +163,9 @@
                             {% if is_disabled %}disabled{% endif %}
                           >
                           <span class="cwc_collection-grid__option-label">{{ value.label | escape }}</span>
-                          <span class="cwc_collection-grid__option-count">{{ value.count }}</span>
+                          {% if section.settings.show_option_counts != false %}
+                            <span class="cwc_collection-grid__option-count">{{ value.count }}</span>
+                          {% endif %}
                         </label>
                       {% endfor %}
                     </div>
@@ -214,7 +222,9 @@
 
         <div class="cwc_collection-grid__drawer-foot" data-cwc-region="drawer-foot">
           <a href="{{ clear_url }}" class="cwc_collection-grid__drawer-clear no-transition" data-cwc-link>Clear all</a>
-          <button type="button" class="cwc_collection-grid__drawer-apply" data-cwc-close>Show {{ results_label }}</button>
+          <button type="button" class="cwc_collection-grid__drawer-apply" data-cwc-close>
+            {%- if section.settings.show_results_count != false -%}Show {{ results_label }}{%- else -%}Show results{%- endif -%}
+          </button>
         </div>
       </aside>
     {% endif %}

@@ -113,6 +113,11 @@
   margin-top: 0.5rem;
 }
 
+/* Load More toggle: mobile only, shown by JS when the text is clamped */
+.cwc_collection-header__description-toggle {
+  display: none;
+}
+
 .cwc_collection-header__count {
   flex: 0 0 auto;
   display: flex;
@@ -315,6 +320,38 @@
 
   .cwc_collection-header__content-heading {
     margin-bottom: 8px;
+  }
+
+  /* Description clamps to --description-lines-mobile lines (line-height 1.7);
+     p + p margins are dropped while clamped so the cut lands on a line */
+  .cwc_collection-header__description--clamped .cwc_collection-header__content-subtext {
+    max-height: calc(var(--ch-subtext-size) * 1.7 * var(--description-lines-mobile, 2));
+    overflow: hidden;
+  }
+
+  .cwc_collection-header__description--clamped .cwc_collection-header__content-subtext p + p {
+    margin-top: 0;
+  }
+
+  .cwc_collection-header__description-toggle:not([hidden]) {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 0;
+    border: 0;
+    border-bottom: 1px solid var(--pill-active-bg);
+    border-radius: 0;
+    background: none;
+    font-family: var(--cwc-font-body);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-color);
+    cursor: pointer;
+  }
+
+  .cwc_collection-header__description-toggle:focus-visible {
+    outline: 2px solid var(--highlight-color);
+    outline-offset: 3px;
   }
 
   .cwc_collection-header__search-submit {

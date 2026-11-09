@@ -129,7 +129,7 @@
 {%- liquid
   assign load_script = false
   if vendor_count > 0
-    if section.settings.show_search or section.settings.sticky_jump_bar
+    if section.settings.show_search or section.settings.show_jump_bar or section.settings.sticky_jump_bar
       assign load_script = true
     endif
   endif
