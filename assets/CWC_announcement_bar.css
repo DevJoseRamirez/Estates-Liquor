@@ -8,7 +8,7 @@
 /* === Section Wrapper === */
 .cwc_announcement-bar {
   --ab-font-body: var(--cwc-font-mono);
-  --ab-arrow-size: 28px;
+  --ab-arrow-size: 32px;
   --ab-height: 32px;
 
   box-sizing: border-box;
@@ -68,7 +68,7 @@
   display: block;
   color: var(--text-color);
   font-size: var(--text-size, 11px);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1.4;
   text-transform: uppercase;
@@ -86,7 +86,7 @@
 
 .cwc_announcement-bar__text strong {
   color: var(--highlight-color);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .cwc_announcement-bar__text a {
@@ -129,7 +129,7 @@
 }
 
 .cwc_announcement-bar__arrow:hover {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .cwc_announcement-bar__arrow:focus-visible {
@@ -138,8 +138,8 @@
 }
 
 .cwc_announcement-bar__arrow svg {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -163,7 +163,7 @@
    ============================== */
 @media screen and (max-width: 768px) {
   .cwc_announcement-bar {
-    --ab-arrow-size: 24px;
+    --ab-arrow-size: 30px;
     --ab-height: 28px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);

@@ -294,11 +294,69 @@
         "offers_drawer_tooltip_background_color": "#f2bd35",
         "overlay_opacity": 0
       }
+    },
+    "cwc_trust_ribbon": {
+      "type": "CWC_trust_ribbon",
+      "blocks": {
+        "cwc_trust_ribbon_b1": {
+          "type": "item",
+          "settings": {
+            "label": "Authentic bottles",
+            "icon": "shield",
+            "link": ""
+          }
+        },
+        "cwc_trust_ribbon_b2": {
+          "type": "item",
+          "settings": {
+            "label": "Replaced if broken or lost",
+            "icon": "package",
+            "link": ""
+          }
+        },
+        "cwc_trust_ribbon_b3": {
+          "type": "item",
+          "settings": {
+            "label": "Ships Mon–Thu",
+            "icon": "truck",
+            "link": ""
+          }
+        },
+        "cwc_trust_ribbon_b4": {
+          "type": "item",
+          "settings": {
+            "label": "Licensed retailer · 21+",
+            "icon": "check",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_trust_ribbon_b1",
+        "cwc_trust_ribbon_b2",
+        "cwc_trust_ribbon_b3",
+        "cwc_trust_ribbon_b4"
+      ],
+      "settings": {
+        "bg_color": "#e9a23b",
+        "text_color": "#221813",
+        "bold_color": "#140e0b",
+        "icon_color": "#221813",
+        "diamond_color": "#a35a12",
+        "border_color": "#d68f27",
+        "show_borders": true,
+        "show_dividers": true,
+        "mobile_diamonds": true,
+        "mobile_speed": 20,
+        "padding_top": 4,
+        "padding_bottom": 4
+      }
     }
   },
   "order": [
     "cwc_announcement_bar",
     "cwc_header_JMrPr8",
+    "cwc_trust_ribbon",
     "header"
   ]
 }

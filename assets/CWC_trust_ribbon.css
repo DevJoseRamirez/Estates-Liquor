@@ -1,0 +1,220 @@
+/* ==============================
+   CWC Trust Ribbon
+   Thin trust bar under the header. Styled to estates-brand-tokens.md:
+   white ground, 1px hairline, IBM Plex Mono uppercase tracked labels,
+   square amber diamonds on mobile. Mobile auto-scroll is CSS only.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_trust-ribbon {
+  --tr-label-size: 11px;
+  --tr-icon-size: 16px;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  font-family: var(--cwc-font-mono);
+}
+
+.cwc_trust-ribbon--borders {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cwc_trust-ribbon__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* === List === */
+.cwc_trust-ribbon__list {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Hidden copy used only by the mobile auto-scroll */
+.cwc_trust-ribbon__list--clone {
+  display: none;
+}
+
+/* === Item === */
+.cwc_trust-ribbon__card {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+.cwc_trust-ribbon--dividers .cwc_trust-ribbon__card+.cwc_trust-ribbon__card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 18px;
+  transform: translateY(-50%);
+  background-color: var(--border-color);
+}
+
+.cwc_trust-ribbon__card-link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cwc_trust-ribbon__card-link:hover .cwc_trust-ribbon__card-title,
+.cwc_trust-ribbon__card-link:focus-visible .cwc_trust-ribbon__card-title {
+  color: var(--highlight-color);
+}
+
+.cwc_trust-ribbon__card-icon {
+  flex: 0 0 auto;
+  width: var(--tr-icon-size);
+  height: var(--tr-icon-size);
+  margin-right: 10px;
+  color: var(--icon-color);
+  object-fit: contain;
+}
+
+.cwc_trust-ribbon__card-diamond {
+  display: none;
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  transform: rotate(45deg);
+  background-color: var(--diamond-color);
+}
+
+.cwc_trust-ribbon__card-title {
+  font-size: var(--tr-label-size);
+  font-weight: 600;
+  line-height: 1.4;
+  line-height: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  transition: color 0.2s ease;
+}
+
+/* === Empty State === */
+.cwc_trust-ribbon__empty {
+  text-align: center;
+  padding: 1rem;
+  color: #5C5C57;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_trust-ribbon__container {
+    padding: 0 1.25rem;
+  }
+
+  .cwc_trust-ribbon__card {
+    padding: 0 0.75rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive — items auto-scroll across in a seamless loop
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_trust-ribbon {
+    --tr-icon-size: 14px;
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_trust-ribbon__container {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Two identical lists side by side; moving the track by half loops seamlessly */
+  .cwc_trust-ribbon__track {
+    display: flex;
+    width: max-content;
+    animation: cwc-trust-ribbon-scroll var(--marquee-duration) linear infinite;
+    will-change: transform;
+  }
+
+  /* A tap pauses it so a shopper can read an item */
+  .cwc_trust-ribbon__track:hover {
+    animation-play-state: paused;
+  }
+
+  .cwc_trust-ribbon__list,
+  .cwc_trust-ribbon__list--clone {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    gap: 2rem;
+    padding: 0 2rem 0 0;
+  }
+
+  .cwc_trust-ribbon__card {
+    flex: 0 0 auto;
+    padding: 0;
+  }
+
+  .cwc_trust-ribbon--dividers .cwc_trust-ribbon__card+.cwc_trust-ribbon__card::before {
+    display: none;
+  }
+
+  .cwc_trust-ribbon--mobile-diamonds .cwc_trust-ribbon__card-diamond {
+    display: block;
+  }
+
+  .cwc_trust-ribbon--mobile-diamonds .cwc_trust-ribbon__card-icon {
+    display: none;
+  }
+
+  .cwc_trust-ribbon__card-icon {
+    margin-right: 8px;
+  }
+}
+
+@keyframes cwc-trust-ribbon-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Reduced motion: no auto-scroll, fall back to a swipeable row */
+@media screen and (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .cwc_trust-ribbon__container {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cwc_trust-ribbon__container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cwc_trust-ribbon__track {
+    animation: none;
+  }
+
+  .cwc_trust-ribbon__list {
+    padding-left: 1rem;
+  }
+
+  .cwc_trust-ribbon__list--clone {
+    display: none;
+  }
+}

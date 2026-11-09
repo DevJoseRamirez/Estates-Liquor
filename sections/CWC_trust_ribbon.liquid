@@ -1,0 +1,257 @@
+{% style %}
+  #cwc_trust-ribbon-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#221813' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --icon-color: {{ section.settings.icon_color | default: '#221813' }};
+    --diamond-color: {{ section.settings.diamond_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
+    --marquee-duration: {{ section.settings.mobile_speed | default: 20 }}s;
+    --padding-top: {{ section.settings.padding_top | default: 10 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 10 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 10 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 10 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_trust_ribbon.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Thin trust bar (ported from the Liquor On Broadway trust strip). Desktop: items
+  spread evenly in one row. Mobile: the row auto-scrolls in a seamless CSS-only
+  loop (no JS); a hidden second copy of the list closes the loop.
+{%- endcomment -%}
+<section
+  id="cwc_trust-ribbon-{{ section.id }}"
+  class="cwc_trust-ribbon{% if section.settings.show_borders %} cwc_trust-ribbon--borders{% endif %}{% if section.settings.show_dividers %} cwc_trust-ribbon--dividers{% endif %}{% if section.settings.mobile_diamonds %} cwc_trust-ribbon--mobile-diamonds{% endif %}"
+>
+  <div class="cwc_trust-ribbon__container">
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_trust-ribbon__track">
+        {% for pass in (1..2) %}
+          <ul
+            class="cwc_trust-ribbon__list{% if pass == 2 %} cwc_trust-ribbon__list--clone{% endif %}"
+            role="list"
+            {% if pass == 2 %}aria-hidden="true"{% endif %}
+          >
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'item' %}
+                  {% if block.settings.label != blank %}
+                    <li class="cwc_trust-ribbon__card" {% if pass == 1 %}{{ block.shopify_attributes }}{% endif %}>
+                      {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="cwc_trust-ribbon__card-link"{% if pass == 2 %} tabindex="-1"{% endif %}>{% endif %}
+                      <span class="cwc_trust-ribbon__card-diamond" aria-hidden="true"></span>
+                      {% if block.settings.icon_image != blank %}
+                        <img
+                          class="cwc_trust-ribbon__card-icon"
+                          src="{{ block.settings.icon_image | image_url: width: 60 }}"
+                          alt=""
+                          loading="lazy"
+                          width="16"
+                          height="16"
+                        >
+                      {% elsif block.settings.icon != 'none' %}
+                        <svg class="cwc_trust-ribbon__card-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                          {%- case block.settings.icon -%}
+                            {%- when 'star' -%}
+                              <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+                            {%- when 'shield' -%}
+                              <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>
+                            {%- when 'package' -%}
+                              <path d="M3 7.5L12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5l9 4.5 9-4.5M12 12v9"/>
+                            {%- when 'truck' -%}
+                              <path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/>
+                            {%- when 'gift' -%}
+                              <path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13"/><path d="M12 7c-1.5-3-5-3-5-1s3 1 5 1zM12 7c1.5-3 5-3 5-1s-3 1-5 1z"/>
+                            {%- when 'lock' -%}
+                              <rect x="5" y="10.5" width="14" height="10" rx="1.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+                            {%- when 'clock' -%}
+                              <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+                            {%- when 'chat' -%}
+                              <path d="M12 4c4.4 0 8 2.9 8 6.5S16.4 17 12 17c-.9 0-1.8-.1-2.6-.3L5 19l1.1-3.6C4.8 14.2 4 12.4 4 10.5 4 6.9 7.6 4 12 4z"/>
+                            {%- when 'check' -%}
+                              <circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/>
+                          {%- endcase -%}
+                        </svg>
+                      {% endif %}
+                      <span class="cwc_trust-ribbon__card-title">{{ block.settings.label | escape }}</span>
+                      {% if block.settings.link != blank %}</a>{% endif %}
+                    </li>
+                  {% endif %}
+              {% endcase %}
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_trust-ribbon__empty">
+        <p>Add trust items to display content.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Trust Ribbon",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Link Hover Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "diamond_color",
+      "label": "Mobile Diamond Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border & Divider Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "Show Bottom Border",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Show Dividers Between Items",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_diamonds",
+      "label": "Mobile: Diamonds Instead of Icons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "mobile_speed",
+      "label": "Mobile Auto-Scroll Speed",
+      "info": "Seconds for one full loop. Lower is faster",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "s",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Keep it short — one line",
+          "default": "Authentic bottles"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "star", "label": "Star" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "package", "label": "Package" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "chat", "label": "Chat" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "shield"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom Icon Image",
+          "info": "Optional. Replaces the icon above"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional, e.g. the shipping policy"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "CWC Trust Ribbon",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "item", "settings": { "label": "Authentic bottles", "icon": "shield" } },
+        { "type": "item", "settings": { "label": "Replaced if broken or lost", "icon": "package" } },
+        { "type": "item", "settings": { "label": "Ships Mon–Thu", "icon": "truck" } },
+        { "type": "item", "settings": { "label": "Licensed retailer · 21+", "icon": "check" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
