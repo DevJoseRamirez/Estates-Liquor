@@ -1,0 +1,375 @@
+{% style %}
+  #cwc_brand-grid-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#221813' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
+    --rule-color: {{ section.settings.rule_color | default: '#E9A23B' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#221813' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#FFFFFF' }};
+    --card-hover-border: {{ section.settings.card_hover_border_color | default: '#E9A23B' }};
+    --button-color: {{ section.settings.button_color | default: '#221813' }};
+    --button-hover-text: {{ section.settings.button_hover_text_color | default: '#FFFFFF' }};
+    --columns-desktop: {{ section.settings.columns_desktop | default: 6 }};
+    --logo-max-height: {{ section.settings.logo_max_height | default: 48 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_brand_grid.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Logo is sized for its tile: the column count decides how wide one tile can get
+  assign columns = section.settings.columns_desktop | default: 6
+  assign tile_vw = 100 | divided_by: columns
+  assign logo_sizes = '(max-width: 768px) 40vw, (max-width: 991px) 22vw, ' | append: tile_vw | append: 'vw'
+-%}
+
+<section id="cwc_brand-grid-{{ section.id }}" class="cwc_brand-grid">
+  <div class="cwc_brand-grid__container">
+
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subtext != blank %}
+      <div class="cwc_brand-grid__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_brand-grid__content-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_brand-grid__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_rule %}
+          <span class="cwc_brand-grid__rule" aria-hidden="true"></span>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_brand-grid__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Brand Tiles {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_brand-grid__grid" data-mobile-count="{{ section.settings.mobile_count }}">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'brand' %}
+              {%- liquid
+                assign block_collection = block.settings.collection
+
+                if block.settings.name != blank
+                  assign card_title = block.settings.name
+                elsif block_collection != blank
+                  assign card_title = block_collection.title
+                else
+                  assign card_title = 'Brand'
+                endif
+
+                if block.settings.link != blank
+                  assign card_link = block.settings.link
+                elsif block_collection != blank
+                  assign card_link = block_collection.url
+                else
+                  assign card_link = nil
+                endif
+              -%}
+
+              {% if card_link != blank %}
+                <a href="{{ card_link }}" class="cwc_brand-grid__card" {{ block.shopify_attributes }}>
+              {% else %}
+                <div class="cwc_brand-grid__card" {{ block.shopify_attributes }}>
+              {% endif %}
+
+                {% if block.settings.logo != blank %}
+                  {{
+                    block.settings.logo
+                    | image_url: width: 480
+                    | image_tag:
+                      class: 'cwc_brand-grid__card-image',
+                      widths: '160, 240, 320, 480',
+                      sizes: logo_sizes,
+                      loading: 'lazy',
+                      decoding: 'async',
+                      alt: card_title
+                  }}
+                {% else %}
+                  <span class="cwc_brand-grid__card-title">{{ card_title | escape }}</span>
+                {% endif %}
+
+              {% if card_link != blank %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_brand-grid__empty">
+        <p>Add brand blocks to display content.</p>
+      </div>
+    {% endif %}
+
+    {% comment %} Button {% endcomment %}
+    {% if section.settings.button_label != blank %}
+      <div class="cwc_brand-grid__button">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="cwc_brand-grid__button-link">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Brand Grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Cellar"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Brands We <strong>Carry</strong></p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Rule Under Heading",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>The names people come in asking for.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#3A3A36"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Rule Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Tile Background Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Tile Text Color",
+      "info": "Used when a brand has no logo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border_color",
+      "label": "Tile Hover Border Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Color",
+      "info": "Outline and text; fills on hover",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button Hover Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (Desktop)",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "mobile_count",
+      "label": "Brands Shown on Mobile",
+      "options": [
+        { "value": "4", "label": "4" },
+        { "value": "6", "label": "6" },
+        { "value": "8", "label": "8" },
+        { "value": "all", "label": "All" }
+      ],
+      "default": "8"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height",
+      "label": "Logo Max Height",
+      "min": 24,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Every brand A–Z"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "info": "Point this at the Brands page"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Brand Logo",
+          "info": "Light logo on a transparent background works best on the dark tile"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Brand Collection",
+          "info": "Tile links to this collection"
+        },
+        {
+          "type": "header",
+          "content": "Overrides (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand Name",
+          "info": "Shown when no logo is set, and used as the logo's alt text. Defaults to the collection title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24,
+  "presets": [
+    {
+      "name": "CWC Brand Grid",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "brand", "settings": { "name": "Buffalo Trace" } },
+        { "type": "brand", "settings": { "name": "Eagle Rare" } },
+        { "type": "brand", "settings": { "name": "Blanton's" } },
+        { "type": "brand", "settings": { "name": "Weller" } },
+        { "type": "brand", "settings": { "name": "Four Roses" } },
+        { "type": "brand", "settings": { "name": "Don Julio" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

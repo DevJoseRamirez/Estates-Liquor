@@ -1,0 +1,490 @@
+{% style %}
+  #cwc_brand-index-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#221813' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
+    --rule-color: {{ section.settings.rule_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
+    --letter-color: {{ section.settings.letter_color | default: '#221813' }};
+    --link-color: {{ section.settings.link_color | default: '#3A3A36' }};
+    --link-hover-color: {{ section.settings.link_hover_color | default: '#221813' }};
+    --link-underline-color: {{ section.settings.link_underline_color | default: '#E9A23B' }};
+    --jump-bg: {{ section.settings.jump_bg_color | default: '#FFFFFF' }};
+    --jump-active-bg: {{ section.settings.jump_active_bg_color | default: '#221813' }};
+    --jump-active-text: {{ section.settings.jump_active_text_color | default: '#E9A23B' }};
+    --jump-disabled-color: {{ section.settings.jump_disabled_color | default: '#C4C4BE' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#D9D9D3' }};
+    --columns-desktop: {{ section.settings.columns_desktop | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 64 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 64 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+
+  {% comment %} A clipped section wrapper would stop the toolbar from sticking {% endcomment %}
+  {% if section.settings.sticky_jump_bar %}
+    #shopify-section-{{ section.id }} {
+      overflow: visible;
+    }
+  {% endif %}
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_brand_index.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  comment
+    Brands come from every product vendor in the store (shop.vendors), so new
+    brands appear with no setup. Names in "Exclude Vendors" are skipped (e.g.
+    the shipping protection product's vendor). Each name links to a collection
+    whose handle matches the vendor when "Link To Matching Collections" is on
+    and one exists, otherwise to Shopify's automatic vendor page.
+
+    Speed: one pass over the vendors builds the groups and the list of letters
+    together. The collection lookup is the costly part per brand, so it can be
+    switched off when brand collections aren't set up.
+  endcomment
+
+  assign exclude_key = '|'
+  assign exclude_raw = section.settings.exclude_vendors | newline_to_br | replace: '<br />', ',' | split: ','
+  for exclude_item in exclude_raw
+    assign exclude_clean = exclude_item | strip | downcase
+    if exclude_clean != blank
+      assign exclude_key = exclude_key | append: exclude_clean | append: '|'
+    endif
+  endfor
+
+  assign alphabet = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z' | split: ','
+  assign alphabet_key = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  assign anchor_prefix = 'cwc_brand-index-' | append: section.id | append: '-'
+  assign link_collections = section.settings.link_to_collections
+
+  assign sorted_vendors = shop.vendors | sort_natural
+  assign letters_present = '|'
+  assign vendor_count = 0
+  assign current_letter = ''
+-%}
+
+{%- capture brand_groups -%}
+  {%- for vendor in sorted_vendors -%}
+    {%- liquid
+      assign vendor_clean = vendor | strip
+      if vendor_clean == blank
+        continue
+      endif
+      assign vendor_needle = '|' | append: vendor_clean | downcase | append: '|'
+      if exclude_key contains vendor_needle
+        continue
+      endif
+
+      assign vendor_letter = vendor_clean | slice: 0 | upcase
+      unless alphabet_key contains vendor_letter
+        assign vendor_letter = '#'
+      endunless
+
+      assign vendor_url = vendor_clean | url_for_vendor
+      if link_collections
+        assign vendor_handle = vendor_clean | handleize
+        assign vendor_collection = collections[vendor_handle]
+        if vendor_collection != blank and vendor_collection.id != blank
+          assign vendor_url = vendor_collection.url
+        endif
+      endif
+
+      assign vendor_count = vendor_count | plus: 1
+    -%}
+
+    {%- if vendor_letter != current_letter -%}
+      {%- if current_letter != '' -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- liquid
+        assign letters_present = letters_present | append: vendor_letter | append: '|'
+        if vendor_letter == '#'
+          assign group_anchor = anchor_prefix | append: 'num'
+        else
+          assign group_anchor = anchor_prefix | append: vendor_letter
+        endif
+        assign current_letter = vendor_letter
+      -%}
+      <div class="cwc_brand-index__group" id="{{ group_anchor }}" data-brand-group="{{ vendor_letter }}">
+        <p class="cwc_brand-index__group-letter" aria-hidden="true">{{ vendor_letter }}</p>
+        <ul class="cwc_brand-index__list" role="list" aria-label="Brands starting with {{ vendor_letter }}">
+    {%- endif -%}
+
+          <li class="cwc_brand-index__item" data-brand-name="{{ vendor_clean | downcase | escape }}">
+            <a href="{{ vendor_url }}" class="cwc_brand-index__link">{{ vendor_clean | escape }}</a>
+          </li>
+  {%- endfor -%}
+
+  {%- if current_letter != '' -%}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- liquid
+  assign load_script = false
+  if vendor_count > 0
+    if section.settings.show_search or section.settings.sticky_jump_bar
+      assign load_script = true
+    endif
+  endif
+-%}
+
+<section
+  id="cwc_brand-index-{{ section.id }}"
+  class="cwc_brand-index{% if section.settings.sticky_jump_bar %} cwc_brand-index--sticky-jump{% endif %}"
+>
+  <div class="cwc_brand-index__container">
+
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subtext != blank %}
+      <div class="cwc_brand-index__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_brand-index__content-eyebrow">
+            {%- assign count_label = vendor_count | append: '' -%}
+            {{- section.settings.eyebrow | replace: '[count]', count_label | escape -}}
+          </p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div
+            class="cwc_brand-index__content-heading cwc-rte"
+            {% if section.settings.heading_is_page_title %}role="heading" aria-level="1"{% endif %}
+          >
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_rule %}
+          <span class="cwc_brand-index__rule" aria-hidden="true"></span>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_brand-index__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if vendor_count > 0 %}
+
+      {% comment %} Search + A–Z Jump Bar {% endcomment %}
+      {% if section.settings.show_search or section.settings.show_jump_bar %}
+        <div class="cwc_brand-index__toolbar" data-brand-toolbar>
+          {% if section.settings.show_search %}
+            <div class="cwc_brand-index__search">
+              <svg class="cwc_brand-index__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+              <input
+                type="search"
+                class="cwc_brand-index__search-input"
+                placeholder="{{ section.settings.search_placeholder | default: 'Find a brand' | escape }}"
+                aria-label="{{ section.settings.search_placeholder | default: 'Find a brand' | escape }}"
+                aria-controls="cwc_brand-index-groups-{{ section.id }}"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                enterkeyhint="search"
+                data-brand-search
+              >
+            </div>
+          {% endif %}
+
+          {% if section.settings.show_jump_bar %}
+            <nav class="cwc_brand-index__jump" aria-label="Jump to letter">
+              {%- if letters_present contains '|#|' -%}
+                <a href="#{{ anchor_prefix }}num" class="cwc_brand-index__jump-letter" data-jump-letter="#">#</a>
+              {%- endif -%}
+              {%- for letter in alphabet -%}
+                {%- assign letter_needle = '|' | append: letter | append: '|' -%}
+                {%- if letters_present contains letter_needle -%}
+                  <a href="#{{ anchor_prefix }}{{ letter }}" class="cwc_brand-index__jump-letter" data-jump-letter="{{ letter }}">{{ letter }}</a>
+                {%- else -%}
+                  <span class="cwc_brand-index__jump-letter cwc_brand-index__jump-letter--empty" aria-hidden="true">{{ letter }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </nav>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} Brand Groups {% endcomment %}
+      <div class="cwc_brand-index__groups" id="cwc_brand-index-groups-{{ section.id }}">
+        {{ brand_groups }}
+      </div>
+
+      {% if section.settings.show_search %}
+        <p class="cwc_brand-index__empty" data-brand-empty hidden>
+          {{ section.settings.no_results_text | default: 'No brands match your search.' | escape }}
+        </p>
+        <p class="cwc_brand-index__status" data-brand-status aria-live="polite"></p>
+      {% endif %}
+
+    {% else %}
+      <p class="cwc_brand-index__empty">No brands to show yet.</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% if load_script %}
+  <script src="{{ 'CWC_brand_index.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Brand Index",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "[count] is replaced with the number of brands",
+      "default": "[count] brands"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Every Brand <strong>A–Z</strong></p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_is_page_title",
+      "label": "Heading Is The Page Title",
+      "info": "Marks the heading as the page's main heading for screen readers. Turn off when the section sits under another page title.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Rule Under Heading",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Find the bottles from the distilleries, wineries and breweries we carry.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Brands"
+    },
+    {
+      "type": "paragraph",
+      "content": "Brands are pulled automatically from every product vendor in the store."
+    },
+    {
+      "type": "checkbox",
+      "id": "link_to_collections",
+      "label": "Link To Matching Collections",
+      "info": "When a collection's handle matches the vendor name (e.g. Buffalo Trace → buffalo-trace), the brand links there. Otherwise it links to Shopify's automatic vendor page. Turn off for a faster page if brands don't have their own collections.",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "exclude_vendors",
+      "label": "Exclude Vendors",
+      "info": "One vendor name per line (or comma separated). Add the shipping protection product's vendor here so it never shows."
+    },
+    {
+      "type": "header",
+      "content": "Search & Jump Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Brand Search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search Placeholder",
+      "default": "Find a brand"
+    },
+    {
+      "type": "text",
+      "id": "no_results_text",
+      "label": "No Results Text",
+      "default": "No brands match your search."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_jump_bar",
+      "label": "Show A–Z Jump Bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_jump_bar",
+      "label": "Sticky Jump Bar",
+      "info": "Keeps the search and letters pinned under the header while scrolling",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#3A3A36"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Rule Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "header",
+      "content": "Brand List Colors"
+    },
+    {
+      "type": "color",
+      "id": "letter_color",
+      "label": "Letter Heading Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Brand Link Color",
+      "default": "#3A3A36"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Brand Link Hover Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "link_underline_color",
+      "label": "Brand Link Hover Underline",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Search & Jump Bar Colors"
+    },
+    {
+      "type": "color",
+      "id": "jump_bg_color",
+      "label": "Bar Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Search Border Color",
+      "default": "#D9D9D3"
+    },
+    {
+      "type": "color",
+      "id": "jump_active_bg_color",
+      "label": "Letter Hover Background",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "jump_active_text_color",
+      "label": "Letter Hover Text",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "jump_disabled_color",
+      "label": "Empty Letter Color",
+      "default": "#C4C4BE"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Brand Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "CWC Brand Index",
+      "category": "CWC Custom"
+    }
+  ]
+}
+{% endschema %}

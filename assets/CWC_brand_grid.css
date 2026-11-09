@@ -1,0 +1,240 @@
+/* ==============================
+   CWC Brand Grid
+   Styled to _theme-styles/estates-brand-tokens.md: square dark tiles,
+   amber hover border (no lift / shadow), Fraunces headings, mono eyebrow,
+   Outline button.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_brand-grid {
+  --bg-heading-size: 34px;
+  --bg-card-height: 104px;
+  --bg-card-title-size: 20px;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  font-family: var(--cwc-font-body);
+}
+
+.cwc_brand-grid__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* === Section Header === */
+.cwc_brand-grid__content {
+  max-width: 900px;
+  margin: 0 auto 2.25rem;
+  width: 100%;
+  text-align: center;
+}
+
+.cwc_brand-grid__content-eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--cwc-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+}
+
+.cwc_brand-grid__content-heading h1,
+.cwc_brand-grid__content-heading h2,
+.cwc_brand-grid__content-heading h3,
+.cwc_brand-grid__content-heading p {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: var(--bg-heading-size);
+  font-weight: 500;
+  line-height: 1.12;
+  color: inherit;
+}
+
+.cwc_brand-grid__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_brand-grid__rule {
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin: 16px auto 0;
+  background-color: var(--rule-color);
+}
+
+.cwc_brand-grid__content-subtext {
+  max-width: 700px;
+  margin: 14px auto 0;
+}
+
+.cwc_brand-grid__content-subtext p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--subtext-color);
+}
+
+/* === Grid === */
+.cwc_brand-grid__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns-desktop), minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* === Card === */
+.cwc_brand-grid__card {
+  min-height: var(--bg-card-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-bg);
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+
+a.cwc_brand-grid__card:hover {
+  border-color: var(--card-hover-border);
+}
+
+a.cwc_brand-grid__card:focus-visible {
+  outline: 2px solid var(--card-hover-border);
+  outline-offset: 2px;
+}
+
+.cwc_brand-grid__card-image {
+  max-width: 80%;
+  max-height: var(--logo-max-height);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.cwc_brand-grid__card-title {
+  font-family: var(--cwc-font-heading);
+  font-size: var(--bg-card-title-size);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--card-text-color);
+}
+
+/* === Button (Outline) === */
+.cwc_brand-grid__button {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.25rem;
+}
+
+.cwc_brand-grid__button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 34px;
+  border: 1px solid var(--button-color);
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--button-color);
+  font-family: var(--cwc-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cwc_brand-grid__button-link:hover {
+  background-color: var(--button-color);
+  color: var(--button-hover-text);
+}
+
+.cwc_brand-grid__button-link:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
+}
+
+/* === Empty State === */
+.cwc_brand-grid__empty {
+  text-align: center;
+  padding: 2rem;
+  color: #5C5C57;
+  border: 1px dashed #D9D9D3;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_brand-grid__container {
+    padding: 0 1.25rem;
+  }
+
+  .cwc_brand-grid__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_brand-grid {
+    --bg-heading-size: 26px;
+    --bg-card-height: 76px;
+    --bg-card-title-size: 18px;
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_brand-grid__container {
+    padding: 0 1rem;
+  }
+
+  .cwc_brand-grid__content {
+    margin-bottom: 1.25rem;
+  }
+
+  .cwc_brand-grid__content-eyebrow {
+    font-size: 11px;
+  }
+
+  .cwc_brand-grid__content-subtext p {
+    font-size: 15px;
+  }
+
+  .cwc_brand-grid__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  /* Hidden tiles skip their lazy logos entirely */
+  .cwc_brand-grid__grid[data-mobile-count='4'] .cwc_brand-grid__card:nth-child(n + 5),
+  .cwc_brand-grid__grid[data-mobile-count='6'] .cwc_brand-grid__card:nth-child(n + 7),
+  .cwc_brand-grid__grid[data-mobile-count='8'] .cwc_brand-grid__card:nth-child(n + 9) {
+    display: none;
+  }
+
+  .cwc_brand-grid__card-image {
+    max-height: calc(var(--logo-max-height) * 0.75);
+  }
+
+  .cwc_brand-grid__button {
+    margin-top: 1.25rem;
+  }
+
+  .cwc_brand-grid__button-link {
+    width: 100%;
+    min-height: 48px;
+  }
+}
