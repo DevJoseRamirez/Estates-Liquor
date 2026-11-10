@@ -1,0 +1,129 @@
+{% comment %}
+  One "Product Tabs" mega panel, for one top-level desktop menu item.
+
+  The tabs down the left are the item's children in the Shopify menu. Each
+  child that links to a collection shows that collection's first few bottles
+  in the grid on the right; hovering or focusing a tab swaps the grid. A child
+  that links anywhere else is still a tab and a link, it just has no grid.
+
+  Without JS the first tab's grid shows and every tab is a plain link.
+
+  Accepts:
+  - link {Object} - the top-level menu link this panel belongs to
+  - block {Object} - the matching mega_products block
+  - panel_id {String} - id for the panel, referenced by the nav link
+
+  Usage:
+  {% render 'CWC_header-mega-products', link: link, block: panel_block, panel_id: panel_id %}
+{% endcomment %}
+
+{%- liquid
+  assign per_tab = block.settings.products_per_tab | default: 4
+-%}
+
+<div
+  id="{{ panel_id }}"
+  class="cwc_header__mega cwc_header__mega--products"
+  data-cwc-mega
+  data-cwc-mega-tabs
+  {{ block.shopify_attributes }}
+>
+  <div class="cwc_header__container cwc_header__mega-inner">
+    <div class="cwc_header__mega-side">
+      {%- if block.settings.sidebar_heading != blank -%}
+        <span class="cwc_header__mega-heading">{{ block.settings.sidebar_heading | escape }}</span>
+      {%- endif -%}
+
+      <ul class="cwc_header__mega-tabs">
+        {%- for child in link.links -%}
+          <li>
+            <a
+              href="{{ child.url }}"
+              class="cwc_header__mega-tab{% if forloop.first %} cwc_header__mega-tab--active{% endif %}"
+              data-cwc-mega-tab="{{ forloop.index0 }}"
+              {% if child.current %}aria-current="page"{% endif %}
+            >
+              <span class="cwc_header__mega-tab-label">{{ child.title | escape }}</span>
+              <span class="cwc_header__mega-tab-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if block.settings.cta_label != blank -%}
+        <a href="{{ block.settings.cta_link | default: link.url }}" class="cwc_header__mega-button">
+          {{- block.settings.cta_label | escape -}}
+        </a>
+      {%- endif -%}
+
+      {%- if block.settings.secondary_label != blank and block.settings.secondary_link != blank -%}
+        <a href="{{ block.settings.secondary_link }}" class="cwc_header__mega-all cwc_header__mega-all--plain">
+          {{- block.settings.secondary_label | escape }} <span aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="cwc_header__mega-stage">
+      {%- for child in link.links -%}
+        {%- liquid
+          assign tab_collection = nil
+          if child.type == 'collection_link'
+            assign tab_collection = child.object
+          endif
+        -%}
+        <div
+          class="cwc_header__mega-tabpanel"
+          data-cwc-mega-tabpanel="{{ forloop.index0 }}"
+          {% unless forloop.first %}hidden{% endunless %}
+        >
+          <div class="cwc_header__mega-stage-head">
+            <a href="{{ child.url }}" class="cwc_header__mega-stage-title">{{ child.title | escape }}</a>
+            {%- if block.settings.grid_note != blank -%}
+              <span class="cwc_header__mega-stage-note">{{ block.settings.grid_note | escape }}</span>
+            {%- endif -%}
+          </div>
+
+          {%- if tab_collection != nil and tab_collection.products_count > 0 -%}
+            <ul class="cwc_header__mega-products" style="--mega-cols: {{ per_tab }};">
+              {%- for product in tab_collection.products limit: per_tab -%}
+                {%- liquid
+                  assign badge_label = ''
+                  if product.tags contains 'Allocated' or product.tags contains 'allocated'
+                    assign badge_label = 'Allocated'
+                  elsif product.tags contains 'Barrel Pick' or product.tags contains 'barrel pick'
+                    assign badge_label = 'Barrel Pick'
+                  elsif product.tags contains 'New' or product.tags contains 'new'
+                    assign badge_label = 'New'
+                  endif
+                -%}
+                <li>
+                  <a href="{{ product.url }}" class="cwc_header__mega-product">
+                    <span class="cwc_header__mega-product-media">
+                      {%- if product.featured_image != blank -%}
+                        {{
+                          product.featured_image
+                          | image_url: width: 400
+                          | image_tag:
+                            class: 'cwc_header__mega-product-image',
+                            alt: '',
+                            loading: 'lazy',
+                            widths: '200, 300, 400',
+                            sizes: '200px'
+                        }}
+                      {%- endif -%}
+                      {%- if badge_label != blank -%}
+                        <span class="cwc_header__mega-promo-label">{{ badge_label }}</span>
+                      {%- endif -%}
+                    </span>
+                    <span class="cwc_header__mega-product-title">{{ product.title | escape }}</span>
+                    <span class="cwc_header__mega-product-price">{{ product.price | money }}</span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>

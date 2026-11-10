@@ -1193,12 +1193,112 @@
         "padding_top": 80,
         "padding_bottom": 80
       }
+    },
+    "cwc_home_hero": {
+      "type": "CWC_home_hero",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "WhistlePig",
+            "heading": "<p>Vermont Rye, Built to Be Bold</p>",
+            "button_label": "Shop WhistlePig",
+            "button_link": "shopify://collections/whistlepig",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/whistlepig"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "The Macallan",
+            "heading": "<p>Single Malt Scotch from Speyside</p>",
+            "button_label": "Shop The Macallan",
+            "button_link": "shopify://collections/macallan-1",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/macallan-1"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "Doc Holliday",
+            "heading": "<p>The Ducks Unlimited 10 Year Set</p>",
+            "button_label": "Shop the Set",
+            "button_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set"
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "Van Winkle",
+            "heading": "<p>The Bourbon Everyone Is Hunting For</p>",
+            "button_label": "Shop Van Winkle",
+            "button_link": "shopify://collections/van-winkle",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/van-winkle"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
+      ],
+      "settings": {
+        "bg_color": "#0b0b0b",
+        "text_color": "#ffffff",
+        "bold_color": "#d9be78",
+        "eyebrow_color": "#d9be78",
+        "link_color": "#d9be78",
+        "frame_color": "#c2a14d",
+        "frame_bg_color": "#0e0c09",
+        "show_bulbs": true,
+        "bulb_color": "#f2d27a",
+        "button_bg_color": "#c2a14d",
+        "button_text_color": "#111111",
+        "button_hover_color": "#f2d27a",
+        "indicator_color": "#4a443a",
+        "fit_image_height": true,
+        "min_height": 480,
+        "min_height_mobile": 420,
+        "overlay_opacity": 0,
+        "autoplay": true,
+        "autoplay_speed": 6,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": [
     "cwc_brand_marquee",
     "cwc_home_banner_PPNPdA",
     "cwc_hero",
+    "cwc_home_hero",
     "cwc_hero_VbRH83",
     "cwc_trust_bar",
     "cwc_shop_category",

@@ -1,0 +1,481 @@
+{% style %}
+  #cwc_home-hero-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#0B0B0B' }};
+    --text-color: {{ section.settings.text_color | default: '#FFFFFF' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#D9BE78' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#D9BE78' }};
+    --link-color: {{ section.settings.link_color | default: '#D9BE78' }};
+    --frame-color: {{ section.settings.frame_color | default: '#C2A14D' }};
+    --frame-bg: {{ section.settings.frame_bg_color | default: '#0E0C09' }};
+    --bulb-color: {{ section.settings.bulb_color | default: '#F2D27A' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#C2A14D' }};
+    --button-text: {{ section.settings.button_text_color | default: '#111111' }};
+    --button-hover-bg: {{ section.settings.button_hover_color | default: '#F2D27A' }};
+    --indicator-color: {{ section.settings.indicator_color | default: '#4A443A' }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | default: 0 | divided_by: 100.0 }};
+    --min-height: {{ section.settings.min_height | default: 480 }}px;
+    --min-height-mobile: {{ section.settings.min_height_mobile | default: 320 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 0 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 0 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 0 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 0 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_home_hero.css' | asset_url | stylesheet_tag }}
+
+{%- assign slide_count = section.blocks.size -%}
+
+<section
+  id="cwc_home-hero-{{ section.id }}"
+  class="cwc_home-hero{% if slide_count > 1 %} cwc_home-hero--slideshow{% endif %}{% if section.settings.show_bulbs %} cwc_home-hero--bulbs{% endif %}{% if section.settings.fit_image_height %} cwc_home-hero--fit{% endif %}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+>
+  {% if slide_count > 0 %}
+    <div class="cwc_home-hero__track cwc_home-hero__track--{{ section.id }}">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'slide' %}
+            {%- assign content_position = block.settings.content_position | default: 'middle_center' | split: '_' -%}
+            {%- assign mobile_position = block.settings.mobile_content_position | default: 'desktop' -%}
+            {%- assign has_content = false -%}
+            {%- if block.settings.show_content -%}
+              {%- if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.button_label != blank -%}
+                {%- assign has_content = true -%}
+              {%- elsif block.settings.link_label != blank and block.settings.link_url != blank -%}
+                {%- assign has_content = true -%}
+              {%- endif -%}
+            {%- endif -%}
+            <div
+              class="cwc_home-hero__slide cwc_home-hero__slide--y-{{ content_position[0] }} cwc_home-hero__slide--x-{{ content_position[1] }}{% if mobile_position != 'desktop' %} cwc_home-hero__slide--mobile-{{ mobile_position }}{% endif %}{% if block.settings.image != blank %} cwc_home-hero__slide--has-image{% endif %}{% if block.settings.image_mobile != blank %} cwc_home-hero__slide--has-mobile-image{% endif %}"
+              id="cwc_home-hero-slide-{{ block.id }}"
+              {%- if block.settings.image != blank or block.settings.image_mobile != blank %}
+                style="{% if block.settings.image != blank %}--image-ratio: {{ block.settings.image.aspect_ratio }};{% endif %}{% if block.settings.image_mobile != blank %} --image-ratio-mobile: {{ block.settings.image_mobile.aspect_ratio }};{% endif %}"
+              {%- endif %}
+              {% if slide_count > 1 %}aria-roledescription="slide" aria-label="{{ forloop.index }} / {{ slide_count }}"{% endif %}
+              {{ block.shopify_attributes }}
+            >
+              <div class="cwc_home-hero__media">
+                {% if block.settings.image != blank %}
+                  <picture>
+                    {% if block.settings.image_mobile != blank %}
+                      <source
+                        media="(max-width: 768px)"
+                        srcset="{{ block.settings.image_mobile | image_url: width: 900 }}"
+                      >
+                    {% endif %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 2400 }}"
+                      srcset="{{ block.settings.image | image_url: width: 1200 }} 1200w, {{ block.settings.image | image_url: width: 1800 }} 1800w, {{ block.settings.image | image_url: width: 2400 }} 2400w"
+                      sizes="100vw"
+                      alt="{{ block.settings.image.alt | default: block.settings.eyebrow | escape }}"
+                      {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                    >
+                  </picture>
+                {% else %}
+                  <div class="cwc_home-hero__placeholder"></div>
+                {% endif %}
+                <span class="cwc_home-hero__overlay" aria-hidden="true"></span>
+              </div>
+
+              {% if has_content %}
+                  <div class="cwc_home-hero__container">
+                    <div class="cwc_home-hero__content cwc_home-hero__content--{{ block.settings.content_style | default: 'plain' }}">
+                      {% if block.settings.eyebrow != blank %}
+                        <p class="cwc_home-hero__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                      {% endif %}
+
+                      {% if block.settings.heading != blank %}
+                        <div class="cwc_home-hero__content-heading cwc-rte">
+                          {{ block.settings.heading }}
+                        </div>
+                      {% endif %}
+
+                      {%- assign show_link = false -%}
+                      {%- if block.settings.link_label != blank and block.settings.link_url != blank -%}
+                        {%- assign show_link = true -%}
+                      {%- endif -%}
+                      {% if block.settings.button_label != blank or show_link %}
+                        <div class="cwc_home-hero__actions">
+                          {% if block.settings.button_label != blank %}
+                            <a
+                              href="{{ block.settings.button_link | default: '#' }}"
+                              class="cwc_home-hero__button"
+                            >
+                              {{- block.settings.button_label | escape -}}
+                            </a>
+                          {% endif %}
+                          {% if show_link %}
+                            <a
+                              href="{{ block.settings.link_url }}"
+                              class="cwc_home-hero__link"
+                            >
+                              {{- block.settings.link_label | escape -}}
+                              <span aria-hidden="true">&rarr;</span>
+                            </a>
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+              {% elsif block.settings.slide_link != blank %}
+                <a
+                  href="{{ block.settings.slide_link }}"
+                  class="cwc_home-hero__slide-link"
+                  aria-label="{{ block.settings.eyebrow | default: block.settings.image.alt | default: 'Shop now' | escape }}"
+                ></a>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+
+    {% if slide_count > 1 %}
+      <div class="cwc_home-hero__indicators">
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="cwc_home-hero__indicator{% if forloop.first %} cwc_home-hero__indicator--active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="Go to slide {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="cwc_home-hero__slide">
+      <div class="cwc_home-hero__media">
+        <div class="cwc_home-hero__placeholder"></div>
+      </div>
+      <div class="cwc_home-hero__container">
+        <div class="cwc_home-hero__content">
+          <p class="cwc_home-hero__eyebrow">Add a slide to get started</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% if slide_count > 1 %}
+  <script src="{{ 'CWC_home_hero.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Home Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0B0B0B"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#D9BE78"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#D9BE78"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Text Link Color",
+      "default": "#D9BE78"
+    },
+    {
+      "type": "color",
+      "id": "frame_color",
+      "label": "Frame Border Color",
+      "default": "#C2A14D"
+    },
+    {
+      "type": "color",
+      "id": "frame_bg_color",
+      "label": "Frame Background Color",
+      "info": "Framed box style only",
+      "default": "#0E0C09"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bulbs",
+      "label": "Show Marquee Lights",
+      "default": true,
+      "info": "Ring of glowing bulbs around slides using the Framed box style"
+    },
+    {
+      "type": "color",
+      "id": "bulb_color",
+      "label": "Marquee Bulb Color",
+      "default": "#F2D27A"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#C2A14D"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button Hover Color",
+      "info": "The button lights up to this colour on hover",
+      "default": "#F2D27A"
+    },
+    {
+      "type": "color",
+      "id": "indicator_color",
+      "label": "Slide Indicator Color",
+      "info": "Active indicator uses the frame border color",
+      "default": "#4A443A"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fit_image_height",
+      "label": "Fit Height to Image",
+      "info": "The hero takes the shape of the slide image so it's never cropped. On mobile this uses the mobile image.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum Height (Desktop)",
+      "info": "Used when Fit Height to Image is off",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum Height (Mobile)",
+      "info": "Used when Fit Height to Image is off, or for slides without a mobile image",
+      "min": 200,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image Overlay Opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Slideshow"
+    },
+    {
+      "type": "paragraph",
+      "content": "With one slide the hero is static. Add two or more slides to turn on the slideshow."
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay Slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay Speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image (Desktop)",
+          "info": "2400 × 960 recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Slide Image (Mobile)",
+          "info": "Optional. 900 × 740 recommended"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "paragraph",
+          "content": "Leave the content fields blank for an image-only slide"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Content",
+          "info": "Untick to hide the content without clearing it",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "content_style",
+          "label": "Content Style",
+          "options": [
+            {
+              "value": "plain",
+              "label": "Text on image"
+            },
+            {
+              "value": "framed",
+              "label": "Framed box"
+            }
+          ],
+          "default": "plain"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content Position (Desktop)",
+          "options": [
+            { "value": "top_left", "label": "Top left" },
+            { "value": "top_center", "label": "Top center" },
+            { "value": "top_right", "label": "Top right" },
+            { "value": "middle_left", "label": "Middle left" },
+            { "value": "middle_center", "label": "Middle center" },
+            { "value": "middle_right", "label": "Middle right" },
+            { "value": "bottom_left", "label": "Bottom left" },
+            { "value": "bottom_center", "label": "Bottom center" },
+            { "value": "bottom_right", "label": "Bottom right" }
+          ],
+          "default": "middle_center"
+        },
+        {
+          "type": "select",
+          "id": "mobile_content_position",
+          "label": "Content Position (Mobile)",
+          "options": [
+            { "value": "desktop", "label": "Same as desktop" },
+            { "value": "top", "label": "Top center" },
+            { "value": "middle", "label": "Middle center" },
+            { "value": "bottom", "label": "Bottom center" }
+          ],
+          "default": "desktop"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Secondary Link Label",
+          "info": "Shows only when a link is set. Hidden on mobile"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Secondary Link"
+        },
+        {
+          "type": "url",
+          "id": "slide_link",
+          "label": "Whole Slide Link",
+          "info": "Makes the whole image clickable. Used only when the slide shows no content"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "CWC Home Hero",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

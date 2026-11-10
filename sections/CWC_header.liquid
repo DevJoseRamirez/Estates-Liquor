@@ -21,6 +21,9 @@
     --promo-bg: {{ section.settings.promo_bg_color | default: '#F6F6F3' }};
     --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#221813' }};
     --promo-label-text: {{ section.settings.promo_label_text_color | default: '#E9A23B' }};
+    --promo-dark-bg: {{ section.settings.promo_dark_bg_color | default: '#221813' }};
+    --promo-dark-text: {{ section.settings.promo_dark_text_color | default: '#ffffff' }};
+    --promo-price: {{ section.settings.promo_price_color | default: '#E9A23B' }};
     --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#221813' }};
     --bar-bg: {{ section.settings.bar_bg_color | default: '#221813' }};
     --bar-text: {{ section.settings.bar_text_color | default: '#ffffff' }};
@@ -150,7 +153,7 @@
 
 <header
   id="cwc_header-{{ section.id }}"
-  class="cwc_header cwc_header--mode-{{ scroll_mode }}{% if section.settings.enable_sticky %} cwc_header--sticky{% endif %}{% if section.settings.show_border %} cwc_header--bordered{% endif %}"
+  class="cwc_header cwc_header--mode-{{ scroll_mode }}{% if section.settings.enable_sticky %} cwc_header--sticky{% endif %}{% if section.settings.show_border %} cwc_header--bordered{% endif %}{% if section.settings.desktop_layout == 'logo_center' %} cwc_header--logo-center{% endif %}"
   data-section-id="{{ section.id }}"
   data-sticky="{{ section.settings.enable_sticky }}"
   data-hide-on-scroll="{{ section.settings.hide_on_scroll }}"
@@ -327,8 +330,9 @@
   {% comment %}
     Desktop nav. A top-level link with children opens a mega panel: its
     children become column headings and their children the links under them.
-    A "Mega Menu Panel" block, matched by title, adds the column footer links
-    and the featured tile.
+    A mega block, matched by title, picks the panel's structure: "Link
+    Columns" (column footer links, notes, featured tile) or "Product Tabs"
+    (the children become tabs showing their collection's bottles).
   {% endcomment %}
   {% if desktop_menu != blank and desktop_menu.links.size > 0 %}
     <nav class="cwc_header__nav" id="cwc_header-nav-{{ section.id }}" aria-label="{{ section.settings.nav_label | default: 'Main' | escape }}">
@@ -347,7 +351,7 @@
 
               assign panel_block = nil
               for block in section.blocks
-                if block.type == 'mega_panel'
+                if block.type == 'mega_panel' or block.type == 'mega_products'
                   assign block_key = block.settings.menu_item | downcase | strip
                   if block_key == link_key
                     assign panel_block = block
@@ -357,8 +361,8 @@
               endfor
 
               assign has_promo = false
-              if panel_block != nil
-                if panel_block.settings.promo_heading != blank or panel_block.settings.promo_text != blank or panel_block.settings.promo_image != blank
+              if panel_block != nil and panel_block.type == 'mega_panel'
+                if panel_block.settings.promo_heading != blank or panel_block.settings.promo_text != blank or panel_block.settings.promo_image != blank or panel_block.settings.promo_product != blank
                   assign has_promo = true
                 endif
               endif
@@ -384,7 +388,13 @@
                 {% endif %}
               </a>
 
-              {% if has_panel %}
+              {% if has_panel and panel_block.type == 'mega_products' and link.links.size > 0 %}
+                {% render 'CWC_header-mega-products',
+                  link: link,
+                  block: panel_block,
+                  panel_id: panel_id
+                %}
+              {% elsif has_panel %}
                 {% render 'CWC_header-mega',
                   link: link,
                   block: panel_block,
@@ -452,7 +462,9 @@
 {
   "name": "CWC Header",
   "enabled_on": {
-    "groups": ["header"]
+    "groups": [
+      "header"
+    ]
   },
   "settings": [
     {
@@ -702,6 +714,23 @@
       "content": "Layout"
     },
     {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop Top Bar",
+      "options": [
+        {
+          "value": "logo_left",
+          "label": "Logo left, search beside it"
+        },
+        {
+          "value": "logo_center",
+          "label": "Search left, logo centered"
+        }
+      ],
+      "default": "logo_left",
+      "info": "Mobile always centers the logo."
+    },
+    {
       "type": "checkbox",
       "id": "show_border",
       "label": "Show Bottom Border",
@@ -819,6 +848,24 @@
       "default": "#E9A23B"
     },
     {
+      "type": "color",
+      "id": "promo_dark_bg_color",
+      "label": "Dark Featured Tile Background",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "promo_dark_text_color",
+      "label": "Dark Featured Tile Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "promo_price_color",
+      "label": "Dark Featured Tile Price",
+      "default": "#E9A23B"
+    },
+    {
       "type": "header",
       "content": "Mobile Menu Colors"
     },
@@ -856,7 +903,7 @@
   "blocks": [
     {
       "type": "mega_panel",
-      "name": "Mega Menu Panel",
+      "name": "Mega Menu · Link Columns",
       "settings": [
         {
           "type": "text",
@@ -871,7 +918,7 @@
         },
         {
           "type": "paragraph",
-          "content": "Optional link under each column, e.g. \"All Bourbon\". Leave the label blank for no link. The link defaults to the column heading's page."
+          "content": "Optional link under each column, e.g. \"All Bourbon\". Leave the label blank for no link. The link defaults to the column heading's page. \"Split\" flows a long column's links into two columns."
         },
         {
           "type": "text",
@@ -884,6 +931,12 @@
           "label": "Column 1 Link"
         },
         {
+          "type": "checkbox",
+          "id": "col1_split",
+          "label": "Split Column 1 In Two",
+          "default": false
+        },
+        {
           "type": "text",
           "id": "col2_label",
           "label": "Column 2 Label"
@@ -892,6 +945,12 @@
           "type": "url",
           "id": "col2_link",
           "label": "Column 2 Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "col2_split",
+          "label": "Split Column 2 In Two",
+          "default": false
         },
         {
           "type": "text",
@@ -904,6 +963,12 @@
           "label": "Column 3 Link"
         },
         {
+          "type": "checkbox",
+          "id": "col3_split",
+          "label": "Split Column 3 In Two",
+          "default": false
+        },
+        {
           "type": "text",
           "id": "col4_label",
           "label": "Column 4 Label"
@@ -914,14 +979,58 @@
           "label": "Column 4 Link"
         },
         {
+          "type": "checkbox",
+          "id": "col4_split",
+          "label": "Split Column 4 In Two",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Link Notes"
+        },
+        {
+          "type": "textarea",
+          "id": "link_notes",
+          "label": "Notes Beside Links",
+          "info": "One per line: link title | note. E.g. Buffalo Trace | Blanton's · Weller · E.H. Taylor"
+        },
+        {
           "type": "header",
           "content": "Featured Tile"
+        },
+        {
+          "type": "select",
+          "id": "promo_style",
+          "label": "Style",
+          "options": [
+            {
+              "value": "light",
+              "label": "Light tint"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "product",
+          "id": "promo_product",
+          "label": "Product",
+          "info": "Optional. Fills the image, heading, price and link. Anything set below overrides it."
+        },
+        {
+          "type": "text",
+          "id": "promo_eyebrow",
+          "label": "Eyebrow",
+          "info": "Small line above the tile, e.g. Featured · Buffalo Trace"
         },
         {
           "type": "image_picker",
           "id": "promo_image",
           "label": "Image",
-          "info": "A bottle shot works best. Shown whole, never cropped."
+          "info": "A bottle shot works best. Shown whole, never cropped. Uses the product image when blank."
         },
         {
           "type": "text",
@@ -933,7 +1042,8 @@
           "type": "text",
           "id": "promo_heading",
           "label": "Heading",
-          "default": "New Allocated Arrivals"
+          "default": "New Allocated Arrivals",
+          "info": "Uses the product title when blank."
         },
         {
           "type": "text",
@@ -951,6 +1061,71 @@
           "type": "url",
           "id": "promo_link",
           "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "mega_products",
+      "name": "Mega Menu · Product Tabs",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu Item Title",
+          "info": "Must match a top-level item in the desktop menu, e.g. Allocated. Its second-level links become the tabs; point each at a collection to show its bottles.",
+          "default": "Allocated"
+        },
+        {
+          "type": "header",
+          "content": "Tabs"
+        },
+        {
+          "type": "text",
+          "id": "sidebar_heading",
+          "label": "Tabs Heading",
+          "default": "The Allocation"
+        },
+        {
+          "type": "text",
+          "id": "grid_note",
+          "label": "Note Above Products",
+          "default": "Listed at fair retail · Limited quantities"
+        },
+        {
+          "type": "range",
+          "id": "products_per_tab",
+          "label": "Products Per Tab",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "type": "header",
+          "content": "Links"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Button Label",
+          "default": "Shop All Allocated"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Button Link",
+          "info": "Defaults to the menu item's page."
+        },
+        {
+          "type": "text",
+          "id": "secondary_label",
+          "label": "Text Link Label",
+          "default": "How Allocation Works"
+        },
+        {
+          "type": "url",
+          "id": "secondary_link",
+          "label": "Text Link"
         }
       ]
     }

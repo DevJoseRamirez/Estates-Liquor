@@ -219,6 +219,40 @@
   }
 
   /* ------------------------------
+     Mega product tabs
+     Hovering or focusing a tab shows its bottles. The tabs stay real links,
+     so a click still goes to the collection.
+     ------------------------------ */
+  function initMegaTabs(sectionEl, signal) {
+    sectionEl.querySelectorAll('[data-cwc-mega-tabs]').forEach(function (panel) {
+      const tabs = Array.from(panel.querySelectorAll('[data-cwc-mega-tab]'));
+      const panes = Array.from(panel.querySelectorAll('[data-cwc-mega-tabpanel]'));
+      if (tabs.length < 2) return;
+
+      function show(index) {
+        tabs.forEach(function (tab) {
+          tab.classList.toggle('cwc_header__mega-tab--active', tab.dataset.cwcMegaTab === index);
+        });
+        panes.forEach(function (pane) {
+          pane.hidden = pane.dataset.cwcMegaTabpanel !== index;
+        });
+      }
+
+      tabs.forEach(function (tab) {
+        ['mouseenter', 'focus'].forEach(function (type) {
+          tab.addEventListener(
+            type,
+            function () {
+              show(tab.dataset.cwcMegaTab);
+            },
+            { signal: signal }
+          );
+        });
+      });
+    });
+  }
+
+  /* ------------------------------
      Predictive search
      Runs on the desktop header search and on the mobile menu's search.
      ------------------------------ */
@@ -1021,6 +1055,7 @@
     sectionEl.classList.add('cwc_header--js');
 
     const mega = initMega(sectionEl, signal);
+    initMegaTabs(sectionEl, signal);
     const search = initSearch(sectionEl.querySelector('[data-cwc-search]'), signal);
     const mobileSearch = initSearch(sectionEl.querySelector('[data-cwc-msearch] [data-cwc-search]'), signal);
     const menu = initMenu(sectionEl, signal);

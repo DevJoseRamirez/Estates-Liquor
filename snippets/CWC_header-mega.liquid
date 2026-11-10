@@ -7,8 +7,11 @@
   its children become one list under the item's own title, flowed across the
   panel in up to four columns, with a "View All" link at the end.
 
-  The column footer links ("All Bourbon →") and the featured tile come from the
-  matching "Mega Menu Panel" block, since neither exists in a Shopify menu.
+  The column footer links ("All Bourbon →"), two-column splits, the small notes
+  beside links ("Blanton's · Weller") and the featured tile come from the
+  matching "Mega Menu · Link Columns" block, since none exist in a Shopify menu.
+  The featured tile can be a product, which fills in its image, title, price
+  and link; anything typed into the block overrides those.
 
   Accepts:
   - link {Object} - the top-level menu link this panel belongs to
@@ -29,6 +32,17 @@
       break
     endif
   endfor
+
+  # "Title | note" lines, matched against third-level link titles
+  assign note_lines = ''
+  if block != nil and block.settings.link_notes != blank
+    assign note_lines = block.settings.link_notes | newline_to_br | split: '<br />'
+  endif
+
+  assign promo_product = nil
+  if block != nil and block.settings.promo_product != blank
+    assign promo_product = block.settings.promo_product
+  endif
 -%}
 
 <div
@@ -51,17 +65,36 @@
                 assign key = 'col' | append: forloop.index | append: '_link'
                 assign footer_url = block.settings[key] | default: child.url
               endif
+              assign col_split = false
+              if block != nil
+                assign key = 'col' | append: forloop.index | append: '_split'
+                assign col_split = block.settings[key]
+              endif
             -%}
-            <div class="cwc_header__mega-col">
+            <div class="cwc_header__mega-col{% if col_split %} cwc_header__mega-col--split{% endif %}">
               {%- if child.url != blank and child.url != '#' -%}
                 <a href="{{ child.url }}" class="cwc_header__mega-heading">{{ child.title | escape }}</a>
               {%- else -%}
                 <span class="cwc_header__mega-heading">{{ child.title | escape }}</span>
               {%- endif -%}
 
-              {%- if child.links.size > 0 or footer_label != blank -%}
-                <ul class="cwc_header__mega-list">
+              {%- if child.links.size > 0 -%}
+                <ul class="cwc_header__mega-list{% if col_split %} cwc_header__mega-list--split{% endif %}">
                   {%- for grandchild in child.links -%}
+                    {%- liquid
+                      assign link_note = ''
+                      if note_lines != ''
+                        assign gc_key = grandchild.title | downcase | strip
+                        for line in note_lines
+                          assign parts = line | split: '|'
+                          assign line_key = parts.first | downcase | strip
+                          if line_key == gc_key and parts.size > 1
+                            assign link_note = parts.last | strip
+                            break
+                          endif
+                        endfor
+                      endif
+                    -%}
                     <li>
                       <a
                         href="{{ grandchild.url }}"
@@ -70,17 +103,20 @@
                       >
                         {{- grandchild.title | escape -}}
                       </a>
+                      {%- if link_note != blank -%}
+                        <span class="cwc_header__mega-note">{{ link_note | escape }}</span>
+                      {%- endif -%}
                     </li>
                   {%- endfor -%}
-
-                  {%- if footer_label != blank -%}
-                    <li class="cwc_header__mega-foot">
-                      <a href="{{ footer_url }}" class="cwc_header__mega-all">
-                        {{- footer_label | escape }} <span aria-hidden="true">&rarr;</span>
-                      </a>
-                    </li>
-                  {%- endif -%}
                 </ul>
+              {%- endif -%}
+
+              {%- if footer_label != blank -%}
+                <div class="cwc_header__mega-foot">
+                  <a href="{{ footer_url }}" class="cwc_header__mega-all">
+                    {{- footer_label | escape }} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
               {%- endif -%}
             </div>
           {%- endfor -%}
@@ -125,16 +161,40 @@
     {%- endif -%}
 
     {%- if has_promo -%}
-      {%- if block.settings.promo_link != blank -%}
-        <a href="{{ block.settings.promo_link }}" class="cwc_header__mega-promo">
+      {%- liquid
+        assign promo_link = block.settings.promo_link
+        assign promo_image = block.settings.promo_image
+        assign promo_heading = block.settings.promo_heading
+        assign promo_dark = false
+        if block.settings.promo_style == 'dark'
+          assign promo_dark = true
+        endif
+        if promo_product != nil
+          if promo_link == blank
+            assign promo_link = promo_product.url
+          endif
+          if promo_image == blank
+            assign promo_image = promo_product.featured_image
+          endif
+          if promo_heading == blank
+            assign promo_heading = promo_product.title
+          endif
+        endif
+      -%}
+      {%- if promo_link != blank -%}
+        <a href="{{ promo_link }}" class="cwc_header__mega-promo{% if promo_dark %} cwc_header__mega-promo--dark{% endif %}">
       {%- else -%}
-        <div class="cwc_header__mega-promo">
+        <div class="cwc_header__mega-promo{% if promo_dark %} cwc_header__mega-promo--dark{% endif %}">
       {%- endif -%}
 
-        {%- if block.settings.promo_image != blank -%}
+        {%- if block.settings.promo_eyebrow != blank -%}
+          <span class="cwc_header__mega-promo-eyebrow">{{ block.settings.promo_eyebrow | escape }}</span>
+        {%- endif -%}
+
+        {%- if promo_image != blank -%}
           <span class="cwc_header__mega-promo-media">
             {{
-              block.settings.promo_image
+              promo_image
               | image_url: width: 600
               | image_tag:
                 class: 'cwc_header__mega-promo-image',
@@ -152,18 +212,25 @@
         {%- endif -%}
 
         <span class="cwc_header__mega-promo-body">
-          {%- if block.settings.promo_heading != blank -%}
-            <span class="cwc_header__mega-promo-title">{{ block.settings.promo_heading | escape }}</span>
+          {%- if promo_heading != blank -%}
+            <span class="cwc_header__mega-promo-title">{{ promo_heading | escape }}</span>
           {%- endif -%}
           {%- if block.settings.promo_text != blank -%}
             <span class="cwc_header__mega-promo-text">{{ block.settings.promo_text | escape }}</span>
           {%- endif -%}
-          {%- if block.settings.promo_cta != blank -%}
-            <span class="cwc_header__mega-promo-cta">{{ block.settings.promo_cta | escape }}</span>
+          {%- if promo_product != nil or block.settings.promo_cta != blank -%}
+            <span class="cwc_header__mega-promo-foot">
+              {%- if promo_product != nil -%}
+                <span class="cwc_header__mega-promo-price">{{ promo_product.price | money }}</span>
+              {%- endif -%}
+              {%- if block.settings.promo_cta != blank -%}
+                <span class="cwc_header__mega-promo-cta">{{ block.settings.promo_cta | escape }}</span>
+              {%- endif -%}
+            </span>
           {%- endif -%}
         </span>
 
-      {%- if block.settings.promo_link != blank -%}
+      {%- if promo_link != blank -%}
         </a>
       {%- else -%}
         </div>
