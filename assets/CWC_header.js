@@ -370,9 +370,10 @@
     function render(data, query) {
       const res = (data && data.resources && data.resources.results) || {};
       // Mobile (menu search or below the desktop breakpoint): max 3 text suggestions
+      // Desktop: max 8 query suggestions (collections stay uncapped)
       const isMobile = isMenuSearch || window.matchMedia('(max-width: 991px)').matches;
       const maxItems = isMobile ? 3 : undefined;
-      const queries = (res.queries || []).slice(0, maxItems);
+      const queries = (res.queries || []).slice(0, isMobile ? 3 : 8);
       // Products tagged no_feed (e.g. shipping protection) never show
       const products = (res.products || [])
         .filter(function (product) {
