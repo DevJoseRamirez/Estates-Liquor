@@ -2059,3 +2059,72 @@ html.cwc-menu-locked {
     transition: none;
   }
 }
+/* ==============================
+   Reference layout (logo centered), desktop
+   Search with its icon on the left, centered logo, ACCOUNT / CART [n] right;
+   a hairline inset to the content width, then a centered nav row.
+   ============================== */
+@media screen and (min-width: 992px) {
+
+  /* Count follows the CART label as a small amber square */
+  .cwc_header__cart-count--inline {
+    position: static;
+    margin-left: -2px;
+  }
+
+  /* Search: icon leads, no divider, lighter field */
+  .cwc_header--logo-center .cwc_header__top .cwc_header__search {
+    max-width: 300px;
+  }
+
+  .cwc_header--logo-center .cwc_header__top .cwc_header__search-form {
+    height: 40px;
+  }
+
+  .cwc_header--logo-center .cwc_header__top .cwc_header__search-submit {
+    order: -1;
+    flex-basis: 40px;
+    width: 40px;
+    border-left: 0;
+    color: var(--bar-accent);
+  }
+
+  .cwc_header--logo-center .cwc_header__top .cwc_header__search-submit svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cwc_header--logo-center .cwc_header__top .cwc_header__search-input {
+    padding-left: 0;
+    font-size: 14px;
+  }
+
+  /* Divider spans the content width, not the viewport */
+  .cwc_header--logo-center .cwc_header__nav {
+    border-top: 0;
+  }
+
+  /* Drawn on the nav (not the inner) so the nav cart keeps its anchor;
+     the insets mirror the 1500px container and its gutter */
+  .cwc_header--logo-center .cwc_header__nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: max(var(--hd-gutter), calc((100% - 1500px) / 2 + var(--hd-gutter)));
+    right: max(var(--hd-gutter), calc((100% - 1500px) / 2 + var(--hd-gutter)));
+    height: 1px;
+    background-color: var(--bar-line);
+    pointer-events: none;
+  }
+
+  /* Centered nav with even spacing */
+  .cwc_header--logo-center .cwc_header__nav-list {
+    justify-content: center;
+    gap: 0 20px;
+  }
+
+  /* Highlight link is just amber text, no leading square */
+  .cwc_header--logo-center .cwc_header__nav-link--highlight::before {
+    display: none;
+  }
+}

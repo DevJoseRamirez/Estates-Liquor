@@ -272,12 +272,16 @@
         {% endcomment %}
         {% if section.settings.show_cart %}
           <a href="{{ routes.cart_url }}" class="cwc_header__icon cwc_header__icon--cart{% if section.settings.show_icon_labels %} cwc_header__icon--labeled{% endif %}" data-cwc-cart aria-label="Cart, {{ cart.item_count }} items">
+            {% comment %} With a label the count follows the word (CART [2]); without one it pins to the icon {% endcomment %}
             <span class="cwc_header__icon-glyph">
               {{ cart_icon }}
-              <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+              {% unless section.settings.show_icon_labels %}
+                <span class="cwc_header__cart-count" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+              {% endunless %}
             </span>
             {% if section.settings.show_icon_labels %}
               <span class="cwc_header__icon-label" aria-hidden="true">{{ section.settings.cart_label | default: 'Cart' | escape }}</span>
+              <span class="cwc_header__cart-count cwc_header__cart-count--inline" data-cwc-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
             {% endif %}
           </a>
         {% endif %}
