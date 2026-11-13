@@ -1,15 +1,15 @@
 {% style %}
   #cwc_product-buy-box-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#221813' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
     --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --media-bg: {{ section.settings.media_bg_color | default: '#FFFFFF' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#221813' }};
-    --stock-color: {{ section.settings.stock_color | default: '#A35A12' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
+    --stock-color: {{ section.settings.stock_color | default: '#7A2226' }};
     --media-width: {{ section.settings.media_width | default: 45 }}%;
     --padding-top: {{ section.settings.padding_top | default: 30 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
@@ -324,7 +324,7 @@
                 data-transit-max="{{ transit_max }}"
                 data-cutoff-hour="{{ block.settings.cutoff_hour }}"
                 data-closed-dates="{{ closed_dates | escape }}"
-                style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#221813' }}; --estimate-accent: {{ block.settings.accent_color | default: '#A35A12' }};"
+                style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#13241C' }}; --estimate-accent: {{ block.settings.accent_color | default: '#8A6A2E' }};"
                 hidden
                 {{ block.shopify_attributes }}
               >
@@ -934,13 +934,13 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
@@ -976,13 +976,13 @@
       "type": "color",
       "id": "button_text_color",
       "label": "Add To Cart Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "stock_color",
       "label": "In Stock Color",
-      "default": "#A35A12"
+      "default": "#7A2226"
     },
     {
       "type": "header",
@@ -1361,13 +1361,13 @@
           "type": "color",
           "id": "text_color",
           "label": "Text Color",
-          "default": "#221813"
+          "default": "#13241C"
         },
         {
           "type": "color",
           "id": "accent_color",
           "label": "Icon And Underline Color",
-          "default": "#A35A12"
+          "default": "#8A6A2E"
         }
       ]
     },

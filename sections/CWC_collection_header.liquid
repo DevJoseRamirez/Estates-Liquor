@@ -1,16 +1,19 @@
 {% style %}
   #cwc_collection-header-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
-    --text-color: {{ section.settings.text_color | default: '#221813' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
     --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --pill-border: {{ section.settings.pill_border_color | default: '#D9D9D3' }};
     --pill-bg: {{ section.settings.pill_bg_color | default: '#FFFFFF' }};
-    --pill-text: {{ section.settings.pill_text_color | default: '#221813' }};
+    --pill-text: {{ section.settings.pill_text_color | default: '#13241C' }};
     --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#E9A23B' }};
-    --pill-active-text: {{ section.settings.pill_active_text_color | default: '#221813' }};
+    --pill-active-text: {{ section.settings.pill_active_text_color | default: '#13241C' }};
+    --search-field-bg: {{ section.settings.search_field_bg_color | default: '#1E3328' }};
+    --search-field-border: {{ section.settings.search_field_border_color | default: '#585530' }};
+    --search-field-text: {{ section.settings.search_field_text_color | default: '#FFFFFF' }};
     --description-lines-mobile: {{ section.settings.description_lines_mobile | default: 2 }};
     --padding-top: {{ section.settings.padding_top | default: 36 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
@@ -361,6 +364,25 @@
       "default": "Search"
     },
     {
+      "type": "color",
+      "id": "search_field_bg_color",
+      "label": "Search Field Background",
+      "info": "Matches the header search field.",
+      "default": "#1E3328"
+    },
+    {
+      "type": "color",
+      "id": "search_field_border_color",
+      "label": "Search Field Border",
+      "default": "#585530"
+    },
+    {
+      "type": "color",
+      "id": "search_field_text_color",
+      "label": "Search Field Text",
+      "default": "#FFFFFF"
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -374,13 +396,13 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
@@ -420,7 +442,7 @@
       "type": "color",
       "id": "pill_text_color",
       "label": "Pill Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -432,7 +454,7 @@
       "type": "color",
       "id": "pill_active_text_color",
       "label": "Active Pill Text",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",

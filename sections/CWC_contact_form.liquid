@@ -1,24 +1,24 @@
 {% style %}
   #cwc_contact-form-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#221813' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#4A554D' }};
     --meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#221813' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
 
     {% comment %} Fields sit on the section background with a hairline rule {% endcomment %}
     --input-bg: {{ section.settings.input_bg_color | default: '#FFFFFF' }};
     --input-border-color: {{ section.settings.input_border_color | default: '#D9D9D3' }};
-    --input-text-color: {{ section.settings.input_text_color | default: '#221813' }};
+    --input-text-color: {{ section.settings.input_text_color | default: '#13241C' }};
     --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#5C5C57' }};
-    --success-bg: {{ section.settings.success_bg_color | default: '#F6F6F3' }};
-    --success-text-color: {{ section.settings.success_text_color | default: '#A35A12' }};
-    --error-bg: {{ section.settings.error_bg_color | default: '#F6F6F3' }};
-    --error-text-color: {{ section.settings.error_text_color | default: '#A35A12' }};
+    --success-bg: {{ section.settings.success_bg_color | default: '#F4F0E8' }};
+    --success-text-color: {{ section.settings.success_text_color | default: '#8A6A2E' }};
+    --error-bg: {{ section.settings.error_bg_color | default: '#F4F0E8' }};
+    --error-text-color: {{ section.settings.error_text_color | default: '#7A2226' }};
     --form-width: {{ section.settings.form_width | default: 720 }}px;
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
@@ -334,19 +334,19 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
@@ -386,7 +386,7 @@
       "type": "color",
       "id": "input_text_color",
       "label": "Field Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -408,7 +408,7 @@
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",
@@ -418,25 +418,25 @@
       "type": "color",
       "id": "success_bg_color",
       "label": "Success Background Color",
-      "default": "#F6F6F3"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
       "id": "success_text_color",
       "label": "Success Text Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "error_bg_color",
       "label": "Error Background Color",
-      "default": "#F6F6F3"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
       "id": "error_text_color",
       "label": "Error Text Color",
-      "default": "#A35A12"
+      "default": "#7A2226"
     },
     {
       "type": "header",

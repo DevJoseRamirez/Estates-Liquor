@@ -17,7 +17,7 @@
   --ch-ink: #1C1C19;
   --ch-amber: #E9A23B;
   --ch-amber-hover: var(--button-hover-bg, #D68F27);
-  --ch-green: #221813;
+  --ch-green: #13241C;
 
   background-color: var(--section-bg);
   color: var(--text-color);
@@ -166,17 +166,24 @@
   min-width: 0;
   height: 48px;
   padding: 0 14px;
-  border: 1px solid var(--ch-ink);
+  /* Same dark field as the header search */
+  border: 1px solid var(--search-field-border);
   border-right: 0;
   border-radius: 0;
-  background: #FFFFFF;
-  color: var(--ch-ink);
+  background: var(--search-field-bg);
+  color: var(--search-field-text);
+  caret-color: var(--search-field-text);
   font-family: var(--ch-font-body);
   font-size: 16px;
 }
 
 .cwc_collection-header__search-input::placeholder {
-  color: var(--meta-color);
+  color: var(--search-field-text);
+  opacity: 0.6;
+}
+
+.cwc_collection-header__search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
 }
 
 .cwc_collection-header__search-input:focus-visible {

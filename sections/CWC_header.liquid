@@ -13,29 +13,29 @@
   #cwc_header-menu-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --text-color: {{ section.settings.text_color | default: '#3A3A36' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --brand-color: {{ section.settings.brand_color | default: '#221813' }};
-    --hover-bg: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --brand-color: {{ section.settings.brand_color | default: '#13241C' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#F4F0E8' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --menu-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
-    --promo-bg: {{ section.settings.promo_bg_color | default: '#F6F6F3' }};
-    --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#221813' }};
+    --promo-bg: {{ section.settings.promo_bg_color | default: '#F4F0E8' }};
+    --promo-label-bg: {{ section.settings.promo_label_bg_color | default: '#13241C' }};
     --promo-label-text: {{ section.settings.promo_label_text_color | default: '#E9A23B' }};
-    --promo-dark-bg: {{ section.settings.promo_dark_bg_color | default: '#221813' }};
+    --promo-dark-bg: {{ section.settings.promo_dark_bg_color | default: '#13241C' }};
     --promo-dark-text: {{ section.settings.promo_dark_text_color | default: '#ffffff' }};
     --promo-price: {{ section.settings.promo_price_color | default: '#E9A23B' }};
-    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#221813' }};
-    --bar-bg: {{ section.settings.bar_bg_color | default: '#221813' }};
+    --drawer-footer-bg: {{ section.settings.drawer_footer_bg_color | default: '#13241C' }};
+    --bar-bg: {{ section.settings.bar_bg_color | default: '#13241C' }};
     --bar-text: {{ section.settings.bar_text_color | default: '#ffffff' }};
-    --bar-accent: {{ section.settings.bar_accent_color | default: '#E9A23B' }};
-    --bar-field-bg: {{ section.settings.bar_field_bg_color | default: '#2E221B' }};
-    --bar-field-line: {{ section.settings.bar_field_border_color | default: '#453D39' }};
-    --bar-line: {{ section.settings.bar_line_color | default: '#342B26' }};
+    --bar-accent: {{ section.settings.bar_accent_color | default: '#C49340' }};
+    --bar-field-bg: {{ section.settings.bar_field_bg_color | default: '#1E3328' }};
+    --bar-field-line: {{ section.settings.bar_field_border_color | default: '#585530' }};
+    --bar-line: {{ section.settings.bar_line_color | default: '#514B29' }};
     --pn-bg: {{ section.settings.menu_bg_color | default: '#ffffff' }};
     --pn-text: {{ section.settings.text_color | default: '#3A3A36' }};
-    --pn-brand: {{ section.settings.brand_color | default: '#221813' }};
-    --pn-highlight: {{ section.settings.bold_color | default: '#A35A12' }};
-    --pn-hover: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
+    --pn-brand: {{ section.settings.brand_color | default: '#13241C' }};
+    --pn-highlight: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --pn-hover: {{ section.settings.hover_bg_color | default: '#F4F0E8' }};
     --pn-line: {{ section.settings.border_color | default: '#ECECE8' }};
     --logo-width: {{ section.settings.logo_width | default: 150 }}px;
     --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 130 }}px;
@@ -46,7 +46,7 @@
   }
 
   #cwc_header-overlay-{{ section.id }} {
-    --overlay-color: {{ section.settings.search_overlay_color | default: '#221813' }};
+    --overlay-color: {{ section.settings.search_overlay_color | default: '#13241C' }};
     --overlay-opacity: {{ section.settings.search_overlay_opacity | default: 45 | divided_by: 100.0 }};
   }
 
@@ -616,7 +616,7 @@
       "type": "color",
       "id": "search_overlay_color",
       "label": "Overlay Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "range",
@@ -760,20 +760,20 @@
       "type": "color",
       "id": "brand_color",
       "label": "Logo And Hover Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
       "info": "Open and current links, highlighted links, column headings.",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "hover_bg_color",
       "label": "Hover Background",
-      "default": "#F6F6F3"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
@@ -790,7 +790,7 @@
       "type": "color",
       "id": "bar_bg_color",
       "label": "Bar Background",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -803,25 +803,25 @@
       "id": "bar_accent_color",
       "label": "Bar Accent",
       "info": "Logo wordmark, search button, highlighted link, underline.",
-      "default": "#E9A23B"
+      "default": "#C49340"
     },
     {
       "type": "color",
       "id": "bar_field_bg_color",
       "label": "Search Field Background",
-      "default": "#2E221B"
+      "default": "#1E3328"
     },
     {
       "type": "color",
       "id": "bar_field_border_color",
       "label": "Search Field Border",
-      "default": "#453D39"
+      "default": "#585530"
     },
     {
       "type": "color",
       "id": "bar_line_color",
       "label": "Bar Divider",
-      "default": "#342B26"
+      "default": "#514B29"
     },
     {
       "type": "header",
@@ -837,13 +837,13 @@
       "type": "color",
       "id": "promo_bg_color",
       "label": "Featured Tile Background",
-      "default": "#F6F6F3"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
       "id": "promo_label_bg_color",
       "label": "Featured Label Background",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -855,7 +855,7 @@
       "type": "color",
       "id": "promo_dark_bg_color",
       "label": "Dark Featured Tile Background",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -877,7 +877,7 @@
       "type": "color",
       "id": "drawer_footer_bg_color",
       "label": "Footer Background",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",

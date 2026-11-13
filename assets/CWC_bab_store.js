@@ -31,6 +31,7 @@
     buttonActive: 'Add box to cart · [total]',
     buttonAdding: 'Adding…',
     inBox: '[qty] in box',
+    lineQty: 'Qty [qty]',
     bottlesInBox: '[count] [bottles] in box',
     results: '[count] bottles in this offer',
     resultsOne: '1 bottle in this offer',

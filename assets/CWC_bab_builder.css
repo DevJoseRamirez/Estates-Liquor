@@ -396,9 +396,13 @@
   font-family: var(--cwc-font-mono);
   font-size: 16px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
+/* price + stock always on one line */
 .cwc_bab-builder__card-stock {
+  flex: 0 0 auto;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -436,6 +440,58 @@
 
 .cwc_bab-builder__card-button:hover {
   background: var(--accent-hover);
+}
+
+/* --- Row alignment across the shelf ---
+   Each card spans 4 rows of the shelf grid (image · title · price · button)
+   and shares them via subgrid, so a long title pushes the whole row down
+   together: prices and buttons always line up, full titles still show. */
+@supports (grid-template-rows: subgrid) {
+  .cwc_bab-builder__card {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  .cwc_bab-builder__card-body {
+    display: contents;
+  }
+
+  .cwc_bab-builder__card-media {
+    grid-row: 1;
+  }
+
+  .cwc_bab-builder__card-title {
+    grid-row: 2;
+    align-self: start;
+    min-height: 0;
+    padding-top: 16px;
+  }
+
+  .cwc_bab-builder__card-price-row {
+    grid-row: 3;
+    align-self: start;
+    padding-top: 12px;
+  }
+
+  .cwc_bab-builder__card-button,
+  .cwc_bab-builder__card .cwc_bab-builder__stepper {
+    grid-row: 4;
+    align-self: end;
+    margin-top: 16px;
+  }
+}
+
+/* Older browsers: hold titles to two lines so rows stay even */
+@supports not (grid-template-rows: subgrid) {
+  .cwc_bab-builder__card-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    height: 2.56em;
+    overflow: hidden;
+  }
 }
 
 .cwc_bab-builder__card--soldout .cwc_bab-builder__card-media img {
@@ -487,24 +543,6 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-
-.cwc_bab-builder__stepper--small {
-  grid-template-columns: 28px 32px 28px;
-  width: max-content;
-  height: 28px;
-  margin-top: 8px;
-  border-color: var(--input-border);
-}
-
-.cwc_bab-builder__stepper--small .cwc_bab-builder__stepper-button svg {
-  width: 12px;
-  height: 12px;
-}
-
-.cwc_bab-builder__stepper--small .cwc_bab-builder__stepper-value {
-  font-size: 12px;
-  letter-spacing: 0;
 }
 
 /* === Empty / placeholder === */
@@ -722,6 +760,15 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1.3;
+}
+
+.cwc_bab-builder__line-qty {
+  margin-top: 6px !important;
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-color);
 }
 
 .cwc_bab-builder__line-note {
@@ -1230,11 +1277,6 @@
 
   .cwc_bab-builder__stepper {
     grid-template-columns: 40px minmax(0, 1fr) 40px;
-  }
-
-  .cwc_bab-builder__stepper--small {
-    grid-template-columns: 32px 32px 32px;
-    height: 32px;
   }
 
   .cwc_bab-builder__stepper-value {

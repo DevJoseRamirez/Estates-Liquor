@@ -181,17 +181,15 @@
         }
         var title = li.querySelector('[data-bab-line-title]');
         if (title) title.textContent = line.title || '';
-        var qty = li.querySelector('[data-bab-qty]');
-        if (qty) qty.textContent = line.qty;
+        /* No stepper in the box: quantity is changed on the shelf card.
+           Show "Qty N" only when there's more than one. */
+        var qty = li.querySelector('[data-bab-line-qty]');
+        if (qty) {
+          qty.hidden = line.qty < 2;
+          qty.textContent = store.fill(copy.lineQty || 'Qty [qty]', { qty: line.qty });
+        }
         var price = li.querySelector('[data-bab-line-price]');
         if (price) price.textContent = store.money(line.price * line.qty);
-        var inc = li.querySelector('[data-bab-inc]');
-        if (inc) {
-          inc.disabled = isFinite(line.max) && line.qty >= line.max;
-          inc.setAttribute('aria-label', 'Add one more ' + (line.title || ''));
-        }
-        var dec = li.querySelector('[data-bab-dec]');
-        if (dec) dec.setAttribute('aria-label', 'Remove one ' + (line.title || ''));
         var remove = li.querySelector('[data-bab-remove]');
         if (remove) remove.setAttribute('aria-label', 'Remove ' + (line.title || '') + ' from box');
         var note = li.querySelector('[data-bab-line-note]');

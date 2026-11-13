@@ -1,13 +1,13 @@
 {% style %}
   #cwc_email-signup-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#221813' }};
+    --section-bg: {{ section.settings.bg_color | default: '#13241C' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
     --subtext-color: {{ section.settings.subtext_color | default: '#ffffff' }};
     --disclaimer-color: {{ section.settings.disclaimer_color | default: '#8E968F' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#221813' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
 
     {% comment %} Field reads as a raised panel, not a tint of the background {% endcomment %}
     --input-bg: {{ section.settings.input_bg_color | default: '#FFFFFF' }};
@@ -16,9 +16,9 @@
     --input-placeholder-color: {{ section.settings.input_placeholder_color | default: '#5C5C57' }};
     --section-border-color: {{ section.settings.section_border_color | default: '#36473D' }};
     --section-border-width: {{ section.settings.section_border_width | default: 1 }}px;
-    --success-bg: {{ section.settings.success_bg_color | default: '#221813' }};
+    --success-bg: {{ section.settings.success_bg_color | default: '#13241C' }};
     --success-text-color: {{ section.settings.success_text_color | default: '#ffffff' }};
-    --error-bg: {{ section.settings.error_bg_color | default: '#A35A12' }};
+    --error-bg: {{ section.settings.error_bg_color | default: '#7A2226' }};
     --error-text-color: {{ section.settings.error_text_color | default: '#FFFFFF' }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
@@ -180,7 +180,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -192,13 +192,13 @@
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#E9A23B"
+      "default": "#C49340"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#E9A23B"
+      "default": "#C49340"
     },
     {
       "type": "color",
@@ -222,7 +222,7 @@
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",
@@ -281,7 +281,7 @@
       "type": "color",
       "id": "success_bg_color",
       "label": "Success Background Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -293,7 +293,7 @@
       "type": "color",
       "id": "error_bg_color",
       "label": "Error Background Color",
-      "default": "#A35A12"
+      "default": "#7A2226"
     },
     {
       "type": "color",

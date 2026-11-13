@@ -13,10 +13,10 @@
   --bb-font-mono: var(--cwc-font-mono);
   /* Brand tokens with no section setting behind them */
   --bb-ink: #1C1C19;
-  --bb-tint: #F6F6F3;
+  --bb-tint: #F4F0E8;
   --bb-tint-line: #E6E6E1;
   --bb-line-strong: #DDDDD7;
-  --bb-soft: #A35A12;
+  --bb-soft: #7A2226;
   --bb-soft-text: #FFFFFF;
   --bb-gutter: 48px;
 
@@ -93,7 +93,7 @@
   aspect-ratio: 1 / 1;
   scroll-snap-align: start;
   overflow: hidden;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #EEE7DF 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
 }
 
 /* Same inset as the card image (9% each side) */
@@ -204,7 +204,7 @@
   padding: 6px;
   box-sizing: border-box;
   cursor: pointer;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #EEE7DF 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
   border: 1px solid transparent;
   border-radius: 0;
   transition: border-color 0.15s ease;
@@ -981,7 +981,7 @@
   font-size: 15px;
   line-height: 1.4;
   text-align: center;
-  color: var(--estimate-text, #221813);
+  color: var(--estimate-text, #13241C);
 }
 
 .cwc_product-buy-box__estimate[hidden] {
@@ -991,14 +991,14 @@
 .cwc_product-buy-box__estimate-icon {
   flex: 0 0 auto;
   display: block;
-  color: var(--estimate-accent, #A35A12);
+  color: var(--estimate-accent, #8A6A2E);
 }
 
 .cwc_product-buy-box__estimate-date {
   font-weight: 700;
   color: inherit;
   text-decoration: underline;
-  text-decoration-color: var(--estimate-accent, #A35A12);
+  text-decoration-color: var(--estimate-accent, #8A6A2E);
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
   white-space: nowrap;
@@ -1016,9 +1016,9 @@
    side by side. Call = Secondary (amber outline), Chat = solid green.
    The chat button opens Shopify Inbox through CWC_inbox_trigger.js. */
 .cwc_product-buy-box__help {
-  --help-green: #221813;
-  --help-green-hover: #140E0B;
-  --help-amber-text: #A35A12;
+  --help-green: #13241C;
+  --help-green-hover: #0B1712;
+  --help-amber-text: #8A6A2E;
 
   display: flex;
   gap: 16px;
@@ -1155,7 +1155,7 @@
   font-size: 17px;
   line-height: 1;
   letter-spacing: 2px;
-  background: linear-gradient(90deg, #A35A12 var(--rating, 100%), #D9D9D3 var(--rating, 100%));
+  background: linear-gradient(90deg, #8A6A2E var(--rating, 100%), #D9D9D3 var(--rating, 100%));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1232,7 +1232,7 @@
 .cwc_product-buy-box__testimonial-verified svg {
   width: 18px;
   height: 18px;
-  color: #A35A12;
+  color: #8A6A2E;
   display: block;
 }
 

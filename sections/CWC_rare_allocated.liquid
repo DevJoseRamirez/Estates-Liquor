@@ -1,18 +1,18 @@
 {% style %}
   #cwc_rare-allocated-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#221813' }};
+    --section-bg: {{ section.settings.bg_color | default: '#13241C' }};
     --text-color: {{ section.settings.text_color | default: '#ffffff' }};
     --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
     --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
-    --button-text-color: {{ section.settings.button_text_color | default: '#221813' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
 
     {% comment %}
       Cards mirror the collection grid, so they carry their own light palette
       rather than inheriting the dark panel's --text-color.
     {% endcomment %}
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --card-text-color: {{ section.settings.card_text_color | default: '#221813' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#13241C' }};
     --card-meta-color: {{ section.settings.card_meta_color | default: '#5C5C57' }};
     --card-media-bg: {{ section.settings.card_media_bg_color | default: '#FFFFFF' }};
     --card-border-color: {{ section.settings.card_border_color | default: '#ECECE8' }};
@@ -247,7 +247,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -259,13 +259,13 @@
       "type": "color",
       "id": "bold_color",
       "label": "Highlight Color",
-      "default": "#E9A23B"
+      "default": "#C49340"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#E9A23B"
+      "default": "#C49340"
     },
     {
       "type": "color",
@@ -277,7 +277,7 @@
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",
@@ -316,7 +316,7 @@
       "type": "color",
       "id": "card_text_color",
       "label": "Card Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",

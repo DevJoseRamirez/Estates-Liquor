@@ -1,23 +1,23 @@
 {% style %}
   #cwc_shop-category-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --text-color: {{ section.settings.text_color | default: '#221813' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
-    --card-overlay-color: {{ section.settings.card_overlay_color | default: '#221813' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
+    --card-overlay-color: {{ section.settings.card_overlay_color | default: '#13241C' }};
     {% comment %}
       The scrim steps down in the overlay colour itself, so the rgb channels
       are pulled out once here and reused at three alphas.
     {% endcomment %}
-    {%- assign card_overlay_hex = section.settings.card_overlay_color | default: '#221813' -%}
+    {%- assign card_overlay_hex = section.settings.card_overlay_color | default: '#13241C' -%}
     --card-overlay-rgb: {{ card_overlay_hex | color_extract: 'red' }}, {{ card_overlay_hex | color_extract: 'green' }}, {{ card_overlay_hex | color_extract: 'blue' }};
     --card-overlay-opacity: {{ section.settings.card_overlay_opacity | default: 100 | divided_by: 100.0 }};
     --card-title-color: {{ section.settings.card_title_color | default: '#ffffff' }};
     --card-text-color: {{ section.settings.card_text_color | default: '#E9A23B' }};
-    --card-bg: {{ section.settings.card_bg_color | default: '#221813' }};
-    --card-bg-end: {{ section.settings.card_bg_end_color | default: '#221813' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#13241C' }};
+    --card-bg-end: {{ section.settings.card_bg_end_color | default: '#13241C' }};
     --pill-bg: {{ section.settings.pill_bg_color | default: '#ffffff' }};
-    --pill-text-color: {{ section.settings.pill_text_color | default: '#221813' }};
+    --pill-text-color: {{ section.settings.pill_text_color | default: '#13241C' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --card-height: {{ section.settings.card_height | default: 208 }}px;
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
@@ -225,19 +225,19 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Heading Bold Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
@@ -259,7 +259,7 @@
       "type": "color",
       "id": "pill_text_color",
       "label": "Pill Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "header",
@@ -269,20 +269,20 @@
       "type": "color",
       "id": "card_bg_color",
       "label": "Card Background Color",
-      "default": "#221813",
+      "default": "#13241C",
       "info": "Used for cards with no image."
     },
     {
       "type": "color",
       "id": "card_bg_end_color",
       "label": "Card Gradient End Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "card_overlay_color",
       "label": "Card Image Overlay Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "range",

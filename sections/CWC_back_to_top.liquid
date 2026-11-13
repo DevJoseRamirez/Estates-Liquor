@@ -1,9 +1,9 @@
 {% style %}
   #cwc_back-to-top-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
-    --text-color: {{ section.settings.text_color | default: '#221813' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --hover-bg: {{ section.settings.hover_bg_color | default: '#F6F6F3' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --hover-bg: {{ section.settings.hover_bg_color | default: '#F4F0E8' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --padding-top: {{ section.settings.padding_top | default: 20 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
@@ -65,19 +65,19 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
       "id": "bold_color",
       "label": "Hover Text Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "hover_bg_color",
       "label": "Hover Background Color",
-      "default": "#F6F6F3"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",

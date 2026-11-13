@@ -2,17 +2,17 @@
   #cwc_bab-builder-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --text-color: {{ section.settings.text_color | default: '#1C1C19' }};
-    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
-    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
     --accent-color: {{ section.settings.accent_color | default: '#E9A23B' }};
     --accent-hover: {{ section.settings.accent_hover_color | default: '#D68F27' }};
-    --accent-text: {{ section.settings.accent_text_color | default: '#A35A12' }};
-    --dark-color: {{ section.settings.dark_color | default: '#221813' }};
+    --accent-text: {{ section.settings.accent_text_color | default: '#8A6A2E' }};
+    --dark-color: {{ section.settings.dark_color | default: '#13241C' }};
     --muted-color: {{ section.settings.muted_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --input-border: {{ section.settings.input_border_color | default: '#D9D9D3' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
-    --ground-edge: {{ section.settings.ground_edge_color | default: '#EEE7DF' }};
+    --ground-edge: {{ section.settings.ground_edge_color | default: '#E4EBE6' }};
     --sticky-offset: {{ section.settings.sticky_offset | default: 24 }}px;
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
@@ -534,15 +534,7 @@
           <span class="cwc_bab-builder__line-media"><img alt="" width="56" height="56" loading="lazy" hidden></span>
           <div class="cwc_bab-builder__line-info">
             <p class="cwc_bab-builder__line-title" data-bab-line-title></p>
-            <div class="cwc_bab-builder__stepper cwc_bab-builder__stepper--small">
-              <button type="button" class="cwc_bab-builder__stepper-button" data-bab-dec aria-label="Remove one">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14" /></svg>
-              </button>
-              <span class="cwc_bab-builder__stepper-value" data-bab-qty></span>
-              <button type="button" class="cwc_bab-builder__stepper-button" data-bab-inc aria-label="Add one more">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
-              </button>
-            </div>
+            <p class="cwc_bab-builder__line-qty" data-bab-line-qty hidden></p>
             <p class="cwc_bab-builder__line-note" data-bab-line-note hidden></p>
           </div>
           <div class="cwc_bab-builder__line-side">
@@ -995,13 +987,13 @@
       "type": "color",
       "id": "bold_color",
       "label": "Heading Highlight Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
@@ -1021,14 +1013,14 @@
       "id": "accent_text_color",
       "label": "Accent Text Color",
       "info": "Status labels, stock notice, reward price.",
-      "default": "#A35A12"
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "dark_color",
       "label": "Dark Color",
       "info": "Reached tier card, mobile box bar, labels.",
-      "default": "#221813"
+      "default": "#13241C"
     },
     {
       "type": "color",
@@ -1062,7 +1054,7 @@
       "type": "color",
       "id": "ground_edge_color",
       "label": "Product Image Ground Edge",
-      "default": "#EEE7DF"
+      "default": "#E4EBE6"
     },
     {
       "type": "header",
