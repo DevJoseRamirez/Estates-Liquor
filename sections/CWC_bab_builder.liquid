@@ -1,0 +1,1212 @@
+{% style %}
+  #cwc_bab-builder-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#1C1C19' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --accent-color: {{ section.settings.accent_color | default: '#E9A23B' }};
+    --accent-hover: {{ section.settings.accent_hover_color | default: '#D68F27' }};
+    --accent-text: {{ section.settings.accent_text_color | default: '#A35A12' }};
+    --dark-color: {{ section.settings.dark_color | default: '#221813' }};
+    --muted-color: {{ section.settings.muted_color | default: '#5C5C57' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
+    --input-border: {{ section.settings.input_border_color | default: '#D9D9D3' }};
+    --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --ground-edge: {{ section.settings.ground_edge_color | default: '#EEE7DF' }};
+    --sticky-offset: {{ section.settings.sticky_offset | default: 24 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_bab_builder.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # ---------- Offer on / off ----------
+  assign offer_live = section.settings.offer_enabled
+  if section.settings.offer_end_date != blank
+    assign today = 'now' | date: '%Y-%m-%d'
+    if today > section.settings.offer_end_date
+      assign offer_live = false
+    endif
+  endif
+
+  # ---------- Valid tiers (product rewards need a purchasable product) ----------
+  assign valid_tiers = ','
+  assign tier_count = 0
+  assign top_threshold = 0
+  for block in section.blocks
+    if block.type == 'tier' and block.settings.threshold > 0
+      assign t_ok = true
+      if block.settings.reward_type == 'product_price' or block.settings.reward_type == 'gift'
+        assign t_variant = block.settings.reward_product.selected_or_first_available_variant
+        if block.settings.reward_product == blank or t_variant.available == false
+          assign t_ok = false
+        endif
+      endif
+      if t_ok
+        assign valid_tiers = valid_tiers | append: block.id | append: ','
+        assign tier_count = tier_count | plus: 1
+        if block.settings.threshold > top_threshold
+          assign top_threshold = block.settings.threshold
+        endif
+      endif
+    endif
+  endfor
+
+  assign min_bottles = section.settings.min_bottles | default: 2
+  assign low_stock = section.settings.low_stock_threshold | default: 5
+-%}
+
+{%- comment -%} Reward naming, shared by tier cards and the JS config {%- endcomment -%}
+{%- capture tier_json -%}
+  [
+  {%- assign tier_i = 0 -%}
+  {%- for block in section.blocks -%}
+    {%- assign block_key = ',' | append: block.id | append: ',' -%}
+    {%- if block.type == 'tier' and valid_tiers contains block_key -%}
+      {%- liquid
+        assign r_type = block.settings.reward_type
+        assign r_product = block.settings.reward_product
+        assign r_variant = r_product.selected_or_first_available_variant
+        assign r_threshold = block.settings.threshold | times: 100 | round
+        assign r_value = block.settings.reward_value | default: 0
+        assign r_price = block.settings.reward_price | default: 0 | times: 100 | round
+        assign r_regular = 0
+        if r_variant != blank
+          assign r_regular = r_variant.price
+        endif
+        if block.settings.reward_label != blank
+          assign r_name = block.settings.reward_label
+        elsif r_type == 'amount_off'
+          assign r_name = r_value | times: 100 | money_without_trailing_zeros | append: ' off your box'
+        elsif r_type == 'percent_off'
+          assign r_name = r_value | append: '% off your box'
+        else
+          assign r_name = r_product.title
+        endif
+        if r_type == 'product_price'
+          assign r_price_phrase = r_price | money_without_trailing_zeros | prepend: 'for '
+        elsif r_type == 'gift'
+          assign r_price_phrase = 'free'
+        else
+          assign r_price_phrase = ''
+        endif
+      -%}
+      {%- unless tier_i == 0 -%},{%- endunless -%}
+      {
+        "idx": {{ tier_i }},
+        "threshold": {{ r_threshold }},
+        "label": {{ r_threshold | money_without_trailing_zeros | append: '+' | json }},
+        "type": {{ r_type | json }},
+        "value": {{ r_value | json }},
+        "price": {{ r_price }},
+        "regular": {{ r_regular }},
+        "name": {{ r_name | json }},
+        "pricePhrase": {{ r_price_phrase | json }},
+        "variantId": {% if r_variant != blank and r_type != 'amount_off' and r_type != 'percent_off' %}{{ r_variant.id }}{% else %}null{% endif %},
+        "image": {% if r_product.featured_image != blank and r_type != 'amount_off' and r_type != 'percent_off' %}{{ r_product.featured_image | image_url: width: 160 | json }}{% else %}null{% endif %}
+      }
+      {%- assign tier_i = tier_i | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  ]
+{%- endcapture -%}
+
+{%- comment -%} Progress bar with one marker per tier — reused in the panel, sheet and bar {%- endcomment -%}
+{%- capture progress_markup -%}
+  <div class="cwc_bab-builder__progress">
+    <div class="cwc_bab-builder__progress-track">
+      <span class="cwc_bab-builder__progress-fill" data-bab-fill></span>
+      {%- assign tier_i = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- assign block_key = ',' | append: block.id | append: ',' -%}
+        {%- if block.type == 'tier' and valid_tiers contains block_key -%}
+          {%- liquid
+            assign m_pos = block.settings.threshold | times: 100.0 | divided_by: top_threshold
+            assign m_mod = block.settings.threshold | modulo: 1000
+            if block.settings.threshold >= 1000 and m_mod == 0
+              assign m_label = block.settings.threshold | divided_by: 1000 | prepend: '$' | append: 'K'
+            else
+              assign m_label = block.settings.threshold | times: 100 | money_without_trailing_zeros
+            endif
+          -%}
+          <span class="cwc_bab-builder__progress-marker" style="--pos: {{ m_pos }}%;" data-bab-marker data-tier="{{ tier_i }}">
+            <span class="cwc_bab-builder__progress-label">{{ m_label }}</span>
+          </span>
+          {%- assign tier_i = tier_i | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endcapture -%}
+
+{%- comment -%} The full box — rendered in the desktop panel and the mobile sheet {%- endcomment -%}
+{%- capture box_markup -%}
+  <div class="cwc_bab-builder__box" data-bab-box>
+    <div class="cwc_bab-builder__box-header">
+      <p class="cwc_bab-builder__box-title">
+        {{ section.settings.box_title | default: 'Your box' }}
+        <span class="cwc_bab-builder__box-count">(<span data-bab-count>0</span>)</span>
+      </p>
+      <button type="button" class="cwc_bab-builder__box-close" data-bab-close aria-label="Close box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </div>
+
+    <div class="cwc_bab-builder__box-status">
+      <p class="cwc_bab-builder__status-bold" data-bab-status></p>
+      <p class="cwc_bab-builder__status-sub" data-bab-sub></p>
+      {% if tier_count > 0 %}{{ progress_markup }}{% endif %}
+    </div>
+
+    <div class="cwc_bab-builder__box-body">
+      <ul class="cwc_bab-builder__lines" data-bab-lines></ul>
+
+      <div class="cwc_bab-builder__reward" data-bab-reward hidden>
+        <div class="cwc_bab-builder__reward-media" data-bab-reward-media></div>
+        <div class="cwc_bab-builder__reward-info">
+          <p class="cwc_bab-builder__reward-label" data-bab-reward-label></p>
+          <p class="cwc_bab-builder__reward-name" data-bab-reward-name></p>
+        </div>
+        <div class="cwc_bab-builder__reward-price">
+          <span data-bab-reward-price></span>
+          <s data-bab-reward-was></s>
+        </div>
+      </div>
+    </div>
+
+    <div class="cwc_bab-builder__box-footer">
+      <div class="cwc_bab-builder__box-total">
+        <span class="cwc_bab-builder__box-total-label" data-bab-total-label>{{ section.settings.total_label | default: 'Box total' }}</span>
+        <span class="cwc_bab-builder__box-total-value" data-bab-total></span>
+      </div>
+      <button type="button" class="cwc_bab-builder__button" data-bab-submit disabled></button>
+      <p class="cwc_bab-builder__error" data-bab-error role="alert" hidden></p>
+      <button type="button" class="cwc_bab-builder__keep" data-bab-close>
+        {{- section.settings.keep_shopping_label | default: 'Keep shopping' -}}
+      </button>
+      {% if section.settings.box_note != blank %}
+        <p class="cwc_bab-builder__box-note">{{ section.settings.box_note }}</p>
+      {% endif %}
+    </div>
+  </div>
+{%- endcapture -%}
+
+<section
+  id="cwc_bab-builder-{{ section.id }}"
+  class="cwc_bab-builder"
+  data-section-id="{{ section.id }}"
+>
+  <div class="cwc_bab-builder__container">
+
+    {% unless offer_live %}
+      {% comment %} Offer off — "check back" state {% endcomment %}
+      <div class="cwc_bab-builder__off">
+        {% if section.settings.off_heading != blank %}
+          <div class="cwc_bab-builder__content-heading cwc-rte">{{ section.settings.off_heading }}</div>
+        {% endif %}
+        {% if section.settings.off_text != blank %}
+          <div class="cwc_bab-builder__content-subtext cwc-rte">{{ section.settings.off_text }}</div>
+        {% endif %}
+      </div>
+    {% else %}
+
+      <div class="cwc_bab-builder__layout">
+
+        {% comment %} ========== Main column ========== {% endcomment %}
+        <div class="cwc_bab-builder__main">
+
+          {% comment %} Section Header {% endcomment %}
+          <div class="cwc_bab-builder__content">
+            {% if section.settings.eyebrow != blank %}
+              <p class="cwc_bab-builder__content-eyebrow">{{ section.settings.eyebrow }}</p>
+            {% endif %}
+            {% if section.settings.heading != blank %}
+              <div class="cwc_bab-builder__content-heading cwc-rte">{{ section.settings.heading }}</div>
+            {% endif %}
+            {% if section.settings.subtext != blank %}
+              <div class="cwc_bab-builder__content-subtext cwc-rte">{{ section.settings.subtext }}</div>
+            {% endif %}
+          </div>
+
+          {% comment %} Tier cards {% endcomment %}
+          {% if tier_count > 0 %}
+            <div class="cwc_bab-builder__tiers" style="--tier-count: {{ tier_count }};">
+              {%- assign tier_i = 0 -%}
+              {% for block in section.blocks %}
+                {%- assign block_key = ',' | append: block.id | append: ',' -%}
+                {% case block.type %}
+                  {% when 'tier' %}
+                    {% if valid_tiers contains block_key %}
+                      {%- liquid
+                        assign r_type = block.settings.reward_type
+                        assign r_product = block.settings.reward_product
+                        assign r_variant = r_product.selected_or_first_available_variant
+                        assign r_value = block.settings.reward_value | default: 0
+                        assign r_price = block.settings.reward_price | default: 0 | times: 100 | round
+                        if block.settings.reward_label != blank
+                          assign r_name = block.settings.reward_label
+                        elsif r_type == 'amount_off'
+                          assign r_name = r_value | times: 100 | money_without_trailing_zeros | append: ' off your box'
+                        elsif r_type == 'percent_off'
+                          assign r_name = r_value | append: '% off your box'
+                        else
+                          assign r_name = r_product.title
+                        endif
+                      -%}
+                      <div class="cwc_bab-builder__tier cwc_bab-builder__tier--locked" data-bab-tier data-tier="{{ tier_i }}" {{ block.shopify_attributes }}>
+                        <p class="cwc_bab-builder__tier-status" data-bab-tier-status>
+                          {{- section.settings.tier_locked_text | default: 'Locked' -}}
+                        </p>
+                        <p class="cwc_bab-builder__tier-threshold">
+                          {{- block.settings.threshold | times: 100 | money_without_trailing_zeros -}}+
+                        </p>
+                        <p class="cwc_bab-builder__tier-name">{{ r_name }}</p>
+                        <p class="cwc_bab-builder__tier-price">
+                          {% case r_type %}
+                            {% when 'product_price' %}
+                              <span>{{ r_price | money_without_trailing_zeros }}</span>
+                              <s>{{ r_variant.price | money }}</s>
+                            {% when 'gift' %}
+                              <span>{{ section.settings.free_text | default: 'Free' }}</span>
+                              <s>{{ r_variant.price | money }}</s>
+                            {% when 'amount_off' %}
+                              <span>{{ r_value | times: 100 | money_without_trailing_zeros }} off</span>
+                            {% when 'percent_off' %}
+                              <span>{{ r_value }}% off</span>
+                          {% endcase %}
+                        </p>
+                      </div>
+                      {%- assign tier_i = tier_i | plus: 1 -%}
+                    {% endif %}
+                {% endcase %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% comment %} Toolbar: tabs + search {% endcomment %}
+          <div class="cwc_bab-builder__toolbar">
+            <div class="cwc_bab-builder__tabs" role="group" aria-label="Filter bottles">
+              {%- assign has_tabs = false -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'tab' and block.settings.collection != blank -%}
+                  {%- assign has_tabs = true -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {% if section.settings.show_all_tab or has_tabs == false %}
+                <button type="button" class="cwc_bab-builder__tab cwc_bab-builder__tab--active" data-bab-tab="all" aria-pressed="true">
+                  {{- section.settings.all_tab_label | default: 'All' -}}
+                </button>
+              {% endif %}
+              {%- assign tab_i = 0 -%}
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'tab' %}
+                    {% if block.settings.collection != blank %}
+                      {%- liquid
+                        assign is_first_active = false
+                        if section.settings.show_all_tab == false and tab_i == 0
+                          assign is_first_active = true
+                        endif
+                      -%}
+                      <button
+                        type="button"
+                        class="cwc_bab-builder__tab{% if is_first_active %} cwc_bab-builder__tab--active{% endif %}"
+                        data-bab-tab="{{ tab_i }}"
+                        aria-pressed="{{ is_first_active }}"
+                        {{ block.shopify_attributes }}
+                      >
+                        {{- block.settings.label | default: block.settings.collection.title -}}
+                      </button>
+                      {%- assign tab_i = tab_i | plus: 1 -%}
+                    {% endif %}
+                {% endcase %}
+              {% endfor %}
+            </div>
+
+            <label class="cwc_bab-builder__search">
+              <span class="cwc_bab-builder__visually-hidden">{{ section.settings.search_placeholder | default: 'Search this offer' }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+              <input
+                type="search"
+                class="cwc_bab-builder__search-input"
+                placeholder="{{ section.settings.search_placeholder | default: 'Search this offer' | escape }}"
+                autocomplete="off"
+                data-bab-search
+              >
+            </label>
+          </div>
+
+          <p class="cwc_bab-builder__count" data-bab-results aria-live="polite"></p>
+
+          {% comment %} Product grid — union of the tab collections, deduped {% endcomment %}
+          <div class="cwc_bab-builder__grid">
+            {%- liquid
+              assign seen = ','
+              assign card_total = 0
+            -%}
+            {% for block in section.blocks %}
+              {% if block.type == 'tab' and block.settings.collection != blank %}
+                {% for product in block.settings.collection.products limit: 50 %}
+                  {%- liquid
+                    assign p_key = ',' | append: product.id | append: ','
+                    assign skip = false
+                    if seen contains p_key
+                      assign skip = true
+                    endif
+                    if product.tags contains 'Allocated' or product.tags contains 'allocated'
+                      assign skip = true
+                    endif
+                    assign p_soldout = false
+                    if product.available == false
+                      assign p_soldout = true
+                      if section.settings.sold_out_mode == 'hide'
+                        assign skip = true
+                      endif
+                    endif
+                    if card_total >= 150
+                      assign skip = true
+                    endif
+                  -%}
+                  {% unless skip %}
+                    {%- liquid
+                      assign seen = seen | append: product.id | append: ','
+                      assign card_total = card_total | plus: 1
+                      assign p_variant = product.selected_or_first_available_variant
+
+                      # Max that can go in the box: tracked + deny = stock, else open
+                      assign p_max = 99
+                      if p_variant.inventory_management == 'shopify' and p_variant.inventory_policy == 'deny'
+                        assign p_max = p_variant.inventory_quantity
+                        if p_max < 0
+                          assign p_max = 0
+                        endif
+                      endif
+                      assign p_low = false
+                      if p_max > 0 and p_max <= low_stock
+                        assign p_low = true
+                      endif
+
+                      # Which tabs this bottle belongs to
+                      assign p_handles = product.collections | map: 'handle' | join: ','
+                      assign p_handles = ',' | append: p_handles | append: ','
+                      assign p_tabs = ' '
+                      assign tab_j = 0
+                      for t_block in section.blocks
+                        if t_block.type == 'tab' and t_block.settings.collection != blank
+                          assign t_key = ',' | append: t_block.settings.collection.handle | append: ','
+                          if p_handles contains t_key or t_block.id == block.id
+                            assign p_tabs = p_tabs | append: tab_j | append: ' '
+                          endif
+                          assign tab_j = tab_j | plus: 1
+                        endif
+                      endfor
+
+                      assign p_search = product.title | append: ' ' | append: product.vendor | append: ' ' | append: product.type
+                      if product.metafields.custom.distillery != blank
+                        assign p_search = p_search | append: ' ' | append: product.metafields.custom.distillery.value
+                      endif
+                      assign p_search = p_search | downcase
+                    -%}
+                    <div
+                      class="cwc_bab-builder__card{% if p_soldout %} cwc_bab-builder__card--soldout{% endif %}"
+                      data-bab-card
+                      data-variant-id="{{ p_variant.id }}"
+                      data-price="{{ p_variant.price }}"
+                      data-max="{{ p_max }}"
+                      data-title="{{ product.title | escape }}"
+                      data-url="{{ product.url }}"
+                      data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 }}{% endif %}"
+                      data-tabs="{{ p_tabs }}"
+                      data-search="{{ p_search | escape }}"
+                    >
+                      <a href="{{ product.url }}" class="cwc_bab-builder__card-media" tabindex="-1" aria-hidden="true">
+                        {% if product.featured_image != blank %}
+                          <img
+                            src="{{ product.featured_image | image_url: width: 600 }}"
+                            srcset="{{ product.featured_image | image_url: width: 300 }} 300w, {{ product.featured_image | image_url: width: 600 }} 600w"
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                            loading="lazy"
+                            width="600"
+                            height="600"
+                          >
+                        {% else %}
+                          <span class="cwc_bab-builder__card-placeholder">
+                            <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                              <rect x="16" y="0" width="20" height="6" rx="2" />
+                              <rect x="18" y="6" width="16" height="11" />
+                              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                            </svg>
+                          </span>
+                        {% endif %}
+                        <span class="cwc_bab-builder__card-badge" data-bab-in-box hidden>
+                          {{- section.settings.in_box_label | default: 'In your box' -}}
+                        </span>
+                        {% if p_soldout %}
+                          <span class="cwc_bab-builder__card-badge cwc_bab-builder__card-badge--soldout">
+                            {{- section.settings.sold_out_label | default: 'Sold out' -}}
+                          </span>
+                        {% endif %}
+                      </a>
+
+                      <div class="cwc_bab-builder__card-body">
+                        <a href="{{ product.url }}" class="cwc_bab-builder__card-title">{{ product.title }}</a>
+
+                        <div class="cwc_bab-builder__card-price-row">
+                          <span class="cwc_bab-builder__card-price">{{ p_variant.price | money }}</span>
+                          {% if p_low %}
+                            <span class="cwc_bab-builder__card-stock">{{ p_max }} left</span>
+                          {% endif %}
+                        </div>
+
+                        {% unless p_soldout %}
+                          <button
+                            type="button"
+                            class="cwc_bab-builder__card-button"
+                            data-bab-add
+                            aria-label="Add {{ product.title | escape }} to box"
+                          >
+                            {{- section.settings.add_label | default: 'Add to box' -}}
+                          </button>
+                          <div class="cwc_bab-builder__stepper" data-bab-stepper hidden>
+                            <button type="button" class="cwc_bab-builder__stepper-button" data-bab-dec aria-label="Remove one {{ product.title | escape }}">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14" /></svg>
+                            </button>
+                            <span class="cwc_bab-builder__stepper-value" data-bab-qty aria-live="polite"></span>
+                            <button type="button" class="cwc_bab-builder__stepper-button" data-bab-inc aria-label="Add one more {{ product.title | escape }}">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
+                            </button>
+                          </div>
+                        {% endunless %}
+                      </div>
+                    </div>
+                  {% endunless %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="cwc_bab-builder__empty" data-bab-empty hidden>
+            <p>{{ section.settings.empty_search_text | default: 'No bottles in this offer match.' }}</p>
+            <button type="button" class="cwc_bab-builder__text-link" data-bab-clear>
+              {{- section.settings.clear_search_label | default: 'Clear search' -}}
+            </button>
+          </div>
+
+          {% if card_total == 0 %}
+            <p class="cwc_bab-builder__placeholder">Add a Tab block with a collection to fill the shelf.</p>
+          {% endif %}
+        </div>
+
+        {% comment %} ========== Desktop box panel (sticky) ========== {% endcomment %}
+        <aside class="cwc_bab-builder__panel" aria-label="{{ section.settings.box_title | default: 'Your box' | escape }}">
+          {{ box_markup }}
+        </aside>
+      </div>
+
+      {% comment %} ========== Mobile tracker bar + box sheet ========== {% endcomment %}
+      <div class="cwc_bab-builder__bar" data-bab-bar>
+        <p class="cwc_bab-builder__status-bold" data-bab-status></p>
+        <p class="cwc_bab-builder__status-sub" data-bab-sub></p>
+        {% if tier_count > 0 %}{{ progress_markup }}{% endif %}
+        <div class="cwc_bab-builder__bar-row">
+          <div class="cwc_bab-builder__bar-summary">
+            <span class="cwc_bab-builder__bar-count" data-bab-bottles></span>
+            <span class="cwc_bab-builder__bar-subtotal" data-bab-subtotal></span>
+          </div>
+          <button type="button" class="cwc_bab-builder__button cwc_bab-builder__button--bar" data-bab-open>
+            {{- section.settings.view_box_label | default: 'View box' -}}
+          </button>
+        </div>
+      </div>
+
+      <dialog class="cwc_bab-builder__sheet" data-bab-sheet aria-label="{{ section.settings.box_title | default: 'Your box' | escape }}">
+        {{ box_markup }}
+      </dialog>
+
+      <template data-bab-line-template>
+        <li class="cwc_bab-builder__line">
+          <span class="cwc_bab-builder__line-media"><img alt="" width="56" height="56" loading="lazy" hidden></span>
+          <div class="cwc_bab-builder__line-info">
+            <p class="cwc_bab-builder__line-title" data-bab-line-title></p>
+            <div class="cwc_bab-builder__stepper cwc_bab-builder__stepper--small">
+              <button type="button" class="cwc_bab-builder__stepper-button" data-bab-dec aria-label="Remove one">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14" /></svg>
+              </button>
+              <span class="cwc_bab-builder__stepper-value" data-bab-qty></span>
+              <button type="button" class="cwc_bab-builder__stepper-button" data-bab-inc aria-label="Add one more">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+            </div>
+            <p class="cwc_bab-builder__line-note" data-bab-line-note hidden></p>
+          </div>
+          <div class="cwc_bab-builder__line-side">
+            <button type="button" class="cwc_bab-builder__line-remove" data-bab-remove aria-label="Remove from box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            </button>
+            <span class="cwc_bab-builder__line-price" data-bab-line-price></span>
+          </div>
+        </li>
+      </template>
+
+      <script type="application/json" data-bab-config>
+        {
+          "storageKey": {{ section.id | json }},
+          "minBottles": {{ min_bottles }},
+          "moneyFormat": {{ shop.money_format | json }},
+          "tiers": {{ tier_json }},
+          "copy": {
+            "emptyBold": {{ section.settings.status_empty_bold | json }},
+            "emptySub": {{ section.settings.status_empty_sub | json }},
+            "fewBold": {{ section.settings.status_few_bold | json }},
+            "fewSub": {{ section.settings.status_few_sub | json }},
+            "underBold": {{ section.settings.status_under_bold | json }},
+            "underSub": {{ section.settings.status_under_sub | json }},
+            "reachedBold": {{ section.settings.status_reached_bold | json }},
+            "reachedSub": {{ section.settings.status_reached_sub | json }},
+            "topBold": {{ section.settings.status_top_bold | json }},
+            "topSub": {{ section.settings.status_top_sub | json }},
+            "noTiersBold": {{ section.settings.status_no_tiers_bold | json }},
+            "tierNext": {{ section.settings.tier_next_text | json }},
+            "tierToGo": {{ section.settings.tier_to_go_text | json }},
+            "tierActive": {{ section.settings.tier_active_text | json }},
+            "tierUpgraded": {{ section.settings.tier_upgraded_text | json }},
+            "tierLocked": {{ section.settings.tier_locked_text | json }},
+            "buttonEmpty": {{ section.settings.button_empty_label | json }},
+            "buttonFew": {{ section.settings.button_few_label | json }},
+            "buttonActive": {{ section.settings.button_active_label | json }},
+            "buttonAdding": {{ section.settings.button_adding_label | json }},
+            "inBox": {{ section.settings.in_box_qty_label | json }},
+            "bottlesInBox": {{ section.settings.bottles_in_box_label | json }},
+            "results": {{ section.settings.results_text | json }},
+            "resultsOne": {{ section.settings.results_text_one | json }},
+            "rewardLabel": {{ section.settings.reward_line_label | json }},
+            "free": {{ section.settings.free_text | json }},
+            "totalLabel": {{ section.settings.total_label | json }},
+            "estTotalLabel": {{ section.settings.est_total_label | json }},
+            "onlyLeft": {{ section.settings.only_left_text | json }},
+            "emptyBox": {{ section.settings.empty_box_text | json }},
+            "addError": {{ section.settings.add_error_text | json }}
+          }
+        }
+      </script>
+    {% endunless %}
+
+  </div>
+</section>
+
+{% if offer_live %}
+  <script src="{{ 'CWC_bab_store.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'CWC_bab_builder.js' | asset_url }}" defer="defer"></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "CWC Build a Box Builder",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The rewards"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "info": "Italic text uses the highlight colour.",
+      "default": "<p>One box, <em>three tiers.</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Your highest tier wins. The reward bottle ships in the same box.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Offer"
+    },
+    {
+      "type": "checkbox",
+      "id": "offer_enabled",
+      "label": "Offer is live",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "offer_end_date",
+      "label": "Offer end date",
+      "info": "Optional. Format YYYY-MM-DD. The builder switches to the off message after this date."
+    },
+    {
+      "type": "richtext",
+      "id": "off_heading",
+      "label": "Offer off: heading",
+      "default": "<p>The box is <em>restocking.</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "off_text",
+      "label": "Offer off: text",
+      "default": "<p>Build-a-Box isn't running right now. Check back soon for the next offer.</p>"
+    },
+    {
+      "type": "range",
+      "id": "min_bottles",
+      "label": "Minimum bottles per box",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all_tab",
+      "label": "Show \"All\" tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "all_tab_label",
+      "label": "All tab label",
+      "default": "All"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search this offer"
+    },
+    {
+      "type": "text",
+      "id": "results_text",
+      "label": "Results count",
+      "info": "[count] is replaced with the number of bottles.",
+      "default": "[count] bottles in this offer"
+    },
+    {
+      "type": "text",
+      "id": "results_text_one",
+      "label": "Results count (one bottle)",
+      "default": "1 bottle in this offer"
+    },
+    {
+      "type": "text",
+      "id": "empty_search_text",
+      "label": "No results message",
+      "default": "No bottles in this offer match."
+    },
+    {
+      "type": "text",
+      "id": "clear_search_label",
+      "label": "Clear search label",
+      "default": "Clear search"
+    },
+    {
+      "type": "select",
+      "id": "sold_out_mode",
+      "label": "Sold-out bottles",
+      "options": [
+        { "value": "hide", "label": "Hide" },
+        { "value": "grey", "label": "Show greyed out" }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold-out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Show \"N left\" at or below",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button label",
+      "default": "Add to box"
+    },
+    {
+      "type": "text",
+      "id": "in_box_qty_label",
+      "label": "Stepper label",
+      "info": "[qty] is replaced with the quantity.",
+      "default": "[qty] in box"
+    },
+    {
+      "type": "text",
+      "id": "in_box_label",
+      "label": "Image label when added",
+      "default": "In your box"
+    },
+    {
+      "type": "header",
+      "content": "Tier Card Labels"
+    },
+    {
+      "type": "text",
+      "id": "tier_next_text",
+      "label": "Next tier (under minimum)",
+      "default": "Next"
+    },
+    {
+      "type": "text",
+      "id": "tier_to_go_text",
+      "label": "Next tier",
+      "info": "[amount] is replaced with the amount left.",
+      "default": "[amount] to go"
+    },
+    {
+      "type": "text",
+      "id": "tier_active_text",
+      "label": "Reached tier",
+      "default": "In your box"
+    },
+    {
+      "type": "text",
+      "id": "tier_upgraded_text",
+      "label": "Passed tier",
+      "default": "Upgraded"
+    },
+    {
+      "type": "text",
+      "id": "tier_locked_text",
+      "label": "Locked tier",
+      "default": "Locked"
+    },
+    {
+      "type": "text",
+      "id": "free_text",
+      "label": "Free reward label",
+      "default": "Free"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "text",
+      "id": "box_title",
+      "label": "Box title",
+      "default": "Your box"
+    },
+    {
+      "type": "text",
+      "id": "empty_box_text",
+      "label": "Empty box text",
+      "default": "Your box is empty. Add bottles from the shelf."
+    },
+    {
+      "type": "text",
+      "id": "reward_line_label",
+      "label": "Reward line label",
+      "info": "[tier] is replaced with the tier, e.g. $250+.",
+      "default": "Box reward · [tier] tier"
+    },
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Total label",
+      "default": "Box total"
+    },
+    {
+      "type": "text",
+      "id": "est_total_label",
+      "label": "Total label ($ or % off rewards)",
+      "default": "Est. box total"
+    },
+    {
+      "type": "text",
+      "id": "button_empty_label",
+      "label": "Button: empty box",
+      "info": "[min] is replaced with the minimum.",
+      "default": "Add [min] bottles to start"
+    },
+    {
+      "type": "text",
+      "id": "button_few_label",
+      "label": "Button: under minimum",
+      "info": "[remaining] and [bottles] are replaced.",
+      "default": "Add [remaining] more [bottles]"
+    },
+    {
+      "type": "text",
+      "id": "button_active_label",
+      "label": "Button: ready",
+      "info": "[total] is replaced with the box total.",
+      "default": "Add box to cart · [total]"
+    },
+    {
+      "type": "text",
+      "id": "button_adding_label",
+      "label": "Button: adding",
+      "default": "Adding…"
+    },
+    {
+      "type": "text",
+      "id": "add_error_text",
+      "label": "Add to cart error",
+      "default": "Something went wrong adding your box. Please try again."
+    },
+    {
+      "type": "text",
+      "id": "only_left_text",
+      "label": "Stock capped note",
+      "info": "[qty] is replaced with the stock left.",
+      "default": "Only [qty] left"
+    },
+    {
+      "type": "text",
+      "id": "view_box_label",
+      "label": "Mobile: view box button",
+      "default": "View box"
+    },
+    {
+      "type": "text",
+      "id": "keep_shopping_label",
+      "label": "Mobile: keep shopping link",
+      "default": "Keep shopping"
+    },
+    {
+      "type": "text",
+      "id": "bottles_in_box_label",
+      "label": "Mobile: bottle count",
+      "info": "[count] and [bottles] are replaced.",
+      "default": "[count] [bottles] in box"
+    },
+    {
+      "type": "text",
+      "id": "box_note",
+      "label": "Note under button",
+      "default": "One reward per box. Doesn't combine with other codes."
+    },
+    {
+      "type": "header",
+      "content": "Status Messages"
+    },
+    {
+      "type": "paragraph",
+      "content": "Tokens: [remaining] [bottles] [min] [amount] [reward] [reward_price] [next_reward]"
+    },
+    {
+      "type": "text",
+      "id": "status_empty_bold",
+      "label": "Empty: bold",
+      "default": "Start your box"
+    },
+    {
+      "type": "text",
+      "id": "status_empty_sub",
+      "label": "Empty: sub",
+      "default": "Add [min] or more bottles to unlock rewards."
+    },
+    {
+      "type": "text",
+      "id": "status_few_bold",
+      "label": "Under minimum: bold",
+      "default": "Add [remaining] more [bottles]"
+    },
+    {
+      "type": "text",
+      "id": "status_few_sub",
+      "label": "Under minimum: sub",
+      "default": "Boxes start at [min] bottles."
+    },
+    {
+      "type": "text",
+      "id": "status_under_bold",
+      "label": "Under first tier: bold",
+      "default": "[amount] to go"
+    },
+    {
+      "type": "text",
+      "id": "status_under_sub",
+      "label": "Under first tier: sub",
+      "default": "Unlock [reward] [reward_price]."
+    },
+    {
+      "type": "text",
+      "id": "status_reached_bold",
+      "label": "Tier reached: bold",
+      "default": "[reward] added [reward_price]"
+    },
+    {
+      "type": "text",
+      "id": "status_reached_sub",
+      "label": "Tier reached: sub",
+      "default": "[amount] more upgrades it to [next_reward]."
+    },
+    {
+      "type": "text",
+      "id": "status_top_bold",
+      "label": "Top tier: bold",
+      "default": "Top reward unlocked"
+    },
+    {
+      "type": "text",
+      "id": "status_top_sub",
+      "label": "Top tier: sub",
+      "default": "[reward] added [reward_price]."
+    },
+    {
+      "type": "text",
+      "id": "status_no_tiers_bold",
+      "label": "No tiers set up: bold",
+      "default": "Your box is ready"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Highlight Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "info": "Buttons, tab underline, progress fill on dark.",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "accent_hover_color",
+      "label": "Accent Hover Color",
+      "default": "#D68F27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent Text Color",
+      "info": "Status labels, stock notice, reward price.",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "dark_color",
+      "label": "Dark Color",
+      "info": "Reached tier card, mobile box bar, labels.",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted Text Color",
+      "default": "#5C5C57"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input / Stepper Border Color",
+      "default": "#D9D9D3"
+    },
+    {
+      "type": "header",
+      "content": "Card Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card / Panel Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "ground_edge_color",
+      "label": "Product Image Ground Edge",
+      "default": "#EEE7DF"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "sticky_offset",
+      "label": "Sticky gap below header",
+      "info": "Space between the sticky header and the box panel / mobile toolbar.",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Tier",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Add tiers lowest threshold first."
+        },
+        {
+          "type": "number",
+          "id": "threshold",
+          "label": "Threshold ($)",
+          "info": "Box subtotal needed, in dollars.",
+          "default": 250
+        },
+        {
+          "type": "select",
+          "id": "reward_type",
+          "label": "Reward type",
+          "options": [
+            { "value": "product_price", "label": "Product at a set price" },
+            { "value": "gift", "label": "Free product" },
+            { "value": "amount_off", "label": "$ off the box" },
+            { "value": "percent_off", "label": "% off the box" }
+          ],
+          "default": "product_price"
+        },
+        {
+          "type": "header",
+          "content": "Product reward"
+        },
+        {
+          "type": "product",
+          "id": "reward_product",
+          "label": "Reward product",
+          "info": "Used by the product reward types. Hidden if it sells out."
+        },
+        {
+          "type": "number",
+          "id": "reward_price",
+          "label": "Reward price ($)",
+          "info": "Shown price for \"Product at a set price\". The real price comes from the discount set up in Shopify.",
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "Discount reward"
+        },
+        {
+          "type": "number",
+          "id": "reward_value",
+          "label": "Discount value",
+          "info": "Dollars for \"$ off\", percent for \"% off\".",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Override"
+        },
+        {
+          "type": "text",
+          "id": "reward_label",
+          "label": "Reward name override",
+          "info": "Optional. Replaces the product name or \"$X off your box\"."
+        }
+      ]
+    },
+    {
+      "type": "tab",
+      "name": "Tab",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Bottles in this collection join the offer. Allocated bottles are always excluded."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab label override"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "CWC Build a Box Builder",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "tier", "settings": { "threshold": 250 } },
+        { "type": "tier", "settings": { "threshold": 500 } },
+        { "type": "tier", "settings": { "threshold": 1000 } },
+        { "type": "tab", "settings": { "label": "Bourbon" } },
+        { "type": "tab", "settings": { "label": "Tequila" } },
+        { "type": "tab", "settings": { "label": "Cognac" } },
+        { "type": "tab", "settings": { "label": "Gift-ready" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

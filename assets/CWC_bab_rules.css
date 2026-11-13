@@ -1,0 +1,150 @@
+/* ==============================
+   CWC Build a Box Rules
+   Off-white band: eyebrow, then a row of rules — each a hairline on top,
+   serif title, small body. Radius 0, no shadows.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_bab-rules {
+  --br-gutter: 48px;
+  --br-col-gap: 32px;
+  --br-row-gap: 32px;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_bab-rules__container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 var(--br-gutter);
+}
+
+/* === Section Header === */
+.cwc_bab-rules__content {
+  margin-bottom: 28px;
+}
+
+.cwc_bab-rules__content-eyebrow {
+  margin: 0;
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+}
+
+.cwc_bab-rules__content-heading {
+  margin-top: 12px;
+}
+
+.cwc_bab-rules__content-heading > * {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: inherit;
+}
+
+.cwc_bab-rules__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_bab-rules__content-heading > * em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--highlight-color);
+}
+
+/* === Rules Grid === */
+.cwc_bab-rules__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--br-col-gap);
+  row-gap: var(--br-row-gap);
+}
+
+.cwc_bab-rules__card {
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.cwc_bab-rules__card-title {
+  margin: 0 0 8px;
+  font-family: var(--cwc-font-heading);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+.cwc_bab-rules__card-text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--card-text-color);
+}
+
+.cwc_bab-rules__card-text p + p {
+  margin-top: 8px;
+}
+
+/* === Empty State === */
+.cwc_bab-rules__empty {
+  padding: 2rem;
+  text-align: center;
+  color: #999999;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_bab-rules {
+    --br-gutter: 32px;
+  }
+
+  .cwc_bab-rules__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_bab-rules {
+    --br-gutter: 18px;
+    --br-row-gap: 24px;
+
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_bab-rules__content {
+    margin-bottom: 20px;
+  }
+
+  .cwc_bab-rules__content-heading > * {
+    font-size: 26px;
+  }
+
+  .cwc_bab-rules__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cwc_bab-rules__card-title {
+    font-size: 18px;
+  }
+
+  .cwc_bab-rules__card-text p {
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,205 @@
+{% style %}
+  #cwc_bab-rules-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#F6F6F3' }};
+    --text-color: {{ section.settings.text_color | default: '#1C1C19' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#A35A12' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#A35A12' }};
+    --card-text-color: {{ section.settings.card_text_color | default: '#3A3A36' }};
+    --border-color: {{ section.settings.border_color | default: '#E6E6E1' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --padding-top: {{ section.settings.padding_top | default: 70 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 70 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_bab_rules.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_bab-rules-{{ section.id }}" class="cwc_bab-rules">
+  <div class="cwc_bab-rules__container">
+
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="cwc_bab-rules__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_bab-rules__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <div class="cwc_bab-rules__content-heading cwc-rte">{{ section.settings.heading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Rules {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_bab-rules__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'rule' %}
+              <div class="cwc_bab-rules__card" {{ block.shopify_attributes }}>
+                {% if block.settings.title != blank %}
+                  <p class="cwc_bab-rules__card-title">{{ block.settings.title }}</p>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  <div class="cwc_bab-rules__card-text cwc-rte">{{ block.settings.text }}</div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_bab-rules__empty">
+        <p>Add Rule blocks to display content.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Build a Box Rules",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Box rules"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading (optional)",
+      "info": "Leave blank to match the design. Italic text uses the highlight colour."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F6F6F3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Highlight Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#A35A12"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Rule Text Color",
+      "default": "#3A3A36"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Color",
+      "default": "#E6E6E1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "rule",
+      "name": "Rule",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "2 bottle minimum"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Any 2 or more bottles from this shelf start a box.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "CWC Build a Box Rules",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "rule",
+          "settings": { "title": "2 bottle minimum", "text": "<p>Any 2 or more bottles from this shelf start a box.</p>" }
+        },
+        {
+          "type": "rule",
+          "settings": { "title": "Highest tier wins", "text": "<p>One reward bottle per box. Reaching a higher tier upgrades it.</p>" }
+        },
+        {
+          "type": "rule",
+          "settings": { "title": "No stacking", "text": "<p>Box rewards don't combine with welcome or other codes.</p>" }
+        },
+        {
+          "type": "rule",
+          "settings": { "title": "Allocated excluded", "text": "<p>Allocated bottles stay at fair retail and sit outside this offer.</p>" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

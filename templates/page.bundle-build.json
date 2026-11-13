@@ -1,0 +1,166 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "template--page",
+      "settings": {
+        "page_title_enabled": true,
+        "page_width": "narrow"
+      },
+      "disabled": true
+    },
+    "bab_hero": {
+      "type": "CWC_bab_hero",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "Pick 2 or more bottles",
+            "label_mobile": "Pick 2+ bottles"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "Reach $250, $500 or $1,000",
+            "label_mobile": "Reach a tier"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "Reward bottle added for $1",
+            "label_mobile": "Reward added for $1"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
+      "settings": {}
+    },
+    "bab_builder": {
+      "type": "CWC_bab_builder",
+      "blocks": {
+        "tier_1": {
+          "type": "tier",
+          "settings": {
+            "threshold": 250,
+            "reward_type": "product_price",
+            "reward_price": 1
+          }
+        },
+        "tier_2": {
+          "type": "tier",
+          "settings": {
+            "threshold": 500,
+            "reward_type": "product_price",
+            "reward_price": 1
+          }
+        },
+        "tier_3": {
+          "type": "tier",
+          "settings": {
+            "threshold": 1000,
+            "reward_type": "product_price",
+            "reward_price": 1
+          }
+        },
+        "tab_1": {
+          "type": "tab",
+          "settings": {
+            "collection": "bourbon",
+            "label": "Bourbon"
+          }
+        },
+        "tab_2": {
+          "type": "tab",
+          "settings": {
+            "collection": "tequila",
+            "label": "Tequila"
+          }
+        },
+        "tab_3": {
+          "type": "tab",
+          "settings": {
+            "collection": "cognac",
+            "label": "Cognac"
+          }
+        },
+        "tab_4": {
+          "type": "tab",
+          "settings": {
+            "collection": "best-selling-products",
+            "label": "Best sellers"
+          }
+        }
+      },
+      "block_order": [
+        "tier_1",
+        "tier_2",
+        "tier_3",
+        "tab_1",
+        "tab_2",
+        "tab_3",
+        "tab_4"
+      ],
+      "settings": {}
+    },
+    "bab_rules": {
+      "type": "CWC_bab_rules",
+      "blocks": {
+        "rule_1": {
+          "type": "rule",
+          "settings": {
+            "title": "2 bottle minimum",
+            "text": "<p>Any 2 or more bottles from this shelf start a box.</p>"
+          }
+        },
+        "rule_2": {
+          "type": "rule",
+          "settings": {
+            "title": "Highest tier wins",
+            "text": "<p>One reward bottle per box. Reaching a higher tier upgrades it.</p>"
+          }
+        },
+        "rule_3": {
+          "type": "rule",
+          "settings": {
+            "title": "No stacking",
+            "text": "<p>Box rewards don't combine with welcome or other codes.</p>"
+          }
+        },
+        "rule_4": {
+          "type": "rule",
+          "settings": {
+            "title": "Allocated excluded",
+            "text": "<p>Allocated bottles stay at fair retail and sit outside this offer.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "rule_1",
+        "rule_2",
+        "rule_3",
+        "rule_4"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "bab_hero",
+    "bab_builder",
+    "bab_rules"
+  ]
+}

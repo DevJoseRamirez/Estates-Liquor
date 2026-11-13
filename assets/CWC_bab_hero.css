@@ -1,0 +1,191 @@
+/* ==============================
+   CWC Build a Box Hero
+   Dark band: eyebrow → display heading (italic accent) → subtext on the left,
+   numbered step list on the right. Brand tokens: radius 0, hairline rules.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_bab-hero {
+  --bh-gutter: 48px;
+  --bh-heading-size: 64px;
+  --bh-subtext-size: 16px;
+  --bh-gap: 64px;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_bab-hero__container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 var(--bh-gutter);
+}
+
+.cwc_bab-hero__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bh-gap);
+}
+
+/* === Section Header === */
+.cwc_bab-hero__content {
+  flex: 0 1 760px;
+  min-width: 0;
+}
+
+.cwc_bab-hero__content-eyebrow {
+  margin: 0 0 20px;
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+}
+
+.cwc_bab-hero__content-heading > * {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: var(--bh-heading-size);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: inherit;
+}
+
+.cwc_bab-hero__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_bab-hero__content-heading > * em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--highlight-color);
+}
+
+.cwc_bab-hero__content-subtext {
+  max-width: 560px;
+  margin-top: 24px;
+}
+
+.cwc_bab-hero__content-subtext p {
+  margin: 0;
+  font-size: var(--bh-subtext-size);
+  line-height: 1.65;
+  color: var(--subtext-color);
+}
+
+/* === Steps === */
+.cwc_bab-hero__steps {
+  flex: 0 0 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.cwc_bab-hero__step {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cwc_bab-hero__step-number {
+  flex: 0 0 auto;
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--step-number-color);
+}
+
+.cwc_bab-hero__step-label {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+.cwc_bab-hero__step-label--mobile {
+  display: none;
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_bab-hero {
+    --bh-gutter: 32px;
+    --bh-heading-size: 52px;
+    --bh-gap: 40px;
+  }
+
+  .cwc_bab-hero__wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cwc_bab-hero__content,
+  .cwc_bab-hero__steps {
+    flex: 0 0 auto;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_bab-hero {
+    --bh-gutter: 18px;
+    --bh-heading-size: 40px;
+    --bh-subtext-size: 16px;
+    --bh-gap: 32px;
+
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_bab-hero__content-eyebrow {
+    margin-bottom: 16px;
+  }
+
+  .cwc_bab-hero__content-subtext {
+    margin-top: 20px;
+  }
+
+  /* steps become a 3-column row, each with its own top rule */
+  .cwc_bab-hero__steps {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: 12px;
+    border-top: 0;
+  }
+
+  .cwc_bab-hero__step {
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 0;
+  }
+
+  .cwc_bab-hero__step-label {
+    font-size: 14px;
+  }
+
+  .cwc_bab-hero__step-label--desktop {
+    display: none;
+  }
+
+  .cwc_bab-hero__step-label--mobile {
+    display: inline;
+  }
+}

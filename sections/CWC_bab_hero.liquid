@@ -1,0 +1,215 @@
+{% style %}
+  #cwc_bab-hero-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#221813' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#E9A23B' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#E9A23B' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#CFC8C1' }};
+    --step-number-color: {{ section.settings.step_number_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#4A3E37' }};
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_bab_hero.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_bab-hero-{{ section.id }}" class="cwc_bab-hero">
+  <div class="cwc_bab-hero__container">
+    <div class="cwc_bab-hero__wrapper">
+
+      {% comment %} Section Header {% endcomment %}
+      <div class="cwc_bab-hero__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="cwc_bab-hero__content-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="cwc_bab-hero__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_bab-hero__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Steps {% endcomment %}
+      {% if section.blocks.size > 0 %}
+        <ol class="cwc_bab-hero__steps">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'step' %}
+                {% if block.settings.label != blank %}
+                  <li class="cwc_bab-hero__step" {{ block.shopify_attributes }}>
+                    <span class="cwc_bab-hero__step-number">
+                      {{- forloop.index | prepend: '0' | slice: -2, 2 -}}
+                    </span>
+                    {% if block.settings.label_mobile != blank %}
+                      <span class="cwc_bab-hero__step-label cwc_bab-hero__step-label--desktop">
+                        {{- block.settings.label -}}
+                      </span>
+                      <span class="cwc_bab-hero__step-label cwc_bab-hero__step-label--mobile">
+                        {{- block.settings.label_mobile -}}
+                      </span>
+                    {% else %}
+                      <span class="cwc_bab-hero__step-label">{{ block.settings.label }}</span>
+                    {% endif %}
+                  </li>
+                {% endif %}
+            {% endcase %}
+          {% endfor %}
+        </ol>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Build a Box Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Build-a-Box"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "info": "Italic text uses the highlight colour.",
+      "default": "<p>Build your box. <em>Unlock the bottle.</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Pick 2 or more bottles from the shelf below. Each tier you reach adds a reward bottle to your box for $1, shipped in the same box.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#221813"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Highlight Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#CFC8C1"
+    },
+    {
+      "type": "color",
+      "id": "step_number_color",
+      "label": "Step Number Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Step Divider Color",
+      "default": "#4A3E37"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Pick 2 or more bottles"
+        },
+        {
+          "type": "text",
+          "id": "label_mobile",
+          "label": "Mobile Label (optional)",
+          "info": "Shorter label shown on mobile. Leave blank to use the main label."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "CWC Build a Box Hero",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": { "label": "Pick 2 or more bottles", "label_mobile": "Pick 2+ bottles" }
+        },
+        {
+          "type": "step",
+          "settings": { "label": "Reach $250, $500 or $1,000", "label_mobile": "Reach a tier" }
+        },
+        {
+          "type": "step",
+          "settings": { "label": "Reward bottle added for $1", "label_mobile": "Reward added for $1" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
