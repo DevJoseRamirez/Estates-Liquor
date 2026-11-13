@@ -11,9 +11,10 @@
     --pill-text: {{ section.settings.pill_text_color | default: '#13241C' }};
     --pill-active-bg: {{ section.settings.pill_active_bg_color | default: '#E9A23B' }};
     --pill-active-text: {{ section.settings.pill_active_text_color | default: '#13241C' }};
-    --search-field-bg: {{ section.settings.search_field_bg_color | default: '#1E3328' }};
-    --search-field-border: {{ section.settings.search_field_border_color | default: '#585530' }};
-    --search-field-text: {{ section.settings.search_field_text_color | default: '#FFFFFF' }};
+    --search-field-bg: {{ section.settings.search_field_bg_color | default: '#FFFFFF' }};
+    --search-field-border: {{ section.settings.search_field_border_color | default: '#E7D4B3' }};
+    --search-field-text: {{ section.settings.search_field_text_color | default: '#1C1C19' }};
+    --search-icon: {{ section.settings.search_icon_color | default: '#8A6A2E' }};
     --description-lines-mobile: {{ section.settings.description_lines_mobile | default: 2 }};
     --padding-top: {{ section.settings.padding_top | default: 36 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
@@ -123,8 +124,15 @@
             spellcheck="false"
           >
           <input type="hidden" name="type" value="product">
-          <button type="submit" class="cwc_collection-header__search-submit">
-            {{- section.settings.search_button_label | default: 'Search' | escape -}}
+          <button
+            type="submit"
+            class="cwc_collection-header__search-submit"
+            aria-label="{{ section.settings.search_button_label | default: 'Search' | escape }}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" />
+            </svg>
           </button>
         </form>
       {% elsif section.settings.show_description and section.settings.description != blank or section.settings.show_description and current.description != blank %}
@@ -360,27 +368,33 @@
     {
       "type": "text",
       "id": "search_button_label",
-      "label": "Search Button Label",
+      "label": "Search Button Label (Screen Readers)",
       "default": "Search"
     },
     {
       "type": "color",
       "id": "search_field_bg_color",
       "label": "Search Field Background",
-      "info": "Matches the header search field.",
-      "default": "#1E3328"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "search_field_border_color",
       "label": "Search Field Border",
-      "default": "#585530"
+      "info": "Gold hairline, the light-ground version of the header search outline.",
+      "default": "#E7D4B3"
     },
     {
       "type": "color",
       "id": "search_field_text_color",
       "label": "Search Field Text",
-      "default": "#FFFFFF"
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "search_icon_color",
+      "label": "Search Icon Color",
+      "default": "#8A6A2E"
     },
     {
       "type": "header",

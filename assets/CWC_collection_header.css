@@ -145,11 +145,26 @@
   color: var(--meta-color);
 }
 
-/* === Search Box (search template) === */
+/* === Search Box (search template) ===
+   Same build as the header search (field + icon button behind a divider),
+   recoloured for the white ground: gold hairline, brass icon. */
 .cwc_collection-header__search {
   display: flex;
+  align-items: stretch;
   max-width: 680px;
+  height: 48px;
   margin: 20px 0 0;
+  box-sizing: border-box;
+  border: 1px solid var(--search-field-border);
+  border-radius: 0;
+  background: var(--search-field-bg);
+  transition: border-color 0.2s ease;
+}
+
+.cwc_collection-header__search:focus-within {
+  border-color: var(--search-icon);
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 .cwc_collection-header__search-label {
@@ -164,60 +179,56 @@
 .cwc_collection-header__search-input {
   flex: 1;
   min-width: 0;
-  height: 48px;
-  padding: 0 14px;
-  /* Same dark field as the header search */
-  border: 1px solid var(--search-field-border);
-  border-right: 0;
+  height: 100%;
+  padding: 0 4px 0 16px;
+  border: 0;
   border-radius: 0;
-  background: var(--search-field-bg);
+  outline: 0;
+  background: transparent;
   color: var(--search-field-text);
-  caret-color: var(--search-field-text);
   font-family: var(--ch-font-body);
   font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .cwc_collection-header__search-input::placeholder {
-  color: var(--search-field-text);
-  opacity: 0.6;
+  color: var(--meta-color);
+  opacity: 1;
 }
 
 .cwc_collection-header__search-input::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 
-.cwc_collection-header__search-input:focus-visible {
-  outline: 2px solid var(--highlight-color);
-  outline-offset: 0;
+.cwc_collection-header__search-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+  width: 48px;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--search-field-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--search-icon);
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-/* Primary: amber, green text */
-.cwc_collection-header__search-submit {
-  flex: 0 0 auto;
-  min-width: 110px;
-  min-height: 48px;
-  padding: 0 24px;
-  border: 0;
-  border-radius: 0;
-  background: var(--ch-amber);
-  color: var(--ch-green);
-  font-family: var(--ch-font-body);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.cwc_collection-header__search-submit svg {
+  width: 20px;
+  height: 20px;
 }
 
 .cwc_collection-header__search-submit:hover {
-  background: var(--ch-amber-hover);
+  color: var(--text-color);
 }
 
 .cwc_collection-header__search-submit:focus-visible {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 3px;
+  outline-offset: -4px;
 }
 
 /* === Pills === */
@@ -359,11 +370,6 @@
   .cwc_collection-header__description-toggle:focus-visible {
     outline: 2px solid var(--highlight-color);
     outline-offset: 3px;
-  }
-
-  .cwc_collection-header__search-submit {
-    min-width: 0;
-    padding: 0 18px;
   }
 
   /* Pills swipe sideways, edge to edge */
