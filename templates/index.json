@@ -1292,6 +1292,31 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "cwc_promo_hero": {
+      "type": "CWC_promo_hero",
+      "blocks": {
+        "cwc_promo_hero_p1": {
+          "type": "panel",
+          "settings": {}
+        },
+        "cwc_promo_hero_p2": {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "",
+            "heading": "<p><strong>10% off</strong> select spirits</p>",
+            "heading_size": "medium",
+            "text": "<p>Plus a <strong>free</strong> gift with purchase.</p>",
+            "content_position": "top-left",
+            "button_label": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_promo_hero_p1",
+        "cwc_promo_hero_p2"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -1299,6 +1324,7 @@
     "cwc_home_banner_PPNPdA",
     "cwc_hero",
     "cwc_home_hero",
+    "cwc_promo_hero",
     "cwc_hero_VbRH83",
     "cwc_trust_bar",
     "cwc_shop_category",

@@ -1,0 +1,514 @@
+{%- liquid
+  comment
+    Contained (1500px) promo hero — one to three image panels side by side,
+    each with its own overlay copy, CTA and optional badge graphic.
+    Desktop column split is set by the "Panel Layout" setting; every panel
+    shares one height set by the "Desktop Height" ratio. Mobile stacks.
+  endcomment
+
+  assign panel_count = 0
+  for block in section.blocks
+    if block.type == 'panel'
+      assign panel_count = panel_count | plus: 1
+    endif
+  endfor
+
+  case section.settings.layout
+    when 'equal'
+      assign grid_cols = 'repeat(' | append: panel_count | append: ', 1fr)'
+    when 'wide_right'
+      assign grid_cols = '1fr 1.7fr'
+    else
+      assign grid_cols = '1.7fr 1fr'
+  endcase
+
+  if panel_count == 1
+    assign grid_cols = '1fr'
+  elsif panel_count > 2
+    assign grid_cols = 'repeat(' | append: panel_count | append: ', 1fr)'
+  endif
+-%}
+
+{% style %}
+  #cwc_promo-hero-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --grid-cols: {{ grid_cols }};
+    --panel-gap: {{ section.settings.panel_gap | default: 10 }}px;
+    --panel-height: {{ section.settings.desktop_height | default: 590 }}px;
+    --panel-height-mobile: {{ section.settings.mobile_height | default: 460 }}px;
+    --panel-radius: {{ section.settings.border_radius | default: 0 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 20 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_promo_hero.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_promo-hero-{{ section.id }}" class="cwc_promo-hero">
+  <div class="cwc_promo-hero__container">
+    {%- if panel_count > 0 -%}
+      <div class="cwc_promo-hero__grid">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'panel' -%}
+              {%- liquid
+                assign desktop_image = block.settings.image
+                assign mobile_image = block.settings.image_mobile
+                if desktop_image == blank
+                  assign desktop_image = mobile_image
+                endif
+
+                assign img_alt = block.settings.alt_text | default: desktop_image.alt | default: 'Promotion' | escape
+
+                assign load_mode = 'lazy'
+                if forloop.first
+                  assign load_mode = 'eager'
+                endif
+
+                assign panel_link = block.settings.link
+                assign whole_link = false
+                if panel_link != blank and block.settings.link_whole_panel
+                  assign whole_link = true
+                endif
+
+                assign overlay = block.settings.overlay_opacity | default: 25 | divided_by: 100.0
+              -%}
+
+              <div
+                id="cwc_promo-hero-panel-{{ block.id }}"
+                class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }}"
+                style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
+                {{ block.shopify_attributes }}
+              >
+                {%- if whole_link -%}
+                  <a class="cwc_promo-hero__panel-link" href="{{ panel_link }}" aria-label="{{ block.settings.button_label | default: img_alt | escape }}"></a>
+                {%- endif -%}
+
+                <div class="cwc_promo-hero__media">
+                  {%- if desktop_image != blank -%}
+                    <picture class="cwc_promo-hero__picture">
+                      {%- if mobile_image != blank -%}
+                        <source
+                          media="(max-width: 767px)"
+                          srcset="
+                            {{ mobile_image | image_url: width: 480 }} 480w,
+                            {{ mobile_image | image_url: width: 750 }} 750w,
+                            {{ mobile_image | image_url: width: 1100 }} 1100w
+                          "
+                          sizes="100vw"
+                        >
+                      {%- endif -%}
+                      <img
+                        class="cwc_promo-hero__image"
+                        src="{{ desktop_image | image_url: width: 1500 }}"
+                        srcset="
+                          {{ desktop_image | image_url: width: 600 }} 600w,
+                          {{ desktop_image | image_url: width: 900 }} 900w,
+                          {{ desktop_image | image_url: width: 1200 }} 1200w,
+                          {{ desktop_image | image_url: width: 1500 }} 1500w,
+                          {{ desktop_image | image_url: width: 2000 }} 2000w
+                        "
+                        sizes="(max-width: 767px) 100vw, 1000px"
+                        alt="{{ img_alt }}"
+                        width="{{ desktop_image.width }}"
+                        height="{{ desktop_image.height }}"
+                        loading="{{ load_mode }}"
+                        {% if forloop.first %}fetchpriority="high"{% endif %}
+                        style="object-position: {{ desktop_image.presentation.focal_point | default: 'center' }};"
+                      >
+                    </picture>
+                  {%- else -%}
+                    <div class="cwc_promo-hero__placeholder">
+                      <span>Add a panel image</span>
+                    </div>
+                  {%- endif -%}
+                  <span class="cwc_promo-hero__overlay" aria-hidden="true"></span>
+                </div>
+
+                <div class="cwc_promo-hero__content">
+                  {%- if block.settings.eyebrow != blank -%}
+                    <p class="cwc_promo-hero__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                  {%- endif -%}
+
+                  {%- if block.settings.heading != blank -%}
+                    <div class="cwc_promo-hero__heading cwc_promo-hero__heading--{{ block.settings.heading_size | default: 'large' }} cwc-rte">
+                      {{ block.settings.heading }}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if block.settings.text != blank -%}
+                    <div class="cwc_promo-hero__text cwc-rte">
+                      {{ block.settings.text }}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if block.settings.button_label != blank -%}
+                    {%- if panel_link != blank -%}
+                      <a class="cwc_promo-hero__button" href="{{ panel_link }}"{% if whole_link %} tabindex="-1"{% endif %}>
+                        {{ block.settings.button_label | escape }}
+                      </a>
+                    {%- else -%}
+                      <span class="cwc_promo-hero__button">{{ block.settings.button_label | escape }}</span>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  {%- if block.settings.logo != blank -%}
+                    <div class="cwc_promo-hero__logo">
+                      <img
+                        src="{{ block.settings.logo | image_url: width: 400 }}"
+                        alt="{{ block.settings.logo.alt | escape }}"
+                        width="{{ block.settings.logo.width }}"
+                        height="{{ block.settings.logo.height }}"
+                        loading="lazy"
+                        style="max-width: {{ block.settings.logo_width | default: 120 }}px;"
+                      >
+                    </div>
+                  {%- endif -%}
+                </div>
+
+                {%- if block.settings.badge != blank -%}
+                  <div class="cwc_promo-hero__badge">
+                    <img
+                      src="{{ block.settings.badge | image_url: width: 500 }}"
+                      alt="{{ block.settings.badge.alt | escape }}"
+                      width="{{ block.settings.badge.width }}"
+                      height="{{ block.settings.badge.height }}"
+                      loading="lazy"
+                    >
+                  </div>
+                {%- endif -%}
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="cwc_promo-hero__empty">
+        <p>Add panels to display the promo hero.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Promo Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Panel Layout",
+      "options": [
+        { "value": "wide_left", "label": "Wide left, narrow right" },
+        { "value": "wide_right", "label": "Narrow left, wide right" },
+        { "value": "equal", "label": "Equal columns" }
+      ],
+      "default": "wide_left",
+      "info": "Applies to two panels. One panel is always full width; three panels are always equal."
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop Height",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 590
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile Panel Height",
+      "min": 280,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 460,
+      "info": "Panels stack on mobile; each panel uses this height."
+    },
+    {
+      "type": "range",
+      "id": "panel_gap",
+      "label": "Gap Between Panels",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner Radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop Image",
+          "info": "Wide panel: 2000 x 1200px. Narrow panel: 1200 x 1200px. Set a focal point in Files to control cropping."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile Image",
+          "info": "Recommended: 1000 x 1100px. Falls back to the desktop image."
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image Alt Text"
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay Opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 25,
+          "info": "Darkens the image so the copy stays readable."
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Before Black Friday"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>The early <em>sale</em> is on</p>"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading Size",
+          "options": [
+            { "value": "xlarge", "label": "Extra large" },
+            { "value": "large", "label": "Large" },
+            { "value": "medium", "label": "Medium" }
+          ],
+          "default": "large"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>All the savings. None of the last-second scramble.</p>"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content Position",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "middle-center", "label": "Center" }
+          ],
+          "default": "bottom-left"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "eyebrow_color",
+          "label": "Eyebrow Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "bold_color",
+          "label": "Heading Accent Color",
+          "default": "#E9A23B",
+          "info": "Applies to bold or italic words in the heading."
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Save Now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "link_whole_panel",
+          "label": "Make Whole Panel Clickable",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#13241C"
+        },
+        {
+          "type": "color",
+          "id": "button_hover_color",
+          "label": "Button Hover Color",
+          "default": "#D68F27"
+        },
+        {
+          "type": "header",
+          "content": "Brand Logo"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo",
+          "info": "Optional. Shown under the button. Use a transparent PNG or SVG."
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "label": "Logo Width",
+          "min": 60,
+          "max": 240,
+          "step": 10,
+          "unit": "px",
+          "default": 120
+        },
+        {
+          "type": "header",
+          "content": "Badge"
+        },
+        {
+          "type": "image_picker",
+          "id": "badge",
+          "label": "Badge Graphic",
+          "info": "Optional stamp such as \"Up to 60% off\" or \"Free gift\". Use a transparent PNG or SVG."
+        },
+        {
+          "type": "select",
+          "id": "badge_position",
+          "label": "Badge Position",
+          "options": [
+            { "value": "top-right", "label": "Top right" },
+            { "value": "middle-right", "label": "Middle right" },
+            { "value": "bottom-right", "label": "Bottom right" }
+          ],
+          "default": "bottom-right"
+        },
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge Width",
+          "min": 80,
+          "max": 280,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Promo Hero",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "panel" },
+        {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "",
+            "heading": "<p><strong>10% off</strong> select spirits</p>",
+            "heading_size": "medium",
+            "text": "<p>Plus a <strong>free</strong> gift with purchase.</p>",
+            "content_position": "top-left",
+            "button_label": "Shop Now"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
