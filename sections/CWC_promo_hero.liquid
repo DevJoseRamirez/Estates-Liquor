@@ -1,9 +1,10 @@
 {%- liquid
   comment
-    Contained (1500px) promo hero — one to three image panels side by side,
-    each with its own overlay copy, CTA and optional badge graphic.
-    Desktop column split is set by the "Panel Layout" setting; every panel
-    shares one height set by the "Desktop Height" ratio. Mobile stacks.
+    Contained (1500px) promo hero — up to five image panels, each with its
+    own overlay copy, CTA and optional badge graphic.
+    "Panel Layout" sets the desktop arrangement: side-by-side columns, or a
+    featured layout where the first panel is large and every other panel
+    stacks in the opposite column (sharing the "Desktop Height"). Mobile stacks.
   endcomment
 
   assign panel_count = 0
@@ -13,10 +14,19 @@
     endif
   endfor
 
-  case section.settings.layout
+  assign layout = section.settings.layout | default: 'wide_left'
+  assign side_count = panel_count | minus: 1
+  assign is_featured = false
+  if panel_count > 1
+    if layout == 'featured_left' or layout == 'featured_right'
+      assign is_featured = true
+    endif
+  endif
+
+  case layout
     when 'equal'
       assign grid_cols = 'repeat(' | append: panel_count | append: ', 1fr)'
-    when 'wide_right'
+    when 'wide_right', 'featured_right'
       assign grid_cols = '1fr 1.7fr'
     else
       assign grid_cols = '1.7fr 1fr'
@@ -24,8 +34,18 @@
 
   if panel_count == 1
     assign grid_cols = '1fr'
-  elsif panel_count > 2
-    assign grid_cols = 'repeat(' | append: panel_count | append: ', 1fr)'
+  elsif panel_count > 2 and is_featured == false
+    assign col_count = panel_count
+    if col_count > 3
+      assign col_count = 3
+    endif
+    assign grid_cols = 'repeat(' | append: col_count | append: ', 1fr)'
+  endif
+
+  assign grid_class = ''
+  if is_featured
+    assign layout_slug = layout | replace: '_', '-'
+    assign grid_class = ' cwc_promo-hero__grid--featured cwc_promo-hero__grid--' | append: layout_slug
   endif
 -%}
 
@@ -33,13 +53,14 @@
   #cwc_promo-hero-{{ section.id }} {
     --section-bg: {{ section.settings.bg_color | default: '#ffffff' }};
     --grid-cols: {{ grid_cols }};
+    --side-count: {{ side_count | at_least: 1 }};
     --panel-gap: {{ section.settings.panel_gap | default: 10 }}px;
     --panel-height: {{ section.settings.desktop_height | default: 590 }}px;
     --panel-height-mobile: {{ section.settings.mobile_height | default: 460 }}px;
     --panel-radius: {{ section.settings.border_radius | default: 0 }}px;
     --padding-top: {{ section.settings.padding_top | default: 20 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
-    --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top_mobile | default: 0 }}px;
     --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
   }
 {% endstyle %}
@@ -50,7 +71,7 @@
 <section id="cwc_promo-hero-{{ section.id }}" class="cwc_promo-hero">
   <div class="cwc_promo-hero__container">
     {%- if panel_count > 0 -%}
-      <div class="cwc_promo-hero__grid">
+      <div class="cwc_promo-hero__grid{{ grid_class }}">
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'panel' -%}
@@ -79,7 +100,7 @@
 
               <div
                 id="cwc_promo-hero-panel-{{ block.id }}"
-                class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }}"
+                class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }}{% if is_featured %}{% if forloop.first %} cwc_promo-hero__panel--featured{% else %} cwc_promo-hero__panel--side{% endif %}{% endif %}"
                 style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
                 {{ block.shopify_attributes }}
               >
@@ -121,8 +142,15 @@
                       >
                     </picture>
                   {%- else -%}
+                    {%- liquid
+                      assign placeholder_name = 'lifestyle-1'
+                      assign placeholder_mod = forloop.index | modulo: 2
+                      if placeholder_mod == 0
+                        assign placeholder_name = 'lifestyle-2'
+                      endif
+                    -%}
                     <div class="cwc_promo-hero__placeholder">
-                      <span>Add a panel image</span>
+                      {{ placeholder_name | placeholder_svg_tag: 'cwc_promo-hero__placeholder-svg' | replace: '<svg', '<svg preserveAspectRatio="xMidYMid slice"' }}
                     </div>
                   {%- endif -%}
                   <span class="cwc_promo-hero__overlay" aria-hidden="true"></span>
@@ -146,12 +174,19 @@
                   {%- endif -%}
 
                   {%- if block.settings.button_label != blank -%}
+                    {%- liquid
+                      assign btn_class = 'cwc_promo-hero__button'
+                      if block.settings.button_style == 'link'
+                        assign btn_class = 'cwc_promo-hero__button cwc_promo-hero__button--link'
+                      endif
+                    -%}
                     {%- if panel_link != blank -%}
-                      <a class="cwc_promo-hero__button" href="{{ panel_link }}"{% if whole_link %} tabindex="-1"{% endif %}>
+                      <a class="{{ btn_class }}" href="{{ panel_link }}"{% if whole_link %} tabindex="-1"{% endif %}>
                         {{ block.settings.button_label | escape }}
+                        {%- if block.settings.button_style == 'link' %} <span aria-hidden="true">&rarr;</span>{% endif %}
                       </a>
                     {%- else -%}
-                      <span class="cwc_promo-hero__button">{{ block.settings.button_label | escape }}</span>
+                      <span class="{{ btn_class }}">{{ block.settings.button_label | escape }}</span>
                     {%- endif -%}
                   {%- endif -%}
 
@@ -206,12 +241,14 @@
       "id": "layout",
       "label": "Panel Layout",
       "options": [
+        { "value": "featured_left", "label": "Featured left, stacked cards right" },
+        { "value": "featured_right", "label": "Stacked cards left, featured right" },
         { "value": "wide_left", "label": "Wide left, narrow right" },
         { "value": "wide_right", "label": "Narrow left, wide right" },
         { "value": "equal", "label": "Equal columns" }
       ],
-      "default": "wide_left",
-      "info": "Applies to two panels. One panel is always full width; three panels are always equal."
+      "default": "featured_left",
+      "info": "Featured: the first panel is large and every other panel stacks beside it (best with 3–5 panels). Wide/narrow applies to two panels; three or more side-by-side panels are equal columns, three per row."
     },
     {
       "type": "range",
@@ -287,6 +324,17 @@
       "step": 5,
       "unit": "px",
       "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 sits the first card flush under the header."
     }
   ],
   "blocks": [
@@ -355,9 +403,11 @@
           "options": [
             { "value": "xlarge", "label": "Extra large" },
             { "value": "large", "label": "Large" },
-            { "value": "medium", "label": "Medium" }
+            { "value": "medium", "label": "Medium" },
+            { "value": "small", "label": "Small" }
           ],
-          "default": "large"
+          "default": "large",
+          "info": "Use Small for stacked side cards."
         },
         {
           "type": "richtext",
@@ -405,6 +455,16 @@
           "id": "button_label",
           "label": "Button Label",
           "default": "Save Now"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button Style",
+          "options": [
+            { "value": "solid", "label": "Solid button" },
+            { "value": "link", "label": "Text link with arrow" }
+          ],
+          "default": "solid"
         },
         {
           "type": "url",
@@ -489,22 +549,49 @@
       ]
     }
   ],
-  "max_blocks": 3,
+  "max_blocks": 5,
   "presets": [
     {
       "name": "Promo Hero",
       "category": "CWC Custom",
+      "settings": {
+        "layout": "featured_left"
+      },
       "blocks": [
-        { "type": "panel" },
         {
           "type": "panel",
           "settings": {
-            "eyebrow": "",
-            "heading": "<p><strong>10% off</strong> select spirits</p>",
-            "heading_size": "medium",
-            "text": "<p>Plus a <strong>free</strong> gift with purchase.</p>",
-            "content_position": "top-left",
-            "button_label": "Shop Now"
+            "eyebrow": "Just landed · Allocated",
+            "heading": "<p>Rare bottles, <em>listed at fair retail.</em></p>",
+            "heading_size": "large",
+            "text": "<p>Weller, Blanton’s and Buffalo Trace Antique Collection, the day they land.</p>",
+            "content_position": "middle-left",
+            "button_label": "Shop the allocation",
+            "button_style": "solid"
+          }
+        },
+        {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "Holiday gifting",
+            "heading": "<p>Gift sets &amp; decanters</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "button_label": "Shop gifts",
+            "button_style": "link"
+          }
+        },
+        {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "Estates barrel picks",
+            "heading": "<p>Single barrels, picked by us</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "button_label": "Shop picks",
+            "button_style": "link"
           }
         }
       ]

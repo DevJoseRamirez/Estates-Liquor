@@ -25,6 +25,44 @@
   gap: var(--panel-gap);
 }
 
+/* Featured: first panel spans every row; the rest stack in the other column
+   and share the section height equally. */
+.cwc_promo-hero__grid--featured {
+  grid-template-rows: repeat(var(--side-count), minmax(0, 1fr));
+  height: var(--panel-height);
+}
+
+.cwc_promo-hero__grid--featured .cwc_promo-hero__panel {
+  height: auto;
+  min-height: 0;
+}
+
+.cwc_promo-hero__grid--featured .cwc_promo-hero__panel--featured {
+  grid-row: 1 / span var(--side-count);
+}
+
+.cwc_promo-hero__grid--featured-left .cwc_promo-hero__panel--featured { grid-column: 1; }
+.cwc_promo-hero__grid--featured-left .cwc_promo-hero__panel--side { grid-column: 2; }
+.cwc_promo-hero__grid--featured-right .cwc_promo-hero__panel--featured { grid-column: 2; }
+.cwc_promo-hero__grid--featured-right .cwc_promo-hero__panel--side { grid-column: 1; }
+
+/* Side cards get tighter copy padding */
+.cwc_promo-hero__panel--side .cwc_promo-hero__content {
+  padding: 1.75rem 2rem;
+}
+
+.cwc_promo-hero__panel--side .cwc_promo-hero__eyebrow {
+  margin-bottom: 10px;
+}
+
+.cwc_promo-hero__panel--side .cwc_promo-hero__heading {
+  margin-bottom: 14px;
+}
+
+.cwc_promo-hero__panel--side .cwc_promo-hero__text {
+  margin-bottom: 18px;
+}
+
 /* === Panel === */
 .cwc_promo-hero__panel {
   position: relative;
@@ -82,15 +120,16 @@
 .cwc_promo-hero__placeholder {
   width: 100%;
   height: 100%;
-  background: #F4F0E8;
-  border: 1px dashed #D9D9D3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #5C5C57;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  background: #2B3A31;
+  overflow: hidden;
+}
+
+.cwc_promo-hero__placeholder-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: rgba(255, 255, 255, 0.35);
+  background: #2B3A31;
 }
 
 /* === Content === */
@@ -167,6 +206,7 @@
 .cwc_promo-hero__heading--xlarge { --panel-heading-size: 80px; }
 .cwc_promo-hero__heading--large { --panel-heading-size: 64px; }
 .cwc_promo-hero__heading--medium { --panel-heading-size: 48px; }
+.cwc_promo-hero__heading--small { --panel-heading-size: 32px; }
 
 /* Body — Inter 17px / 1.7 */
 .cwc_promo-hero__text {
@@ -213,6 +253,24 @@
 a.cwc_promo-hero__button:hover,
 .cwc_promo-hero__panel:has(.cwc_promo-hero__panel-link:hover) .cwc_promo-hero__button {
   background-color: var(--btn-hover-bg);
+}
+
+/* Text-link variant — small caps label with accent underline and arrow */
+.cwc_promo-hero__button--link {
+  min-height: 0;
+  padding: 0 0 6px;
+  font-size: 12px;
+  background-color: transparent;
+  color: var(--panel-text);
+  border-bottom: 1px solid var(--btn-bg);
+  gap: 0.4em;
+}
+
+a.cwc_promo-hero__button--link:hover,
+.cwc_promo-hero__panel:has(.cwc_promo-hero__panel-link:hover) .cwc_promo-hero__button--link {
+  background-color: transparent;
+  color: var(--btn-bg);
+  border-bottom-color: var(--btn-hover-bg);
 }
 
 a.cwc_promo-hero__button:focus-visible {
@@ -269,9 +327,14 @@ a.cwc_promo-hero__button:focus-visible {
   .cwc_promo-hero__heading--xlarge { --panel-heading-size: 64px; }
   .cwc_promo-hero__heading--large { --panel-heading-size: 52px; }
   .cwc_promo-hero__heading--medium { --panel-heading-size: 40px; }
+  .cwc_promo-hero__heading--small { --panel-heading-size: 28px; }
 
   .cwc_promo-hero__text {
     margin-bottom: 28px;
+  }
+
+  .cwc_promo-hero__panel--side .cwc_promo-hero__content {
+    padding: 1.5rem 1.75rem;
   }
 
   .cwc_promo-hero__badge {
@@ -296,6 +359,21 @@ a.cwc_promo-hero__button:focus-visible {
     height: auto;
     min-height: var(--panel-height-mobile);
   }
+
+  .cwc_promo-hero__grid--featured {
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .cwc_promo-hero__grid--featured .cwc_promo-hero__panel {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: var(--panel-height-mobile);
+  }
+
+  .cwc_promo-hero__grid--featured .cwc_promo-hero__panel--side {
+    min-height: calc(var(--panel-height-mobile) * 0.65);
+  }
 }
 
 /* ==============================
@@ -308,7 +386,7 @@ a.cwc_promo-hero__button:focus-visible {
   }
 
   .cwc_promo-hero__container {
-    padding: 0 16px;
+    padding: 0;
   }
 
   .cwc_promo-hero__content {
@@ -320,16 +398,25 @@ a.cwc_promo-hero__button:focus-visible {
   .cwc_promo-hero__heading--xlarge { --panel-heading-size: 48px; }
   .cwc_promo-hero__heading--large { --panel-heading-size: 40px; }
   .cwc_promo-hero__heading--medium { --panel-heading-size: 32px; }
+  .cwc_promo-hero__heading--small { --panel-heading-size: 26px; }
 
   .cwc_promo-hero__text {
     margin-bottom: 28px;
   }
 
+  .cwc_promo-hero__panel--side .cwc_promo-hero__content {
+    padding: 1.5rem;
+  }
+
   .cwc_promo-hero__text p { font-size: 16px; }
 
-  .cwc_promo-hero__button {
+  .cwc_promo-hero__button:not(.cwc_promo-hero__button--link) {
     display: flex;
     width: 100%;
+  }
+
+  .cwc_promo-hero__content:has(.cwc_promo-hero__button--link) {
+    align-items: flex-start;
   }
 
   .cwc_promo-hero__content {

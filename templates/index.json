@@ -11,6 +11,7 @@
   "sections": {
     "cwc_brand_marquee": {
       "type": "CWC_brand_marquee",
+      "disabled": true,
       "blocks": {
         "cwc_brand_marquee_b1": {
           "type": "brand",
@@ -222,6 +223,7 @@
     },
     "cwc_hero": {
       "type": "CWC_hero",
+      "disabled": true,
       "settings": {
         "eyebrow": "Allocated Bourbon · Rare Releases",
         "heading": "<p>Rare spirits.<br/><em>Delivered</em><br/>to your door.</p>",
@@ -1041,58 +1043,51 @@
         "padding_bottom": 80
       }
     },
-    "cwc_reviews": {
-      "type": "CWC_reviews",
+    "cwc_store_reviews": {
+      "type": "CWC_store_reviews",
       "blocks": {
-        "cwc_reviews_b1": {
+        "cwc_store_reviews_b1": {
           "type": "review",
           "settings": {
-            "text": "<p>\"Found a Pappy 15 here when nowhere else had it. Shipping was fast, bottle arrived perfectly packed. This is my go-to for allocated bourbon.\"</p>",
-            "name": "Michael T.",
-            "location": "Dallas, TX",
-            "avatar_alt": ""
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R.",
+            "meta": "Verified buyer"
           }
         },
-        "cwc_reviews_b2": {
+        "cwc_store_reviews_b2": {
           "type": "review",
           "settings": {
-            "text": "<p>\"The barrel picks are exceptional. I have ordered three of them and each one has been a standout. Worth every penny, and the shipping protection gave me peace of mind.\"</p>",
-            "name": "Robert K.",
-            "location": "Chicago, IL",
-            "avatar_alt": ""
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K.",
+            "meta": "Verified buyer"
           }
         },
-        "cwc_reviews_b3": {
+        "cwc_store_reviews_b3": {
           "type": "review",
           "settings": {
-            "text": "<p>\"Great selection of Japanese whisky that I cannot find locally. Ordered twice, both times arrived on time and in perfect condition. Highly recommend.\"</p>",
-            "name": "James W.",
-            "location": "New York, NY",
-            "avatar_alt": ""
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T.",
+            "meta": "Verified buyer"
           }
         }
       },
       "block_order": [
-        "cwc_reviews_b1",
-        "cwc_reviews_b2",
-        "cwc_reviews_b3"
+        "cwc_store_reviews_b1",
+        "cwc_store_reviews_b2",
+        "cwc_store_reviews_b3"
       ],
       "settings": {
-        "eyebrow": "Verified Reviews",
-        "heading": "<p>Trusted by Spirits Enthusiasts</p>",
-        "show_rating": true,
-        "rating_score": "4.9",
-        "rating_meta": "Verified store rating",
-        "bg_color": "#f4f0e8",
+        "eyebrow": "4.9 Average · 18 Store Reviews",
+        "heading": "<p>What Estates Liquor Customers Say</p>",
+        "show_rule": true,
+        "bg_color": "#ffffff",
         "text_color": "#13241C",
         "bold_color": "#8a6a2e",
         "eyebrow_color": "#8a6a2e",
         "star_color": "#8a6a2e",
         "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
-        "card_text_color": "#3a3a36",
         "card_meta_color": "#5c5c57",
-        "avatar_bg_color": "#13241C",
         "padding_top": 70,
         "padding_bottom": 70
       }
@@ -1196,6 +1191,7 @@
     },
     "cwc_home_hero": {
       "type": "CWC_home_hero",
+      "disabled": true,
       "blocks": {
         "slide_1": {
           "type": "slide",
@@ -1298,25 +1294,49 @@
       "blocks": {
         "cwc_promo_hero_p1": {
           "type": "panel",
-          "settings": {}
+          "settings": {
+            "eyebrow": "Just landed · Allocated",
+            "heading": "<p>Rare bottles, <em>listed at fair retail.</em></p>",
+            "heading_size": "large",
+            "text": "<p>Weller, Blanton’s and Buffalo Trace Antique Collection, the day they land.</p>",
+            "content_position": "middle-left",
+            "button_label": "Shop the allocation",
+            "button_style": "solid"
+          }
         },
         "cwc_promo_hero_p2": {
           "type": "panel",
           "settings": {
-            "eyebrow": "",
-            "heading": "<p><strong>10% off</strong> select spirits</p>",
-            "heading_size": "medium",
-            "text": "<p>Plus a <strong>free</strong> gift with purchase.</p>",
-            "content_position": "top-left",
-            "button_label": "Shop Now"
+            "eyebrow": "Holiday gifting",
+            "heading": "<p>Gift sets &amp; decanters</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "button_label": "Shop gifts",
+            "button_style": "link"
+          }
+        },
+        "cwc_promo_hero_p3": {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "Estates barrel picks",
+            "heading": "<p>Single barrels, picked by us</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "button_label": "Shop picks",
+            "button_style": "link"
           }
         }
       },
       "block_order": [
         "cwc_promo_hero_p1",
-        "cwc_promo_hero_p2"
+        "cwc_promo_hero_p2",
+        "cwc_promo_hero_p3"
       ],
-      "settings": {}
+      "settings": {
+        "layout": "featured_left"
+      }
     }
   },
   "order": [
@@ -1334,7 +1354,7 @@
     "cwc_rare_allocated",
     "cwc_barrel_picks",
     "cwc_shipping_steps",
-    "cwc_reviews",
+    "cwc_store_reviews",
     "cwc_faq"
   ]
 }
