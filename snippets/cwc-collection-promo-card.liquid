@@ -1,0 +1,74 @@
+{% comment %}
+  CWC Collection Promo Card
+  Rendered from the promo_card block of CWC Collection Grid, inside the
+  product grid as its own <li>. Params:
+    block — the promo_card block (for its settings)
+
+  Only rendered on page 1 of the grid, so "Load more" never repeats it.
+{% endcomment %}
+
+{%- liquid
+  assign promo_link = block.settings.link
+  assign promo_image = block.settings.image
+  assign promo_overlay = block.settings.overlay_opacity | default: 30 | divided_by: 100.0
+  assign promo_span = block.settings.width | default: '1'
+-%}
+
+<li
+  class="cwc_collection-grid__item cwc_collection-grid__promo-item cwc_collection-grid__promo-item--span-{{ promo_span }}"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="cwc_collection-grid__promo{% if promo_image != blank %} cwc_collection-grid__promo--has-image{% endif %} cwc_collection-grid__promo--{{ block.settings.content_layout | default: 'split' }}"
+    style="--promo-bg: {{ block.settings.bg_color | default: '#13241C' }}; --promo-text: {{ block.settings.text_color | default: '#FFFFFF' }}; --promo-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --promo-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --promo-btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --promo-btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --promo-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --promo-overlay-opacity: {{ promo_overlay }};"
+  >
+    {%- if promo_link != blank -%}
+      <a class="cwc_collection-grid__promo-link" href="{{ promo_link }}" aria-label="{{ block.settings.button_label | default: block.settings.eyebrow | default: 'Shop now' | escape }}"></a>
+    {%- endif -%}
+
+    {%- if promo_image != blank -%}
+      <div class="cwc_collection-grid__promo-media" aria-hidden="true">
+        <img
+          class="cwc_collection-grid__promo-image"
+          src="{{ promo_image | image_url: width: 900 }}"
+          srcset="
+            {{ promo_image | image_url: width: 400 }} 400w,
+            {{ promo_image | image_url: width: 600 }} 600w,
+            {{ promo_image | image_url: width: 900 }} 900w
+          "
+          sizes="(max-width: 768px) 50vw, 25vw"
+          alt=""
+          width="{{ promo_image.width }}"
+          height="{{ promo_image.height }}"
+          loading="lazy"
+          style="object-position: {{ promo_image.presentation.focal_point | default: 'center' }};"
+        >
+        <span class="cwc_collection-grid__promo-overlay"></span>
+      </div>
+    {%- endif -%}
+
+    <div class="cwc_collection-grid__promo-content">
+      <div class="cwc_collection-grid__promo-copy">
+        {%- if block.settings.eyebrow != blank -%}
+          <p class="cwc_collection-grid__promo-eyebrow">{{ block.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if block.settings.heading != blank -%}
+          <div class="cwc_collection-grid__promo-heading">{{ block.settings.heading }}</div>
+        {%- endif -%}
+
+        {%- if block.settings.text != blank -%}
+          <div class="cwc_collection-grid__promo-text">{{ block.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if block.settings.button_label != blank -%}
+        {%- if promo_link != blank -%}
+          <a class="cwc_collection-grid__promo-button" href="{{ promo_link }}" tabindex="-1">{{ block.settings.button_label | escape }}</a>
+        {%- else -%}
+          <span class="cwc_collection-grid__promo-button">{{ block.settings.button_label | escape }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</li>

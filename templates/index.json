@@ -1311,36 +1311,21 @@
         "cwc_product_tabs_t3": {
           "type": "tab",
           "settings": {
-            "label": "Scotch"
-          }
-        },
-        "cwc_product_tabs_t4": {
-          "type": "tab",
-          "settings": {
-            "label": "Tequila",
-            "collection": "tequila"
-          }
-        },
-        "cwc_product_tabs_t5": {
-          "type": "tab",
-          "settings": {
-            "label": "Under $100",
-            "collection": "under-100"
+            "label": "Scotch",
+            "collection": "scotch-100-up"
           }
         }
       },
       "block_order": [
         "cwc_product_tabs_t1",
         "cwc_product_tabs_t2",
-        "cwc_product_tabs_t3",
-        "cwc_product_tabs_t4",
-        "cwc_product_tabs_t5"
+        "cwc_product_tabs_t3"
       ],
       "settings": {
         "heading": "<p>From the <em>Cellar</em></p>",
         "subtext": "<p>In stock and ready to ship from Coronado.</p>",
         "show_rule": true,
-        "products_to_show": 5,
+        "products_to_show": 10,
         "columns": 5,
         "products_mobile": 4,
         "card_align": "center",
@@ -1361,7 +1346,8 @@
         "cwc_category_tiles_t2": {
           "type": "tile",
           "settings": {
-            "title": "Shop Scotch"
+            "title": "Shop Scotch",
+            "collection": "scotch-100-up"
           }
         },
         "cwc_category_tiles_t3": {
@@ -1374,7 +1360,8 @@
         "cwc_category_tiles_t4": {
           "type": "tile",
           "settings": {
-            "title": "Shop Gifts & Sets"
+            "title": "Shop Gifts & Sets",
+            "collection": "bundles-100-up"
           }
         }
       },
@@ -1391,6 +1378,53 @@
         "card_gap": 16,
         "padding_top": 40,
         "padding_bottom": 0
+      }
+    },
+    "cwc_why_estates": {
+      "type": "CWC_why_estates",
+      "blocks": {
+        "cwc_why_estates_r1": {
+          "type": "reason",
+          "settings": {
+            "icon": "shield",
+            "title": "Authentic bottles",
+            "text": "<p>Every bottle sold by a licensed California retailer.</p>"
+          }
+        },
+        "cwc_why_estates_r2": {
+          "type": "reason",
+          "settings": {
+            "icon": "package",
+            "title": "Packed for glass",
+            "text": "<p>Molded inserts, and replaced if broken or lost with shipping protection.</p>"
+          }
+        },
+        "cwc_why_estates_r3": {
+          "type": "reason",
+          "settings": {
+            "icon": "clock",
+            "title": "Listed the day it lands",
+            "text": "<p>Allocated releases at fair retail. No lottery, no waitlist.</p>"
+          }
+        },
+        "cwc_why_estates_r4": {
+          "type": "reason",
+          "settings": {
+            "icon": "phone",
+            "title": "A real store in Coronado",
+            "text": "<p>Call <a href=\"tel:6197913613\">619-791-3613</a> and talk to someone who knows the shelf.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_why_estates_r1",
+        "cwc_why_estates_r2",
+        "cwc_why_estates_r3",
+        "cwc_why_estates_r4"
+      ],
+      "settings": {
+        "eyebrow": "Why Estates",
+        "heading": "<p>Bought right. <em>Shipped right.</em></p>"
       }
     },
     "cwc_promo_hero": {
@@ -1461,6 +1495,7 @@
     "cwc_barrel_picks",
     "cwc_shipping_steps",
     "cwc_store_reviews",
-    "cwc_faq"
+    "cwc_faq",
+    "cwc_why_estates"
   ]
 }

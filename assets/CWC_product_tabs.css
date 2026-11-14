@@ -218,6 +218,11 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 40px 20px;
   }
+
+  /* Two full rows of three on tablet */
+  .cwc_product-tabs__card:nth-child(n + 7) {
+    display: none;
+  }
 }
 
 /* ==============================

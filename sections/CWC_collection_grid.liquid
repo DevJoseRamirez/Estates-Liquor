@@ -57,6 +57,9 @@
   endif
 
   assign per_page = section.settings.products_per_page | default: 12
+
+  # Promo cards (promo_card blocks) — only on the first page so Load more never repeats them
+  assign promo_blocks = section.blocks | where: 'type', 'promo_card'
   assign button_labels = section.settings.button_filters | downcase | split: ','
   assign form_id = 'cwc_collection-grid-form-' | append: section.id
   assign has_filters = false
@@ -162,7 +165,15 @@
   {% comment %} paginate needs the real object path, so each source gets its own block {% endcomment %}
   {% if is_search %}
     {% paginate search.results by per_page %}
-      {%- assign item_count = 0 -%}
+      {%- liquid
+        assign item_count = 0
+        assign tile_index = 0
+        assign placed_promos = ''
+        assign show_promos = false
+        if paginate.current_page == 1 and promo_blocks.size > 0
+          assign show_promos = true
+        endif
+      -%}
       {%- capture grid_items -%}
         {%- for product in search.results -%}
           {%- liquid
@@ -177,10 +188,36 @@
             endif
             assign item_count = item_count | plus: 1
           -%}
+          {%- if show_promos -%}
+            {%- for promo in promo_blocks -%}
+              {%- liquid
+                assign next_slot = tile_index | plus: 1
+                assign promo_pos = promo.settings.position | plus: 0
+                if is_search and promo.settings.show_on_search == false
+                  continue
+                endif
+              -%}
+              {%- if promo_pos == next_slot -%}
+                {% render 'cwc-collection-promo-card', block: promo %}
+                {%- assign tile_index = tile_index | plus: 1 -%}
+                {%- assign placed_promos = placed_promos | append: promo.id | append: ',' -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- assign tile_index = tile_index | plus: 1 -%}
           <li class="cwc_collection-grid__item">
             {% render 'cwc-product-card', product: product, section_settings: section.settings %}
           </li>
         {%- endfor -%}
+        {%- comment -%} Promos positioned past the last product land at the end of the grid {%- endcomment -%}
+        {%- if show_promos and item_count > 0 -%}
+          {%- for promo in promo_blocks -%}
+            {%- if is_search and promo.settings.show_on_search == false -%}{%- continue -%}{%- endif -%}
+            {%- unless placed_promos contains promo.id -%}
+              {% render 'cwc-collection-promo-card', block: promo %}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
       {%- endcapture -%}
       {%- assign page_size = search.results.size -%}
       {% render 'CWC_collection_grid_body',
@@ -206,7 +243,15 @@
     {% endpaginate %}
   {% else %}
     {% paginate collection.products by per_page %}
-      {%- assign item_count = 0 -%}
+      {%- liquid
+        assign item_count = 0
+        assign tile_index = 0
+        assign placed_promos = ''
+        assign show_promos = false
+        if paginate.current_page == 1 and promo_blocks.size > 0
+          assign show_promos = true
+        endif
+      -%}
       {%- capture grid_items -%}
         {%- for product in collection.products -%}
           {%- liquid
@@ -221,10 +266,36 @@
             endif
             assign item_count = item_count | plus: 1
           -%}
+          {%- if show_promos -%}
+            {%- for promo in promo_blocks -%}
+              {%- liquid
+                assign next_slot = tile_index | plus: 1
+                assign promo_pos = promo.settings.position | plus: 0
+                if is_search and promo.settings.show_on_search == false
+                  continue
+                endif
+              -%}
+              {%- if promo_pos == next_slot -%}
+                {% render 'cwc-collection-promo-card', block: promo %}
+                {%- assign tile_index = tile_index | plus: 1 -%}
+                {%- assign placed_promos = placed_promos | append: promo.id | append: ',' -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- assign tile_index = tile_index | plus: 1 -%}
           <li class="cwc_collection-grid__item">
             {% render 'cwc-product-card', product: product, section_settings: section.settings %}
           </li>
         {%- endfor -%}
+        {%- comment -%} Promos positioned past the last product land at the end of the grid {%- endcomment -%}
+        {%- if show_promos and item_count > 0 -%}
+          {%- for promo in promo_blocks -%}
+            {%- if is_search and promo.settings.show_on_search == false -%}{%- continue -%}{%- endif -%}
+            {%- unless placed_promos contains promo.id -%}
+              {% render 'cwc-collection-promo-card', block: promo %}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
       {%- endcapture -%}
       {%- assign page_size = collection.products.size -%}
       {% render 'CWC_collection_grid_body',
@@ -524,6 +595,163 @@
       "default": 72
     }
   ],
+  "blocks": [
+    {
+      "type": "promo_card",
+      "name": "Promo Card",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "A promo tile inside the product grid. Shows on the first page only."
+        },
+        {
+          "type": "range",
+          "id": "position",
+          "label": "Position In Grid",
+          "min": 1,
+          "max": 24,
+          "step": 1,
+          "default": 5,
+          "info": "1 = first tile. With 4 columns, 5 starts the second row. Past the last product it goes at the end."
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Card Width",
+          "options": [
+            { "value": "1", "label": "1 column" },
+            { "value": "2", "label": "2 columns" }
+          ],
+          "default": "1",
+          "info": "On mobile, 2 columns spans the full width."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_search",
+          "label": "Also Show On Search Results",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Holiday Gifting"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>Bottles <em>worth wrapping.</em></p>",
+          "info": "Italic or bold words use the Heading Accent Color."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "content_layout",
+          "label": "Content Layout",
+          "options": [
+            { "value": "split", "label": "Copy top, button bottom" },
+            { "value": "top", "label": "All at top" },
+            { "value": "center", "label": "Centered" },
+            { "value": "bottom", "label": "All at bottom" }
+          ],
+          "default": "split"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop Gifts"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "The whole card is clickable when a link is set."
+        },
+        {
+          "type": "header",
+          "content": "Background Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Optional. Portrait works best: 800 x 1100px. Leave empty for a solid color card."
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay Opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#13241C"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "eyebrow_color",
+          "label": "Eyebrow Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "bold_color",
+          "label": "Heading Accent Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#13241C"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
   "presets": [
     {
       "name": "Collection Grid",

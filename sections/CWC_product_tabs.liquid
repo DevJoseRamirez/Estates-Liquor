@@ -32,7 +32,7 @@
 {{ 'CWC_product_tabs.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign products_limit = section.settings.products_to_show | default: 5
+  assign products_limit = section.settings.products_to_show | default: 10
   assign products_mobile = section.settings.products_mobile | default: 4
   assign tab_count = 0
   for block in section.blocks
@@ -232,7 +232,8 @@
       "min": 2,
       "max": 12,
       "step": 1,
-      "default": 5
+      "default": 10,
+      "info": "Set to twice the column count for two full rows."
     },
     {
       "type": "range",
@@ -397,7 +398,7 @@
       ]
     }
   ],
-  "max_blocks": 6,
+  "max_blocks": 3,
   "presets": [
     {
       "name": "CWC Product Tabs",
@@ -405,9 +406,7 @@
       "blocks": [
         { "type": "tab", "settings": { "label": "Estates Picks" } },
         { "type": "tab", "settings": { "label": "Bourbon" } },
-        { "type": "tab", "settings": { "label": "Scotch" } },
-        { "type": "tab", "settings": { "label": "Tequila" } },
-        { "type": "tab", "settings": { "label": "Under $100" } }
+        { "type": "tab", "settings": { "label": "Scotch" } }
       ]
     }
   ]

@@ -43,11 +43,9 @@
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          /* Only show once the shopper has scrolled PAST the main button
-             (it's above the viewport) — not while it's still below the fold
-             on first load. */
-          var scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-          bar.classList.toggle('cwc_product-details__sticky--visible', scrolledPast);
+          /* Show whenever the main Add to Cart is off-screen — above OR
+             below the viewport. Hide only while it is actually in view. */
+          bar.classList.toggle('cwc_product-details__sticky--visible', !entry.isIntersecting);
         });
       },
       { threshold: 0 }
