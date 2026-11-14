@@ -1,0 +1,415 @@
+{%- comment -%}
+  CWC Product Tabs — centered heading with side rules, underline tabs (one per
+  collection) and a single row of the shared product card per tab, with an
+  outline "View all" button under each panel. Adapted from the Liquor On
+  Broadway product tabs; cards are snippets/cwc-product-card.liquid so they
+  match every other grid in the store. Add to cart: CWC_product_card.js.
+{%- endcomment -%}
+
+{% style %}
+  #cwc_product-tabs-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#5C5C57' }};
+    --rule-color: {{ section.settings.rule_color | default: '#13241C' }};
+    --tab-color: {{ section.settings.tab_color | default: '#5C5C57' }};
+    --tab-active-color: {{ section.settings.tab_active_color | default: '#13241C' }};
+    --tab-underline-color: {{ section.settings.tab_underline_color | default: '#E9A23B' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
+    --button-text: {{ section.settings.view_all_color | default: '#13241C' }};
+    --button-hover-text: {{ section.settings.view_all_hover_text_color | default: '#FFFFFF' }};
+    --columns: {{ section.settings.columns | default: 5 }};
+    --padding-top: {{ section.settings.padding_top | default: 72 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 72 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 72 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 72 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_tabs.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign products_limit = section.settings.products_to_show | default: 5
+  assign products_mobile = section.settings.products_mobile | default: 4
+  assign tab_count = 0
+  for block in section.blocks
+    if block.type == 'tab'
+      assign tab_count = tab_count | plus: 1
+    endif
+  endfor
+-%}
+
+<section
+  id="cwc_product-tabs-{{ section.id }}"
+  class="cwc_product-tabs cwc_product-tabs--align-{{ section.settings.card_align | default: 'center' }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="cwc_product-tabs__container">
+
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.heading != blank or section.settings.subtext != blank %}
+      <div class="cwc_product-tabs__content">
+        {% if section.settings.heading != blank %}
+          <div class="cwc_product-tabs__content-title">
+            {% if section.settings.show_rule %}<span class="cwc_product-tabs__content-rule" aria-hidden="true"></span>{% endif %}
+            <div class="cwc_product-tabs__content-heading cwc-rte">
+              {{ section.settings.heading }}
+            </div>
+            {% if section.settings.show_rule %}<span class="cwc_product-tabs__content-rule" aria-hidden="true"></span>{% endif %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="cwc_product-tabs__content-subtext cwc-rte">
+            {{ section.settings.subtext }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if tab_count > 0 %}
+
+      {% comment %} Tabs — only when there is more than one {% endcomment %}
+      {% if tab_count > 1 %}
+        <div class="cwc_product-tabs__tabs" role="tablist" aria-label="{{ section.settings.heading | strip_html | escape }}">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'tab' %}
+                {%- liquid
+                  assign tab_label = block.settings.label
+                  if tab_label == blank and block.settings.collection != blank
+                    assign tab_label = block.settings.collection.title
+                  endif
+                -%}
+                <button
+                  type="button"
+                  role="tab"
+                  id="cwc_product-tabs-tab-{{ block.id }}"
+                  class="cwc_product-tabs__tab{% if forloop.first %} cwc_product-tabs__tab--active{% endif %}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                  aria-controls="cwc_product-tabs-panel-{{ block.id }}"
+                  tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+                  data-index="{{ forloop.index0 }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{- tab_label | default: 'Tab' | escape -}}
+                </button>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% comment %} Panels — one product row per tab {% endcomment %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'tab' %}
+            {%- liquid
+              assign tab_collection = block.settings.collection
+              assign tab_label = block.settings.label
+              if tab_label == blank and tab_collection != blank
+                assign tab_label = tab_collection.title
+              endif
+            -%}
+            <div
+              class="cwc_product-tabs__panel{% if forloop.first %} cwc_product-tabs__panel--active{% endif %}"
+              id="cwc_product-tabs-panel-{{ block.id }}"
+              {% if tab_count > 1 %}role="tabpanel" aria-labelledby="cwc_product-tabs-tab-{{ block.id }}"{% else %}{{ block.shopify_attributes }}{% endif %}
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              {% if tab_collection != blank and tab_collection.products_count > 0 %}
+                <div class="cwc_product-tabs__grid" data-mobile-count="{{ products_mobile }}">
+                  {%- assign shown = 0 -%}
+                  {% for product in tab_collection.products limit: 50 %}
+                    {%- liquid
+                      if product.tags contains 'no-feed' or product.tags contains 'no_feed'
+                        continue
+                      endif
+                      if shown >= products_limit
+                        break
+                      endif
+                      assign shown = shown | plus: 1
+                    -%}
+                    <div class="cwc_product-tabs__card{% if shown > products_mobile %} cwc_product-tabs__card--desktop-only{% endif %}">
+                      {% render 'cwc-product-card', product: product, section_settings: section.settings %}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="cwc_product-tabs__grid">
+                  {% for i in (1..products_limit) %}
+                    <div class="cwc_product-tabs__card{% if i > products_mobile %} cwc_product-tabs__card--desktop-only{% endif %}">
+                      <div class="cwc_collection-body__card">
+                        <div class="cwc_collection-body__card-media">
+                          <span class="cwc_collection-body__card-placeholder">
+                            <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+                              <rect x="16" y="0" width="20" height="6" rx="2" />
+                              <rect x="18" y="6" width="16" height="11" />
+                              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+                            </svg>
+                          </span>
+                        </div>
+                        <div class="cwc_collection-body__card-body">
+                          <div class="cwc_collection-body__card-brand">Brand</div>
+                          <span class="cwc_collection-body__card-title">Select a collection for this tab</span>
+                          <div class="cwc_collection-body__card-footer">
+                            <div class="cwc_collection-body__card-price">
+                              <span class="cwc_collection-body__card-price-now">$00.00</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if tab_collection != blank and section.settings.show_view_all %}
+                <div class="cwc_product-tabs__button">
+                  <a href="{{ tab_collection.url }}" class="cwc_product-tabs__button-link">
+                    {%- if block.settings.view_all_label != blank -%}
+                      {{ block.settings.view_all_label | escape }}
+                    {%- else -%}
+                      View all {{ tab_label | escape }}
+                    {%- endif -%}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+
+    {% else %}
+      <div class="cwc_product-tabs__empty">
+        <p>Add tab blocks to display products.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
+<script src="{{ 'CWC_product_tabs.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CWC Product Tabs",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>From the <em>Cellar</em></p>",
+      "info": "Italic or bold words use the Heading Accent Color."
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>In stock and ready to ship from Coronado.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Lines Beside Heading",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products Per Tab (Desktop)",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (Desktop)",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "products_mobile",
+      "label": "Products Per Tab (Mobile)",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "default": 4,
+      "info": "Mobile shows two per row."
+    },
+    {
+      "type": "select",
+      "id": "card_align",
+      "label": "Card Text Alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_meta",
+      "label": "Show Product Detail Line",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Button",
+      "default": true,
+      "info": "Products tagged no-feed or no_feed are always hidden."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Accent Color",
+      "default": "#8A6A2E"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#5C5C57"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Heading Line Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "tab_color",
+      "label": "Tab Text Color",
+      "default": "#5C5C57"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_color",
+      "label": "Active Tab Text Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "tab_underline_color",
+      "label": "Active Tab Underline Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Tab Divider Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "color",
+      "id": "view_all_color",
+      "label": "View All Button Color",
+      "default": "#13241C",
+      "info": "Outline and text; fills on hover."
+    },
+    {
+      "type": "color",
+      "id": "view_all_hover_text_color",
+      "label": "View All Button Hover Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab Label",
+          "info": "Defaults to the collection title."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "view_all_label",
+          "label": "View All Label Override",
+          "info": "Defaults to \"View all\" + tab label."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "CWC Product Tabs",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "tab", "settings": { "label": "Estates Picks" } },
+        { "type": "tab", "settings": { "label": "Bourbon" } },
+        { "type": "tab", "settings": { "label": "Scotch" } },
+        { "type": "tab", "settings": { "label": "Tequila" } },
+        { "type": "tab", "settings": { "label": "Under $100" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

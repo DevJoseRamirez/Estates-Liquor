@@ -306,7 +306,8 @@
                 comment
                   Delivery = processing (counted from today if ordered on a business day
                   before the cutoff, otherwise from the next business day) + UPS transit,
-                  in business days. CWC_product_buy_box.js fills in the dates in store
+                  in business days. Shows one fixed date (slowest or fastest case, per
+                  "Date Shown"). CWC_product_buy_box.js fills in the date in store
                   (Pacific) time and unhides the line; without JS it stays hidden.
                 endcomment
                 assign processing_min = block.settings.processing_min | default: 3
@@ -324,6 +325,7 @@
                 data-transit-max="{{ transit_max }}"
                 data-cutoff-hour="{{ block.settings.cutoff_hour }}"
                 data-closed-dates="{{ closed_dates | escape }}"
+                data-date-mode="{{ block.settings.date_mode | default: 'latest' }}"
                 style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#13241C' }}; --estimate-accent: {{ block.settings.accent_color | default: '#8A6A2E' }};"
                 hidden
                 {{ block.shopify_attributes }}
@@ -1288,7 +1290,18 @@
           "type": "text",
           "id": "label",
           "label": "Label",
-          "default": "Order today, estimated delivery"
+          "default": "Get it by",
+          "info": "Shown before the date, e.g. \"Get it by Fri, Nov 21\". Keep it short so it fits on one line."
+        },
+        {
+          "type": "select",
+          "id": "date_mode",
+          "label": "Date Shown",
+          "options": [
+            { "value": "latest", "label": "Slowest case (safest promise)" },
+            { "value": "earliest", "label": "Fastest case" }
+          ],
+          "default": "latest"
         },
         {
           "type": "paragraph",

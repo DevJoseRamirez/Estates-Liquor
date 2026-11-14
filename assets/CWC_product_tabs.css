@@ -1,0 +1,300 @@
+/* ==============================
+   CWC Product Tabs
+   Styled to _theme-styles/estates-brand-tokens.md: white ground, centered
+   Fraunces H2 with hairline rules, Inter underline tabs (active = deep green
+   with 2px CTA-yellow bar), shared product card, Outline "View all" button.
+   Square corners, lines not shadows.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_product-tabs {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_product-tabs__container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* === Section Header === */
+.cwc_product-tabs__content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.cwc_product-tabs__content-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cwc_product-tabs__content-rule {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 1px;
+  background-color: var(--rule-color);
+}
+
+/* H2 — Fraunces 40 / 26px, 500, 1.1 */
+.cwc_product-tabs__content-heading > * {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+}
+
+.cwc_product-tabs__content-heading > * em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--highlight-color);
+}
+
+.cwc_product-tabs__content-heading > * strong {
+  font-weight: 500;
+  color: var(--highlight-color);
+}
+
+.cwc_product-tabs__content-subtext {
+  margin-top: 12px;
+}
+
+.cwc_product-tabs__content-subtext > * {
+  margin: 0;
+  font-family: var(--cwc-font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--subtext-color);
+}
+
+/* === Tabs — Inter 13px 600 0.14em, active underline === */
+.cwc_product-tabs__tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px 32px;
+  margin: 0 0 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cwc_product-tabs__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 4px;
+  font-family: var(--cwc-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tab-color);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.cwc_product-tabs__tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.cwc_product-tabs__tab:hover {
+  color: var(--tab-active-color);
+}
+
+.cwc_product-tabs__tab--active {
+  color: var(--tab-active-color);
+}
+
+.cwc_product-tabs__tab--active::after {
+  background-color: var(--tab-underline-color);
+}
+
+.cwc_product-tabs__tab:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
+}
+
+/* === Panels === */
+.cwc_product-tabs__panel[hidden] {
+  display: none;
+}
+
+/* === Grid === */
+.cwc_product-tabs__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  gap: 56px 24px;
+}
+
+.cwc_product-tabs__card {
+  display: flex;
+  min-width: 0;
+}
+
+.cwc_product-tabs__card > * {
+  width: 100%;
+}
+
+/* Centered card copy (reference look); the shared card is left-aligned */
+.cwc_product-tabs--align-center .cwc_collection-body__card-body {
+  text-align: center;
+}
+
+.cwc_product-tabs--align-center .cwc_collection-body__card-price {
+  justify-content: center;
+}
+
+/* === View All — Outline button === */
+.cwc_product-tabs__button {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.cwc_product-tabs__button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  font-family: var(--cwc-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--button-text);
+  background-color: transparent;
+  border: 1px solid var(--button-text);
+  border-radius: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cwc_product-tabs__button-link:hover {
+  background-color: var(--button-text);
+  color: var(--button-hover-text);
+}
+
+.cwc_product-tabs__button-link:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
+}
+
+/* === Empty State === */
+.cwc_product-tabs__empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--subtext-color);
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 1024px) {
+  .cwc_product-tabs__container {
+    padding: 0 32px;
+  }
+
+  .cwc_product-tabs__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 20px;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_product-tabs {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_product-tabs__container {
+    padding: 0 18px;
+  }
+
+  .cwc_product-tabs__content {
+    margin-bottom: 24px;
+  }
+
+  .cwc_product-tabs__content-title {
+    gap: 14px;
+  }
+
+  .cwc_product-tabs__content-rule {
+    width: 28px;
+  }
+
+  .cwc_product-tabs__content-heading > * {
+    font-size: 26px;
+  }
+
+  /* Tabs swipe edge to edge */
+  .cwc_product-tabs__tabs {
+    justify-content: flex-start;
+    gap: 24px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -18px 28px;
+    padding: 0 18px;
+  }
+
+  .cwc_product-tabs__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cwc_product-tabs__tab {
+    min-height: 44px;
+    font-size: 12px;
+  }
+
+  .cwc_product-tabs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 12px;
+  }
+
+  .cwc_product-tabs__card--desktop-only {
+    display: none;
+  }
+
+  .cwc_product-tabs__button {
+    margin-top: 28px;
+  }
+
+  .cwc_product-tabs__button-link {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
+/* ==============================
+   Reduced Motion
+   ============================== */
+@media (prefers-reduced-motion: reduce) {
+  .cwc_product-tabs__tab,
+  .cwc_product-tabs__tab::after,
+  .cwc_product-tabs__button-link {
+    transition: none;
+  }
+}

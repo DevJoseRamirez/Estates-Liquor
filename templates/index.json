@@ -285,6 +285,7 @@
     },
     "cwc_trust_bar": {
       "type": "CWC_trust_bar",
+      "disabled": true,
       "blocks": {
         "cwc_trust_bar_b1": {
           "type": "item",
@@ -344,6 +345,7 @@
     },
     "cwc_shop_category": {
       "type": "CWC_shop_category",
+      "disabled": true,
       "blocks": {
         "cwc_shop_category_b1": {
           "type": "pill",
@@ -1289,6 +1291,108 @@
         "padding_bottom": 0
       }
     },
+    "cwc_product_tabs": {
+      "type": "CWC_product_tabs",
+      "blocks": {
+        "cwc_product_tabs_t1": {
+          "type": "tab",
+          "settings": {
+            "label": "Estates Picks",
+            "collection": "barrel-picks"
+          }
+        },
+        "cwc_product_tabs_t2": {
+          "type": "tab",
+          "settings": {
+            "label": "Bourbon",
+            "collection": "bourbon"
+          }
+        },
+        "cwc_product_tabs_t3": {
+          "type": "tab",
+          "settings": {
+            "label": "Scotch"
+          }
+        },
+        "cwc_product_tabs_t4": {
+          "type": "tab",
+          "settings": {
+            "label": "Tequila",
+            "collection": "tequila"
+          }
+        },
+        "cwc_product_tabs_t5": {
+          "type": "tab",
+          "settings": {
+            "label": "Under $100",
+            "collection": "under-100"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_product_tabs_t1",
+        "cwc_product_tabs_t2",
+        "cwc_product_tabs_t3",
+        "cwc_product_tabs_t4",
+        "cwc_product_tabs_t5"
+      ],
+      "settings": {
+        "heading": "<p>From the <em>Cellar</em></p>",
+        "subtext": "<p>In stock and ready to ship from Coronado.</p>",
+        "show_rule": true,
+        "products_to_show": 5,
+        "columns": 5,
+        "products_mobile": 4,
+        "card_align": "center",
+        "show_card_meta": false,
+        "show_view_all": true
+      }
+    },
+    "cwc_category_tiles": {
+      "type": "CWC_category_tiles",
+      "blocks": {
+        "cwc_category_tiles_t1": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Bourbon",
+            "collection": "bourbon"
+          }
+        },
+        "cwc_category_tiles_t2": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Scotch"
+          }
+        },
+        "cwc_category_tiles_t3": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Tequila",
+            "collection": "tequila"
+          }
+        },
+        "cwc_category_tiles_t4": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Gifts & Sets"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_category_tiles_t1",
+        "cwc_category_tiles_t2",
+        "cwc_category_tiles_t3",
+        "cwc_category_tiles_t4"
+      ],
+      "settings": {
+        "columns": 4,
+        "card_height": 150,
+        "card_height_mobile": 120,
+        "card_gap": 16,
+        "padding_top": 40,
+        "padding_bottom": 0
+      }
+    },
     "cwc_promo_hero": {
       "type": "CWC_promo_hero",
       "blocks": {
@@ -1345,6 +1449,8 @@
     "cwc_hero",
     "cwc_home_hero",
     "cwc_promo_hero",
+    "cwc_category_tiles",
+    "cwc_product_tabs",
     "cwc_hero_VbRH83",
     "cwc_trust_bar",
     "cwc_shop_category",

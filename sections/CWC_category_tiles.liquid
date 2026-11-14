@@ -1,0 +1,295 @@
+{%- comment -%}
+  CWC Category Tiles — a row of short landscape category cards: title top
+  left, outlined arrow box top right, bottle image sitting on a dark baseline.
+  Each card is one link. Grounds alternate Sage Mist / Stone by default; any
+  card can override its own. Desktop: one row; tablet + mobile: 2 x 2.
+{%- endcomment -%}
+
+{% style %}
+  #cwc_category-tiles-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --card-bg-odd: {{ section.settings.card_bg_odd | default: '#E4EBE6' }};
+    --card-bg-even: {{ section.settings.card_bg_even | default: '#EFE9DD' }};
+    --baseline-color: {{ section.settings.baseline_color | default: '#13241C' }};
+    --arrow-color: {{ section.settings.arrow_color | default: '#13241C' }};
+    --arrow-hover-bg: {{ section.settings.arrow_hover_bg | default: '#E9A23B' }};
+    --columns: {{ section.settings.columns | default: 4 }};
+    --card-gap: {{ section.settings.card_gap | default: 16 }}px;
+    --card-height: {{ section.settings.card_height | default: 150 }}px;
+    --card-height-mobile: {{ section.settings.card_height_mobile | default: 120 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 40 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 40 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 40 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 40 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_category_tiles.css' | asset_url | stylesheet_tag }}
+
+<section id="cwc_category-tiles-{{ section.id }}" class="cwc_category-tiles">
+  <div class="cwc_category-tiles__container">
+
+    {% if section.settings.heading != blank %}
+      <div class="cwc_category-tiles__content">
+        <div class="cwc_category-tiles__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="cwc_category-tiles__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'tile' %}
+              {%- liquid
+                assign tile_collection = block.settings.collection
+                assign tile_url = block.settings.link
+                if tile_url == blank and tile_collection != blank
+                  assign tile_url = tile_collection.url
+                endif
+
+                assign tile_title = block.settings.title
+                if tile_title == blank and tile_collection != blank
+                  assign tile_title = 'Shop ' | append: tile_collection.title
+                endif
+
+                assign tile_image = block.settings.image
+                if tile_image == blank and tile_collection != blank
+                  assign tile_image = tile_collection.featured_image
+                endif
+
+                assign tile_tag = 'div'
+                if tile_url != blank
+                  assign tile_tag = 'a'
+                endif
+              -%}
+              <{{ tile_tag }}
+                {% if tile_url != blank %}href="{{ tile_url }}"{% endif %}
+                class="cwc_category-tiles__card"
+                {% if block.settings.card_bg != blank %}style="--tile-override: {{ block.settings.card_bg }};"{% endif %}
+                {{ block.shopify_attributes }}
+              >
+                {% if tile_title != blank %}
+                  <span class="cwc_category-tiles__card-title">{{ tile_title | escape }}</span>
+                {% endif %}
+
+                <span class="cwc_category-tiles__card-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" focusable="false"><path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" /></svg>
+                </span>
+
+                <span class="cwc_category-tiles__card-media">
+                  {% if tile_image != blank %}
+                    <img
+                      src="{{ tile_image | image_url: width: 500 }}"
+                      srcset="{{ tile_image | image_url: width: 300 }} 300w, {{ tile_image | image_url: width: 500 }} 500w, {{ tile_image | image_url: width: 700 }} 700w"
+                      sizes="(max-width: 991px) 50vw, 25vw"
+                      alt="{{ tile_image.alt | default: tile_title | escape }}"
+                      width="{{ tile_image.width }}"
+                      height="{{ tile_image.height }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <svg class="cwc_category-tiles__card-placeholder" viewBox="0 0 80 62" aria-hidden="true" focusable="false">
+                      <path d="M22 0h8v8h-1v6c0 3 7 5 7 12v32a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V26c0-7 7-9 7-12V8h-1z" />
+                      <path d="M53 18h6v6h-1v4c0 2 5 4 5 9v21a4 4 0 0 1-4 4h-6a4 4 0 0 1-4-4V37c0-5 5-7 5-9v-4h-1z" />
+                    </svg>
+                  {% endif %}
+                </span>
+              </{{ tile_tag }}>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cwc_category-tiles__empty">
+        <p>Add tiles to display categories.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Category Tiles",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "info": "Optional. Leave empty for just the row of tiles."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Tiles Per Row (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "info": "Tablet and mobile show two per row."
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Tile Height (Desktop)",
+      "min": 100,
+      "max": 260,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "label": "Tile Height (Mobile)",
+      "min": 90,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap Between Tiles",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_odd",
+      "label": "Tile Color 1",
+      "default": "#E4EBE6",
+      "info": "Tiles alternate Color 1 / Color 2. A tile's own color overrides."
+    },
+    {
+      "type": "color",
+      "id": "card_bg_even",
+      "label": "Tile Color 2",
+      "default": "#EFE9DD"
+    },
+    {
+      "type": "color",
+      "id": "baseline_color",
+      "label": "Baseline Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Box Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_bg",
+      "label": "Arrow Box Hover Fill",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Defaults to \"Shop\" + the collection title."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Sets the link, and the image if none is picked."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Transparent PNG of the bottles works best, about 600 x 400px. Sits on the bottom line."
+        },
+        {
+          "type": "color",
+          "id": "card_bg",
+          "label": "Tile Color Override"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "CWC Category Tiles",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "tile", "settings": { "title": "Shop Bourbon" } },
+        { "type": "tile", "settings": { "title": "Shop Scotch" } },
+        { "type": "tile", "settings": { "title": "Shop Tequila" } },
+        { "type": "tile", "settings": { "title": "Shop Gifts & Sets" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

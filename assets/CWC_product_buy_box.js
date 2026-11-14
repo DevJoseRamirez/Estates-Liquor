@@ -892,8 +892,8 @@
     var format = function (date) {
       return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
     };
-    dateEl.textContent =
-      earliest.getTime() === latest.getTime() ? format(latest) : format(earliest) + " \u2013 " + format(latest);
+    // One fixed date, not a range: the slowest case by default so the promise holds
+    dateEl.textContent = format(data.dateMode === "earliest" ? earliest : latest);
     estimate.hidden = false;
   }
 

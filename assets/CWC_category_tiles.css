@@ -1,0 +1,241 @@
+/* ==============================
+   CWC Category Tiles
+   Styled to _theme-styles/estates-brand-tokens.md: square, no shadows,
+   Sage Mist / Stone grounds, Fraunces titles, deep-green 2px baseline,
+   1px outlined arrow box that fills CTA yellow on hover.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_category-tiles {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_category-tiles__container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* === Optional heading — H2 === */
+.cwc_category-tiles__content {
+  margin-bottom: 24px;
+}
+
+.cwc_category-tiles__content-heading > * {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+}
+
+/* === Grid === */
+.cwc_category-tiles__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  gap: var(--card-gap);
+}
+
+/* === Tile === */
+.cwc_category-tiles__card {
+  --tile-bg: var(--tile-override, var(--card-bg-odd));
+  position: relative;
+  display: block;
+  height: var(--card-height);
+  overflow: hidden;
+  background-color: var(--tile-bg);
+  border-bottom: 2px solid var(--baseline-color);
+  border-radius: 0;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.cwc_category-tiles__card:nth-child(even) {
+  --tile-bg: var(--tile-override, var(--card-bg-even));
+}
+
+.cwc_category-tiles__card:focus-visible {
+  outline: 2px solid #8A6A2E;
+  outline-offset: 3px;
+}
+
+/* Title — Fraunces, top left */
+.cwc_category-tiles__card-title {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 64px;
+  z-index: 2;
+  font-family: var(--cwc-font-heading);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Arrow box — 1px outline square, top right */
+.cwc_category-tiles__card-arrow {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--arrow-color);
+  background-color: transparent;
+  color: var(--arrow-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+a.cwc_category-tiles__card:hover .cwc_category-tiles__card-arrow {
+  background-color: var(--arrow-hover-bg);
+  border-color: var(--arrow-hover-bg);
+}
+
+a.cwc_category-tiles__card:hover .cwc_category-tiles__card-arrow svg {
+  transform: translateX(2px);
+}
+
+.cwc_category-tiles__card-arrow svg {
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+/* Bottles sit on the baseline, centered, kept clear of the title */
+.cwc_category-tiles__card-media {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 0;
+  top: 46px;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.cwc_category-tiles__card-media img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  mix-blend-mode: multiply;
+  transition: transform 0.4s ease;
+  transform-origin: center bottom;
+}
+
+a.cwc_category-tiles__card:hover .cwc_category-tiles__card-media img {
+  transform: scale(1.04);
+}
+
+.cwc_category-tiles__card-placeholder {
+  display: block;
+  height: 80%;
+  width: auto;
+  fill: var(--text-color);
+  opacity: 0.18;
+}
+
+/* === Empty State === */
+.cwc_category-tiles__empty {
+  text-align: center;
+  padding: 2rem;
+  color: #5C5C57;
+}
+
+/* ==============================
+   Tablet Responsive — 2 x 2
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_category-tiles__container {
+    padding: 0 32px;
+  }
+
+  .cwc_category-tiles__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Alternate as a checkerboard so neighbours never match in 2 columns */
+  .cwc_category-tiles__card:nth-child(4n + 1),
+  .cwc_category-tiles__card:nth-child(4n + 4) {
+    --tile-bg: var(--tile-override, var(--card-bg-odd));
+  }
+
+  .cwc_category-tiles__card:nth-child(4n + 2),
+  .cwc_category-tiles__card:nth-child(4n + 3) {
+    --tile-bg: var(--tile-override, var(--card-bg-even));
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_category-tiles {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_category-tiles__container {
+    padding: 0 18px;
+  }
+
+  .cwc_category-tiles__grid {
+    gap: min(var(--card-gap), 10px);
+  }
+
+  .cwc_category-tiles__card {
+    height: var(--card-height-mobile);
+  }
+
+  .cwc_category-tiles__card-title {
+    top: 12px;
+    left: 12px;
+    right: 46px;
+    font-size: 15px;
+  }
+
+  .cwc_category-tiles__card-arrow {
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .cwc_category-tiles__card-media {
+    left: 10px;
+    right: 10px;
+    top: 52px;
+  }
+
+  .cwc_category-tiles__content-heading > * {
+    font-size: 24px;
+  }
+}
+
+/* ==============================
+   Reduced Motion
+   ============================== */
+@media (prefers-reduced-motion: reduce) {
+  .cwc_category-tiles__card-arrow,
+  .cwc_category-tiles__card-arrow svg,
+  .cwc_category-tiles__card-media img {
+    transition: none;
+  }
+
+  a.cwc_category-tiles__card:hover .cwc_category-tiles__card-media img,
+  a.cwc_category-tiles__card:hover .cwc_category-tiles__card-arrow svg {
+    transform: none;
+  }
+}
