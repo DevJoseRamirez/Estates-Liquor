@@ -81,6 +81,78 @@
     },
     "cwc_header_JMrPr8": {
       "type": "CWC_header",
+      "blocks": {
+        "mega_whiskey": {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Whiskey",
+            "promo_style": "light",
+            "promo_label": "Just Listed",
+            "promo_heading": "New Allocated Arrivals",
+            "promo_text": "Fresh drops from the vault, while they last.",
+            "promo_cta": "Shop Allocated",
+            "link_notes": "Bourbon | Buffalo Trace · Weller · Blanton's\nJapanese Whisky | Yamazaki · Hibiki · Nikka",
+            "promo_eyebrow": "Featured · The Vault",
+            "promo_link": "shopify://collections/rare-limited"
+          }
+        },
+        "mega_tequila": {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Tequila & Mezcal",
+            "promo_style": "light",
+            "promo_label": "Gift Ready",
+            "promo_heading": "Bottles Under $100",
+            "promo_text": "Easy sipping picks that won't break the bank.",
+            "promo_cta": "Shop Under $100",
+            "promo_link": "shopify://collections/under-100"
+          }
+        },
+        "mega_wine": {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Wine & Champagne",
+            "promo_style": "light",
+            "promo_label": "Celebrate",
+            "promo_heading": "Gifts Under $200",
+            "promo_text": "Champagne, wine and spirits picked for the occasion.",
+            "promo_cta": "Shop Gifts",
+            "promo_link": "shopify://collections/under-200"
+          }
+        },
+        "mega_spirits": {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Spirits",
+            "promo_style": "light",
+            "promo_label": "Top Picks",
+            "promo_heading": "Best Sellers",
+            "promo_text": "The bottles our customers come back for.",
+            "promo_cta": "Shop Best Sellers",
+            "promo_link": "shopify://collections/best-sellers"
+          }
+        },
+        "mega_featured": {
+          "type": "mega_panel",
+          "settings": {
+            "menu_item": "Featured",
+            "promo_style": "dark",
+            "promo_label": "Reward Bottle $1",
+            "promo_heading": "Build your box. Unlock the bottle.",
+            "promo_text": "Pick 2 or more bottles. Reach $250, $500 or $1,000 and a reward bottle ships in the same box for $1.",
+            "promo_cta": "Start Your Box",
+            "promo_eyebrow": "Build-a-Box",
+            "promo_link": "/pages/build-a-box"
+          }
+        }
+      },
+      "block_order": [
+        "mega_whiskey",
+        "mega_tequila",
+        "mega_wine",
+        "mega_spirits",
+        "mega_featured"
+      ],
       "name": "Header",
       "settings": {
         "logo": "shopify://shop_images/ESTATES_LIQUOR_logo_2.png",

@@ -1722,6 +1722,66 @@ html.cwc-menu-locked {
   fill: var(--bar-accent);
 }
 
+/* Mobile menu top (close · logo · cart + search) mirrors the mobile header:
+   same bar colors, accent logo, dark search field with a blended button.
+   Its search results re-point to the panel colors via the rule above. */
+.cwc_header__menu-top {
+  --section-bg: var(--bar-bg);
+  --text-color: var(--bar-text);
+  --brand-color: var(--bar-text);
+  --highlight-color: var(--bar-accent);
+  --hover-bg: rgba(255, 255, 255, 0.06);
+  --border-color: var(--bar-line);
+  --hd-line: var(--bar-line);
+  --hd-line-input: var(--bar-field-line);
+  --hd-ink: var(--bar-text);
+  --hd-muted: rgba(255, 255, 255, 0.6);
+  background-color: var(--bar-bg);
+  color: var(--bar-text);
+  padding-bottom: 12px;
+}
+
+.cwc_header__menu-top .cwc_header__wordmark-top,
+.cwc_header__menu-top .cwc_header__wordmark-bottom {
+  color: var(--bar-accent);
+}
+
+.cwc_header__menu-top .cwc_header__wordmark-rule {
+  background-color: var(--bar-accent);
+}
+
+.cwc_header__menu-top .cwc_header__logo-mark {
+  fill: var(--bar-accent);
+}
+
+.cwc_header__menu-search {
+  border-color: var(--bar-field-line);
+  background-color: var(--bar-field-bg);
+}
+
+.cwc_header__menu-search-input {
+  color: var(--bar-text);
+}
+
+.cwc_header__menu-search-submit {
+  width: 46px;
+  height: 100%;
+  margin-right: 0;
+  border-left: 1px solid var(--bar-field-line);
+  background-color: var(--bar-field-bg);
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+}
+
+.cwc_header__menu-search-submit:hover {
+  color: var(--bar-text);
+}
+
+.cwc_header__menu-search-submit:focus-visible {
+  outline: 2px solid var(--bar-text);
+  outline-offset: -4px;
+}
+
 /* Search field on dark */
 .cwc_header__search-form,
 .cwc_header__top .cwc_header__search-form {
