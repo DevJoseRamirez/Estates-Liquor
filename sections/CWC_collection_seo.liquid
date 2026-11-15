@@ -58,9 +58,32 @@
 {% endcomment %}
 {% assign seo_text = seo_copy | strip_html | strip %}
 
-{% if seo_text != blank or section.blocks.size > 0 %}
+{% liquid
+  # Collection title + description, moved here from the header so the grid sits
+  # at the same height on every collection whether or not it has a description.
+  assign show_description = false
+  if section.settings.show_collection_description and collection != blank
+    assign description_text = collection.description | strip_html | strip
+    if description_text != blank
+      assign show_description = true
+    endif
+  endif
+%}
+
+{% if show_description or seo_text != blank or section.blocks.size > 0 %}
   <section id="cwc_collection-seo-{{ section.id }}" class="cwc_collection-seo">
     <div class="cwc_collection-seo__container">
+      {% if show_description %}
+        {% comment %} Outside the Read More body so it never collapses {% endcomment %}
+        <div class="cwc_collection-seo__card cwc_collection-seo__card--large cwc_collection-seo__card--description">
+          <h2 class="cwc_collection-seo__card-title">{{ collection.title | escape }}</h2>
+          <div class="cwc_collection-seo__card-text cwc-rte">
+            {{ collection.description }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if seo_text != blank or section.blocks.size > 0 %}
       <div class="cwc_collection-seo__content" data-cwc-seo-body>
         {% if seo_text != blank %}
           {% comment %}
@@ -101,8 +124,9 @@
           {% endfor %}
         {% endif %}
       </div>
+      {% endif %}
 
-      {% if section.settings.enable_read_more %}
+      {% if section.settings.enable_read_more and seo_text != blank or section.settings.enable_read_more and section.blocks.size > 0 %}
         <div class="cwc_collection-seo__more">
           <button
             type="button"
@@ -129,6 +153,13 @@
     {
       "type": "header",
       "content": "Content Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show Collection Description",
+      "default": false,
+      "info": "Shows the collection title and its description first. Turn off \"Show collection description\" in the Collection Header so it isn't shown twice."
     },
     {
       "type": "checkbox",

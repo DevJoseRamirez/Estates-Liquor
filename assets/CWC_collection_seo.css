@@ -25,6 +25,18 @@
   margin: 0 auto;
 }
 
+/* === Collection Description (sits above the SEO copy, never collapses) === */
+.cwc_collection-seo__card--description {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.cwc_collection-seo__card--description + .cwc_collection-seo__content {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(19, 36, 28, 0.12);
+}
+
 /* === Content Block === */
 .cwc_collection-seo__card+.cwc_collection-seo__card {
   margin-top: 1.75rem;

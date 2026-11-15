@@ -53,6 +53,8 @@
 
     observer.observe(watched);
 
+    syncWithBuyBox(bar);
+
     var form = bar.querySelector('form[action*="/cart/add"]');
     var button = bar.querySelector('[data-cwc-sticky-add]');
     if (!form || !button) return;
@@ -104,6 +106,44 @@
           }, 2000);
         });
     });
+  }
+
+  /* Follow the buy box's option picker: same variant in the hidden id field,
+     and copy its price / was-price / Save text once the buy box has updated
+     them, so formatting matches exactly. */
+  function syncWithBuyBox(bar) {
+    var select = document.querySelector('[data-cwc-variant-select]');
+    if (!select) return;
+
+    var idField = bar.querySelector('form [name="id"]');
+    var priceEl = bar.querySelector('[data-cwc-sticky-price]');
+    var compareEl = bar.querySelector('[data-cwc-sticky-compare]');
+    var saveEl = bar.querySelector('[data-cwc-sticky-save]');
+    var button = bar.querySelector('[data-cwc-sticky-add]');
+
+    function copy(target, sourceSelector) {
+      if (!target) return;
+      var source = document.querySelector(sourceSelector);
+      if (!source) return;
+      target.textContent = source.textContent.trim();
+      target.hidden = source.hidden;
+    }
+
+    function sync() {
+      if (idField) idField.value = select.value;
+      var option = select.options[select.selectedIndex];
+      if (button && option) button.disabled = option.disabled;
+
+      /* Let the buy box's own change handler run first */
+      window.setTimeout(function () {
+        copy(priceEl, '[data-cwc-price]');
+        copy(compareEl, '[data-cwc-compare]');
+        copy(saveEl, '[data-cwc-save]');
+      }, 0);
+    }
+
+    select.addEventListener('change', sync);
+    if (select.value && idField && idField.value !== select.value) sync();
   }
 
   function initSection(sectionEl) {

@@ -61,12 +61,12 @@
   color: inherit;
 }
 
-.cwc_contact-band__content-heading > * strong {
+.cwc_contact-band__content-heading>* strong {
   font-weight: 500;
   color: var(--highlight-color);
 }
 
-.cwc_contact-band__content-heading > * em {
+.cwc_contact-band__content-heading>* em {
   font-style: italic;
   font-weight: 400;
   color: var(--highlight-color);
@@ -116,6 +116,8 @@
   text-decoration: none;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  /*  */
+  border-radius: 30px;
 }
 
 .cwc_contact-band__button svg {
