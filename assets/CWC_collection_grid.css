@@ -1269,3 +1269,34 @@
     transform: none;
   }
 }
+
+/* ==============================
+   Card labels — collection grid only
+   Swapped vs. the shared card: Save goes top-left, the status label
+   (Allocated / Barrel Pick / New) goes bottom-right. Sold Out stays top-right.
+   ============================== */
+.cwc_collection-grid .cwc_collection-body__card-badge--save {
+  top: 12px;
+  bottom: auto;
+  left: 0;
+  right: auto;
+}
+
+.cwc_collection-grid .cwc_collection-body__card-badge:not(.cwc_collection-body__card-badge--corner) {
+  top: auto;
+  bottom: 12px;
+  left: auto;
+  right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_collection-grid .cwc_collection-body__card-badge--save {
+    top: 8px;
+    bottom: auto;
+  }
+
+  .cwc_collection-grid .cwc_collection-body__card-badge:not(.cwc_collection-body__card-badge--corner) {
+    top: auto;
+    bottom: 8px;
+  }
+}

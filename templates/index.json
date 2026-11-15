@@ -738,6 +738,7 @@
         "button_label": "View All Brands",
         "button_link": "shopify://pages/brands",
         "columns": 6,
+        "show_count": false,
         "bg_color": "#ffffff",
         "text_color": "#13241C",
         "bold_color": "#8a6a2e",
@@ -749,81 +750,6 @@
         "button_text_color": "#13241C",
         "padding_top": 80,
         "padding_bottom": 80
-      }
-    },
-    "cwc_featured_products": {
-      "type": "CWC_featured_products",
-      "blocks": {
-        "cwc_featured_products_b1": {
-          "type": "tab",
-          "settings": {
-            "collection": "best-selling-products",
-            "title": "Best Sellers"
-          }
-        },
-        "cwc_featured_products_b2": {
-          "type": "tab",
-          "settings": {
-            "collection": "new-arrivals",
-            "title": "New Arrivals"
-          }
-        },
-        "cwc_featured_products_b3": {
-          "type": "tab",
-          "settings": {
-            "collection": "bourbon",
-            "title": ""
-          }
-        },
-        "cwc_featured_products_b4": {
-          "type": "tab",
-          "settings": {
-            "collection": "japanese-whiskey",
-            "title": ""
-          }
-        },
-        "tab_YEqCRb": {
-          "type": "tab",
-          "settings": {
-            "collection": "vodka",
-            "title": ""
-          }
-        },
-        "tab_7WtNcM": {
-          "type": "tab",
-          "settings": {
-            "collection": "wine",
-            "title": ""
-          }
-        }
-      },
-      "block_order": [
-        "cwc_featured_products_b1",
-        "cwc_featured_products_b2",
-        "cwc_featured_products_b3",
-        "cwc_featured_products_b4",
-        "tab_YEqCRb",
-        "tab_7WtNcM"
-      ],
-      "settings": {
-        "eyebrow": "Best Sellers",
-        "heading": "<p>Fan Favorites</p>",
-        "link_label": "View All Products",
-        "link_url": "shopify://collections/best-selling-products",
-        "products_to_show": 10,
-        "columns": 5,
-        "bg_color": "#f4f0e8",
-        "text_color": "#13241C",
-        "bold_color": "#8a6a2e",
-        "eyebrow_color": "#8a6a2e",
-        "border_color": "#ecece8",
-        "card_bg_color": "#ffffff",
-        "card_media_bg_color": "#ffffff",
-        "card_title_color": "#13241C",
-        "card_text_color": "#5c5c57",
-        "button_bg_color": "#e9a23b",
-        "padding_top": 70,
-        "padding_bottom": 70
       }
     },
     "cwc_shop_price": {
@@ -988,63 +914,6 @@
         "padding_bottom": 70
       }
     },
-    "cwc_shipping_steps": {
-      "type": "CWC_shipping_steps",
-      "blocks": {
-        "cwc_shipping_steps_b1": {
-          "type": "step",
-          "settings": {
-            "icon": "box",
-            "custom_icon_alt": "",
-            "title": "Packed by Hand",
-            "text": "<p>Every bottle is wrapped, braced, and boxed in molded inserts built for glass. We pack the same way whether it is a $50 bottle or a $2,000 one.</p>"
-          }
-        },
-        "cwc_shipping_steps_b2": {
-          "type": "step",
-          "settings": {
-            "icon": "shield",
-            "custom_icon_alt": "",
-            "title": "Protected in Transit",
-            "text": "<p>Add shipping protection at checkout and we replace or refund any bottle that arrives broken, or goes missing on the way.</p>"
-          }
-        },
-        "cwc_shipping_steps_b3": {
-          "type": "step",
-          "settings": {
-            "icon": "signature",
-            "custom_icon_alt": "",
-            "title": "Adult Signature Required",
-            "text": "<p>Someone 21 or older must be present to sign. Orders placed Monday through Thursday ship the same week.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_shipping_steps_b1",
-        "cwc_shipping_steps_b2",
-        "cwc_shipping_steps_b3"
-      ],
-      "settings": {
-        "eyebrow": "No Surprises",
-        "heading": "<p>How Your Order Ships</p>",
-        "subtext": "",
-        "show_rule": true,
-        "note": "We ship to most US states. Enter your ZIP at checkout to confirm delivery to your address.",
-        "show_numbers": true,
-        "columns": 3,
-        "bg_color": "#ffffff",
-        "text_color": "#13241C",
-        "bold_color": "#8a6a2e",
-        "eyebrow_color": "#8a6a2e",
-        "icon_color": "#13241C",
-        "border_color": "#ecece8",
-        "note_color": "#5c5c57",
-        "card_title_color": "#13241C",
-        "card_text_color": "#5c5c57",
-        "padding_top": 80,
-        "padding_bottom": 80
-      }
-    },
     "cwc_store_reviews": {
       "type": "CWC_store_reviews",
       "blocks": {
@@ -1092,103 +961,6 @@
         "card_meta_color": "#5c5c57",
         "padding_top": 70,
         "padding_bottom": 70
-      }
-    },
-    "cwc_faq": {
-      "type": "CWC_faq",
-      "blocks": {
-        "cwc_faq_b1": {
-          "type": "item",
-          "settings": {
-            "question": "When will this ship?",
-            "answer": "<p>Orders placed Monday through Thursday are processed and ship within 3–5 business days. Orders placed Friday through Sunday are processed the following Monday. We ship from Coronado, CA via UPS, and tracking is emailed as soon as your order leaves.</p>",
-            "open_by_default": true
-          }
-        },
-        "cwc_faq_b2": {
-          "type": "item",
-          "settings": {
-            "question": "Which states do you ship to?",
-            "answer": "<p>We ship to most US states, but not to Tennessee, US territories, or APO/FPO addresses. Enter your ZIP code at checkout and we will confirm delivery to your address before you pay. Not sure? Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> before ordering.</p>",
-            "open_by_default": false
-          }
-        },
-        "cwc_faq_b3": {
-          "type": "item",
-          "settings": {
-            "question": "Do I have to sign for delivery?",
-            "answer": "<p>Yes. An adult 21 or older with valid government-issued ID must be present to sign. UPS will not leave alcohol unattended.</p><p></p>",
-            "open_by_default": false
-          }
-        },
-        "cwc_faq_b4": {
-          "type": "item",
-          "settings": {
-            "question": "What happens if I miss the delivery?",
-            "answer": "<p>UPS attempts delivery up to three times. If all three attempts fail, the package is returned to us and re-shipping costs are the customer's responsibility.</p><p></p>",
-            "open_by_default": false
-          }
-        },
-        "cwc_faq_b5": {
-          "type": "item",
-          "settings": {
-            "question": "How is the bottle packed?",
-            "answer": "<p>Wrapped, braced, and boxed in molded inserts built for glass — the same packing whether it is a $35 bottle or a $2,000 one.</p><p></p>",
-            "open_by_default": false
-          }
-        },
-        "item_m9HTdC": {
-          "type": "item",
-          "settings": {
-            "question": "Can I return it?",
-            "answer": "<p>All sales are final. Alcohol is a consumable product, so we cannot accept returns based on taste preference. If a bottle arrives broken or we ship the wrong item, contact us within 48 hours of delivery with your order number and a photo, and we will replace or refund it at no cost.</p>",
-            "open_by_default": false
-          }
-        },
-        "item_ctWHkr": {
-          "type": "item",
-          "settings": {
-            "question": "What if my order is lost or damaged in transit?",
-            "answer": "<p>Contact us within 48 hours at <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> with your order number and photos. Adding shipping protection at checkout covers loss, damage, and theft, and lets us resolve it immediately rather than waiting on a UPS claim.</p>",
-            "open_by_default": false
-          }
-        },
-        "item_DNNXet": {
-          "type": "item",
-          "settings": {
-            "question": "Can I cancel an order?",
-            "answer": "<p>Email <a href=\"mailto:support@estatesliquor.com\">support@estatesliquor.com</a> immediately and we will try to stop it before it ships. If the order has already been processed, a 10% restocking fee applies.</p>",
-            "open_by_default": false
-          }
-        }
-      },
-      "block_order": [
-        "cwc_faq_b1",
-        "cwc_faq_b2",
-        "cwc_faq_b3",
-        "cwc_faq_b4",
-        "cwc_faq_b5",
-        "item_m9HTdC",
-        "item_ctWHkr",
-        "item_DNNXet"
-      ],
-      "settings": {
-        "eyebrow": "Before You Order",
-        "heading": "<p>Common Questions</p>",
-        "subtext": "",
-        "show_rule": true,
-        "button_label": "",
-        "button_link": "",
-        "bg_color": "#f4f0e8",
-        "text_color": "#13241C",
-        "bold_color": "#8a6a2e",
-        "eyebrow_color": "#8a6a2e",
-        "border_color": "#ecece8",
-        "button_text_color": "#13241C",
-        "card_title_color": "#13241C",
-        "card_text_color": "#5c5c57",
-        "padding_top": 80,
-        "padding_bottom": 80
       }
     },
     "cwc_home_hero": {
@@ -1332,6 +1104,38 @@
         "show_card_meta": false,
         "show_view_all": true
       }
+    },
+    "cwc_collection_highlight": {
+      "type": "CWC_collection_highlight",
+      "blocks": {
+        "cwc_collection_highlight_b1": {
+          "type": "bullet",
+          "settings": {
+            "text": "Buffalo Trace Antique Collection",
+            "link": ""
+          }
+        },
+        "cwc_collection_highlight_b2": {
+          "type": "bullet",
+          "settings": {
+            "text": "Weller, Blanton’s, E.H. Taylor",
+            "link": ""
+          }
+        },
+        "cwc_collection_highlight_b3": {
+          "type": "bullet",
+          "settings": {
+            "text": "Van Winkle when it lands",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_collection_highlight_b1",
+        "cwc_collection_highlight_b2",
+        "cwc_collection_highlight_b3"
+      ],
+      "settings": {}
     },
     "cwc_category_tiles": {
       "type": "CWC_category_tiles",
@@ -1485,17 +1289,15 @@
     "cwc_promo_hero",
     "cwc_category_tiles",
     "cwc_product_tabs",
+    "cwc_collection_highlight",
     "cwc_hero_VbRH83",
     "cwc_trust_bar",
     "cwc_shop_category",
     "cwc_shop_brand",
-    "cwc_featured_products",
     "cwc_shop_price",
     "cwc_rare_allocated",
     "cwc_barrel_picks",
-    "cwc_shipping_steps",
     "cwc_store_reviews",
-    "cwc_faq",
     "cwc_why_estates"
   ]
 }

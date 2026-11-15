@@ -9,7 +9,8 @@
 .cwc_announcement-bar {
   --ab-font-body: var(--cwc-font-mono);
   --ab-arrow-size: 32px;
-  --ab-height: 32px;
+  --ab-arrow-height: 24px;
+  --ab-height: 28px;
 
   box-sizing: border-box;
   display: flex;
@@ -118,7 +119,7 @@
   align-items: center;
   justify-content: center;
   width: var(--ab-arrow-size);
-  height: var(--ab-arrow-size);
+  height: var(--ab-arrow-height);
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -164,7 +165,7 @@
 @media screen and (max-width: 768px) {
   .cwc_announcement-bar {
     --ab-arrow-size: 30px;
-    --ab-height: 28px;
+    --ab-height: 26px;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
   }

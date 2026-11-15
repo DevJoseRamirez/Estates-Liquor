@@ -113,29 +113,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   box-sizing: border-box;
   border-radius: 0;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: var(--ft-link);
+  border: 1px solid rgba(196, 147, 64, 0.45);
+  font-family: var(--cwc-font-mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: #C49340;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .cwc_footer__social-link:hover {
-  border-color: var(--highlight-color);
-  color: var(--highlight-color);
+  border-color: #C49340;
+  background-color: rgba(196, 147, 64, 0.1);
 }
 
 .cwc_footer__social-link:focus-visible {
   outline: 2px solid var(--highlight-color);
   outline-offset: 3px;
-}
-
-.cwc_footer__social-link svg {
-  width: 16px;
-  height: 16px;
-  display: block;
 }
 
 /* === Newsletter Signup (own block, sits as a normal footer column) === */

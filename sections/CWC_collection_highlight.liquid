@@ -1,0 +1,429 @@
+{% style %}
+  #cwc_collection-highlight-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#13241C' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
+    --subtext-color: {{ section.settings.subtext_color | default: '#3A3A36' }};
+    --bullet-color: {{ section.settings.bullet_color | default: '#E9A23B' }};
+    --button-bg: {{ section.settings.button_bg_color | default: '#E9A23B' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
+    --button-hover-bg: {{ section.settings.button_hover_color | default: '#D68F27' }};
+    --button-2-color: {{ section.settings.button_2_color | default: '#13241C' }};
+    --image-bg: {{ section.settings.image_bg_color | default: '#13241C' }};
+    --image-width: {{ section.settings.image_width | default: 50 }}%;
+    --image-ratio: {{ section.settings.image_ratio | default: '5 / 4' }};
+    --padding-top: {{ section.settings.padding_top | default: 80 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 80 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_collection_highlight.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign highlight_collection = section.settings.collection
+
+  assign desktop_image = section.settings.image
+  if desktop_image == blank and highlight_collection != blank
+    assign desktop_image = highlight_collection.featured_image
+  endif
+  assign mobile_image = section.settings.image_mobile
+
+  assign img_alt = section.settings.alt_text | default: desktop_image.alt | default: highlight_collection.title | default: 'Collection image' | escape
+
+  assign button_link = section.settings.button_link
+  if button_link == blank and highlight_collection != blank
+    assign button_link = highlight_collection.url
+  endif
+
+  assign position_class = 'cwc_collection-highlight--image-' | append: section.settings.image_position
+  if section.settings.mobile_content_first
+    assign position_class = position_class | append: ' cwc_collection-highlight--mobile-content-first'
+  endif
+-%}
+
+<section
+  id="cwc_collection-highlight-{{ section.id }}"
+  class="cwc_collection-highlight {{ position_class }} cwc_collection-highlight--align-{{ section.settings.content_align | default: 'center' }}"
+>
+  <div class="cwc_collection-highlight__container">
+    <div class="cwc_collection-highlight__wrapper">
+
+      {% comment %} Image {% endcomment %}
+      <div class="cwc_collection-highlight__image">
+        {% if desktop_image != blank %}
+          {% if button_link != blank %}<a href="{{ button_link }}" class="cwc_collection-highlight__image-link" tabindex="-1" aria-hidden="true">{% endif %}
+          <picture>
+            {% if mobile_image != blank %}
+              <source
+                media="(max-width: 767px)"
+                srcset="
+                  {{ mobile_image | image_url: width: 600 }} 600w,
+                  {{ mobile_image | image_url: width: 900 }} 900w,
+                  {{ mobile_image | image_url: width: 1200 }} 1200w
+                "
+                sizes="100vw"
+              >
+            {% endif %}
+            <img
+              src="{{ desktop_image | image_url: width: 1200 }}"
+              srcset="
+                {{ desktop_image | image_url: width: 600 }} 600w,
+                {{ desktop_image | image_url: width: 900 }} 900w,
+                {{ desktop_image | image_url: width: 1200 }} 1200w,
+                {{ desktop_image | image_url: width: 1600 }} 1600w
+              "
+              sizes="(max-width: 991px) 100vw, 650px"
+              alt="{{ img_alt }}"
+              width="{{ desktop_image.width }}"
+              height="{{ desktop_image.height }}"
+              loading="lazy"
+              style="object-position: {{ desktop_image.presentation.focal_point | default: 'center' }};"
+            >
+          </picture>
+          {% if button_link != blank %}</a>{% endif %}
+        {% else %}
+          <div class="cwc_collection-highlight__placeholder">
+            {{ 'collection-1' | placeholder_svg_tag: 'cwc_collection-highlight__placeholder-svg' | replace: '<svg', '<svg preserveAspectRatio="xMidYMid slice"' }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Content {% endcomment %}
+      <div class="cwc_collection-highlight__body">
+        <div class="cwc_collection-highlight__content">
+          {% if section.settings.eyebrow != blank %}
+            <p class="cwc_collection-highlight__content-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <div class="cwc_collection-highlight__content-heading cwc-rte">
+              {{ section.settings.heading }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.subtext != blank %}
+            <div class="cwc_collection-highlight__content-subtext cwc-rte">
+              {{ section.settings.subtext }}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if section.blocks.size > 0 %}
+          <ul class="cwc_collection-highlight__list" role="list">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'bullet' %}
+                  {% if block.settings.text != blank %}
+                    <li class="cwc_collection-highlight__list-item" {{ block.shopify_attributes }}>
+                      {%- if block.settings.link != blank -%}
+                        <a href="{{ block.settings.link }}" class="cwc_collection-highlight__list-link">{{ block.settings.text | escape }}</a>
+                      {%- else -%}
+                        {{ block.settings.text | escape }}
+                      {%- endif -%}
+                    </li>
+                  {% endif %}
+              {% endcase %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if section.settings.button_label != blank or section.settings.button_2_label != blank %}
+          <div class="cwc_collection-highlight__button">
+            {% if section.settings.button_label != blank %}
+              <a href="{{ button_link | default: '#' }}" class="cwc_collection-highlight__button-link cwc_collection-highlight__button-link--primary">
+                {{ section.settings.button_label | escape }}
+              </a>
+            {% endif %}
+
+            {% if section.settings.button_2_label != blank %}
+              <a href="{{ section.settings.button_2_link | default: '#' }}" class="cwc_collection-highlight__button-link cwc_collection-highlight__button-link--outline">
+                {{ section.settings.button_2_label | escape }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Collection Highlight",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Rare & Allocated"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>The <strong>Allocation.</strong></p>",
+      "info": "Bold or italic words use the Heading Bold Color."
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "default": "<p>Allocated releases arrive a few bottles at a time. We list them at fair retail the day they land, with no lottery and no waitlist.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Optional. Supplies the image and the primary button link when those are left empty."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary Button Label",
+      "default": "Shop the Allocation"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary Button Link",
+      "info": "Falls back to the collection."
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Secondary Button Label",
+      "default": "Join the Allocation List"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#13241C",
+      "info": "Bold or italic words in the heading."
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#8A6A2E"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Body Text Color",
+      "default": "#3A3A36"
+    },
+    {
+      "type": "color",
+      "id": "bullet_color",
+      "label": "Bullet Marker Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "image_bg_color",
+      "label": "Image Background Color",
+      "default": "#13241C",
+      "info": "Shows behind transparent images and the placeholder."
+    },
+    {
+      "type": "header",
+      "content": "Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Primary Button Background",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Primary Button Text",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Primary Button Hover",
+      "default": "#D68F27"
+    },
+    {
+      "type": "color",
+      "id": "button_2_color",
+      "label": "Secondary Button Color",
+      "default": "#13241C",
+      "info": "Border and text. Fills on hover."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image Width",
+      "min": 40,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Shape",
+      "options": [
+        { "value": "5 / 4", "label": "Landscape (5:4)" },
+        { "value": "4 / 3", "label": "Wide (4:3)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" }
+      ],
+      "default": "5 / 4"
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "Content Vertical Alignment",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_content_first",
+      "label": "Show Content Above Image On Mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Featured Image",
+      "info": "1600 x 1280px for Landscape. Falls back to the collection image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Image",
+      "info": "Optional. Falls back to the featured image."
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Image Alt Text"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bullet",
+      "name": "Bullet Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Buffalo Trace Antique Collection"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Collection Highlight",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "bullet", "settings": { "text": "Buffalo Trace Antique Collection" } },
+        { "type": "bullet", "settings": { "text": "Weller, Blanton’s, E.H. Taylor" } },
+        { "type": "bullet", "settings": { "text": "Van Winkle when it lands" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
