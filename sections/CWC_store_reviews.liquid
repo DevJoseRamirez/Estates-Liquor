@@ -133,16 +133,23 @@
   {%- comment -%} Cards sit outside the container so the row spans the full viewport {%- endcomment -%}
   {% if card_total > 0 %}
     {%- comment -%}
-      Auto-scrolling loop. JS clones the set to fill the width and starts the
-      animation; without JS (or with reduced motion) it is a swipe row.
+      Carousel Style:
+        cycle   — swipe row that steps one card every few seconds; visitors can
+                  swipe, scroll or use the arrows, which pauses it a moment.
+        marquee — continuous loop (JS clones the set and animates it).
+        manual  — swipe row only.
+      Without JS (or with reduced motion) every style is a plain swipe row.
     {%- endcomment -%}
+    {%- assign carousel_mode = section.settings.carousel_mode | default: 'cycle' -%}
     <div
       class="cwc_store-reviews__carousel"
       role="region"
       aria-label="Store reviews"
       tabindex="0"
       data-review-source="{{ review_source }}"
+      data-mode="{{ carousel_mode }}"
       data-speed="{{ section.settings.carousel_speed | default: 40 }}"
+      data-interval="{{ section.settings.cycle_interval | default: 5 }}"
     >
       <div class="cwc_store-reviews__track">
         <div class="cwc_store-reviews__set">
@@ -150,6 +157,19 @@
         </div>
       </div>
     </div>
+
+    {%- if carousel_mode != 'marquee' and section.settings.show_arrows -%}
+      <div class="cwc_store-reviews__container">
+        <div class="cwc_store-reviews__nav" hidden>
+          <button type="button" class="cwc_store-reviews__nav-button" data-direction="prev" aria-label="Previous reviews">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M13.5 8h-10M7 4.5 3.5 8 7 11.5" /></svg>
+          </button>
+          <button type="button" class="cwc_store-reviews__nav-button" data-direction="next" aria-label="Next reviews">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" /></svg>
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
   {% else %}
     <div class="cwc_store-reviews__container">
       <div class="cwc_store-reviews__empty">
@@ -249,10 +269,39 @@
       "content": "Carousel"
     },
     {
+      "type": "select",
+      "id": "carousel_mode",
+      "label": "Carousel Style",
+      "options": [
+        { "value": "cycle", "label": "Auto-cycle, visitors can swipe" },
+        { "value": "marquee", "label": "Continuous scroll" },
+        { "value": "manual", "label": "Manual swipe only" }
+      ],
+      "default": "cycle",
+      "info": "Auto-cycle steps one card at a time and pauses while a visitor hovers, swipes or uses the arrows."
+    },
+    {
+      "type": "range",
+      "id": "cycle_interval",
+      "label": "Auto-cycle Delay",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Arrows",
+      "default": true,
+      "info": "Auto-cycle and manual styles."
+    },
+    {
       "type": "range",
       "id": "carousel_speed",
-      "label": "Scroll Speed",
-      "info": "Pauses on hover; stays still for visitors who prefer reduced motion.",
+      "label": "Continuous Scroll Speed",
+      "info": "Continuous scroll only. Pauses on hover; stays still for visitors who prefer reduced motion.",
       "min": 10,
       "max": 100,
       "step": 5,

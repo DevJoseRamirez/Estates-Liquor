@@ -125,6 +125,47 @@
   }
 }
 
+/* === Arrows (auto-cycle / manual) — Outline squares === */
+.cwc_store-reviews__nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.cwc_store-reviews__nav[hidden] {
+  display: none;
+}
+
+.cwc_store-reviews__nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--text-color);
+  background-color: transparent;
+  border: 1px solid var(--text-color);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cwc_store-reviews__nav-button:hover {
+  background-color: var(--text-color);
+  color: var(--card-bg);
+}
+
+.cwc_store-reviews__nav-button:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
+}
+
+.cwc_store-reviews__nav-button svg {
+  display: block;
+}
+
 /* === Card === */
 .cwc_store-reviews__card {
   flex: 0 0 var(--card-width);
