@@ -1,0 +1,230 @@
+{% style %}
+  #cwc_quick-links-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --chip-text: {{ section.settings.chip_text_color | default: '#1C1C19' }};
+    --chip-border: {{ section.settings.chip_border_color | default: '#D9D9D3' }};
+    --chip-bg: {{ section.settings.chip_bg_color | default: '#FFFFFF' }};
+    --featured-bg: {{ section.settings.featured_bg_color | default: '#13241C' }};
+    --featured-text: {{ section.settings.featured_text_color | default: '#C49340' }};
+    --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
+    --padding-top: {{ section.settings.padding_top | default: 28 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 28 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 28 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 28 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_quick_links.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  CWC Quick Links
+  A single scrolling row of collection shortcuts (The Allocation, Bourbon,
+  Scotch...). Mobile only by default. Each chip is a block: pick a collection
+  (supplies the link and, if the label is empty, the title). "Featured" gives
+  the dark/gold treatment used for The Allocation.
+{%- endcomment -%}
+
+<section
+  id="cwc_quick-links-{{ section.id }}"
+  class="cwc_quick-links{% if section.settings.mobile_only %} cwc_quick-links--mobile-only{% endif %}{% if section.settings.show_border %} cwc_quick-links--bordered{% endif %}"
+>
+  <div class="cwc_quick-links__container">
+    {% if section.blocks.size > 0 %}
+      <nav class="cwc_quick-links__nav" aria-label="{{ section.settings.nav_label | default: 'Shop by category' | escape }}">
+        <ul class="cwc_quick-links__list" role="list">
+          {% for block in section.blocks %}
+            {%- liquid
+              assign chip_collection = block.settings.collection
+
+              if block.settings.label != blank
+                assign chip_label = block.settings.label
+              elsif chip_collection != blank
+                assign chip_label = chip_collection.title
+              else
+                assign chip_label = blank
+              endif
+
+              if block.settings.link != blank
+                assign chip_link = block.settings.link
+              elsif chip_collection != blank
+                assign chip_link = chip_collection.url
+              else
+                assign chip_link = nil
+              endif
+            -%}
+
+            {% if chip_label != blank %}
+              <li class="cwc_quick-links__item" {{ block.shopify_attributes }}>
+                {% if chip_link %}
+                  <a href="{{ chip_link }}" class="cwc_quick-links__chip{% if block.settings.featured %} cwc_quick-links__chip--featured{% endif %}">
+                    {{- chip_label | escape -}}
+                  </a>
+                {% else %}
+                  <span class="cwc_quick-links__chip{% if block.settings.featured %} cwc_quick-links__chip--featured{% endif %}">
+                    {{- chip_label | escape -}}
+                  </span>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Quick Links",
+  "tag": "section",
+  "class": "cwc_quick-links-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Accessible Label",
+      "info": "Read by screen readers; not shown.",
+      "default": "Shop by category"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "chip_bg_color",
+      "label": "Chip Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "chip_text_color",
+      "label": "Chip Text",
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "chip_border_color",
+      "label": "Chip Border",
+      "default": "#D9D9D3"
+    },
+    {
+      "type": "color",
+      "id": "featured_bg_color",
+      "label": "Featured Chip Background",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "featured_text_color",
+      "label": "Featured Chip Text",
+      "default": "#C49340"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom Border Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_only",
+      "label": "Show On Mobile Only",
+      "info": "Hidden above 768px.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Bottom Border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "info": "Mobile uses half.",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "info": "Mobile uses half.",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the link, and the label if left empty."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link Override"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured Style",
+          "info": "Dark chip with gold text (e.g. The Allocation).",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick Links",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "link", "settings": { "label": "The Allocation", "featured": true } },
+        { "type": "link", "settings": { "label": "Bourbon" } },
+        { "type": "link", "settings": { "label": "Scotch" } },
+        { "type": "link", "settings": { "label": "Tequila" } },
+        { "type": "link", "settings": { "label": "Rye" } },
+        { "type": "link", "settings": { "label": "Gifts" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

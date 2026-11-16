@@ -762,7 +762,7 @@
             "link": "shopify://collections/100-to-250",
             "amount": "$100–$250",
             "label": "Everyday Pours",
-            "description": "Reliable bottles for the bar cart and gifts worth giving.",
+            "description": "",
             "dark_style": false
           }
         },
@@ -773,7 +773,7 @@
             "link": "shopify://collections/250-to-500",
             "amount": "$250–$500",
             "label": "Premium",
-            "description": "Special bottles for a celebration or a milestone.",
+            "description": "",
             "dark_style": false
           }
         },
@@ -784,7 +784,7 @@
             "link": "shopify://collections/500-to-1-000",
             "amount": "$500–$1,000",
             "label": "Limited",
-            "description": "Limited releases and single barrel selections.",
+            "description": "",
             "dark_style": false
           }
         },
@@ -795,7 +795,7 @@
             "link": "shopify://collections/1-000-and-up",
             "amount": "$1,000+",
             "label": "The Vault",
-            "description": "Allocated, collectible, and hard to find anywhere else.",
+            "description": "",
             "dark_style": true
           }
         }
@@ -1235,6 +1235,87 @@
       "settings": {
         "layout": "featured_left"
       }
+    },
+    "cwc_quick_links": {
+      "type": "CWC_quick_links",
+      "blocks": {
+        "cwc_quick_links_b1": {
+          "type": "link",
+          "settings": {
+            "collection": "rare-limited",
+            "label": "The Allocation",
+            "link": "",
+            "featured": true
+          }
+        },
+        "cwc_quick_links_b2": {
+          "type": "link",
+          "settings": {
+            "collection": "bourbon",
+            "label": "Bourbon",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b3": {
+          "type": "link",
+          "settings": {
+            "collection": "scotch",
+            "label": "Scotch",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b4": {
+          "type": "link",
+          "settings": {
+            "collection": "tequila",
+            "label": "Tequila",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b5": {
+          "type": "link",
+          "settings": {
+            "collection": "rye-whiskey",
+            "label": "Rye",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b6": {
+          "type": "link",
+          "settings": {
+            "collection": "gifts",
+            "label": "Gifts",
+            "link": "",
+            "featured": false
+          }
+        }
+      },
+      "block_order": [
+        "cwc_quick_links_b1",
+        "cwc_quick_links_b2",
+        "cwc_quick_links_b3",
+        "cwc_quick_links_b4",
+        "cwc_quick_links_b5",
+        "cwc_quick_links_b6"
+      ],
+      "settings": {
+        "nav_label": "Shop by category",
+        "bg_color": "#FFFFFF",
+        "chip_bg_color": "#FFFFFF",
+        "chip_text_color": "#1C1C19",
+        "chip_border_color": "#D9D9D3",
+        "featured_bg_color": "#13241C",
+        "featured_text_color": "#C49340",
+        "border_color": "#ECECE8",
+        "mobile_only": true,
+        "show_border": false,
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
     }
   },
   "order": [
@@ -1242,6 +1323,7 @@
     "cwc_home_banner_PPNPdA",
     "cwc_hero",
     "cwc_home_hero",
+    "cwc_quick_links",
     "cwc_promo_hero",
     "cwc_category_tiles",
     "cwc_product_tabs",
