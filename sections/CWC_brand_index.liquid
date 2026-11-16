@@ -12,10 +12,12 @@
     --link-hover-color: {{ section.settings.link_hover_color | default: '#13241C' }};
     --link-underline-color: {{ section.settings.link_underline_color | default: '#E9A23B' }};
     --jump-bg: {{ section.settings.jump_bg_color | default: '#FFFFFF' }};
-    --jump-active-bg: {{ section.settings.jump_active_bg_color | default: '#13241C' }};
-    --jump-active-text: {{ section.settings.jump_active_text_color | default: '#E9A23B' }};
+    --jump-active-bg: {{ section.settings.jump_active_bg_color | default: '#F4F0E8' }};
+    --jump-active-text: {{ section.settings.jump_active_text_color | default: '#8A6A2E' }};
+    --jump-active-line: {{ section.settings.jump_active_line_color | default: '#C49340' }};
     --jump-disabled-color: {{ section.settings.jump_disabled_color | default: '#C4C4BE' }};
-    --input-border-color: {{ section.settings.input_border_color | default: '#D9D9D3' }};
+    --input-border-color: {{ section.settings.input_border_color | default: '#E7D4B3' }};
+    --search-icon-color: {{ section.settings.search_icon_color | default: '#8A6A2E' }};
     --columns-desktop: {{ section.settings.columns_desktop | default: 4 }};
     --padding-top: {{ section.settings.padding_top | default: 64 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
@@ -179,7 +181,6 @@
         <div class="cwc_brand-index__toolbar" data-brand-toolbar>
           {% if section.settings.show_search %}
             <div class="cwc_brand-index__search">
-              <svg class="cwc_brand-index__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
               <input
                 type="search"
                 class="cwc_brand-index__search-input"
@@ -193,6 +194,9 @@
                 enterkeyhint="search"
                 data-brand-search
               >
+              <span class="cwc_brand-index__search-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+              </span>
             </div>
           {% endif %}
 
@@ -422,19 +426,31 @@
       "type": "color",
       "id": "input_border_color",
       "label": "Search Border Color",
-      "default": "#D9D9D3"
+      "default": "#E7D4B3"
+    },
+    {
+      "type": "color",
+      "id": "search_icon_color",
+      "label": "Search Icon Color",
+      "default": "#8A6A2E"
     },
     {
       "type": "color",
       "id": "jump_active_bg_color",
       "label": "Letter Hover Background",
-      "default": "#13241C"
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
       "id": "jump_active_text_color",
       "label": "Letter Hover Text",
-      "default": "#E9A23B"
+      "default": "#8A6A2E"
+    },
+    {
+      "type": "color",
+      "id": "jump_active_line_color",
+      "label": "Letter Hover Underline",
+      "default": "#C49340"
     },
     {
       "type": "color",
