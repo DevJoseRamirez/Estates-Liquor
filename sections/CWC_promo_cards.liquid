@@ -1,0 +1,370 @@
+{% style %}
+  #cwc_promo-cards-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --card-gap: {{ section.settings.card_gap | default: 10 }}px;
+    --card-height: {{ section.settings.card_height | default: 440 }}px;
+    --card-height-mobile: {{ section.settings.card_height_mobile | default: 360 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 20 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 20 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{{ 'CWC_promo_cards.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  CWC Promo Cards
+  Three equal image cards in a row — the Promo Hero panel look (image or
+  placeholder art, overlay, mono eyebrow, Fraunces heading, button or text
+  link) at one size. Tablet: 3 across, tighter copy. Mobile: stack, or a
+  swipe row (section setting).
+{%- endcomment -%}
+
+<section
+  id="cwc_promo-cards-{{ section.id }}"
+  class="cwc_promo-cards cwc_promo-cards--mobile-{{ section.settings.mobile_layout | default: 'stack' }}"
+>
+  <div class="cwc_promo-cards__container">
+    {%- if section.blocks.size > 0 -%}
+      <div class="cwc_promo-cards__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign card_image = block.settings.image
+            assign card_link = block.settings.link
+            assign whole_link = false
+            if card_link != blank and block.settings.link_whole_card
+              assign whole_link = true
+            endif
+            assign overlay = block.settings.overlay_opacity | default: 25 | divided_by: 100.0
+            assign img_alt = block.settings.alt_text | default: card_image.alt | default: block.settings.eyebrow | default: 'Promotion' | escape
+          -%}
+
+          <div
+            class="cwc_promo-cards__card cwc_promo-cards__card--{{ block.settings.content_position | default: 'middle-left' }}"
+            style="--card-text: {{ block.settings.text_color | default: '#FFFFFF' }}; --card-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --card-overlay-opacity: {{ overlay }}; --card-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --card-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }};"
+            {{ block.shopify_attributes }}
+          >
+            {%- if whole_link -%}
+              <a class="cwc_promo-cards__card-link" href="{{ card_link }}" aria-label="{{ block.settings.button_label | default: img_alt | escape }}"></a>
+            {%- endif -%}
+
+            <div class="cwc_promo-cards__media">
+              {%- if card_image != blank -%}
+                <img
+                  class="cwc_promo-cards__image"
+                  src="{{ card_image | image_url: width: 1000 }}"
+                  srcset="
+                    {{ card_image | image_url: width: 500 }} 500w,
+                    {{ card_image | image_url: width: 750 }} 750w,
+                    {{ card_image | image_url: width: 1000 }} 1000w,
+                    {{ card_image | image_url: width: 1400 }} 1400w
+                  "
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  alt="{{ img_alt }}"
+                  width="{{ card_image.width }}"
+                  height="{{ card_image.height }}"
+                  loading="lazy"
+                  style="object-position: {{ card_image.presentation.focal_point | default: 'center' }};"
+                >
+              {%- else -%}
+                {%- comment -%} Same placeholder art on every card until an image is picked {%- endcomment -%}
+                {%- assign placeholder_name = 'lifestyle-1' -%}
+                <div class="cwc_promo-cards__placeholder">
+                  {{ placeholder_name | placeholder_svg_tag: 'cwc_promo-cards__placeholder-svg' | replace: '<svg', '<svg preserveAspectRatio="xMidYMid slice"' }}
+                </div>
+              {%- endif -%}
+              <span class="cwc_promo-cards__overlay" aria-hidden="true"></span>
+            </div>
+
+            <div class="cwc_promo-cards__content">
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="cwc_promo-cards__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.heading != blank -%}
+                <div class="cwc_promo-cards__heading cwc-rte">{{ block.settings.heading }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.text != blank -%}
+                <div class="cwc_promo-cards__text cwc-rte">{{ block.settings.text }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.button_label != blank -%}
+                {%- liquid
+                  assign btn_class = 'cwc_promo-cards__button'
+                  if block.settings.button_style == 'link'
+                    assign btn_class = 'cwc_promo-cards__button cwc_promo-cards__button--link'
+                  endif
+                -%}
+                {%- if card_link != blank -%}
+                  <a class="{{ btn_class }}" href="{{ card_link }}"{% if whole_link %} tabindex="-1"{% endif %}>
+                    {{- block.settings.button_label | escape -}}
+                  </a>
+                {%- else -%}
+                  <span class="{{ btn_class }}">{{ block.settings.button_label | escape }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="cwc_promo-cards__empty">Add cards to display the promo row.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CWC Promo Cards",
+  "tag": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card Height",
+      "min": 280,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 440
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "label": "Card Height (Mobile)",
+      "min": 220,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap Between Cards",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout",
+      "options": [
+        { "value": "stack", "label": "Stack" },
+        { "value": "swipe", "label": "Swipe row" }
+      ],
+      "default": "stack"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1000 x 1000px or larger. Set a focal point in Files to control cropping."
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image Alt Text"
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay Opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 25
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Holiday gifting"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>Gift sets &amp; decanters</p>",
+          "info": "Bold or italic words use the accent color."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content Position",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "middle-center", "label": "Center" }
+          ],
+          "default": "middle-left"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "eyebrow_color",
+          "label": "Eyebrow Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "bold_color",
+          "label": "Heading Accent Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop now"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button Style",
+          "options": [
+            { "value": "link", "label": "Text link" },
+            { "value": "solid", "label": "Solid button" }
+          ],
+          "default": "link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "link_whole_card",
+          "label": "Make Whole Card Clickable",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button / Underline Color",
+          "default": "#E9A23B"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Solid Button Text Color",
+          "default": "#13241C"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Cards",
+      "category": "CWC Custom",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Holiday gifting",
+            "heading": "<p>Gift sets &amp; decanters</p>",
+            "button_label": "Shop gifts"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Estates barrel picks",
+            "heading": "<p>Single barrels, <em>picked by us</em></p>",
+            "button_label": "Shop picks"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Just landed",
+            "heading": "<p>New this week</p>",
+            "button_label": "Shop new"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1151,7 +1151,8 @@
         "card_height_mobile": 120,
         "card_gap": 16,
         "padding_top": 40,
-        "padding_bottom": 0
+        "padding_bottom": 0,
+        "baseline_color": "#C4C4BE"
       }
     },
     "cwc_why_estates": {
@@ -1219,12 +1220,12 @@
         "cwc_promo_hero_p2": {
           "type": "panel",
           "settings": {
-            "eyebrow": "Holiday gifting",
-            "heading": "<p>Gift sets &amp; decanters</p>",
+            "eyebrow": "Today’s flash sale",
+            "heading": "<p>Markdowns</p>",
             "heading_size": "small",
             "text": "",
             "content_position": "middle-left",
-            "button_label": "Shop gifts",
+            "button_label": "Shop the sale",
             "button_style": "link"
           }
         }
@@ -1317,6 +1318,130 @@
         "padding_top": 28,
         "padding_bottom": 28
       }
+    },
+    "cwc_product_tabs_2": {
+      "type": "CWC_product_tabs",
+      "blocks": {
+        "cwc_product_tabs_2_t1": {
+          "type": "tab",
+          "settings": {
+            "label": "American Whiskey",
+            "collection": "american-whiskey"
+          }
+        },
+        "cwc_product_tabs_2_t2": {
+          "type": "tab",
+          "settings": {
+            "label": "Irish Whiskey",
+            "collection": "irish-whiskey"
+          }
+        },
+        "cwc_product_tabs_2_t3": {
+          "type": "tab",
+          "settings": {
+            "label": "Rye Whiskey",
+            "collection": "rye-whiskey"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_product_tabs_2_t1",
+        "cwc_product_tabs_2_t2",
+        "cwc_product_tabs_2_t3"
+      ],
+      "settings": {
+        "heading": "<p>More to <em>Explore</em></p>",
+        "subtext": "<p>American, Irish and rye whiskey, ready to ship.</p>",
+        "show_rule": true,
+        "products_to_show": 10,
+        "columns": 5,
+        "products_mobile": 4,
+        "card_align": "center",
+        "show_card_meta": false,
+        "show_view_all": true
+      }
+    },
+    "cwc_promo_cards": {
+      "type": "CWC_promo_cards",
+      "blocks": {
+        "cwc_promo_cards_c1": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Bundles & gift sets",
+            "heading": "<p>Ready-made <em>bundles</em></p>",
+            "text": "<p>Curated sets, boxed and ready to give.</p>",
+            "content_position": "middle-left",
+            "text_color": "#FFFFFF",
+            "eyebrow_color": "#E9A23B",
+            "bold_color": "#E9A23B",
+            "button_label": "Shop bundles",
+            "button_style": "link",
+            "link": "shopify://collections/bundles-100-up",
+            "link_whole_card": true,
+            "button_bg_color": "#E9A23B",
+            "button_text_color": "#13241C"
+          }
+        },
+        "cwc_promo_cards_c2": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Build your own",
+            "heading": "<p>Build a <em>bundle</em></p>",
+            "text": "<p>Pick the bottles, we box them up.</p>",
+            "content_position": "middle-left",
+            "text_color": "#FFFFFF",
+            "eyebrow_color": "#E9A23B",
+            "bold_color": "#E9A23B",
+            "button_label": "Start building",
+            "button_style": "link",
+            "link": "",
+            "link_whole_card": true,
+            "button_bg_color": "#E9A23B",
+            "button_text_color": "#13241C"
+          }
+        },
+        "cwc_promo_cards_c3": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Personalized",
+            "heading": "<p>Custom <em>engraving</em></p>",
+            "text": "<p>Add a name, date or message to the bottle.</p>",
+            "content_position": "middle-left",
+            "text_color": "#FFFFFF",
+            "eyebrow_color": "#E9A23B",
+            "bold_color": "#E9A23B",
+            "button_label": "Learn more",
+            "button_style": "link",
+            "link": "",
+            "link_whole_card": true,
+            "button_bg_color": "#E9A23B",
+            "button_text_color": "#13241C"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_promo_cards_c1",
+        "cwc_promo_cards_c2",
+        "cwc_promo_cards_c3"
+      ],
+      "settings": {
+        "bg_color": "#FFFFFF",
+        "card_height": 440,
+        "card_height_mobile": 360,
+        "card_gap": 10,
+        "mobile_layout": "stack",
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [
@@ -1328,14 +1453,16 @@
     "cwc_promo_hero",
     "cwc_category_tiles",
     "cwc_product_tabs",
+    "cwc_promo_cards",
     "cwc_collection_highlight",
+    "cwc_product_tabs_2",
     "cwc_hero_VbRH83",
     "cwc_trust_bar",
     "cwc_shop_category",
     "cwc_shop_brand",
-    "cwc_shop_price",
-    "cwc_rare_allocated",
     "cwc_store_reviews",
+    "cwc_rare_allocated",
+    "cwc_shop_price",
     "cwc_why_estates"
   ]
 }
