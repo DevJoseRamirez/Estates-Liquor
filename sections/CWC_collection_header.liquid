@@ -40,7 +40,7 @@
   # Pills: collection metafield first, then the fixed pill blocks, else none
   assign meta_pills = current.metafields.custom.sub_collections.value
   assign pill_source = 'none'
-  if is_search
+  if is_search or section.settings.show_pills == false
     assign pill_source = 'none'
   elsif meta_pills != blank and meta_pills.size > 0
     assign pill_source = 'metafield'
@@ -320,6 +320,13 @@
     {
       "type": "paragraph",
       "content": "Pills come from the collection metafield custom.sub_collections (list of collections). Without it, the Pill blocks below are used. With neither, the pill row is hidden."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pills",
+      "label": "Show Pills",
+      "default": true,
+      "info": "Turn off when the CWC Sub-Category Tiles section shows the sub-collections instead."
     },
     {
       "type": "checkbox",

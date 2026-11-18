@@ -1,0 +1,367 @@
+/* ==============================
+   CWC Sub-Category Tiles
+   Image tiles for a collection's sub-categories (custom.sub_collections).
+   Styled to _theme-styles/estates-brand-tokens.md: radius 0, bottle on the
+   white-to-sage product image ground, ink title. Container matches the
+   collection grid (1500px, 48px gutter) so tiles line up with the cards.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_subcategory-tiles {
+  --st-gutter: 48px;
+  --st-gap: 16px;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  font-family: var(--cwc-font-body);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.cwc_subcategory-tiles__container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 var(--st-gutter);
+}
+
+/* === Inside CWC Collection Grid (block) ===
+   Sits in the grid's main column, so it takes the column's width and the
+   grid's gutters (48 / 20 / 16px — same values as --st-gutter below). */
+.cwc_subcategory-tiles--grid {
+  padding: 0;
+  margin-bottom: var(--gap-below);
+  background-color: transparent;
+}
+
+.cwc_subcategory-tiles--grid .cwc_subcategory-tiles__container {
+  max-width: none;
+  padding: 0;
+}
+
+/* === Section Header === */
+.cwc_subcategory-tiles__content {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.cwc_subcategory-tiles__content-heading h1,
+.cwc_subcategory-tiles__content-heading h2,
+.cwc_subcategory-tiles__content-heading h3,
+.cwc_subcategory-tiles__content-heading p {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.cwc_subcategory-tiles__content-heading > * strong {
+  color: var(--highlight-color);
+}
+
+.cwc_subcategory-tiles__content-subtext {
+  margin-top: 0.375rem;
+}
+
+.cwc_subcategory-tiles__content-subtext p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #343434;
+}
+
+/* === Grid === */
+.cwc_subcategory-tiles__nav {
+  width: 100%;
+}
+
+.cwc_subcategory-tiles__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns-desktop), minmax(0, 1fr));
+  gap: 24px var(--st-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cwc_subcategory-tiles__item {
+  min-width: 0;
+}
+
+/* === Card === */
+.cwc_subcategory-tiles__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cwc_subcategory-tiles__card:focus-visible {
+  outline: 2px solid var(--tile-hover-border);
+  outline-offset: 3px;
+}
+
+.cwc_subcategory-tiles__card-image {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--tile-border);
+  border-radius: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, var(--tile-ground-center) 0%, var(--tile-ground-center) 38%, var(--tile-ground-edge) 100%);
+  transition: border-color 0.2s ease;
+}
+
+.cwc_subcategory-tiles__img {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform 0.3s ease;
+}
+
+.cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__card-image,
+.cwc_subcategory-tiles__card:focus-visible .cwc_subcategory-tiles__card-image {
+  border-color: var(--tile-hover-border);
+}
+
+.cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__img {
+  transform: scale(1.04);
+}
+
+.cwc_subcategory-tiles__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cwc-font-heading);
+  font-size: 2.5rem;
+  color: var(--highlight-color);
+}
+
+.cwc_subcategory-tiles__card-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__card-title {
+  text-decoration: underline;
+  text-decoration-color: var(--tile-hover-border);
+  text-underline-offset: 4px;
+}
+
+/* === Label === */
+.cwc_subcategory-tiles__eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+}
+
+/* === Compact Style ===
+   Small image + title side by side on a bordered card — reads as navigation,
+   not as another row of product cards. */
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 6px 12px 6px 6px;
+  background-color: var(--chip-card-bg);
+  border: 1px solid var(--tile-border);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card-image {
+  flex: 0 0 52px;
+  width: 52px;
+  border: 0;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__img {
+  inset: 8%;
+  width: 84%;
+  height: 84%;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__placeholder {
+  font-size: 1.375rem;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.cwc_subcategory-tiles__card-arrow {
+  flex: none;
+  color: var(--eyebrow-color);
+  transition: transform 0.2s ease;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card:hover,
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card:focus-visible {
+  border-color: var(--tile-hover-border);
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__card-title {
+  text-decoration: none;
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__card-arrow {
+  transform: translateX(3px);
+}
+
+.cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__img {
+  transform: none;
+}
+
+/* === Empty State (theme editor only) === */
+.cwc_subcategory-tiles__empty {
+  padding: 1rem;
+  border: 2px dashed #DDDDD7;
+  color: #5C5C57;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.cwc_subcategory-tiles__empty p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cwc_subcategory-tiles__img,
+  .cwc_subcategory-tiles__card-image,
+  .cwc_subcategory-tiles__card-arrow,
+  .cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card {
+    transition: none;
+  }
+
+  .cwc_subcategory-tiles__card:hover .cwc_subcategory-tiles__img {
+    transform: none;
+  }
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_subcategory-tiles {
+    --st-gutter: 20px;
+  }
+
+  .cwc_subcategory-tiles--tile .cwc_subcategory-tiles__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_subcategory-tiles {
+    --st-gutter: 16px;
+    --st-gap: 12px;
+
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_subcategory-tiles--grid {
+    padding: 0;
+    margin-bottom: var(--gap-below-mobile);
+  }
+
+  .cwc_subcategory-tiles__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 16px;
+  }
+
+  .cwc_subcategory-tiles__card {
+    gap: 8px;
+  }
+
+  .cwc_subcategory-tiles__card-title {
+    font-size: 0.8125rem;
+  }
+
+  /* Swipe row: one line, bleeds to the screen edge, ~3.4 tiles visible */
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav {
+    margin: 0 calc(var(--st-gutter) * -1);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 var(--st-gutter);
+    scrollbar-width: none;
+  }
+
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 27%;
+    padding: 0 var(--st-gutter);
+  }
+
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__item {
+    scroll-snap-align: start;
+  }
+}
+
+/* Compact style on mobile: 2 per row, or a swipe row of chip cards */
+@media screen and (max-width: 768px) {
+  .cwc_subcategory-tiles__eyebrow {
+    margin-bottom: 10px;
+    font-size: 0.6875rem;
+  }
+
+  .cwc_subcategory-tiles--compact .cwc_subcategory-tiles__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card {
+    gap: 10px;
+    padding: 5px 10px 5px 5px;
+  }
+
+  .cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card-image {
+    flex-basis: 44px;
+    width: 44px;
+  }
+
+  .cwc_subcategory-tiles--compact .cwc_subcategory-tiles__card-title {
+    font-size: 0.8125rem;
+  }
+
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__grid {
+    grid-template-columns: none;
+    grid-auto-columns: max-content;
+  }
+
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__card {
+    min-width: 150px;
+  }
+}

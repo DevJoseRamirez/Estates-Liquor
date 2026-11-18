@@ -4,8 +4,11 @@
   Built from its own menu (the header's "Mobile Menu" setting, falling back to
   the desktop menu), so mobile can be ordered and grouped differently. A
   top-level item with children becomes an accordion with its children in two
-  columns; an item with no children is a plain row. Accordions are native
-  details/summary, so they open with no JS.
+  columns; an item with no children is a plain row. When any child has its own
+  children (the same third level the desktop mega menu shows as columns), the
+  children stack full width instead and each one with children becomes a
+  nested accordion holding its links in two columns plus a "View All" link.
+  Accordions are native details/summary, so they open with no JS.
 
   Accepts:
   - section {Object} - the header section, for its settings
@@ -100,13 +103,52 @@
               <span class="cwc_header__menu-sign" aria-hidden="true"></span>
             </summary>
 
-            <ul class="cwc_header__menu-sub">
+            {% liquid
+              assign has_columns = false
+              for child in link.links
+                if child.links.size > 0
+                  assign has_columns = true
+                  break
+                endif
+              endfor
+            %}
+
+            <ul class="cwc_header__menu-sub{% if has_columns %} cwc_header__menu-sub--nested{% endif %}">
               {% for child in link.links %}
-                <li>
-                  <a href="{{ child.url }}" class="cwc_header__menu-link"{% if child.current %} aria-current="page"{% endif %}>
-                    {{- child.title | escape -}}
-                  </a>
-                </li>
+                {% if child.links.size > 0 %}
+                  <li class="cwc_header__menu-sub-group">
+                    <details class="cwc_header__menu-group cwc_header__menu-group--child">
+                      <summary class="cwc_header__menu-row cwc_header__menu-row--child">
+                        {{ child.title | escape }}
+                        <span class="cwc_header__menu-sign" aria-hidden="true"></span>
+                      </summary>
+
+                      <ul class="cwc_header__menu-sub cwc_header__menu-sub--child">
+                        {% for grandchild in child.links %}
+                          <li>
+                            <a href="{{ grandchild.url }}" class="cwc_header__menu-link"{% if grandchild.current %} aria-current="page"{% endif %}>
+                              {{- grandchild.title | escape -}}
+                            </a>
+                          </li>
+                        {% endfor %}
+
+                        {% if section.settings.view_all_label != blank and child.url != blank and child.url != '#' %}
+                          <li class="cwc_header__menu-sub-all">
+                            <a href="{{ child.url }}" class="cwc_header__menu-link cwc_header__menu-link--all">
+                              {{- section.settings.view_all_label | escape }} {{ child.title | escape }} <span aria-hidden="true">&rarr;</span>
+                            </a>
+                          </li>
+                        {% endif %}
+                      </ul>
+                    </details>
+                  </li>
+                {% else %}
+                  <li>
+                    <a href="{{ child.url }}" class="cwc_header__menu-link{% if has_columns %} cwc_header__menu-link--child{% endif %}"{% if child.current %} aria-current="page"{% endif %}>
+                      {{- child.title | escape -}}
+                    </a>
+                  </li>
+                {% endif %}
               {% endfor %}
 
               {% if section.settings.view_all_label != blank %}

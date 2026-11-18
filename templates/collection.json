@@ -112,7 +112,8 @@
         "pill_active_bg_color": "#e9a23b",
         "pill_active_text_color": "#13241C",
         "padding_top": 36,
-        "padding_bottom": 32
+        "padding_bottom": 32,
+        "show_pills": false
       }
     },
     "cwc_subcategory_rail": {
@@ -475,6 +476,26 @@
         "show_card_meta": false
       },
       "blocks": {
+        "cwc_subcategory_tiles": {
+          "type": "subcategory_tiles",
+          "settings": {
+            "metafield_key": "sub_collections",
+            "hide_empty": true,
+            "aria_label": "Shop by type",
+            "text_color": "#1C1C19",
+            "tile_bg_color": "#FFFFFF",
+            "tile_edge_color": "#E4EBE6",
+            "tile_border_color": "#ECECE8",
+            "tile_hover_color": "#E9A23B",
+            "columns_desktop": 6,
+            "mobile_layout": "scroll",
+            "gap_below": 24,
+            "tile_style": "compact",
+            "eyebrow": "Shop by Type",
+            "eyebrow_color": "#8A6A2E",
+            "card_bg_color": "#FFFFFF"
+          }
+        },
         "cwc_collection_promo_b1": {
           "type": "promo_card",
           "settings": {
@@ -502,6 +523,7 @@
         }
       },
       "block_order": [
+        "cwc_subcategory_tiles",
         "cwc_collection_promo_b1",
         "cwc_collection_promo_b2"
       ]

@@ -758,6 +758,7 @@
 
 .cwc_header__mega-col+.cwc_header__mega-col {
   border-left: 1px solid var(--border-color);
+  border: none;
 }
 
 /* Column headers are eyebrows */
@@ -1458,6 +1459,63 @@ a.cwc_header__menu-row {
   grid-column: 1 / -1;
 }
 
+/* Third level: children stack full width, each with links is a sub-accordion */
+.cwc_header__menu-sub--nested {
+  grid-template-columns: minmax(0, 1fr);
+  padding-bottom: 8px;
+}
+
+.cwc_header__menu-sub-group {
+  min-width: 0;
+}
+
+.cwc_header__menu-group--child {
+  border-bottom: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.cwc_header__menu-row--child {
+  min-height: 48px;
+  padding-left: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hd-ink);
+}
+
+.cwc_header__menu-row--child .cwc_header__menu-sign {
+  width: 12px;
+  height: 12px;
+}
+
+.cwc_header__menu-row--child .cwc_header__menu-sign::before {
+  width: 12px;
+}
+
+.cwc_header__menu-row--child .cwc_header__menu-sign::after {
+  height: 12px;
+}
+
+.cwc_header__menu-group--child[open]>.cwc_header__menu-row--child .cwc_header__menu-sign {
+  transform: rotate(45deg);
+}
+
+/* the parent's [open] rule must not turn closed child signs into an x */
+.cwc_header__menu-group--child:not([open])>.cwc_header__menu-row--child .cwc_header__menu-sign {
+  transform: none;
+}
+
+.cwc_header__menu-sub--child {
+  padding: 0 0 12px 12px;
+}
+
+.cwc_header__menu-link--child {
+  padding-left: 12px;
+  border-top: 1px solid var(--border-color);
+  font-weight: 600;
+  color: var(--hd-ink);
+}
+
 .cwc_header__menu-link {
   display: flex;
   align-items: center;
@@ -1847,6 +1905,8 @@ html.cwc-menu-locked {
     border: 0;
     border-top: 1px solid var(--hd-line);
     border-bottom: 1px solid var(--hd-line);
+    /* testing */
+    max-height: max-content;
   }
 
   .cwc_header__top .cwc_header__search-panel {
@@ -2074,7 +2134,8 @@ html.cwc-menu-locked {
   }
 
   .cwc_header__msearch .cwc_header__search-input {
-    font-size: 16px; /* 16px stops iOS zooming on focus */
+    font-size: 16px;
+    /* 16px stops iOS zooming on focus */
   }
 
   .cwc_header--msearch-hidden .cwc_header__msearch {
@@ -2119,6 +2180,7 @@ html.cwc-menu-locked {
     transition: none;
   }
 }
+
 /* ==============================
    Reference layout (logo centered), desktop
    Search with its icon on the left, centered logo, ACCOUNT / CART [n] right;

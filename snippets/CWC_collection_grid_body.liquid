@@ -231,6 +231,15 @@
 
     {% comment %} Main column {% endcomment %}
     <div class="cwc_collection-grid__main">
+      {% comment %} Sub-category tiles (block): below the toolbar, above the cards — collection pages only {% endcomment %}
+      {% unless is_search %}
+        {% for block in section.blocks %}
+          {% if block.type == 'subcategory_tiles' %}
+            {% render 'cwc-subcategory-tiles', settings: block.settings, scope_id: block.id, context: 'grid', attrs: block.shopify_attributes %}
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
+
       <div class="cwc_collection-grid__chips" data-cwc-region="chips">{{ chips_html }}</div>
 
       <div data-cwc-region="grid">

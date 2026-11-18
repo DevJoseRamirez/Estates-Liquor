@@ -1,0 +1,169 @@
+{% comment %}
+  CWC Sub-Category Tiles — shared markup (styles: assets/CWC_subcategory_tiles.css).
+  Image tiles for the current collection's sub-categories, read from the collection's own
+  metafield custom.<metafield_key> (type "List of collections"). Collections without it render nothing
+  (a dashed note shows in the theme editor only).
+
+  Used by:
+  - sections/CWC_collection_grid.liquid → "Sub-Category Tiles" block, between the toolbar and the cards
+  - sections/CWC_subcategory_tiles.liquid → standalone section
+
+  Accepts:
+  - settings: block.settings or section.settings (same setting ids in both)
+  - scope_id: unique id for the root element (block.id / section.id)
+  - context: 'grid' (inside the collection grid) or 'section' (standalone)
+  - attrs: optional block.shopify_attributes
+{% endcomment %}
+
+{%- liquid
+  assign context = context | default: 'section'
+  assign meta_key = settings.metafield_key | default: 'sub_collections' | strip
+  assign tile_collections = null
+  if collection != blank
+    assign tile_collections = collection.metafields.custom[meta_key].value
+  endif
+
+  assign tile_count = 0
+  if tile_collections != blank
+    for tile_collection in tile_collections
+      if tile_collection == blank or tile_collection.handle == collection.handle
+        continue
+      endif
+      if settings.hide_empty and tile_collection.products_count == 0
+        continue
+      endif
+      assign tile_count = tile_count | plus: 1
+    endfor
+  endif
+
+  assign root_id = 'cwc_subcategory-tiles-' | append: scope_id
+  assign tile_style = settings.tile_style | default: 'tile'
+  assign root_tag = 'div'
+  if context == 'section'
+    assign root_tag = 'section'
+  endif
+-%}
+
+{% if tile_count > 0 or request.design_mode %}
+  {% style %}
+    #{{ root_id }} {
+      --section-bg: {{ settings.bg_color | default: 'transparent' }};
+      --text-color: {{ settings.text_color | default: '#1C1C19' }};
+      --highlight-color: {{ settings.bold_color | default: '#8A6A2E' }};
+      --tile-ground-center: {{ settings.tile_bg_color | default: '#FFFFFF' }};
+      --tile-ground-edge: {{ settings.tile_edge_color | default: '#E4EBE6' }};
+      --tile-border: {{ settings.tile_border_color | default: '#ECECE8' }};
+      --tile-hover-border: {{ settings.tile_hover_color | default: '#E9A23B' }};
+      --chip-card-bg: {{ settings.card_bg_color | default: '#FFFFFF' }};
+      --eyebrow-color: {{ settings.eyebrow_color | default: '#8A6A2E' }};
+      --columns-desktop: {{ settings.columns_desktop | default: 6 }};
+      --padding-top: {{ settings.padding_top | default: 0 }}px;
+      --padding-bottom: {{ settings.padding_bottom | default: 0 }}px;
+      --padding-top-mobile: {{ settings.padding_top | default: 0 | times: 0.5 }}px;
+      --padding-bottom-mobile: {{ settings.padding_bottom | default: 0 | times: 0.5 }}px;
+      --gap-below: {{ settings.gap_below | default: 28 }}px;
+      --gap-below-mobile: {{ settings.gap_below | default: 28 | times: 0.75 | round }}px;
+    }
+  {% endstyle %}
+{% endif %}
+
+{% if tile_count > 0 %}
+  <{{ root_tag }}
+    id="{{ root_id }}"
+    class="cwc_subcategory-tiles cwc_subcategory-tiles--{{ context }} cwc_subcategory-tiles--{{ tile_style }} cwc_subcategory-tiles--mobile-{{ settings.mobile_layout | default: 'scroll' }}"
+    {{ attrs }}
+  >
+    <div class="cwc_subcategory-tiles__container">
+      {% if context == 'section' and settings.show_header %}
+        {% if settings.heading != blank or settings.subtext != blank %}
+          <div class="cwc_subcategory-tiles__content">
+            {% if settings.heading != blank %}
+              <div class="cwc_subcategory-tiles__content-heading cwc-rte">
+                {{ settings.heading }}
+              </div>
+            {% endif %}
+
+            {% if settings.subtext != blank %}
+              <div class="cwc_subcategory-tiles__content-subtext cwc-rte">
+                {{ settings.subtext }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% comment %}
+        {% if settings.eyebrow != blank %}
+          <p class="cwc_subcategory-tiles__eyebrow">{{ settings.eyebrow | escape }}</p>
+        {% endif %}
+      {% endcomment %}
+
+      <nav class="cwc_subcategory-tiles__nav" aria-label="{{ settings.aria_label | default: 'Shop by type' | escape }}">
+        <ul class="cwc_subcategory-tiles__grid" role="list">
+          {% for tile_collection in tile_collections %}
+            {% if tile_collection == blank or tile_collection.handle == collection.handle %}{% continue %}{% endif %}
+            {% if settings.hide_empty and tile_collection.products_count == 0 %}{% continue %}{% endif %}
+
+            {%- liquid
+              # collection.featured_image is the collection image, else its first product's image
+              assign tile_image = tile_collection.featured_image
+            -%}
+
+            <li class="cwc_subcategory-tiles__item">
+              <a href="{{ tile_collection.url }}" class="cwc_subcategory-tiles__card">
+                <span class="cwc_subcategory-tiles__card-image">
+                  {% if tile_image != blank %}
+                    {{
+                      tile_image
+                      | image_url: width: 400
+                      | image_tag:
+                        class: 'cwc_subcategory-tiles__img',
+                        alt: '',
+                        loading: 'lazy',
+                        widths: '200, 300, 400',
+                        sizes: '(max-width: 768px) 33vw, 200px'
+                    }}
+                  {% else %}
+                    <span class="cwc_subcategory-tiles__placeholder" aria-hidden="true">
+                      {{- tile_collection.title | slice: 0 -}}
+                    </span>
+                  {% endif %}
+                </span>
+                <span class="cwc_subcategory-tiles__card-title">{{ tile_collection.title | escape }}</span>
+                {% if tile_style == 'compact' %}
+                  <svg
+                    class="cwc_subcategory-tiles__card-arrow"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M9 6l6 6-6 6"></path>
+                  </svg>
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </{{ root_tag }}>
+{% elsif request.design_mode %}
+  <{{ root_tag }} id="{{ root_id }}" class="cwc_subcategory-tiles cwc_subcategory-tiles--{{ context }}" {{ attrs }}>
+    <div class="cwc_subcategory-tiles__container">
+      <div class="cwc_subcategory-tiles__empty">
+        <p>
+          Sub-category tiles: this collection has no <code>custom.{{ meta_key | escape }}</code> metafield, so nothing
+          shows here. Fill it in on the collection (a list of collections) to show tiles. This note is only visible in
+          the theme editor.
+        </p>
+      </div>
+    </div>
+  </{{ root_tag }}>
+{% endif %}

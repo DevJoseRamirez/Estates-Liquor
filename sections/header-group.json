@@ -98,7 +98,7 @@
             "col4_label": "",
             "col4_link": "",
             "col4_split": false,
-            "link_notes": "Bourbon | Buffalo Trace · Weller · Blanton's\nJapanese Whisky | Yamazaki · Hibiki · Nikka",
+            "link_notes": "",
             "promo_style": "light",
             "promo_product": "",
             "promo_eyebrow": "Featured · The Vault",
@@ -166,7 +166,7 @@
         "mega_spirits": {
           "type": "mega_panel",
           "settings": {
-            "menu_item": "Spirits",
+            "menu_item": "More Spirits",
             "col1_label": "",
             "col1_link": "",
             "col1_split": false,
@@ -193,7 +193,7 @@
         "mega_featured": {
           "type": "mega_panel",
           "settings": {
-            "menu_item": "Featured",
+            "menu_item": "Gifts & Bundles",
             "col1_label": "",
             "col1_link": "",
             "col1_split": false,
@@ -216,9 +216,23 @@
             "promo_cta": "Start Your Box",
             "promo_link": "/pages/build-a-box"
           }
+        },
+        "mega_allocation": {
+          "type": "mega_products",
+          "settings": {
+            "menu_item": "The Allocation",
+            "sidebar_heading": "The Allocation",
+            "grid_note": "Listed at fair retail · Limited quantities",
+            "products_per_tab": 4,
+            "cta_label": "Shop All Allocated",
+            "cta_link": "",
+            "secondary_label": "How Allocation Works",
+            "secondary_link": ""
+          }
         }
       },
       "block_order": [
+        "mega_allocation",
         "mega_whiskey",
         "mega_tequila",
         "mega_wine",

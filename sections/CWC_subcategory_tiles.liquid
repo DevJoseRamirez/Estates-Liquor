@@ -1,0 +1,177 @@
+{% comment %}
+  CWC Sub-Category Tiles — standalone section. Markup lives in snippets/cwc-subcategory-tiles.liquid,
+  shared with the "Sub-Category Tiles" block of CWC Collection Grid (which places the tiles between
+  the filter/sort bar and the product cards — the setup used on templates/collection.json).
+{% endcomment %}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_subcategory_tiles.css' | asset_url | stylesheet_tag }}
+
+{% render 'cwc-subcategory-tiles', settings: section.settings, scope_id: section.id, context: 'section' %}
+
+{% schema %}
+{
+  "name": "CWC Sub-Category Tiles",
+  "tag": "section",
+  "class": "cwc-section-subcategory-tiles",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Image tiles for the current collection's sub-categories, read from its collection metafield. Each collection gets its own tiles; collections without the metafield show nothing."
+    },
+    {
+      "type": "header",
+      "content": "Data Source"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "Collection Metafield Key",
+      "default": "sub_collections",
+      "info": "Reads custom.<key> on the collection. Type must be List of collections. Tile image is the sub-collection's image, else its first product's image."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_empty",
+      "label": "Hide Empty Collections",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Heading",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "<p>Shop by <strong>Type</strong></p>",
+      "visible_if": "{{ section.settings.show_header }}"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Section Subtext",
+      "visible_if": "{{ section.settings.show_header }}"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessible Label",
+      "default": "Shop by type",
+      "info": "Read by screen readers for the tile list."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1C1C19"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Heading Bold Color",
+      "default": "#8A6A2E"
+    },
+    {
+      "type": "header",
+      "content": "Tile Colors"
+    },
+    {
+      "type": "color",
+      "id": "tile_bg_color",
+      "label": "Tile Ground Center",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "tile_edge_color",
+      "label": "Tile Ground Edge",
+      "default": "#E4EBE6"
+    },
+    {
+      "type": "color",
+      "id": "tile_border_color",
+      "label": "Tile Border Color",
+      "default": "#ECECE8"
+    },
+    {
+      "type": "color",
+      "id": "tile_hover_color",
+      "label": "Tile Hover Border Color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Tiles Per Row (Desktop)",
+      "min": 4,
+      "max": 8,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout",
+      "options": [
+        { "value": "scroll", "label": "Swipe Row" },
+        { "value": "grid", "label": "Grid (3 Per Row)" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "CWC Sub-Category Tiles",
+      "category": "CWC Custom"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}
