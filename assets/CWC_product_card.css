@@ -338,7 +338,14 @@
   border: 0;
   border-bottom: 0;
   overflow: hidden;
-  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
+  /* Spotlight (after the Broadway cards): white hot spot high on the bottle,
+     falling off to a deeper sage at the edges, soft floor shadow under it.
+     Edge is deeper than the --el-ground-edge token (#E4EBE6) on purpose. */
+  --card-ground-edge: #D3DFD7;
+  background: var(--card-ground-edge);
+  background:
+    radial-gradient(ellipse 34% 4.5% at 50% 90%, rgba(19, 36, 28, 0.16), transparent 100%),
+    radial-gradient(ellipse 55% 75% at 50% 28%, #FFFFFF 0%, color-mix(in srgb, var(--card-ground-edge) 40%, #FFFFFF) 45%, var(--card-ground-edge) 100%);
 }
 
 .cwc_collection-body__card-media img {
