@@ -870,6 +870,8 @@ div.cwc_header__mega-foot {
   background-color: var(--promo-bg);
   color: var(--hd-ink);
   text-decoration: none;
+  /* testing */
+  height: max-content;
 }
 
 a.cwc_header__mega-promo:focus-visible {
@@ -1188,24 +1190,43 @@ a.cwc_header__mega-promo:hover .cwc_header__mega-promo-cta {
   outline-offset: 3px;
 }
 
+/* Image ground matches the collection grid cards (CWC_product_card.css):
+   white-to-sage radial ground, bottle at 82% in multiply, never cropped */
 .cwc_header__mega-product-media {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   aspect-ratio: 1 / 1;
-  padding: 14px;
-  box-sizing: border-box;
-  background-color: var(--promo-bg);
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, #E4EBE6 100%);
 }
 
 .cwc_header__mega-product-image {
+  position: absolute;
+  inset: 9%;
   display: block;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+  width: 82%;
+  height: 82%;
   object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform 0.3s ease;
+}
+
+.cwc_header__mega-product:hover .cwc_header__mega-product-image {
+  transform: scale(1.03);
+}
+
+.cwc_header__mega-product-media .cwc_header__mega-promo-label {
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cwc_header__mega-product-image {
+    transition: none;
+  }
+
+  .cwc_header__mega-product:hover .cwc_header__mega-product-image {
+    transform: none;
+  }
 }
 
 .cwc_header__mega-product-title {

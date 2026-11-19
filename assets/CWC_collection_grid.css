@@ -771,10 +771,8 @@
     padding: 16px var(--cg-gutter) 0;
   }
 
-  /* Toolbar: [Filter (n)] [Sort] + chips row — a line, not a shadow */
-  .cwc_collection-grid--sticky .cwc_collection-grid__toolbar {
-    border-bottom-color: var(--cg-ink);
-  }
+  /* Toolbar: [Filter (n)] [Sort] + chips row — keeps the same soft hairline
+     (--border-color) as desktop; no dark rule under the buttons */
 
   .cwc_collection-grid__toolbar-inner {
     flex-wrap: nowrap;

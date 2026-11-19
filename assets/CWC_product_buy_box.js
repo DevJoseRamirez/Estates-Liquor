@@ -1016,6 +1016,30 @@
     card.hidden = false;
   }
 
+  /* Description block: Read More only appears when the copy is actually
+     taller than the clamp. Without JS the clamped text stays short, and
+     the button stays hidden. */
+  function initDescription(sectionEl) {
+    var wrap = sectionEl.querySelector("[data-cwc-desc]");
+    if (!wrap) return;
+    var body = wrap.querySelector("[data-cwc-desc-body]");
+    var toggle = wrap.querySelector("[data-cwc-desc-toggle]");
+    if (!body || !toggle) return;
+
+    if (body.scrollHeight <= body.clientHeight + 4) {
+      wrap.classList.remove("cwc_product-buy-box__description--clamped");
+      toggle.remove();
+      return;
+    }
+
+    toggle.hidden = false;
+    toggle.addEventListener("click", function () {
+      var open = wrap.classList.toggle("cwc_product-buy-box__description--open");
+      toggle.textContent = open ? toggle.dataset.less : toggle.dataset.more;
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+
   function initSection(sectionEl) {
     if (!sectionEl || sectionEl.dataset.cwcBuyBoxInit === "true") return;
     sectionEl.dataset.cwcBuyBoxInit = "true";
@@ -1027,6 +1051,7 @@
     initFbt(sectionEl);
     initDeliveryEstimate(sectionEl);
     initTestimonial(sectionEl);
+    initDescription(sectionEl);
   }
 
   function initAllSections() {
