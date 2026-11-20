@@ -8,7 +8,7 @@
 /* === Section Wrapper === */
 .cwc_review-strip {
   --rs-star-size: 13px;
-  --rs-text-size: 14px;
+  --rs-text-size: 15px;
   --rs-gap: 2.25rem;
 
   background-color: var(--section-bg);
@@ -55,7 +55,7 @@
 }
 
 /* === Review === */
-/* Each review carries its own trailing gap (with the diamond centred in it),
+/* Each review carries its own trailing gap (with the divider centred in it),
    so the spacing at the loop seam is identical to every other gap */
 .cwc_review-strip__card {
   position: relative;
@@ -103,16 +103,16 @@
   color: var(--author-color);
 }
 
-/* Square amber diamond between reviews (brand separator) */
-.cwc_review-strip__card-diamond {
+/* Plain "|" between reviews (kept distinct from the star shapes) */
+.cwc_review-strip__card-divider {
   position: absolute;
   top: 50%;
-  right: calc(var(--rs-gap) / 2 - 3px);
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  transform: rotate(45deg);
-  background-color: var(--highlight-color);
+  right: calc(var(--rs-gap) / 2);
+  transform: translate(50%, -50%);
+  font-size: calc(var(--rs-text-size) + 2px);
+  font-style: normal;
+  line-height: 1;
+  color: var(--highlight-color);
 }
 
 /* === Empty State (theme editor only) === */
@@ -152,7 +152,7 @@
 @media screen and (max-width: 768px) {
   .cwc_review-strip {
     --rs-star-size: 12px;
-    --rs-text-size: 13px;
+    --rs-text-size: 14px;
     --rs-gap: 1.75rem;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);

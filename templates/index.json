@@ -11,7 +11,6 @@
   "sections": {
     "cwc_brand_marquee": {
       "type": "CWC_brand_marquee",
-      "disabled": true,
       "blocks": {
         "cwc_brand_marquee_b1": {
           "type": "brand",
@@ -144,6 +143,7 @@
         "cwc_brand_marquee_b15",
         "cwc_brand_marquee_b16"
       ],
+      "disabled": true,
       "settings": {
         "show_label": true,
         "label": "In Stock Now",
@@ -152,9 +152,9 @@
         "scroll_duration": 120,
         "pause_on_hover": false,
         "bg_color": "#f4f0e8",
-        "text_color": "#13241C",
+        "text_color": "#13241c",
         "bold_color": "#8a6a2e",
-        "label_bg_color": "#13241C",
+        "label_bg_color": "#13241c",
         "label_text_color": "#e9a23b",
         "show_border": true,
         "border_color": "#ecece8",
@@ -214,7 +214,7 @@
         "image_fit": "cover",
         "border_radius": 0,
         "arrow_bg_color": "#ffffff",
-        "arrow_icon_color": "#13241C",
+        "arrow_icon_color": "#13241c",
         "dot_color": "#ffffff",
         "dot_active_color": "#e9a23b",
         "padding_top": 0,
@@ -241,15 +241,676 @@
         "overlay_opacity": 100,
         "overlay_coverage": 35,
         "hero_height": 640,
-        "bg_color": "#13241C",
+        "bg_color": "#13241c",
         "text_color": "#ffffff",
         "bold_color": "#c49340",
         "eyebrow_color": "#c49340",
-        "overlay_color": "#13241C",
+        "overlay_color": "#13241c",
         "button_bg_color": "#e9a23b",
-        "button_text_color": "#13241C",
+        "button_text_color": "#13241c",
         "padding_top": 80,
         "padding_bottom": 80
+      }
+    },
+    "cwc_home_hero": {
+      "type": "CWC_home_hero",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "WhistlePig",
+            "heading": "<p>Vermont Rye, Built to Be Bold</p>",
+            "button_label": "Shop WhistlePig",
+            "button_link": "shopify://collections/whistlepig",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/whistlepig"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "The Macallan",
+            "heading": "<p>Single Malt Scotch from Speyside</p>",
+            "button_label": "Shop The Macallan",
+            "button_link": "shopify://collections/macallan-1",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/macallan-1"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "Doc Holliday",
+            "heading": "<p>The Ducks Unlimited 10 Year Set</p>",
+            "button_label": "Shop the Set",
+            "button_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set"
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "show_content": false,
+            "content_style": "plain",
+            "content_position": "middle_center",
+            "mobile_content_position": "desktop",
+            "eyebrow": "Van Winkle",
+            "heading": "<p>The Bourbon Everyone Is Hunting For</p>",
+            "button_label": "Shop Van Winkle",
+            "button_link": "shopify://collections/van-winkle",
+            "link_label": "Browse the full lineup",
+            "link_url": "shopify://collections/all",
+            "slide_link": "shopify://collections/van-winkle"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
+      ],
+      "disabled": true,
+      "settings": {
+        "bg_color": "#0b0b0b",
+        "text_color": "#ffffff",
+        "bold_color": "#d9be78",
+        "eyebrow_color": "#d9be78",
+        "link_color": "#d9be78",
+        "frame_color": "#c2a14d",
+        "frame_bg_color": "#0e0c09",
+        "show_bulbs": true,
+        "bulb_color": "#f2d27a",
+        "button_bg_color": "#c2a14d",
+        "button_text_color": "#111111",
+        "button_hover_color": "#f2d27a",
+        "indicator_color": "#4a443a",
+        "fit_image_height": true,
+        "min_height": 480,
+        "min_height_mobile": 420,
+        "overlay_opacity": 0,
+        "autoplay": true,
+        "autoplay_speed": 6,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "cwc_quick_links": {
+      "type": "CWC_quick_links",
+      "blocks": {
+        "cwc_quick_links_b1": {
+          "type": "link",
+          "settings": {
+            "collection": "rare-limited",
+            "label": "The Allocation",
+            "link": "",
+            "featured": true
+          }
+        },
+        "cwc_quick_links_b2": {
+          "type": "link",
+          "settings": {
+            "collection": "bourbon",
+            "label": "Bourbon",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b3": {
+          "type": "link",
+          "settings": {
+            "collection": "scotch",
+            "label": "Scotch",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b4": {
+          "type": "link",
+          "settings": {
+            "collection": "tequila",
+            "label": "Tequila",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b5": {
+          "type": "link",
+          "settings": {
+            "collection": "rye-whiskey",
+            "label": "Rye",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b6": {
+          "type": "link",
+          "settings": {
+            "collection": "bundles-100-up",
+            "label": "Gifts",
+            "link": "",
+            "featured": false
+          }
+        }
+      },
+      "block_order": [
+        "cwc_quick_links_b1",
+        "cwc_quick_links_b2",
+        "cwc_quick_links_b3",
+        "cwc_quick_links_b4",
+        "cwc_quick_links_b5",
+        "cwc_quick_links_b6"
+      ],
+      "settings": {
+        "nav_label": "Shop by category",
+        "bg_color": "#ffffff",
+        "chip_bg_color": "#ffffff",
+        "chip_text_color": "#1c1c19",
+        "chip_border_color": "#d9d9d3",
+        "featured_bg_color": "#13241c",
+        "featured_text_color": "#c49340",
+        "border_color": "#ecece8",
+        "mobile_only": true,
+        "show_border": false,
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "cwc_promo_hero": {
+      "type": "CWC_promo_hero",
+      "blocks": {
+        "cwc_promo_hero_p1": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group-1_5d72e1af-02e2-4665-b0d1-23fbbf8166f2.png",
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_style": "gradient",
+            "overlay_opacity": 25,
+            "overlay_reach": 55,
+            "eyebrow": "Just landed · Allocated",
+            "heading": "<p>Rare bottles, <em>listed at fair retail.</em></p>",
+            "heading_size": "large",
+            "text": "<p>Weller, Blanton’s and Buffalo Trace Antique Collection, the day they land.</p>",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Shop the allocation",
+            "button_style": "solid",
+            "link": "",
+            "link_whole_panel": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c",
+            "button_hover_color": "#d68f27",
+            "logo_width": 120,
+            "badge_position": "bottom-right",
+            "badge_width": 180
+          }
+        },
+        "cwc_promo_hero_p2": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_2.png",
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_style": "gradient",
+            "overlay_opacity": 25,
+            "overlay_reach": 55,
+            "eyebrow": "Today’s flash sale",
+            "heading": "<p>Markdowns</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Shop the sale",
+            "button_style": "link",
+            "link": "",
+            "link_whole_panel": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c",
+            "button_hover_color": "#d68f27",
+            "logo_width": 120,
+            "badge_position": "bottom-right",
+            "badge_width": 180
+          }
+        },
+        "cwc_promo_hero_p3": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group-2.png",
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_style": "gradient",
+            "overlay_opacity": 25,
+            "overlay_reach": 55,
+            "eyebrow": "Single barrel",
+            "heading": "<p>Store picks</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Shop the picks",
+            "button_style": "link",
+            "link": "",
+            "link_whole_panel": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c",
+            "button_hover_color": "#d68f27",
+            "logo_width": 120,
+            "badge_position": "bottom-right",
+            "badge_width": 180
+          }
+        }
+      },
+      "block_order": [
+        "cwc_promo_hero_p1",
+        "cwc_promo_hero_p2",
+        "cwc_promo_hero_p3"
+      ],
+      "settings": {
+        "layout": "featured_left",
+        "desktop_height": 590,
+        "mobile_height": 460,
+        "panel_gap": 10,
+        "border_radius": 0,
+        "bg_color": "#ffffff",
+        "padding_top": 15,
+        "padding_bottom": 15,
+        "padding_top_mobile": 0
+      }
+    },
+    "cwc_review_strip": {
+      "type": "CWC_review_strip",
+      "blocks": {
+        "cwc_review_strip_b1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R."
+          }
+        },
+        "cwc_review_strip_b2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K."
+          }
+        },
+        "cwc_review_strip_b3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T."
+          }
+        }
+      },
+      "block_order": [
+        "cwc_review_strip_b1",
+        "cwc_review_strip_b2",
+        "cwc_review_strip_b3"
+      ],
+      "settings": {
+        "use_judgeme": true,
+        "judgeme_limit": 25,
+        "judgeme_min_rating": 4,
+        "text_limit": 110,
+        "seconds_per_review": 10,
+        "show_borders": false,
+        "edge_fade": true,
+        "bg_color": "#ffffff",
+        "text_color": "#000000",
+        "bold_color": "#c49340",
+        "star_color": "#c49340",
+        "author_color": "#6e6a60",
+        "border_color": "#e4ded2",
+        "padding_top": 14,
+        "padding_bottom": 14
+      }
+    },
+    "cwc_category_tiles": {
+      "type": "CWC_category_tiles",
+      "blocks": {
+        "cwc_category_tiles_t1": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Bourbon",
+            "collection": "bourbon",
+            "link": "",
+            "card_bg": ""
+          }
+        },
+        "cwc_category_tiles_t2": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Scotch",
+            "collection": "scotch-100-up",
+            "link": "",
+            "card_bg": ""
+          }
+        },
+        "cwc_category_tiles_t3": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Tequila",
+            "collection": "tequila",
+            "link": "",
+            "card_bg": ""
+          }
+        },
+        "cwc_category_tiles_t4": {
+          "type": "tile",
+          "settings": {
+            "title": "Shop Gifts & Sets",
+            "collection": "bundles-100-up",
+            "link": "",
+            "card_bg": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_category_tiles_t1",
+        "cwc_category_tiles_t2",
+        "cwc_category_tiles_t3",
+        "cwc_category_tiles_t4"
+      ],
+      "settings": {
+        "heading": "",
+        "columns": 4,
+        "card_height": 150,
+        "card_height_mobile": 120,
+        "card_gap": 16,
+        "bg_color": "#ffffff",
+        "text_color": "#13241c",
+        "card_bg_odd": "#e4ebe6",
+        "card_bg_even": "#efe9dd",
+        "baseline_color": "#c4c4be",
+        "arrow_color": "#13241c",
+        "arrow_hover_bg": "#e9a23b",
+        "padding_top": 40,
+        "padding_bottom": 0
+      }
+    },
+    "cwc_product_tabs": {
+      "type": "CWC_product_tabs",
+      "blocks": {
+        "cwc_product_tabs_t1": {
+          "type": "tab",
+          "settings": {
+            "label": "Featured",
+            "collection": "just-landed",
+            "view_all_label": ""
+          }
+        },
+        "cwc_product_tabs_t2": {
+          "type": "tab",
+          "settings": {
+            "label": "Bourbon",
+            "collection": "bourbon-100-up",
+            "view_all_label": ""
+          }
+        },
+        "cwc_product_tabs_t3": {
+          "type": "tab",
+          "settings": {
+            "label": "Scotch",
+            "collection": "scotch-100-up",
+            "view_all_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_product_tabs_t1",
+        "cwc_product_tabs_t2",
+        "cwc_product_tabs_t3"
+      ],
+      "settings": {
+        "heading": "<p>From the <em>Cellar</em></p>",
+        "subtext": "",
+        "show_rule": true,
+        "products_to_show": 10,
+        "columns": 5,
+        "products_mobile": 4,
+        "card_align": "center",
+        "show_card_meta": false,
+        "show_view_all": true,
+        "bg_color": "#ffffff",
+        "text_color": "#13241c",
+        "bold_color": "#8a6a2e",
+        "subtext_color": "#5c5c57",
+        "rule_color": "#13241c",
+        "tab_color": "#5c5c57",
+        "tab_active_color": "#13241c",
+        "tab_underline_color": "#e9a23b",
+        "border_color": "#ecece8",
+        "view_all_color": "#13241c",
+        "view_all_hover_text_color": "#ffffff",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "cwc_promo_cards": {
+      "type": "CWC_promo_cards",
+      "blocks": {
+        "cwc_promo_cards_c1": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Bundles & gift sets",
+            "heading": "<p>Ready-made <em>bundles</em></p>",
+            "text": "<p>Curated sets, boxed and ready to give.</p>",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Shop bundles",
+            "button_style": "link",
+            "link": "shopify://collections/bundles-100-up",
+            "link_whole_card": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c"
+          }
+        },
+        "cwc_promo_cards_c2": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Build your own",
+            "heading": "<p>Build a <em>bundle</em></p>",
+            "text": "<p>Pick the bottles, we box them up.</p>",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Start building",
+            "button_style": "link",
+            "link": "",
+            "link_whole_card": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c"
+          }
+        },
+        "cwc_promo_cards_c3": {
+          "type": "card",
+          "settings": {
+            "alt_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 25,
+            "eyebrow": "Personalized",
+            "heading": "<p>Custom <em>engraving</em></p>",
+            "text": "<p>Add a name, date or message to the bottle.</p>",
+            "content_position": "middle-left",
+            "text_color": "#ffffff",
+            "eyebrow_color": "#e9a23b",
+            "bold_color": "#e9a23b",
+            "button_label": "Learn more",
+            "button_style": "link",
+            "link": "",
+            "link_whole_card": true,
+            "button_bg_color": "#e9a23b",
+            "button_text_color": "#13241c"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_promo_cards_c1",
+        "cwc_promo_cards_c2",
+        "cwc_promo_cards_c3"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "card_height": 440,
+        "card_height_mobile": 360,
+        "card_gap": 10,
+        "mobile_layout": "stack",
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "cwc_collection_highlight": {
+      "type": "CWC_collection_highlight",
+      "blocks": {
+        "cwc_collection_highlight_b1": {
+          "type": "bullet",
+          "settings": {
+            "text": "Buffalo Trace Antique Collection",
+            "link": ""
+          }
+        },
+        "cwc_collection_highlight_b2": {
+          "type": "bullet",
+          "settings": {
+            "text": "Weller, Blanton’s, E.H. Taylor",
+            "link": ""
+          }
+        },
+        "cwc_collection_highlight_b3": {
+          "type": "bullet",
+          "settings": {
+            "text": "Van Winkle when it lands",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_collection_highlight_b1",
+        "cwc_collection_highlight_b2",
+        "cwc_collection_highlight_b3"
+      ],
+      "settings": {
+        "eyebrow": "Rare & Allocated",
+        "heading": "<p>The <strong>Allocation.</strong></p>",
+        "subtext": "<p>Allocated releases arrive a few bottles at a time. We list them at fair retail the day they land, with no lottery and no waitlist.</p>",
+        "collection": "",
+        "button_label": "Shop the Allocation",
+        "button_link": "",
+        "button_2_label": "Join the Allocation List",
+        "button_2_link": "",
+        "bg_color": "#ffffff",
+        "text_color": "#13241c",
+        "bold_color": "#13241c",
+        "eyebrow_color": "#8a6a2e",
+        "subtext_color": "#3a3a36",
+        "bullet_color": "#e9a23b",
+        "image_bg_color": "#13241c",
+        "button_bg_color": "#e9a23b",
+        "button_text_color": "#13241c",
+        "button_hover_color": "#d68f27",
+        "button_2_color": "#13241c",
+        "image_position": "left",
+        "image_width": 50,
+        "image_ratio": "5 / 4",
+        "content_align": "center",
+        "mobile_content_first": false,
+        "alt_text": "",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cwc_product_tabs_2": {
+      "type": "CWC_product_tabs",
+      "blocks": {
+        "cwc_product_tabs_2_t1": {
+          "type": "tab",
+          "settings": {
+            "label": "American Whiskey",
+            "collection": "american-whiskey-over-100",
+            "view_all_label": ""
+          }
+        },
+        "cwc_product_tabs_2_t2": {
+          "type": "tab",
+          "settings": {
+            "label": "Irish Whiskey",
+            "collection": "irish-whiskey-over-100",
+            "view_all_label": ""
+          }
+        },
+        "cwc_product_tabs_2_t3": {
+          "type": "tab",
+          "settings": {
+            "label": "Rye Whiskey",
+            "collection": "rye-whiskey-over-100",
+            "view_all_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "cwc_product_tabs_2_t1",
+        "cwc_product_tabs_2_t2",
+        "cwc_product_tabs_2_t3"
+      ],
+      "settings": {
+        "heading": "<p>More to <em>Explore</em></p>",
+        "subtext": "",
+        "show_rule": true,
+        "products_to_show": 10,
+        "columns": 5,
+        "products_mobile": 4,
+        "card_align": "center",
+        "show_card_meta": false,
+        "show_view_all": true,
+        "bg_color": "#ffffff",
+        "text_color": "#13241c",
+        "bold_color": "#8a6a2e",
+        "subtext_color": "#5c5c57",
+        "rule_color": "#13241c",
+        "tab_color": "#5c5c57",
+        "tab_active_color": "#13241c",
+        "tab_underline_color": "#e9a23b",
+        "border_color": "#ecece8",
+        "view_all_color": "#13241c",
+        "view_all_hover_text_color": "#ffffff",
+        "padding_top": 72,
+        "padding_bottom": 72
       }
     },
     "cwc_hero_VbRH83": {
@@ -285,7 +946,6 @@
     },
     "cwc_trust_bar": {
       "type": "CWC_trust_bar",
-      "disabled": true,
       "blocks": {
         "cwc_trust_bar_b1": {
           "type": "item",
@@ -330,9 +990,10 @@
         "cwc_trust_bar_b3",
         "cwc_trust_bar_b4"
       ],
+      "disabled": true,
       "settings": {
         "bg_color": "#f4f0e8",
-        "text_color": "#13241C",
+        "text_color": "#13241c",
         "subtext_color": "#5c5c57",
         "bold_color": "#8a6a2e",
         "icon_color": "#8a6a2e",
@@ -345,7 +1006,6 @@
     },
     "cwc_shop_category": {
       "type": "CWC_shop_category",
-      "disabled": true,
       "blocks": {
         "cwc_shop_category_b1": {
           "type": "pill",
@@ -581,21 +1241,22 @@
         "card_EUi9N6",
         "card_memhfT"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "Browse the Collection",
         "heading": "<p>Shop by Category</p>",
         "subtext": "",
         "show_rule": true,
         "bg_color": "#ffffff",
-        "text_color": "#13241C",
+        "text_color": "#13241c",
         "bold_color": "#8a6a2e",
         "eyebrow_color": "#8a6a2e",
         "border_color": "#ecece8",
         "pill_bg_color": "#ffffff",
-        "pill_text_color": "#13241C",
-        "card_bg_color": "#13241C",
-        "card_bg_end_color": "#13241C",
-        "card_overlay_color": "#13241C",
+        "pill_text_color": "#13241c",
+        "card_bg_color": "#13241c",
+        "card_bg_end_color": "#13241c",
+        "card_overlay_color": "#13241c",
         "card_overlay_opacity": 100,
         "card_title_color": "#ffffff",
         "card_text_color": "#e9a23b",
@@ -740,14 +1401,139 @@
         "columns": 6,
         "show_count": false,
         "bg_color": "#ffffff",
-        "text_color": "#13241C",
+        "text_color": "#13241c",
         "bold_color": "#8a6a2e",
         "eyebrow_color": "#8a6a2e",
         "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
-        "card_title_color": "#13241C",
+        "card_title_color": "#13241c",
         "card_text_color": "#5c5c57",
-        "button_text_color": "#13241C",
+        "button_text_color": "#13241c",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cwc_store_reviews": {
+      "type": "CWC_store_reviews",
+      "blocks": {
+        "cwc_store_reviews_b1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R.",
+            "meta": "Verified buyer"
+          }
+        },
+        "cwc_store_reviews_b2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K.",
+            "meta": "Verified buyer"
+          }
+        },
+        "cwc_store_reviews_b3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T.",
+            "meta": "Verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_store_reviews_b1",
+        "cwc_store_reviews_b2",
+        "cwc_store_reviews_b3"
+      ],
+      "settings": {
+        "eyebrow": "4.9 Average · 18 Store Reviews",
+        "heading": "<p>What Estates Liquor Customers Say</p>",
+        "show_rule": true,
+        "use_judgeme": true,
+        "judgeme_limit": 25,
+        "judgeme_min_rating": 4,
+        "judgeme_show_verified": true,
+        "summary_source": "store",
+        "summary_template": "[rating] Average · [count] Store Reviews",
+        "carousel_mode": "cycle",
+        "cycle_interval": 5,
+        "show_arrows": true,
+        "carousel_speed": 40,
+        "card_width": 360,
+        "bg_color": "#ffffff",
+        "text_color": "#13241c",
+        "bold_color": "#8a6a2e",
+        "eyebrow_color": "#8a6a2e",
+        "star_color": "#8a6a2e",
+        "border_color": "#ecece8",
+        "card_bg_color": "#ffffff",
+        "card_meta_color": "#5c5c57",
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
+    },
+    "cwc_rare_allocated": {
+      "type": "CWC_rare_allocated",
+      "blocks": {
+        "cwc_rare_allocated_b1": {
+          "type": "stat",
+          "settings": {
+            "number": "40+",
+            "label": "Allocated Releases"
+          }
+        },
+        "cwc_rare_allocated_b2": {
+          "type": "stat",
+          "settings": {
+            "number": "Weekly",
+            "label": "Restocked Drops"
+          }
+        },
+        "cwc_rare_allocated_b3": {
+          "type": "stat",
+          "settings": {
+            "number": "Retail",
+            "label": "Fair Prices, Always"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_rare_allocated_b1",
+        "cwc_rare_allocated_b2",
+        "cwc_rare_allocated_b3"
+      ],
+      "disabled": true,
+      "settings": {
+        "eyebrow": "Rare & Allocated",
+        "heading": "<p>The bottles that<br/>rarely reach<br/>the shelf.</p>",
+        "subtext": "<p>Allocated releases arrive in small quantities and leave fast. We list them at fair retail — no lottery, no markup games. When a bottle lands, it goes live.</p>",
+        "collection": "rare-limited",
+        "products_to_show": 16,
+        "show_card_vendor": true,
+        "show_card_meta": false,
+        "cards_per_view": 2,
+        "button_label": "Shop Rare & Allocated",
+        "button_link": "shopify://collections/rare-limited",
+        "bg_color": "#13241c",
+        "text_color": "#ffffff",
+        "bold_color": "#c49340",
+        "eyebrow_color": "#c49340",
+        "button_bg_color": "#e9a23b",
+        "button_text_color": "#13241c",
+        "show_decor": true,
+        "decor_opacity": 16,
+        "card_bg_color": "#ffffff",
+        "card_text_color": "#13241c",
+        "card_meta_color": "#5c5c57",
+        "card_media_bg_color": "#ffffff",
+        "card_border_color": "#ecece8",
+        "card_button_bg_color": "#e9a23b",
         "padding_top": 80,
         "padding_bottom": 80
       }
@@ -814,345 +1600,16 @@
         "show_rule": true,
         "columns": 4,
         "bg_color": "#f4f0e8",
-        "text_color": "#13241C",
+        "text_color": "#13241c",
         "bold_color": "#8a6a2e",
         "eyebrow_color": "#8a6a2e",
         "border_color": "#ecece8",
         "card_bg_color": "#ffffff",
-        "card_bg_dark_color": "#13241C",
-        "card_title_color": "#13241C",
+        "card_bg_dark_color": "#13241c",
+        "card_title_color": "#13241c",
         "card_text_color": "#5c5c57",
         "padding_top": 80,
         "padding_bottom": 80
-      }
-    },
-    "cwc_rare_allocated": {
-      "type": "CWC_rare_allocated",
-      "disabled": true,
-      "blocks": {
-        "cwc_rare_allocated_b1": {
-          "type": "stat",
-          "settings": {
-            "number": "40+",
-            "label": "Allocated Releases"
-          }
-        },
-        "cwc_rare_allocated_b2": {
-          "type": "stat",
-          "settings": {
-            "number": "Weekly",
-            "label": "Restocked Drops"
-          }
-        },
-        "cwc_rare_allocated_b3": {
-          "type": "stat",
-          "settings": {
-            "number": "Retail",
-            "label": "Fair Prices, Always"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_rare_allocated_b1",
-        "cwc_rare_allocated_b2",
-        "cwc_rare_allocated_b3"
-      ],
-      "settings": {
-        "eyebrow": "Rare & Allocated",
-        "heading": "<p>The bottles that<br/>rarely reach<br/>the shelf.</p>",
-        "subtext": "<p>Allocated releases arrive in small quantities and leave fast. We list them at fair retail — no lottery, no markup games. When a bottle lands, it goes live.</p>",
-        "collection": "rare-limited",
-        "products_to_show": 16,
-        "cards_per_view": 2,
-        "button_label": "Shop Rare & Allocated",
-        "button_link": "shopify://collections/rare-limited",
-        "bg_color": "#13241C",
-        "text_color": "#ffffff",
-        "bold_color": "#c49340",
-        "eyebrow_color": "#c49340",
-        "button_bg_color": "#e9a23b",
-        "button_text_color": "#13241C",
-        "show_decor": true,
-        "decor_opacity": 16,
-        "card_bg_color": "#ffffff",
-        "card_text_color": "#13241C",
-        "card_meta_color": "#5c5c57",
-        "card_media_bg_color": "#ffffff",
-        "card_border_color": "#ecece8",
-        "card_button_bg_color": "#e9a23b",
-        "padding_top": 80,
-        "padding_bottom": 80
-      }
-    },
-    "cwc_store_reviews": {
-      "type": "CWC_store_reviews",
-      "blocks": {
-        "cwc_store_reviews_b1": {
-          "type": "review",
-          "settings": {
-            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
-            "author": "Michael R.",
-            "meta": "Verified buyer"
-          }
-        },
-        "cwc_store_reviews_b2": {
-          "type": "review",
-          "settings": {
-            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
-            "author": "David K.",
-            "meta": "Verified buyer"
-          }
-        },
-        "cwc_store_reviews_b3": {
-          "type": "review",
-          "settings": {
-            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
-            "author": "James T.",
-            "meta": "Verified buyer"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_store_reviews_b1",
-        "cwc_store_reviews_b2",
-        "cwc_store_reviews_b3"
-      ],
-      "settings": {
-        "eyebrow": "4.9 Average · 18 Store Reviews",
-        "heading": "<p>What Estates Liquor Customers Say</p>",
-        "show_rule": true,
-        "bg_color": "#ffffff",
-        "text_color": "#13241C",
-        "bold_color": "#8a6a2e",
-        "eyebrow_color": "#8a6a2e",
-        "star_color": "#8a6a2e",
-        "border_color": "#ecece8",
-        "card_bg_color": "#ffffff",
-        "card_meta_color": "#5c5c57",
-        "padding_top": 70,
-        "padding_bottom": 70
-      }
-    },
-    "cwc_home_hero": {
-      "type": "CWC_home_hero",
-      "disabled": true,
-      "blocks": {
-        "slide_1": {
-          "type": "slide",
-          "settings": {
-            "show_content": false,
-            "content_style": "plain",
-            "content_position": "middle_center",
-            "mobile_content_position": "desktop",
-            "eyebrow": "WhistlePig",
-            "heading": "<p>Vermont Rye, Built to Be Bold</p>",
-            "button_label": "Shop WhistlePig",
-            "button_link": "shopify://collections/whistlepig",
-            "link_label": "Browse the full lineup",
-            "link_url": "shopify://collections/all",
-            "slide_link": "shopify://collections/whistlepig"
-          }
-        },
-        "slide_2": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "show_content": false,
-            "content_style": "plain",
-            "content_position": "middle_center",
-            "mobile_content_position": "desktop",
-            "eyebrow": "The Macallan",
-            "heading": "<p>Single Malt Scotch from Speyside</p>",
-            "button_label": "Shop The Macallan",
-            "button_link": "shopify://collections/macallan-1",
-            "link_label": "Browse the full lineup",
-            "link_url": "shopify://collections/all",
-            "slide_link": "shopify://collections/macallan-1"
-          }
-        },
-        "slide_3": {
-          "type": "slide",
-          "settings": {
-            "show_content": false,
-            "content_style": "plain",
-            "content_position": "middle_center",
-            "mobile_content_position": "desktop",
-            "eyebrow": "Doc Holliday",
-            "heading": "<p>The Ducks Unlimited 10 Year Set</p>",
-            "button_label": "Shop the Set",
-            "button_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set",
-            "link_label": "Browse the full lineup",
-            "link_url": "shopify://collections/all",
-            "slide_link": "shopify://products/doc-holliday-10-year-ducks-unlimited-10-year-limited-edition-bundle-2-bottle-set"
-          }
-        },
-        "slide_4": {
-          "type": "slide",
-          "settings": {
-            "show_content": false,
-            "content_style": "plain",
-            "content_position": "middle_center",
-            "mobile_content_position": "desktop",
-            "eyebrow": "Van Winkle",
-            "heading": "<p>The Bourbon Everyone Is Hunting For</p>",
-            "button_label": "Shop Van Winkle",
-            "button_link": "shopify://collections/van-winkle",
-            "link_label": "Browse the full lineup",
-            "link_url": "shopify://collections/all",
-            "slide_link": "shopify://collections/van-winkle"
-          }
-        }
-      },
-      "block_order": [
-        "slide_1",
-        "slide_2",
-        "slide_3",
-        "slide_4"
-      ],
-      "settings": {
-        "bg_color": "#0b0b0b",
-        "text_color": "#ffffff",
-        "bold_color": "#d9be78",
-        "eyebrow_color": "#d9be78",
-        "link_color": "#d9be78",
-        "frame_color": "#c2a14d",
-        "frame_bg_color": "#0e0c09",
-        "show_bulbs": true,
-        "bulb_color": "#f2d27a",
-        "button_bg_color": "#c2a14d",
-        "button_text_color": "#111111",
-        "button_hover_color": "#f2d27a",
-        "indicator_color": "#4a443a",
-        "fit_image_height": true,
-        "min_height": 480,
-        "min_height_mobile": 420,
-        "overlay_opacity": 0,
-        "autoplay": true,
-        "autoplay_speed": 6,
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
-    "cwc_product_tabs": {
-      "type": "CWC_product_tabs",
-      "blocks": {
-        "cwc_product_tabs_t1": {
-          "type": "tab",
-          "settings": {
-            "label": "Featured",
-            "collection": "just-landed"
-          }
-        },
-        "cwc_product_tabs_t2": {
-          "type": "tab",
-          "settings": {
-            "label": "Bourbon",
-            "collection": "bourbon-100-up"
-          }
-        },
-        "cwc_product_tabs_t3": {
-          "type": "tab",
-          "settings": {
-            "label": "Scotch",
-            "collection": "scotch-100-up"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_product_tabs_t1",
-        "cwc_product_tabs_t2",
-        "cwc_product_tabs_t3"
-      ],
-      "settings": {
-        "heading": "<p>From the <em>Cellar</em></p>",
-        "subtext": "",
-        "show_rule": true,
-        "products_to_show": 10,
-        "columns": 5,
-        "products_mobile": 4,
-        "card_align": "center",
-        "show_card_meta": false,
-        "show_view_all": true
-      }
-    },
-    "cwc_collection_highlight": {
-      "type": "CWC_collection_highlight",
-      "blocks": {
-        "cwc_collection_highlight_b1": {
-          "type": "bullet",
-          "settings": {
-            "text": "Buffalo Trace Antique Collection",
-            "link": ""
-          }
-        },
-        "cwc_collection_highlight_b2": {
-          "type": "bullet",
-          "settings": {
-            "text": "Weller, Blanton’s, E.H. Taylor",
-            "link": ""
-          }
-        },
-        "cwc_collection_highlight_b3": {
-          "type": "bullet",
-          "settings": {
-            "text": "Van Winkle when it lands",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "cwc_collection_highlight_b1",
-        "cwc_collection_highlight_b2",
-        "cwc_collection_highlight_b3"
-      ],
-      "settings": {}
-    },
-    "cwc_category_tiles": {
-      "type": "CWC_category_tiles",
-      "blocks": {
-        "cwc_category_tiles_t1": {
-          "type": "tile",
-          "settings": {
-            "title": "Shop Bourbon",
-            "collection": "bourbon"
-          }
-        },
-        "cwc_category_tiles_t2": {
-          "type": "tile",
-          "settings": {
-            "title": "Shop Scotch",
-            "collection": "scotch-100-up"
-          }
-        },
-        "cwc_category_tiles_t3": {
-          "type": "tile",
-          "settings": {
-            "title": "Shop Tequila",
-            "collection": "tequila"
-          }
-        },
-        "cwc_category_tiles_t4": {
-          "type": "tile",
-          "settings": {
-            "title": "Shop Gifts & Sets",
-            "collection": "bundles-100-up"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_category_tiles_t1",
-        "cwc_category_tiles_t2",
-        "cwc_category_tiles_t3",
-        "cwc_category_tiles_t4"
-      ],
-      "settings": {
-        "columns": 4,
-        "card_height": 150,
-        "card_height_mobile": 120,
-        "card_gap": 16,
-        "padding_top": 40,
-        "padding_bottom": 0,
-        "baseline_color": "#C4C4BE"
       }
     },
     "cwc_why_estates": {
@@ -1199,300 +1656,18 @@
       ],
       "settings": {
         "eyebrow": "Why Estates",
-        "heading": "<p>Bought right. <em>Shipped right.</em></p>"
-      }
-    },
-    "cwc_promo_hero": {
-      "type": "CWC_promo_hero",
-      "blocks": {
-        "cwc_promo_hero_p1": {
-          "type": "panel",
-          "settings": {
-            "eyebrow": "Just landed · Allocated",
-            "heading": "<p>Rare bottles, <em>listed at fair retail.</em></p>",
-            "heading_size": "large",
-            "text": "<p>Weller, Blanton’s and Buffalo Trace Antique Collection, the day they land.</p>",
-            "content_position": "middle-left",
-            "button_label": "Shop the allocation",
-            "button_style": "solid"
-          }
-        },
-        "cwc_promo_hero_p2": {
-          "type": "panel",
-          "settings": {
-            "eyebrow": "Today’s flash sale",
-            "heading": "<p>Markdowns</p>",
-            "heading_size": "small",
-            "text": "",
-            "content_position": "middle-left",
-            "button_label": "Shop the sale",
-            "button_style": "link"
-          }
-        },
-        "cwc_promo_hero_p3": {
-          "type": "panel",
-          "settings": {
-            "eyebrow": "Single barrel",
-            "heading": "<p>Store picks</p>",
-            "heading_size": "small",
-            "text": "",
-            "content_position": "middle-left",
-            "button_label": "Shop the picks",
-            "button_style": "link"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_promo_hero_p1",
-        "cwc_promo_hero_p2",
-        "cwc_promo_hero_p3"
-      ],
-      "settings": {
-        "layout": "featured_left",
-        "padding_top": 15,
-        "padding_bottom": 15
-      }
-    },
-    "cwc_quick_links": {
-      "type": "CWC_quick_links",
-      "blocks": {
-        "cwc_quick_links_b1": {
-          "type": "link",
-          "settings": {
-            "collection": "rare-limited",
-            "label": "The Allocation",
-            "link": "",
-            "featured": true
-          }
-        },
-        "cwc_quick_links_b2": {
-          "type": "link",
-          "settings": {
-            "collection": "bourbon",
-            "label": "Bourbon",
-            "link": "",
-            "featured": false
-          }
-        },
-        "cwc_quick_links_b3": {
-          "type": "link",
-          "settings": {
-            "collection": "scotch",
-            "label": "Scotch",
-            "link": "",
-            "featured": false
-          }
-        },
-        "cwc_quick_links_b4": {
-          "type": "link",
-          "settings": {
-            "collection": "tequila",
-            "label": "Tequila",
-            "link": "",
-            "featured": false
-          }
-        },
-        "cwc_quick_links_b5": {
-          "type": "link",
-          "settings": {
-            "collection": "rye-whiskey",
-            "label": "Rye",
-            "link": "",
-            "featured": false
-          }
-        },
-        "cwc_quick_links_b6": {
-          "type": "link",
-          "settings": {
-            "collection": "bundles-100-up",
-            "label": "Gifts",
-            "link": "",
-            "featured": false
-          }
-        }
-      },
-      "block_order": [
-        "cwc_quick_links_b1",
-        "cwc_quick_links_b2",
-        "cwc_quick_links_b3",
-        "cwc_quick_links_b4",
-        "cwc_quick_links_b5",
-        "cwc_quick_links_b6"
-      ],
-      "settings": {
-        "nav_label": "Shop by category",
-        "bg_color": "#FFFFFF",
-        "chip_bg_color": "#FFFFFF",
-        "chip_text_color": "#1C1C19",
-        "chip_border_color": "#D9D9D3",
-        "featured_bg_color": "#13241C",
-        "featured_text_color": "#C49340",
-        "border_color": "#ECECE8",
-        "mobile_only": true,
-        "show_border": false,
-        "padding_top": 28,
-        "padding_bottom": 28
-      }
-    },
-    "cwc_product_tabs_2": {
-      "type": "CWC_product_tabs",
-      "blocks": {
-        "cwc_product_tabs_2_t1": {
-          "type": "tab",
-          "settings": {
-            "label": "American Whiskey",
-            "collection": "american-whiskey-over-100"
-          }
-        },
-        "cwc_product_tabs_2_t2": {
-          "type": "tab",
-          "settings": {
-            "label": "Irish Whiskey",
-            "collection": "irish-whiskey-over-100"
-          }
-        },
-        "cwc_product_tabs_2_t3": {
-          "type": "tab",
-          "settings": {
-            "label": "Rye Whiskey",
-            "collection": "rye-whiskey-over-100"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_product_tabs_2_t1",
-        "cwc_product_tabs_2_t2",
-        "cwc_product_tabs_2_t3"
-      ],
-      "settings": {
-        "heading": "<p>More to <em>Explore</em></p>",
-        "subtext": "",
-        "show_rule": true,
-        "products_to_show": 10,
-        "columns": 5,
-        "products_mobile": 4,
-        "card_align": "center",
-        "show_card_meta": false,
-        "show_view_all": true
-      }
-    },
-    "cwc_promo_cards": {
-      "type": "CWC_promo_cards",
-      "blocks": {
-        "cwc_promo_cards_c1": {
-          "type": "card",
-          "settings": {
-            "alt_text": "",
-            "overlay_color": "#000000",
-            "overlay_opacity": 25,
-            "eyebrow": "Bundles & gift sets",
-            "heading": "<p>Ready-made <em>bundles</em></p>",
-            "text": "<p>Curated sets, boxed and ready to give.</p>",
-            "content_position": "middle-left",
-            "text_color": "#FFFFFF",
-            "eyebrow_color": "#E9A23B",
-            "bold_color": "#E9A23B",
-            "button_label": "Shop bundles",
-            "button_style": "link",
-            "link": "shopify://collections/bundles-100-up",
-            "link_whole_card": true,
-            "button_bg_color": "#E9A23B",
-            "button_text_color": "#13241C"
-          }
-        },
-        "cwc_promo_cards_c2": {
-          "type": "card",
-          "settings": {
-            "alt_text": "",
-            "overlay_color": "#000000",
-            "overlay_opacity": 25,
-            "eyebrow": "Build your own",
-            "heading": "<p>Build a <em>bundle</em></p>",
-            "text": "<p>Pick the bottles, we box them up.</p>",
-            "content_position": "middle-left",
-            "text_color": "#FFFFFF",
-            "eyebrow_color": "#E9A23B",
-            "bold_color": "#E9A23B",
-            "button_label": "Start building",
-            "button_style": "link",
-            "link": "",
-            "link_whole_card": true,
-            "button_bg_color": "#E9A23B",
-            "button_text_color": "#13241C"
-          }
-        },
-        "cwc_promo_cards_c3": {
-          "type": "card",
-          "settings": {
-            "alt_text": "",
-            "overlay_color": "#000000",
-            "overlay_opacity": 25,
-            "eyebrow": "Personalized",
-            "heading": "<p>Custom <em>engraving</em></p>",
-            "text": "<p>Add a name, date or message to the bottle.</p>",
-            "content_position": "middle-left",
-            "text_color": "#FFFFFF",
-            "eyebrow_color": "#E9A23B",
-            "bold_color": "#E9A23B",
-            "button_label": "Learn more",
-            "button_style": "link",
-            "link": "",
-            "link_whole_card": true,
-            "button_bg_color": "#E9A23B",
-            "button_text_color": "#13241C"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_promo_cards_c1",
-        "cwc_promo_cards_c2",
-        "cwc_promo_cards_c3"
-      ],
-      "settings": {
-        "bg_color": "#FFFFFF",
-        "card_height": 440,
-        "card_height_mobile": 360,
-        "card_gap": 10,
-        "mobile_layout": "stack",
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
-    },
-    "cwc_review_strip": {
-      "type": "CWC_review_strip",
-      "blocks": {
-        "cwc_review_strip_b1": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
-            "author": "Michael R."
-          }
-        },
-        "cwc_review_strip_b2": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
-            "author": "David K."
-          }
-        },
-        "cwc_review_strip_b3": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
-            "author": "James T."
-          }
-        }
-      },
-      "block_order": [
-        "cwc_review_strip_b1",
-        "cwc_review_strip_b2",
-        "cwc_review_strip_b3"
-      ],
-      "settings": {
-        "seconds_per_review": 10
+        "heading": "<p>Bought right. <em>Shipped right.</em></p>",
+        "bg_color": "#13241c",
+        "text_color": "#ffffff",
+        "bold_color": "#c49340",
+        "eyebrow_color": "#c49340",
+        "icon_color": "#c49340",
+        "icon_border_color": "",
+        "card_title_color": "#ffffff",
+        "card_text_color": "",
+        "divider_color": "",
+        "padding_top": 80,
+        "padding_bottom": 80
       }
     }
   },

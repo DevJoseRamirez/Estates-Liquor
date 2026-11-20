@@ -1,11 +1,11 @@
 {% style %}
   #cwc_review-strip-{{ section.id }} {
-    --section-bg: {{ section.settings.bg_color | default: '#13241C' }};
-    --text-color: {{ section.settings.text_color | default: '#F4F0E8' }};
+    --section-bg: {{ section.settings.bg_color | default: '#FFFFFF' }};
+    --text-color: {{ section.settings.text_color | default: '#000000' }};
     --highlight-color: {{ section.settings.bold_color | default: '#C49340' }};
     --star-color: {{ section.settings.star_color | default: '#C49340' }};
-    --author-color: {{ section.settings.author_color | default: '#C9C3B6' }};
-    --border-color: {{ section.settings.border_color | default: '#2A3B32' }};
+    --author-color: {{ section.settings.author_color | default: '#6E6A60' }};
+    --border-color: {{ section.settings.border_color | default: '#E4DED2' }};
     --padding-top: {{ section.settings.padding_top | default: 14 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 14 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 14 | times: 0.5 }}px;
@@ -221,18 +221,18 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#13241C"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#F4F0E8"
+      "default": "#000000"
     },
     {
       "type": "color",
       "id": "bold_color",
-      "label": "Diamond Color",
+      "label": "Divider Color",
       "default": "#C49340"
     },
     {
@@ -245,13 +245,13 @@
       "type": "color",
       "id": "author_color",
       "label": "Reviewer Name Color",
-      "default": "#C9C3B6"
+      "default": "#6E6A60"
     },
     {
       "type": "color",
       "id": "border_color",
       "label": "Border & Empty Star Color",
-      "default": "#2A3B32"
+      "default": "#E4DED2"
     },
     {
       "type": "header",

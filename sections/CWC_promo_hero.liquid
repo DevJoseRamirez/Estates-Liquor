@@ -95,13 +95,14 @@
                   assign whole_link = true
                 endif
 
-                assign overlay = block.settings.overlay_opacity | default: 25 | divided_by: 100.0
+                assign overlay = block.settings.overlay_opacity | default: 45 | divided_by: 100.0
+                assign overlay_style = block.settings.overlay_style | default: 'gradient'
               -%}
 
               <div
                 id="cwc_promo-hero-panel-{{ block.id }}"
-                class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }}{% if is_featured %}{% if forloop.first %} cwc_promo-hero__panel--featured{% else %} cwc_promo-hero__panel--side{% endif %}{% endif %}"
-                style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
+                class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }} cwc_promo-hero__panel--overlay-{{ overlay_style }}{% if is_featured %}{% if forloop.first %} cwc_promo-hero__panel--featured{% else %} cwc_promo-hero__panel--side{% endif %}{% endif %}"
+                style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-overlay-reach: {{ block.settings.overlay_reach | default: 55 }}%; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
                 {{ block.shopify_attributes }}
               >
                 {%- if whole_link -%}
@@ -370,15 +371,37 @@
           "default": "#000000"
         },
         {
+          "type": "select",
+          "id": "overlay_style",
+          "label": "Overlay Style",
+          "options": [
+            { "value": "gradient", "label": "Gradient behind the copy" },
+            { "value": "solid", "label": "Solid over the whole image" }
+          ],
+          "default": "gradient",
+          "info": "Gradient darkens only the side the copy sits on (follows Content Position) and fades out so the rest of the image stays clear."
+        },
+        {
           "type": "range",
           "id": "overlay_opacity",
           "label": "Overlay Opacity",
           "min": 0,
-          "max": 80,
+          "max": 90,
           "step": 5,
           "unit": "%",
-          "default": 25,
-          "info": "Darkens the image so the copy stays readable."
+          "default": 45,
+          "info": "Gradient: strength behind the copy. Solid: strength over the whole image."
+        },
+        {
+          "type": "range",
+          "id": "overlay_reach",
+          "label": "Gradient Reach",
+          "min": 30,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 55,
+          "info": "Gradient only. How far across the panel it fades out."
         },
         {
           "type": "header",
