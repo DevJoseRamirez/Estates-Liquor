@@ -888,6 +888,19 @@
     const HIDE_AFTER = 8;
     let ticking = false;
 
+    // A bar right under the header (trust ribbon) would show the tucked row's
+    // empty slot above it, so the header holds its full size until that bar
+    // has scrolled up behind the part of the header that stays
+    // Only a bar in the header group counts; copies placed in the page don't
+    const headerBar = document.querySelector('.shopify-section-group-header-group [data-cwc-header-bar]');
+    const wrapper = sectionEl.parentElement;
+
+    function pastHeaderBar(y, tuckHeight) {
+      if (!headerBar || !wrapper) return y > HIDE_AFTER;
+      const stayBottom = wrapper.getBoundingClientRect().top + wrapper.offsetHeight - tuckHeight;
+      return headerBar.getBoundingClientRect().bottom <= stayBottom + 1;
+    }
+
     // Sticky toolbars elsewhere (collection filters) sit below whatever part
     // of the header is showing
     function publishHeight() {
@@ -955,7 +968,7 @@
         if (!sticky) return;
         // Hold still while the shopper is typing in it
         if (mobileSearch && mobileSearch.isActive()) return;
-        if (y <= HIDE_AFTER) setSearchHidden(false);
+        if (!pastHeaderBar(y, msearch ? msearch.offsetHeight : 0)) setSearchHidden(false);
         else if (delta > 1) setSearchHidden(true);
         return;
       }
@@ -973,7 +986,8 @@
       if (delta > 0) upTravel = 0;
       else if (delta < 0) upTravel -= delta;
 
-      if (y <= HIDE_AFTER) {
+      const tuckRow = hideNav ? nav : top;
+      if (!pastHeaderBar(y, tuckRow ? tuckRow.offsetHeight : 0)) {
         setCompact(false);
       } else if (delta > 1) {
         setCompact(true);

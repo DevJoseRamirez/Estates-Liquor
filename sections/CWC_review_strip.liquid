@@ -1,0 +1,327 @@
+{% style %}
+  #cwc_review-strip-{{ section.id }} {
+    --section-bg: {{ section.settings.bg_color | default: '#13241C' }};
+    --text-color: {{ section.settings.text_color | default: '#F4F0E8' }};
+    --highlight-color: {{ section.settings.bold_color | default: '#C49340' }};
+    --star-color: {{ section.settings.star_color | default: '#C49340' }};
+    --author-color: {{ section.settings.author_color | default: '#C9C3B6' }};
+    --border-color: {{ section.settings.border_color | default: '#2A3B32' }};
+    --padding-top: {{ section.settings.padding_top | default: 14 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 14 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 14 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 14 | times: 0.5 }}px;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  Thin social proof strip: every store review scrolls across the full width in
+  one endless CSS-only loop (no JS). Same review source as CWC Store Reviews:
+  Judge.me featured store reviews when on and any pass the filters, otherwise
+  the review blocks.
+
+  The loop is two identical halves; sliding the track by half its width lands
+  exactly on the start again. A short review list is repeated inside each half
+  so one half is always wider than the screen and no gap shows at the seam.
+{%- endcomment -%}
+{%- liquid
+  assign text_limit = section.settings.text_limit | default: 110
+  assign review_count = 0
+
+  if section.settings.use_judgeme
+    assign judgeme_reviews = shop.metafields.judgeme.reviews_grid.value.store_reviews.reviews
+    assign judgeme_limit = section.settings.judgeme_limit | default: 25
+    assign judgeme_min_rating = section.settings.judgeme_min_rating | default: 4
+
+    capture items_primary
+      for review in judgeme_reviews
+        if review_count >= judgeme_limit
+          break
+        endif
+        assign review_rating = review.rating | plus: 0
+        if review_rating < judgeme_min_rating
+          continue
+        endif
+        assign review_text = review.body | strip_html | strip | truncate: text_limit
+        if review_text == blank
+          continue
+        endif
+        render 'CWC_review_strip_item', rating: review_rating, text: review_text, author: review.reviewer_name
+        assign review_count = review_count | plus: 1
+      endfor
+    endcapture
+
+    if review_count > 0
+      capture items_copy
+        assign copy_count = 0
+        for review in judgeme_reviews
+          if copy_count >= judgeme_limit
+            break
+          endif
+          assign review_rating = review.rating | plus: 0
+          if review_rating < judgeme_min_rating
+            continue
+          endif
+          assign review_text = review.body | strip_html | strip | truncate: text_limit
+          if review_text == blank
+            continue
+          endif
+          render 'CWC_review_strip_item', rating: review_rating, text: review_text, author: review.reviewer_name, hidden: true
+          assign copy_count = copy_count | plus: 1
+        endfor
+      endcapture
+    endif
+  endif
+
+  if review_count == 0
+    capture items_primary
+      for block in section.blocks
+        if block.type != 'review' or block.settings.text == blank
+          continue
+        endif
+        assign review_text = block.settings.text | strip_html | strip | truncate: text_limit
+        render 'CWC_review_strip_item', rating: block.settings.rating, text: review_text, author: block.settings.author, block_attrs: block.shopify_attributes
+        assign review_count = review_count | plus: 1
+      endfor
+    endcapture
+
+    capture items_copy
+      for block in section.blocks
+        if block.type != 'review' or block.settings.text == blank
+          continue
+        endif
+        assign review_text = block.settings.text | strip_html | strip | truncate: text_limit
+        render 'CWC_review_strip_item', rating: block.settings.rating, text: review_text, author: block.settings.author, hidden: true
+      endfor
+    endcapture
+  endif
+
+  # Repeat a short list so each half holds at least 8 reviews (wider than any screen)
+  assign repeats = 1
+  if review_count > 0 and review_count < 8
+    assign repeats = 8 | plus: review_count | minus: 1 | divided_by: review_count
+  endif
+  assign half_count = review_count | times: repeats
+  assign loop_seconds = section.settings.seconds_per_review | default: 10 | times: half_count
+-%}
+
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_review_strip.css' | asset_url | stylesheet_tag }}
+
+{%- if review_count > 0 or request.design_mode -%}
+<section
+  id="cwc_review-strip-{{ section.id }}"
+  class="cwc_review-strip{% if section.settings.show_borders %} cwc_review-strip--borders{% endif %}{% if section.settings.edge_fade %} cwc_review-strip--fade{% endif %}"
+  style="--loop-duration: {{ loop_seconds }}s;"
+>
+  {% if review_count > 0 %}
+    <div class="cwc_review-strip__container" role="region" aria-label="Customer reviews">
+      <div class="cwc_review-strip__track">
+        {%- for pass in (1..2) -%}
+          <ul
+            class="cwc_review-strip__list{% if pass == 2 %} cwc_review-strip__list--clone{% endif %}"
+            role="list"
+            {% if pass == 2 %}aria-hidden="true"{% endif %}
+          >
+            {%- for r in (1..repeats) -%}
+              {%- if pass == 1 and r == 1 -%}
+                {{ items_primary }}
+              {%- else -%}
+                {{ items_copy }}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endfor -%}
+      </div>
+    </div>
+  {% else %}
+    <div class="cwc_review-strip__empty">
+      <p>No Judge.me reviews matched. Add review blocks as a fallback.</p>
+    </div>
+  {% endif %}
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "CWC Review Strip",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Review Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_judgeme",
+      "label": "Use Judge.me Store Reviews",
+      "info": "Pulls featured store reviews from Judge.me. The review blocks show instead when this is off or no Judge.me review matches the filters below.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "judgeme_limit",
+      "label": "Max Judge.me Reviews",
+      "info": "Judge.me shares about 25 featured store reviews",
+      "min": 1,
+      "max": 25,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "judgeme_min_rating",
+      "label": "Minimum Star Rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "text_limit",
+      "label": "Max Characters per Review",
+      "info": "Longer reviews are cut short with …",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "default": 110
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "seconds_per_review",
+      "label": "Scroll Speed",
+      "info": "Seconds each review takes to pass. Lower is faster. Pauses on hover.",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "Show Top & Bottom Borders",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "edge_fade",
+      "label": "Fade Edges",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#F4F0E8"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Diamond Color",
+      "default": "#C49340"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#C49340"
+    },
+    {
+      "type": "color",
+      "id": "author_color",
+      "label": "Reviewer Name Color",
+      "default": "#C9C3B6"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border & Empty Star Color",
+      "default": "#2A3B32"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Fallback review. Shows only when Judge.me is off or has no matching reviews."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Review Text",
+          "default": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Reviewer Name",
+          "default": "Michael R."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "CWC Review Strip",
+      "category": "CWC Custom",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review", "settings": { "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>", "author": "David K." } },
+        { "type": "review", "settings": { "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>", "author": "James T." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

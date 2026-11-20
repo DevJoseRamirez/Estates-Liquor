@@ -16,10 +16,10 @@
     --search-field-text: {{ section.settings.search_field_text_color | default: '#1C1C19' }};
     --search-icon: {{ section.settings.search_icon_color | default: '#8A6A2E' }};
     --description-lines-mobile: {{ section.settings.description_lines_mobile | default: 2 }};
-    --padding-top: {{ section.settings.padding_top | default: 36 }}px;
-    --padding-bottom: {{ section.settings.padding_bottom | default: 32 }}px;
-    --padding-top-mobile: {{ section.settings.padding_top | default: 36 | times: 0.5 }}px;
-    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 32 | times: 0.5 }}px;
+    --padding-top: {{ section.settings.padding_top | default: 26 }}px;
+    --padding-bottom: {{ section.settings.padding_bottom | default: 22 }}px;
+    --padding-top-mobile: {{ section.settings.padding_top | default: 26 | times: 0.5 }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 22 | times: 0.5 }}px;
   }
 {% endstyle %}
 
@@ -489,7 +489,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 26
     },
     {
       "type": "range",
@@ -499,7 +499,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "default": 32
+      "default": 22
     }
   ],
   "blocks": [

@@ -10,6 +10,8 @@
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
     --button-text-color: {{ section.settings.button_text_color | default: '#13241C' }};
     --columns: {{ section.settings.columns | default: 6 }};
+    --overlay-color: {{ section.settings.overlay_color | default: '#000000' }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | default: 0 | divided_by: 100.0 }};
     --padding-top: {{ section.settings.padding_top | default: 80 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 80 | times: 0.5 }}px;
@@ -20,7 +22,37 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_shop_brand.css' | asset_url | stylesheet_tag }}
 
-<section id="cwc_shop-brand-{{ section.id }}" class="cwc_shop-brand{% unless section.settings.show_count %} cwc_shop-brand--titles-only{% endunless %}">
+<section id="cwc_shop-brand-{{ section.id }}" class="cwc_shop-brand{% unless section.settings.show_count %} cwc_shop-brand--titles-only{% endunless %}{% if section.settings.bg_image != blank %} cwc_shop-brand--has-image{% endif %}">
+
+  {% comment %} Background Image (optional): sits behind everything, cover-cropped around its focal point {% endcomment %}
+  {% if section.settings.bg_image != blank %}
+    {%- liquid
+      assign bg_image = section.settings.bg_image
+      assign bg_image_mobile = section.settings.bg_image_mobile | default: bg_image
+    -%}
+    <div class="cwc_shop-brand__bg" aria-hidden="true">
+      <picture>
+        <source
+          media="(max-width: 768px)"
+          srcset="{{ bg_image_mobile | image_url: width: 800 }} 800w, {{ bg_image_mobile | image_url: width: 1200 }} 1200w"
+          sizes="100vw"
+        >
+        <img
+          class="cwc_shop-brand__bg-image"
+          src="{{ bg_image | image_url: width: 1920 }}"
+          srcset="{{ bg_image | image_url: width: 1200 }} 1200w, {{ bg_image | image_url: width: 1920 }} 1920w, {{ bg_image | image_url: width: 2800 }} 2800w"
+          sizes="100vw"
+          alt=""
+          loading="lazy"
+          width="{{ bg_image.width }}"
+          height="{{ bg_image.height }}"
+          style="object-position: {{ bg_image.presentation.focal_point | default: 'center' }};"
+        >
+      </picture>
+      <span class="cwc_shop-brand__bg-overlay"></span>
+    </div>
+  {% endif %}
+
   <div class="cwc_shop-brand__container">
 
     {% comment %} Section Header {% endcomment %}
@@ -243,6 +275,39 @@
       "id": "button_text_color",
       "label": "Button Color",
       "default": "#13241C"
+    },
+    {
+      "type": "header",
+      "content": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+      "info": "Optional. Fills the whole section behind the content. Set a focal point on the image to control the crop."
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Mobile Background Image",
+      "info": "Optional. Uses the image above when empty."
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "info": "Darken or tint the image so the text stays readable",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 0
     },
     {
       "type": "header",

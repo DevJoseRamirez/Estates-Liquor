@@ -810,12 +810,50 @@
         "chat"
       ],
       "settings": {}
+    },
+    "cwc_review_strip": {
+      "type": "CWC_review_strip",
+      "blocks": {
+        "cwc_review_strip_b1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R."
+          }
+        },
+        "cwc_review_strip_b2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K."
+          }
+        },
+        "cwc_review_strip_b3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T."
+          }
+        }
+      },
+      "block_order": [
+        "cwc_review_strip_b1",
+        "cwc_review_strip_b2",
+        "cwc_review_strip_b3"
+      ],
+      "settings": {
+        "seconds_per_review": 10
+      }
     }
   },
   "order": [
     "product-form",
     "cwc_breadcrumb",
     "cwc_product_buy_box",
+    "cwc_review_strip",
     "cwc_product_details",
     "cwc_why_buy",
     "cwc_product_faq",

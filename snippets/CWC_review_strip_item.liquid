@@ -1,0 +1,25 @@
+{% comment %}
+  One review in the CWC_review_strip marquee.
+
+  Params:
+  - rating: 1-5
+  - text: plain review text (already stripped and shortened)
+  - author: reviewer name (optional)
+  - hidden: true for the repeat copies that only fill out the loop
+  - block_attrs: block.shopify_attributes (first copy of a manual block only)
+{% endcomment %}
+{%- assign item_rating = rating | default: 5 | plus: 0 -%}
+<li class="cwc_review-strip__card"{% if hidden %} aria-hidden="true"{% endif %} {{ block_attrs }}>
+  <span class="cwc_review-strip__card-stars" role="img" aria-label="{{ item_rating }} out of 5 stars">
+    {%- for i in (1..5) -%}
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"{% if i > item_rating %} class="cwc_review-strip__card-star--empty"{% endif %}>
+        <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
+      </svg>
+    {%- endfor -%}
+  </span>
+  <q class="cwc_review-strip__card-text">{{ text | escape }}</q>
+  {%- if author != blank -%}
+    <span class="cwc_review-strip__card-author">— {{ author | escape }}</span>
+  {%- endif -%}
+  <span class="cwc_review-strip__card-diamond" aria-hidden="true"></span>
+</li>

@@ -16,6 +16,40 @@
   padding-bottom: var(--padding-bottom);
 }
 
+/* === Background Image (optional) === */
+.cwc_shop-brand--has-image {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.cwc_shop-brand__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cwc_shop-brand__bg picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cwc_shop-brand__bg-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cwc_shop-brand__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--overlay-color);
+  opacity: var(--overlay-opacity);
+}
+
 .cwc_shop-brand__container {
   max-width: var(--el-container);
   margin: 0 auto;

@@ -1,0 +1,192 @@
+/* ==============================
+   CWC Review Strip
+   Thin full-width social proof bar. Every review scrolls across in one
+   endless CSS-only loop: two identical halves, the track slides by half
+   its width and lands back on the start. Pauses on hover.
+   ============================== */
+
+/* === Section Wrapper === */
+.cwc_review-strip {
+  --rs-star-size: 13px;
+  --rs-text-size: 14px;
+  --rs-gap: 2.25rem;
+
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  font-family: var(--cwc-font-body);
+}
+
+.cwc_review-strip--borders {
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Full bleed: no max-width, the row runs edge to edge */
+.cwc_review-strip__container {
+  overflow: hidden;
+}
+
+.cwc_review-strip--fade .cwc_review-strip__container {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+/* === Track === */
+.cwc_review-strip__track {
+  display: flex;
+  width: max-content;
+  animation: cwc-review-strip-scroll var(--loop-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.cwc_review-strip__container:hover .cwc_review-strip__track {
+  animation-play-state: paused;
+}
+
+.cwc_review-strip__list {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* === Review === */
+/* Each review carries its own trailing gap (with the diamond centred in it),
+   so the spacing at the loop seam is identical to every other gap */
+.cwc_review-strip__card {
+  position: relative;
+  display: flex;
+  padding-right: var(--rs-gap);
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 10px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.cwc_review-strip__card-stars {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 1px;
+  color: var(--star-color);
+}
+
+.cwc_review-strip__card-stars svg {
+  display: block;
+  width: var(--rs-star-size);
+  height: var(--rs-star-size);
+  fill: currentColor;
+}
+
+.cwc_review-strip__card-stars .cwc_review-strip__card-star--empty {
+  color: var(--border-color);
+}
+
+.cwc_review-strip__card-text {
+  font-size: var(--rs-text-size);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-color);
+  quotes: '\201C' '\201D';
+}
+
+.cwc_review-strip__card-author {
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--author-color);
+}
+
+/* Square amber diamond between reviews (brand separator) */
+.cwc_review-strip__card-diamond {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--rs-gap) / 2 - 3px);
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  transform: rotate(45deg);
+  background-color: var(--highlight-color);
+}
+
+/* === Empty State (theme editor only) === */
+.cwc_review-strip__empty {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.cwc_review-strip__empty p {
+  margin: 0;
+}
+
+@keyframes cwc-review-strip-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ==============================
+   Tablet Responsive
+   ============================== */
+@media screen and (max-width: 991px) {
+  .cwc_review-strip {
+    --rs-gap: 2rem;
+  }
+}
+
+/* ==============================
+   Mobile Responsive
+   ============================== */
+@media screen and (max-width: 768px) {
+  .cwc_review-strip {
+    --rs-star-size: 12px;
+    --rs-text-size: 13px;
+    --rs-gap: 1.75rem;
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+  }
+
+  .cwc_review-strip__card {
+    gap: 8px;
+  }
+
+  .cwc_review-strip__card-author {
+    font-size: 10px;
+  }
+}
+
+/* Reduced motion: no auto-scroll, a swipeable row instead */
+@media (prefers-reduced-motion: reduce) {
+  .cwc_review-strip__container {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cwc_review-strip__container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cwc_review-strip__track {
+    animation: none;
+  }
+
+  .cwc_review-strip__list {
+    padding-left: 1rem;
+  }
+
+  .cwc_review-strip__list--clone {
+    display: none;
+  }
+}

@@ -1039,15 +1039,15 @@
         "cwc_product_tabs_t1": {
           "type": "tab",
           "settings": {
-            "label": "Estates Picks",
-            "collection": "barrel-picks"
+            "label": "Featured",
+            "collection": "just-landed"
           }
         },
         "cwc_product_tabs_t2": {
           "type": "tab",
           "settings": {
             "label": "Bourbon",
-            "collection": "bourbon"
+            "collection": "bourbon-100-up"
           }
         },
         "cwc_product_tabs_t3": {
@@ -1065,7 +1065,7 @@
       ],
       "settings": {
         "heading": "<p>From the <em>Cellar</em></p>",
-        "subtext": "<p>In stock and ready to ship from Coronado.</p>",
+        "subtext": "",
         "show_rule": true,
         "products_to_show": 10,
         "columns": 5,
@@ -1228,14 +1228,29 @@
             "button_label": "Shop the sale",
             "button_style": "link"
           }
+        },
+        "cwc_promo_hero_p3": {
+          "type": "panel",
+          "settings": {
+            "eyebrow": "Single barrel",
+            "heading": "<p>Store picks</p>",
+            "heading_size": "small",
+            "text": "",
+            "content_position": "middle-left",
+            "button_label": "Shop the picks",
+            "button_style": "link"
+          }
         }
       },
       "block_order": [
         "cwc_promo_hero_p1",
-        "cwc_promo_hero_p2"
+        "cwc_promo_hero_p2",
+        "cwc_promo_hero_p3"
       ],
       "settings": {
-        "layout": "featured_left"
+        "layout": "featured_left",
+        "padding_top": 15,
+        "padding_bottom": 15
       }
     },
     "cwc_quick_links": {
@@ -1326,21 +1341,21 @@
           "type": "tab",
           "settings": {
             "label": "American Whiskey",
-            "collection": "american-whiskey"
+            "collection": "american-whiskey-over-100"
           }
         },
         "cwc_product_tabs_2_t2": {
           "type": "tab",
           "settings": {
             "label": "Irish Whiskey",
-            "collection": "irish-whiskey"
+            "collection": "irish-whiskey-over-100"
           }
         },
         "cwc_product_tabs_2_t3": {
           "type": "tab",
           "settings": {
             "label": "Rye Whiskey",
-            "collection": "rye-whiskey"
+            "collection": "rye-whiskey-over-100"
           }
         }
       },
@@ -1351,7 +1366,7 @@
       ],
       "settings": {
         "heading": "<p>More to <em>Explore</em></p>",
-        "subtext": "<p>American, Irish and rye whiskey, ready to ship.</p>",
+        "subtext": "",
         "show_rule": true,
         "products_to_show": 10,
         "columns": 5,
@@ -1442,6 +1457,43 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "cwc_review_strip": {
+      "type": "CWC_review_strip",
+      "blocks": {
+        "cwc_review_strip_b1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Packed better than anything I have ordered online. Arrived in two days in perfect shape.</p>",
+            "author": "Michael R."
+          }
+        },
+        "cwc_review_strip_b2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Fair prices on allocated bottles, which is rare on its own. No games, no inflated markup.</p>",
+            "author": "David K."
+          }
+        },
+        "cwc_review_strip_b3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "<p>Emailed a question about a barrel pick and heard back the same day from someone who knew it.</p>",
+            "author": "James T."
+          }
+        }
+      },
+      "block_order": [
+        "cwc_review_strip_b1",
+        "cwc_review_strip_b2",
+        "cwc_review_strip_b3"
+      ],
+      "settings": {
+        "seconds_per_review": 10
+      }
     }
   },
   "order": [
@@ -1451,6 +1503,7 @@
     "cwc_home_hero",
     "cwc_quick_links",
     "cwc_promo_hero",
+    "cwc_review_strip",
     "cwc_category_tiles",
     "cwc_product_tabs",
     "cwc_promo_cards",
