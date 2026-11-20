@@ -6,6 +6,10 @@
     --star-color: {{ section.settings.star_color | default: '#C49340' }};
     --author-color: {{ section.settings.author_color | default: '#6E6A60' }};
     --border-color: {{ section.settings.border_color | default: '#E4DED2' }};
+    --heading-color: {{ section.settings.heading_color | default: '#13241C' }};
+    --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
+    --rs-card-min: {{ section.settings.card_min_width | default: 260 }}px;
+    --rs-card-max: {{ section.settings.card_max_width | default: 360 }}px;
     --padding-top: {{ section.settings.padding_top | default: 14 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 14 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 14 | times: 0.5 }}px;
@@ -102,6 +106,36 @@
   endif
   assign half_count = review_count | times: repeats
   assign loop_seconds = section.settings.seconds_per_review | default: 10 | times: half_count
+
+  # Header summary: live Judge.me rating + count, falling back to the summary text
+  assign summary_text = section.settings.summary_fallback
+  assign summary_rating = 0
+  assign summary_count = 0
+  assign summary_source = section.settings.summary_source | default: 'store'
+  if summary_source == 'store'
+    assign summary_count = shop.metafields.judgeme.shop_reviews_count.value | plus: 0
+    assign summary_rating = shop.metafields.judgeme.shop_reviews_rating.value | plus: 0
+  elsif summary_source == 'all'
+    assign summary_count = shop.metafields.judgeme.all_reviews_count.value | plus: 0
+    assign summary_rating = shop.metafields.judgeme.all_reviews_rating.value | plus: 0
+  endif
+
+  if summary_count > 0 and section.settings.summary_template != blank
+    # 1922 -> 1,922 (Liquid has no number delimiter filter)
+    assign count_display = summary_count | append: ''
+    if summary_count >= 1000
+      assign count_thousands = summary_count | divided_by: 1000
+      assign count_rest = summary_count | modulo: 1000 | plus: 1000 | append: '' | slice: 1, 3
+      assign count_display = count_thousands | append: ',' | append: count_rest
+    endif
+    assign rating_display = summary_rating | round: 1 | append: ''
+    assign summary_text = section.settings.summary_template | replace: '[rating]', rating_display | replace: '[count]', count_display
+  endif
+
+  assign show_header = false
+  if section.settings.heading != blank or section.settings.show_summary and summary_text != blank
+    assign show_header = true
+  endif
 -%}
 
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
@@ -110,9 +144,31 @@
 {%- if review_count > 0 or request.design_mode -%}
 <section
   id="cwc_review-strip-{{ section.id }}"
-  class="cwc_review-strip{% if section.settings.show_borders %} cwc_review-strip--borders{% endif %}{% if section.settings.edge_fade %} cwc_review-strip--fade{% endif %}"
+  class="cwc_review-strip{% if section.settings.show_borders %} cwc_review-strip--borders{% endif %}{% if section.settings.edge_fade %} cwc_review-strip--fade{% endif %}{% if section.settings.card_layout == 'stacked' %} cwc_review-strip--stacked{% endif %}"
   style="--loop-duration: {{ loop_seconds }}s;"
 >
+  {% comment %} Section Header: title, then the star rating and review total {% endcomment %}
+  {% if show_header %}
+    <div class="cwc_review-strip__content">
+      {% if section.settings.heading != blank %}
+        <div class="cwc_review-strip__content-heading cwc-rte">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_summary and summary_text != blank %}
+        <p class="cwc_review-strip__summary">
+          <span class="cwc_review-strip__summary-stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" /></svg>
+            {%- endfor -%}
+          </span>
+          <span class="cwc_review-strip__summary-text">{{ summary_text | escape }}</span>
+        </p>
+      {% endif %}
+    </div>
+  {% endif %}
+
   {% if review_count > 0 %}
     <div class="cwc_review-strip__container" role="region" aria-label="Customer reviews">
       <div class="cwc_review-strip__track">
@@ -146,6 +202,49 @@
   "name": "CWC Review Strip",
   "tag": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Section Heading",
+      "info": "Leave empty for the strip only",
+      "default": "<p>What Our <strong>Customers</strong> Say</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_summary",
+      "label": "Show Rating Summary",
+      "info": "Stars with the average rating and review total, under the heading",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "summary_source",
+      "label": "Summary Source",
+      "info": "Judge.me numbers update live. Falls back to the text below if Judge.me has no count.",
+      "options": [
+        { "value": "store", "label": "Judge.me: store reviews only" },
+        { "value": "all", "label": "Judge.me: all reviews (product + store)" },
+        { "value": "manual", "label": "Fallback text" }
+      ],
+      "default": "store"
+    },
+    {
+      "type": "text",
+      "id": "summary_template",
+      "label": "Judge.me Summary Format",
+      "info": "[rating] and [count] are replaced with the live Judge.me numbers",
+      "default": "[rating] Average · [count] Store Reviews"
+    },
+    {
+      "type": "text",
+      "id": "summary_fallback",
+      "label": "Summary Fallback Text",
+      "default": "4.9 Average · 18 Store Reviews"
+    },
     {
       "type": "header",
       "content": "Review Source"
@@ -202,6 +301,38 @@
       "default": 10
     },
     {
+      "type": "select",
+      "id": "card_layout",
+      "label": "Review Layout",
+      "options": [
+        { "value": "inline", "label": "Inline (stars, text, name in one line)" },
+        { "value": "stacked", "label": "Stacked (stars, then text, then name)" }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "range",
+      "id": "card_min_width",
+      "label": "Review Min Width",
+      "info": "Short reviews still take at least this much room, so the row never looks cramped",
+      "min": 160,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 260
+    },
+    {
+      "type": "range",
+      "id": "card_max_width",
+      "label": "Review Max Width",
+      "info": "Stacked layout: longer reviews wrap to two lines at this width",
+      "min": 240,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
       "type": "checkbox",
       "id": "show_borders",
       "label": "Show Top & Bottom Borders",
@@ -216,6 +347,18 @@
     {
       "type": "header",
       "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Summary Text Color",
+      "default": "#8A6A2E"
     },
     {
       "type": "color",

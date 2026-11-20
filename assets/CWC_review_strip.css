@@ -8,7 +8,7 @@
 /* === Section Wrapper === */
 .cwc_review-strip {
   --rs-star-size: 13px;
-  --rs-text-size: 15px;
+  --rs-text-size: 16px;
   --rs-gap: 2.25rem;
 
   background-color: var(--section-bg);
@@ -21,6 +21,61 @@
 .cwc_review-strip--borders {
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+}
+
+/* === Section Header === */
+/* Title, then stars + live rating and review total, centred above the strip */
+.cwc_review-strip__content {
+  max-width: 1300px;
+  margin: 0 auto 14px;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.cwc_review-strip__content-heading h1,
+.cwc_review-strip__content-heading h2,
+.cwc_review-strip__content-heading h3,
+.cwc_review-strip__content-heading p {
+  margin: 0;
+  font-family: var(--cwc-font-heading);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--heading-color);
+}
+
+.cwc_review-strip__content-heading > * strong {
+  color: var(--highlight-color);
+}
+
+.cwc_review-strip__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 0;
+}
+
+.cwc_review-strip__summary-stars {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--star-color);
+}
+
+.cwc_review-strip__summary-stars svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.cwc_review-strip__summary-text {
+  font-family: var(--cwc-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
 }
 
 /* Full bleed: no max-width, the row runs edge to edge */
@@ -59,7 +114,12 @@
    so the spacing at the loop seam is identical to every other gap */
 .cwc_review-strip__card {
   position: relative;
+  box-sizing: border-box;
   display: flex;
+  /* Short reviews still get a full slot, centred in it, so the row keeps an
+     even rhythm instead of bunching up */
+  min-width: calc(min(var(--rs-card-min, 260px), 62vw) + var(--rs-gap));
+  justify-content: center;
   padding-right: var(--rs-gap);
   align-items: center;
   flex: 0 0 auto;
@@ -115,6 +175,37 @@
   color: var(--highlight-color);
 }
 
+/* === Stacked Layout === */
+/* Stars on top, quote, then reviewer name, centred in each card */
+.cwc_review-strip--stacked .cwc_review-strip__list {
+  align-items: stretch;
+}
+
+.cwc_review-strip--stacked .cwc_review-strip__card {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+/* Quote wraps to at most two lines instead of one long flat line */
+.cwc_review-strip--stacked .cwc_review-strip__card-text {
+  display: -webkit-box;
+  width: max-content;
+  max-width: min(var(--rs-card-max, 360px), 75vw);
+  overflow: hidden;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cwc_review-strip--stacked .cwc_review-strip__card-divider {
+  font-size: calc(var(--rs-text-size) * 2.25);
+  font-weight: 300;
+}
+
 /* === Empty State (theme editor only) === */
 .cwc_review-strip__empty {
   text-align: center;
@@ -152,7 +243,7 @@
 @media screen and (max-width: 768px) {
   .cwc_review-strip {
     --rs-star-size: 12px;
-    --rs-text-size: 14px;
+    --rs-text-size: 15px;
     --rs-gap: 1.75rem;
     padding-top: var(--padding-top-mobile);
     padding-bottom: var(--padding-bottom-mobile);
@@ -163,6 +254,22 @@
   }
 
   .cwc_review-strip__card-author {
+    font-size: 10px;
+  }
+
+  .cwc_review-strip__content {
+    margin-bottom: 10px;
+    padding: 0 1rem;
+  }
+
+  .cwc_review-strip__content-heading h1,
+  .cwc_review-strip__content-heading h2,
+  .cwc_review-strip__content-heading h3,
+  .cwc_review-strip__content-heading p {
+    font-size: 21px;
+  }
+
+  .cwc_review-strip__summary-text {
     font-size: 10px;
   }
 }

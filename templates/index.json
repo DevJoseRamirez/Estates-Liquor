@@ -430,7 +430,7 @@
         "mobile_only": true,
         "show_border": false,
         "padding_top": 28,
-        "padding_bottom": 28
+        "padding_bottom": 0
       }
     },
     "cwc_promo_hero": {
@@ -443,8 +443,8 @@
             "alt_text": "",
             "overlay_color": "#000000",
             "overlay_style": "gradient",
-            "overlay_opacity": 25,
-            "overlay_reach": 55,
+            "overlay_opacity": 80,
+            "overlay_reach": 20,
             "eyebrow": "Just landed · Allocated",
             "heading": "<p>Rare bottles, <em>listed at fair retail.</em></p>",
             "heading_size": "large",
@@ -472,8 +472,8 @@
             "alt_text": "",
             "overlay_color": "#000000",
             "overlay_style": "gradient",
-            "overlay_opacity": 25,
-            "overlay_reach": 55,
+            "overlay_opacity": 80,
+            "overlay_reach": 20,
             "eyebrow": "Today’s flash sale",
             "heading": "<p>Markdowns</p>",
             "heading_size": "small",
@@ -498,11 +498,12 @@
           "type": "panel",
           "settings": {
             "image": "shopify://shop_images/Mask_group-2.png",
+            "image_mobile": "shopify://shop_images/Mask_group_3_1.png",
             "alt_text": "",
             "overlay_color": "#000000",
             "overlay_style": "gradient",
-            "overlay_opacity": 25,
-            "overlay_reach": 55,
+            "overlay_opacity": 80,
+            "overlay_reach": 20,
             "eyebrow": "Single barrel",
             "heading": "<p>Store picks</p>",
             "heading_size": "small",
@@ -535,10 +536,7 @@
         "mobile_height": 460,
         "panel_gap": 10,
         "border_radius": 0,
-        "bg_color": "#ffffff",
-        "padding_top": 15,
-        "padding_bottom": 15,
-        "padding_top_mobile": 0
+        "bg_color": "#ffffff"
       }
     },
     "cwc_review_strip": {
@@ -575,13 +573,23 @@
         "cwc_review_strip_b3"
       ],
       "settings": {
+        "heading": "<p>What Our <strong>Customers</strong> Say</p>",
+        "show_summary": true,
+        "summary_source": "store",
+        "summary_template": "[rating] Average · [count] Store Reviews",
+        "summary_fallback": "4.9 Average · 18 Store Reviews",
         "use_judgeme": true,
         "judgeme_limit": 25,
         "judgeme_min_rating": 4,
         "text_limit": 110,
         "seconds_per_review": 10,
+        "card_layout": "stacked",
+        "card_min_width": 260,
+        "card_max_width": 360,
         "show_borders": false,
         "edge_fade": true,
+        "heading_color": "#13241c",
+        "eyebrow_color": "#8a6a2e",
         "bg_color": "#ffffff",
         "text_color": "#000000",
         "bold_color": "#c49340",

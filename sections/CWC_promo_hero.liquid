@@ -58,10 +58,6 @@
     --panel-height: {{ section.settings.desktop_height | default: 590 }}px;
     --panel-height-mobile: {{ section.settings.mobile_height | default: 460 }}px;
     --panel-radius: {{ section.settings.border_radius | default: 0 }}px;
-    --padding-top: {{ section.settings.padding_top | default: 20 }}px;
-    --padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;
-    --padding-top-mobile: {{ section.settings.padding_top_mobile | default: 0 }}px;
-    --padding-bottom-mobile: {{ section.settings.padding_bottom | default: 20 | times: 0.5 }}px;
   }
 {% endstyle %}
 
@@ -95,14 +91,14 @@
                   assign whole_link = true
                 endif
 
-                assign overlay = block.settings.overlay_opacity | default: 45 | divided_by: 100.0
+                assign overlay = block.settings.overlay_opacity | default: 70 | divided_by: 100.0
                 assign overlay_style = block.settings.overlay_style | default: 'gradient'
               -%}
 
               <div
                 id="cwc_promo-hero-panel-{{ block.id }}"
                 class="cwc_promo-hero__panel cwc_promo-hero__panel--{{ block.settings.content_position | default: 'middle-left' }} cwc_promo-hero__panel--badge-{{ block.settings.badge_position | default: 'bottom-right' }} cwc_promo-hero__panel--overlay-{{ overlay_style }}{% if is_featured %}{% if forloop.first %} cwc_promo-hero__panel--featured{% else %} cwc_promo-hero__panel--side{% endif %}{% endif %}"
-                style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-overlay-reach: {{ block.settings.overlay_reach | default: 55 }}%; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
+                style="--panel-text: {{ block.settings.text_color | default: '#ffffff' }}; --panel-overlay: {{ block.settings.overlay_color | default: '#000000' }}; --panel-overlay-opacity: {{ overlay }}; --panel-overlay-fade: {{ block.settings.overlay_reach | default: 20 }}%; --panel-eyebrow: {{ block.settings.eyebrow_color | default: '#E9A23B' }}; --panel-highlight: {{ block.settings.bold_color | default: '#E9A23B' }}; --btn-bg: {{ block.settings.button_bg_color | default: '#E9A23B' }}; --btn-text: {{ block.settings.button_text_color | default: '#13241C' }}; --btn-hover-bg: {{ block.settings.button_hover_color | default: '#D68F27' }}; --badge-width: {{ block.settings.badge_width | default: 180 }}px;"
                 {{ block.shopify_attributes }}
               >
                 {%- if whole_link -%}
@@ -275,7 +271,8 @@
     {
       "type": "range",
       "id": "panel_gap",
-      "label": "Gap Between Panels",
+      "label": "Spacing",
+      "info": "Gap between panels. The section's top, bottom and side edges use the same value so the spacing is even all round.",
       "min": 0,
       "max": 40,
       "step": 2,
@@ -301,41 +298,6 @@
       "id": "bg_color",
       "label": "Background Color",
       "default": "#ffffff"
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Padding Top",
-      "min": 0,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Padding Bottom",
-      "min": 0,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "padding_top_mobile",
-      "label": "Padding Top (Mobile)",
-      "min": 0,
-      "max": 60,
-      "step": 2,
-      "unit": "px",
-      "default": 0,
-      "info": "0 sits the first card flush under the header."
     }
   ],
   "blocks": [
@@ -379,7 +341,7 @@
             { "value": "solid", "label": "Solid over the whole image" }
           ],
           "default": "gradient",
-          "info": "Gradient darkens only the side the copy sits on (follows Content Position) and fades out so the rest of the image stays clear."
+          "info": "Gradient darkens only the area behind the copy, then fades out so the rest of the image stays clear."
         },
         {
           "type": "range",
@@ -389,19 +351,19 @@
           "max": 90,
           "step": 5,
           "unit": "%",
-          "default": 45,
+          "default": 70,
           "info": "Gradient: strength behind the copy. Solid: strength over the whole image."
         },
         {
           "type": "range",
           "id": "overlay_reach",
-          "label": "Gradient Reach",
-          "min": 30,
-          "max": 100,
+          "label": "Gradient Fade Length",
+          "min": 0,
+          "max": 50,
           "step": 5,
           "unit": "%",
-          "default": 55,
-          "info": "Gradient only. How far across the panel it fades out."
+          "default": 20,
+          "info": "Gradient only. How far past the copy the dark band fades out. Lower keeps it tight to the text."
         },
         {
           "type": "header",

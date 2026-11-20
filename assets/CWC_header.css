@@ -1314,7 +1314,8 @@ a.cwc_header__mega-promo:hover .cwc_header__mega-promo-cta {
 
 .cwc_header__menu-search:focus-within {
   outline: 2px solid var(--highlight-color);
-  outline-offset: 3px;
+  /* drawn inside the field, same as the header's mobile search */
+  outline-offset: -2px;
 }
 
 .cwc_header__menu-search-input {
@@ -1363,9 +1364,17 @@ a.cwc_header__mega-promo:hover .cwc_header__mega-promo-cta {
   height: 20px;
 }
 
-/* Suggestions drop over the link list, which sits lower in the menu */
+/* Suggestions drop over the link list, edge to edge (past the side gutters)
+   and flush with the bottom of the search row — same as the header's
+   mobile search panel */
 .cwc_header__menu-search-results {
+  top: calc(100% + 14px);
+  left: calc(var(--hd-gutter) * -1);
+  right: calc(var(--hd-gutter) * -1);
   max-height: calc(100dvh - 160px);
+  border-right: 0;
+  border-left: 0;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
 
 /* Only the link list scrolls */
@@ -2157,6 +2166,25 @@ html.cwc-menu-locked {
   .cwc_header__msearch .cwc_header__search-input {
     font-size: 16px;
     /* 16px stops iOS zooming on focus */
+  }
+
+  /* Focus ring drawn inside the field: the top bar sits above this row, so a
+     ring outside the box got its top edge cut off */
+  .cwc_header__msearch .cwc_header__search-form:focus-within {
+    outline-offset: -2px;
+  }
+
+  /* Results run edge to edge under the header (past the side gutters) and
+     start flush with the bottom of the search row */
+  .cwc_header__msearch .cwc_header__search-results {
+    top: calc(100% + 12px);
+    left: calc(var(--hd-gutter) * -1);
+    right: calc(var(--hd-gutter) * -1);
+    max-height: 75vh;
+    max-height: 75dvh;
+    border-right: 0;
+    border-left: 0;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
   }
 
   .cwc_header--msearch-hidden .cwc_header__msearch {

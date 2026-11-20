@@ -8,8 +8,10 @@
 .cwc_promo-hero {
   background-color: var(--section-bg);
   font-family: var(--cwc-font-body);
-  padding-top: var(--padding-top);
-  padding-bottom: var(--padding-bottom);
+  /* One even edge all round: top, bottom and sides all match the gap
+     between panels, at every screen size */
+  padding-top: var(--panel-gap);
+  padding-bottom: var(--panel-gap);
 }
 
 .cwc_promo-hero__container {
@@ -17,8 +19,7 @@
   max-width: 1600px;
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
-  padding: 0 2rem;
+  padding: 0 var(--panel-gap);
 }
 
 /* === Grid === */
@@ -131,26 +132,20 @@
   pointer-events: none;
 }
 
-/* Gradient overlay: full strength behind the copy, fading out toward the far
-   side so the rest of the image stays clear. Direction follows the content
-   position; --panel-overlay-reach sets where it is fully gone. */
+/* Gradient overlay: a horizontal band on the left side of the card, where the
+   copy sits, so the rest of the image stays clear. */
 .cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay {
-  --overlay-fade: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.45) calc(var(--panel-overlay-reach) * 0.4), transparent var(--panel-overlay-reach));
+  /* Only the left half of the card: darkest at the edge, holds through the
+     first part, then fades out over --panel-overlay-fade, gone by 50% */
+  --overlay-end: 50%;
+  --overlay-fade: linear-gradient(90deg, #000 0, rgba(0, 0, 0, 0.85) max(0%, calc(var(--overlay-end) - var(--panel-overlay-fade))), transparent var(--overlay-end));
   background-color: var(--panel-overlay);
   -webkit-mask-image: var(--overlay-fade);
   mask-image: var(--overlay-fade);
 }
 
-.cwc_promo-hero__panel--top-left.cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay {
-  --overlay-fade: linear-gradient(135deg, #000 0%, rgba(0, 0, 0, 0.45) calc(var(--panel-overlay-reach) * 0.4), transparent var(--panel-overlay-reach));
-}
-
-.cwc_promo-hero__panel--bottom-left.cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay {
-  --overlay-fade: linear-gradient(45deg, #000 0%, rgba(0, 0, 0, 0.45) calc(var(--panel-overlay-reach) * 0.4), transparent var(--panel-overlay-reach));
-}
-
 .cwc_promo-hero__panel--middle-center.cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay {
-  --overlay-fade: radial-gradient(ellipse at center, #000 0%, rgba(0, 0, 0, 0.45) calc(var(--panel-overlay-reach) * 0.35), transparent calc(var(--panel-overlay-reach) * 0.75));
+  --overlay-fade: radial-gradient(ellipse at center, #000 0, #000 35%, transparent calc(35% + var(--panel-overlay-fade)));
 }
 
 .cwc_promo-hero__placeholder {
@@ -422,10 +417,6 @@ a.cwc_promo-hero__button:focus-visible {
    Tablet Responsive — panels stack
    ============================== */
 @media screen and (max-width: 991px) {
-  .cwc_promo-hero__container {
-    padding: 0 32px;
-  }
-
   .cwc_promo-hero__grid {
     grid-template-columns: 1fr;
   }
@@ -455,14 +446,12 @@ a.cwc_promo-hero__button:focus-visible {
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
-  .cwc_promo-hero {
-    padding-top: var(--padding-top-mobile);
-    padding-bottom: var(--padding-bottom-mobile);
+  /* Cards run edge to edge on mobile */
+  .cwc_promo-hero__container {
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .cwc_promo-hero__container {
-    padding: 0;
-  }
 
   .cwc_promo-hero__content {
     padding: 1.75rem 1.5rem;

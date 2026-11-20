@@ -43,7 +43,7 @@
 }
 
 /* H2 — Fraunces 40 / 26px, 500, 1.1 */
-.cwc_product-tabs__content-heading > * {
+.cwc_product-tabs__content-heading>* {
   margin: 0;
   font-family: var(--cwc-font-heading);
   font-size: 40px;
@@ -52,13 +52,13 @@
   color: inherit;
 }
 
-.cwc_product-tabs__content-heading > * em {
+.cwc_product-tabs__content-heading>* em {
   font-style: italic;
   font-weight: 400;
   color: var(--highlight-color);
 }
 
-.cwc_product-tabs__content-heading > * strong {
+.cwc_product-tabs__content-heading>* strong {
   font-weight: 500;
   color: var(--highlight-color);
 }
@@ -67,7 +67,7 @@
   margin-top: 12px;
 }
 
-.cwc_product-tabs__content-subtext > * {
+.cwc_product-tabs__content-subtext>* {
   margin: 0;
   font-family: var(--cwc-font-body);
   font-size: 14px;
@@ -150,7 +150,7 @@
   min-width: 0;
 }
 
-.cwc_product-tabs__card > * {
+.cwc_product-tabs__card>* {
   width: 100%;
 }
 
@@ -251,13 +251,13 @@
     width: 28px;
   }
 
-  .cwc_product-tabs__content-heading > * {
+  .cwc_product-tabs__content-heading>* {
     font-size: 26px;
   }
 
   /* Tabs swipe edge to edge */
   .cwc_product-tabs__tabs {
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     gap: 24px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -298,6 +298,7 @@
    Reduced Motion
    ============================== */
 @media (prefers-reduced-motion: reduce) {
+
   .cwc_product-tabs__tab,
   .cwc_product-tabs__tab::after,
   .cwc_product-tabs__button-link {
