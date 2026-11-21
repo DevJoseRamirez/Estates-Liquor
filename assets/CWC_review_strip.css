@@ -164,15 +164,19 @@
 }
 
 /* Plain "|" between reviews (kept distinct from the star shapes) */
+/* Drawn as a 1px hairline rather than the "|" glyph (hidden), so it stays
+   thin at any font size */
 .cwc_review-strip__card-divider {
   position: absolute;
   top: 50%;
   right: calc(var(--rs-gap) / 2);
+  width: 1px;
+  height: calc(var(--rs-text-size) + 4px);
   transform: translate(50%, -50%);
-  font-size: calc(var(--rs-text-size) + 2px);
-  font-style: normal;
-  line-height: 1;
-  color: var(--highlight-color);
+  overflow: hidden;
+  font-size: 0;
+  color: transparent;
+  background-color: var(--highlight-color);
 }
 
 /* === Stacked Layout === */
@@ -202,8 +206,7 @@
 }
 
 .cwc_review-strip--stacked .cwc_review-strip__card-divider {
-  font-size: calc(var(--rs-text-size) * 2.25);
-  font-weight: 300;
+  height: calc(var(--rs-text-size) * 2.25);
 }
 
 /* === Empty State (theme editor only) === */
