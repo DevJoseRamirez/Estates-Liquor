@@ -220,7 +220,8 @@
         {% comment %} ========== Main column ========== {% endcomment %}
         <div class="cwc_bab-builder__main">
 
-          {% comment %} Section Header {% endcomment %}
+          {% comment %} Section Header + tier cards (hidden together via "Show tier cards") {% endcomment %}
+          {% if section.settings.show_tiers %}
           <div class="cwc_bab-builder__content">
             {% if section.settings.eyebrow != blank %}
               <p class="cwc_bab-builder__content-eyebrow">{{ section.settings.eyebrow }}</p>
@@ -233,8 +234,10 @@
             {% endif %}
           </div>
 
+          {% endif %}
+
           {% comment %} Tier cards {% endcomment %}
-          {% if tier_count > 0 %}
+          {% if tier_count > 0 and section.settings.show_tiers %}
             <div class="cwc_bab-builder__tiers" style="--tier-count: {{ tier_count }};">
               {%- assign tier_i = 0 -%}
               {% for block in section.blocks %}
@@ -604,6 +607,13 @@
     {
       "type": "header",
       "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tiers",
+      "label": "Show tier cards",
+      "info": "Hides the tier cards and this header. The progress bar in the box still shows the tiers.",
+      "default": true
     },
     {
       "type": "text",
