@@ -3,7 +3,11 @@
   left, outlined arrow box top right, bottle image sitting on a dark baseline.
   Each card is one link. Grounds alternate Sage Mist / Stone by default; any
   card can override its own. Desktop: one row; tablet + mobile: 2 x 2.
+
+  Image Style: "background" fills the whole card (cover, cropped to the focal
+  point); "bottles" keeps the cut-out image sitting on the baseline.
 {%- endcomment -%}
+{%- assign image_style = section.settings.image_style | default: 'background' -%}
 
 {% style %}
   #cwc_category-tiles-{{ section.id }} {
@@ -14,6 +18,8 @@
     --baseline-color: {{ section.settings.baseline_color | default: '#13241C' }};
     --arrow-color: {{ section.settings.arrow_color | default: '#13241C' }};
     --arrow-hover-bg: {{ section.settings.arrow_hover_bg | default: '#E9A23B' }};
+    --overlay-color: {{ section.settings.overlay_color | default: '#000000' }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | default: 0 | divided_by: 100.0 }};
     --columns: {{ section.settings.columns | default: 4 }};
     --card-gap: {{ section.settings.card_gap | default: 16 }}px;
     --card-height: {{ section.settings.card_height | default: 150 }}px;
@@ -28,7 +34,7 @@
 {{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
 {{ 'CWC_category_tiles.css' | asset_url | stylesheet_tag }}
 
-<section id="cwc_category-tiles-{{ section.id }}" class="cwc_category-tiles">
+<section id="cwc_category-tiles-{{ section.id }}" class="cwc_category-tiles cwc_category-tiles--image-{{ image_style }}">
   <div class="cwc_category-tiles__container">
 
     {% if section.settings.heading != blank %}
@@ -72,6 +78,10 @@
                 {% if block.settings.card_bg != blank %}style="--tile-override: {{ block.settings.card_bg }};"{% endif %}
                 {{ block.shopify_attributes }}
               >
+                {% if image_style == 'background' and tile_image != blank %}
+                  <span class="cwc_category-tiles__card-overlay" aria-hidden="true"></span>
+                {% endif %}
+
                 {% if tile_title != blank %}
                   <span class="cwc_category-tiles__card-title">{{ tile_title | escape }}</span>
                 {% endif %}
@@ -84,8 +94,9 @@
                   {% if tile_image != blank %}
                     <img
                       src="{{ tile_image | image_url: width: 500 }}"
-                      srcset="{{ tile_image | image_url: width: 300 }} 300w, {{ tile_image | image_url: width: 500 }} 500w, {{ tile_image | image_url: width: 700 }} 700w"
+                      srcset="{{ tile_image | image_url: width: 300 }} 300w, {{ tile_image | image_url: width: 500 }} 500w, {{ tile_image | image_url: width: 700 }} 700w, {{ tile_image | image_url: width: 900 }} 900w"
                       sizes="(max-width: 991px) 50vw, 25vw"
+                      {% if image_style == 'background' %}style="object-position: {{ tile_image.presentation.focal_point | default: 'center' }};"{% endif %}
                       alt="{{ tile_image.alt | default: tile_title | escape }}"
                       width="{{ tile_image.width }}"
                       height="{{ tile_image.height }}"
@@ -169,6 +180,33 @@
       "step": 2,
       "unit": "px",
       "default": 16
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "Image Style",
+      "options": [
+        { "value": "background", "label": "Background (fills the card)" },
+        { "value": "bottles", "label": "Bottles on the baseline" }
+      ],
+      "default": "background"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Background Image Overlay",
+      "info": "Darkens or tints background images so the title stays readable",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
     },
     {
       "type": "header",
@@ -268,7 +306,7 @@
           "type": "image_picker",
           "id": "image",
           "label": "Image",
-          "info": "Transparent PNG of the bottles works best, about 600 x 400px. Sits on the bottom line."
+          "info": "Background style: about 900 x 400px, kept clear top left for the title. Set a focal point in Files to control cropping. Bottles style: transparent PNG, about 700 x 350px."
         },
         {
           "type": "color",

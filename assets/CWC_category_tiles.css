@@ -148,6 +148,39 @@ a.cwc_category-tiles__card:hover .cwc_category-tiles__card-media img {
   opacity: 0.18;
 }
 
+/* === Background Image Style === */
+/* The image covers the whole card behind the title and arrow */
+.cwc_category-tiles--image-background .cwc_category-tiles__card-media {
+  inset: 0;
+  z-index: 0;
+}
+
+.cwc_category-tiles--image-background .cwc_category-tiles__card-media img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+  mix-blend-mode: normal;
+  transform-origin: center;
+}
+
+.cwc_category-tiles__card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--overlay-color);
+  opacity: var(--overlay-opacity);
+  pointer-events: none;
+}
+
+/* Placeholder stays a small centred icon until an image is picked */
+.cwc_category-tiles--image-background .cwc_category-tiles__card-placeholder {
+  height: 60%;
+  margin: auto;
+}
+
 /* === Empty State === */
 .cwc_category-tiles__empty {
   text-align: center;
@@ -218,6 +251,10 @@ a.cwc_category-tiles__card:hover .cwc_category-tiles__card-media img {
     left: 10px;
     right: 10px;
     top: 52px;
+  }
+
+  .cwc_category-tiles--image-background .cwc_category-tiles__card-media {
+    inset: 0;
   }
 
   .cwc_category-tiles__content-heading > * {
