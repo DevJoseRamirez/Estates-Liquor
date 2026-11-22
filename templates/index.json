@@ -574,6 +574,7 @@
       ],
       "settings": {
         "heading": "<p>What Our <strong>Customers</strong> Say</p>",
+        "show_rule": true,
         "show_summary": true,
         "summary_source": "all",
         "summary_template": "[rating] Average · [count] Reviews",
@@ -589,6 +590,7 @@
         "show_borders": false,
         "edge_fade": true,
         "heading_color": "#13241c",
+        "rule_color": "#13241c",
         "eyebrow_color": "#8a6a2e",
         "bg_color": "#ffffff",
         "text_color": "#000000",
@@ -609,6 +611,7 @@
             "title": "Shop Bourbon",
             "collection": "bourbon",
             "link": "",
+            "image": "shopify://shop_images/Bourbon.png",
             "card_bg": ""
           }
         },
@@ -618,6 +621,7 @@
             "title": "Shop Scotch",
             "collection": "scotch-100-up",
             "link": "",
+            "image": "shopify://shop_images/Scotch.png",
             "card_bg": ""
           }
         },
@@ -627,6 +631,7 @@
             "title": "Shop Tequila",
             "collection": "tequila",
             "link": "",
+            "image": "shopify://shop_images/Tequila.png",
             "card_bg": ""
           }
         },
@@ -636,6 +641,7 @@
             "title": "Shop Gifts & Sets",
             "collection": "bundles-100-up",
             "link": "",
+            "image": "shopify://shop_images/Gifts_Sets.png",
             "card_bg": ""
           }
         }
@@ -652,16 +658,19 @@
         "card_height": 150,
         "card_height_mobile": 120,
         "card_gap": 16,
+        "image_style": "background",
+        "overlay_opacity": 0,
+        "overlay_color": "#000000",
         "bg_color": "#ffffff",
         "text_color": "#13241c",
         "card_bg_odd": "#e4ebe6",
         "card_bg_even": "#efe9dd",
         "baseline_color": "#c4c4be",
         "arrow_color": "#13241c",
+        "arrow_icon_color": "#f4f0e8",
         "arrow_hover_bg": "#e9a23b",
         "padding_top": 40,
-        "padding_bottom": 0,
-        "image_style": "background"
+        "padding_bottom": 0
       }
     },
     "cwc_product_tabs": {
@@ -752,16 +761,16 @@
             "alt_text": "",
             "overlay_color": "#000000",
             "overlay_opacity": 25,
-            "eyebrow": "Build your own",
-            "heading": "<p>Build a <em>bundle</em></p>",
-            "text": "<p>Pick the bottles, we box them up.</p>",
+            "eyebrow": "Customer favorites",
+            "heading": "<p>Best <em>sellers</em></p>",
+            "text": "<p>The bottles our regulars keep coming back for.</p>",
             "content_position": "middle-left",
             "text_color": "#ffffff",
             "eyebrow_color": "#e9a23b",
             "bold_color": "#e9a23b",
-            "button_label": "Start building",
+            "button_label": "Shop best sellers",
             "button_style": "link",
-            "link": "",
+            "link": "shopify://collections/best-selling-products",
             "link_whole_card": true,
             "button_bg_color": "#e9a23b",
             "button_text_color": "#13241c"
@@ -841,7 +850,7 @@
         "collection": "",
         "button_label": "Shop the Allocation",
         "button_link": "",
-        "button_2_label": "Join the Allocation List",
+        "button_2_label": "",
         "button_2_link": "",
         "bg_color": "#ffffff",
         "text_color": "#13241c",
@@ -859,6 +868,7 @@
         "image_ratio": "5 / 4",
         "content_align": "center",
         "mobile_content_first": false,
+        "image": "shopify://shop_images/image_462_1.png",
         "alt_text": "",
         "padding_top": 80,
         "padding_bottom": 80
@@ -870,25 +880,25 @@
         "cwc_product_tabs_2_t1": {
           "type": "tab",
           "settings": {
-            "label": "American Whiskey",
+            "label": "American",
             "collection": "american-whiskey-over-100",
-            "view_all_label": ""
+            "view_all_label": "View all American Whiskey"
           }
         },
         "cwc_product_tabs_2_t2": {
           "type": "tab",
           "settings": {
-            "label": "Irish Whiskey",
+            "label": "Irish",
             "collection": "irish-whiskey-over-100",
-            "view_all_label": ""
+            "view_all_label": "View all Irish Whiskey"
           }
         },
         "cwc_product_tabs_2_t3": {
           "type": "tab",
           "settings": {
-            "label": "Rye Whiskey",
+            "label": "Rye",
             "collection": "rye-whiskey-over-100",
-            "view_all_label": ""
+            "view_all_label": "View all Rye Whiskey"
           }
         }
       },
@@ -898,7 +908,7 @@
         "cwc_product_tabs_2_t3"
       ],
       "settings": {
-        "heading": "<p>More to <em>Explore</em></p>",
+        "heading": "<p>More <em>Whiskey</em> to Explore</p>",
         "subtext": "",
         "show_rule": true,
         "products_to_show": 10,
@@ -1460,6 +1470,7 @@
         "cwc_store_reviews_b2",
         "cwc_store_reviews_b3"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "4.9 Average · 18 Store Reviews",
         "heading": "<p>What Estates Liquor Customers Say</p>",
@@ -1601,6 +1612,7 @@
         "cwc_shop_price_b3",
         "cwc_shop_price_b4"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "Find Something for Every Occasion",
         "heading": "<p>Shop by Price</p>",

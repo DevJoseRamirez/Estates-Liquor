@@ -30,7 +30,13 @@
   endif
 %}
 
-<section id="cwc_product-details-{{ section.id }}" class="cwc_product-details" data-section-id="{{ section.id }}">
+{%- comment -%}
+  "Show About This Bottle content" off: the section renders only the sticky
+  Add to Cart bar (no description, no padding), so the bar can stay on the
+  page without the description block.
+{%- endcomment -%}
+<section id="cwc_product-details-{{ section.id }}" class="cwc_product-details{% unless section.settings.show_content %} cwc_product-details--sticky-only{% endunless %}" data-section-id="{{ section.id }}">
+  {% if section.settings.show_content %}
   <div class="cwc_product-details__container">
     <div class="cwc_product-details__content">
 
@@ -105,6 +111,7 @@
 
     </div>
   </div>
+  {% endif %}
 
   {% comment %}
     Sticky mobile add-to-cart lives here as a block, per the page notes, so the
@@ -125,6 +132,13 @@
 {
   "name": "CWC Product Details",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_content",
+      "label": "Show About This Bottle content",
+      "info": "Turn off to hide the description and keep only the sticky Add to Cart bar.",
+      "default": true
+    },
     {
       "type": "header",
       "content": "Section Header"

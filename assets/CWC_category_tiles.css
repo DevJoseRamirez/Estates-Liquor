@@ -2,7 +2,7 @@
    CWC Category Tiles
    Styled to _theme-styles/estates-brand-tokens.md: square, no shadows,
    Sage Mist / Stone grounds, Fraunces titles, 2px baseline (color is a section setting),
-   1px outlined arrow box that fills CTA yellow on hover.
+   Filled arrow button (dark green, light arrow) that turns CTA yellow on hover.
    ============================== */
 
 /* === Section Wrapper === */
@@ -90,14 +90,16 @@
   width: 30px;
   height: 30px;
   border: 1px solid var(--arrow-color);
-  background-color: transparent;
-  color: var(--arrow-color);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  /* Filled button: solid fill, light arrow; turns CTA yellow on hover */
+  background-color: var(--arrow-color);
+  color: var(--arrow-icon-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 a.cwc_category-tiles__card:hover .cwc_category-tiles__card-arrow {
   background-color: var(--arrow-hover-bg);
   border-color: var(--arrow-hover-bg);
+  color: var(--arrow-color);
 }
 
 a.cwc_category-tiles__card:hover .cwc_category-tiles__card-arrow svg {

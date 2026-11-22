@@ -305,7 +305,8 @@
   }
 
   /* Swipe row: one line, bleeds to the screen edge, ~3.4 tiles visible */
-  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav {
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav,
+  .cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__nav {
     margin: 0 calc(var(--st-gutter) * -1);
     overflow-x: auto;
     overscroll-behavior-x: contain;
@@ -314,7 +315,8 @@
     scrollbar-width: none;
   }
 
-  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav::-webkit-scrollbar {
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__nav::-webkit-scrollbar,
+  .cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__nav::-webkit-scrollbar {
     display: none;
   }
 
@@ -325,8 +327,19 @@
     padding: 0 var(--st-gutter);
   }
 
-  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__item {
+  .cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__item,
+  .cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__item {
     scroll-snap-align: start;
+  }
+
+  /* Two-row swipe: tiles fill top-to-bottom, then the next column,
+     so twice as many show at once while still scrolling sideways */
+  .cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__grid {
+    grid-template-columns: none;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: 27%;
+    padding: 0 var(--st-gutter);
   }
 }
 
@@ -356,12 +369,14 @@
     font-size: 0.8125rem;
   }
 
-  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__grid {
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__grid,
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__grid {
     grid-template-columns: none;
     grid-auto-columns: max-content;
   }
 
-  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__card {
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll .cwc_subcategory-tiles__card,
+  .cwc_subcategory-tiles--compact.cwc_subcategory-tiles--mobile-scroll_two_rows .cwc_subcategory-tiles__card {
     min-width: 150px;
   }
 }

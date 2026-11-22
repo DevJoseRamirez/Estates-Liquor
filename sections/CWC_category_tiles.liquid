@@ -18,6 +18,7 @@
     --baseline-color: {{ section.settings.baseline_color | default: '#13241C' }};
     --arrow-color: {{ section.settings.arrow_color | default: '#13241C' }};
     --arrow-hover-bg: {{ section.settings.arrow_hover_bg | default: '#E9A23B' }};
+    --arrow-icon-color: {{ section.settings.arrow_icon_color | default: '#F4F0E8' }};
     --overlay-color: {{ section.settings.overlay_color | default: '#000000' }};
     --overlay-opacity: {{ section.settings.overlay_opacity | default: 0 | divided_by: 100.0 }};
     --columns: {{ section.settings.columns | default: 4 }};
@@ -246,8 +247,14 @@
     {
       "type": "color",
       "id": "arrow_color",
-      "label": "Arrow Box Color",
+      "label": "Arrow Button Fill",
       "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow Icon Color",
+      "default": "#F4F0E8"
     },
     {
       "type": "color",
