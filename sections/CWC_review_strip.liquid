@@ -8,6 +8,7 @@
     --border-color: {{ section.settings.border_color | default: '#E4DED2' }};
     --heading-color: {{ section.settings.heading_color | default: '#13241C' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
+    --rule-color: {{ section.settings.rule_color | default: '#13241C' }};
     --rs-card-min: {{ section.settings.card_min_width | default: 260 }}px;
     --rs-card-max: {{ section.settings.card_max_width | default: 360 }}px;
     --padding-top: {{ section.settings.padding_top | default: 14 }}px;
@@ -111,7 +112,7 @@
   assign summary_text = section.settings.summary_fallback
   assign summary_rating = 0
   assign summary_count = 0
-  assign summary_source = section.settings.summary_source | default: 'store'
+  assign summary_source = section.settings.summary_source | default: 'all'
   if summary_source == 'store'
     assign summary_count = shop.metafields.judgeme.shop_reviews_count.value | plus: 0
     assign summary_rating = shop.metafields.judgeme.shop_reviews_rating.value | plus: 0
@@ -151,8 +152,12 @@
   {% if show_header %}
     <div class="cwc_review-strip__content">
       {% if section.settings.heading != blank %}
-        <div class="cwc_review-strip__content-heading cwc-rte">
-          {{ section.settings.heading }}
+        <div class="cwc_review-strip__content-title">
+          {% if section.settings.show_rule %}<span class="cwc_review-strip__content-rule" aria-hidden="true"></span>{% endif %}
+          <div class="cwc_review-strip__content-heading cwc-rte">
+            {{ section.settings.heading }}
+          </div>
+          {% if section.settings.show_rule %}<span class="cwc_review-strip__content-rule" aria-hidden="true"></span>{% endif %}
         </div>
       {% endif %}
 
@@ -215,6 +220,12 @@
     },
     {
       "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Lines Beside Heading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
       "id": "show_summary",
       "label": "Show Rating Summary",
       "info": "Stars with the average rating and review total, under the heading",
@@ -230,14 +241,14 @@
         { "value": "all", "label": "Judge.me: all reviews (product + store)" },
         { "value": "manual", "label": "Fallback text" }
       ],
-      "default": "store"
+      "default": "all"
     },
     {
       "type": "text",
       "id": "summary_template",
       "label": "Judge.me Summary Format",
       "info": "[rating] and [count] are replaced with the live Judge.me numbers",
-      "default": "[rating] Average · [count] Store Reviews"
+      "default": "[rating] Average · [count] Reviews"
     },
     {
       "type": "text",
@@ -352,6 +363,12 @@
       "type": "color",
       "id": "heading_color",
       "label": "Heading Color",
+      "default": "#13241C"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Heading Line Color",
       "default": "#13241C"
     },
     {

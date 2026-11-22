@@ -23,22 +23,22 @@
         "step_1": {
           "type": "step",
           "settings": {
-            "label": "Pick 2 or more bottles",
-            "label_mobile": "Pick 2+ bottles"
+            "label": "Pick 3 or more bottles",
+            "label_mobile": "Pick 3+ bottles"
           }
         },
         "step_2": {
           "type": "step",
           "settings": {
-            "label": "Reach $250, $500 or $1,000",
+            "label": "Reach $250, $600 or $1,200",
             "label_mobile": "Reach a tier"
           }
         },
         "step_3": {
           "type": "step",
           "settings": {
-            "label": "Reward bottle added for $1",
-            "label_mobile": "Reward added for $1"
+            "label": "Save $25, $60 or $120",
+            "label_mobile": "Save up to $120"
           }
         }
       },
@@ -56,24 +56,24 @@
           "type": "tier",
           "settings": {
             "threshold": 250,
-            "reward_type": "product_price",
-            "reward_price": 1
+            "reward_type": "amount_off",
+            "reward_value": 25
           }
         },
         "tier_2": {
           "type": "tier",
           "settings": {
-            "threshold": 500,
-            "reward_type": "product_price",
-            "reward_price": 1
+            "threshold": 600,
+            "reward_type": "amount_off",
+            "reward_value": 60
           }
         },
         "tier_3": {
           "type": "tier",
           "settings": {
-            "threshold": 1000,
-            "reward_type": "product_price",
-            "reward_price": 1
+            "threshold": 1200,
+            "reward_type": "amount_off",
+            "reward_value": 120
           }
         },
         "tab_1": {
@@ -114,7 +114,9 @@
         "tab_3",
         "tab_4"
       ],
-      "settings": {}
+      "settings": {
+        "min_bottles": 3
+      }
     },
     "bab_rules": {
       "type": "CWC_bab_rules",
@@ -122,15 +124,15 @@
         "rule_1": {
           "type": "rule",
           "settings": {
-            "title": "2 bottle minimum",
-            "text": "<p>Any 2 or more bottles from this shelf start a box.</p>"
+            "title": "3 bottle minimum",
+            "text": "<p>Any 3 or more bottles from this shelf start a box.</p>"
           }
         },
         "rule_2": {
           "type": "rule",
           "settings": {
             "title": "Highest tier wins",
-            "text": "<p>One reward bottle per box. Reaching a higher tier upgrades it.</p>"
+            "text": "<p>One discount per box. Reaching a higher tier upgrades it.</p>"
           }
         },
         "rule_3": {

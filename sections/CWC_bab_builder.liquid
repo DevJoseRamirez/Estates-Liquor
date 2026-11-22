@@ -57,7 +57,7 @@
     endif
   endfor
 
-  assign min_bottles = section.settings.min_bottles | default: 2
+  assign min_bottles = section.settings.min_bottles | default: 3
   assign low_stock = section.settings.low_stock_threshold | default: 5
 -%}
 
@@ -659,7 +659,7 @@
       "min": 1,
       "max": 5,
       "step": 1,
-      "default": 2
+      "default": 3
     },
     {
       "type": "header",

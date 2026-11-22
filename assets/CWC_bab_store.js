@@ -100,7 +100,7 @@
       if (config.copy[k]) copy[k] = config.copy[k];
     }
 
-    var minBottles = Math.max(1, Number(config.minBottles) || 2);
+    var minBottles = Math.max(1, Number(config.minBottles) || 3);
     var moneyFormat = config.moneyFormat;
     var storageKey = 'cwc_bab_' + (config.storageKey || 'box');
     var tiers = (config.tiers || []).slice().sort(function (a, b) {

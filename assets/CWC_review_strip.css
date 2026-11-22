@@ -32,6 +32,21 @@
   text-align: center;
 }
 
+/* Heading with a short line either side (same as Product Tabs) */
+.cwc_review-strip__content-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cwc_review-strip__content-rule {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 1px;
+  background-color: var(--rule-color);
+}
+
 .cwc_review-strip__content-heading h1,
 .cwc_review-strip__content-heading h2,
 .cwc_review-strip__content-heading h3,
@@ -164,15 +179,16 @@
 }
 
 /* Plain "|" between reviews (kept distinct from the star shapes) */
-/* Drawn as a 1px hairline rather than the "|" glyph (hidden), so it stays
-   thin at any font size */
+/* Drawn as a half-pixel hairline rather than the "|" glyph (hidden), so it
+   stays thin at any font size */
 .cwc_review-strip__card-divider {
   position: absolute;
   top: 50%;
   right: calc(var(--rs-gap) / 2);
   width: 1px;
   height: calc(var(--rs-text-size) + 4px);
-  transform: translate(50%, -50%);
+  /* scaleX(0.5): a true half-pixel hairline on retina, a softer 1px elsewhere */
+  transform: translate(50%, -50%) scaleX(0.5);
   overflow: hidden;
   font-size: 0;
   color: transparent;
@@ -263,6 +279,14 @@
   .cwc_review-strip__content {
     margin-bottom: 10px;
     padding: 0 1rem;
+  }
+
+  .cwc_review-strip__content-title {
+    gap: 14px;
+  }
+
+  .cwc_review-strip__content-rule {
+    width: 28px;
   }
 
   .cwc_review-strip__content-heading h1,
