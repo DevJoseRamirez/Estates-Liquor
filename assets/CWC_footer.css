@@ -8,7 +8,7 @@
 /* === Section Wrapper === */
 .cwc_footer {
   /* Spec values on the green band (alpha colours the hex settings can't hold) */
-  --ft-link: rgba(255, 255, 255, 0.72);
+  --ft-link: var(--link-color, rgba(255, 255, 255, 0.72));
   --ft-rule: rgba(255, 255, 255, 0.12);
   --ft-on-amber: #13241C;
   --ft-gutter: 2rem;
@@ -413,7 +413,7 @@
 
 .cwc_footer-disclaimer {
   line-height: 1.7;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .cwc_footer__bottom-links a {
@@ -455,6 +455,24 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_footer__logo img {
+    display: block;
+    width: 146px;
+    height: auto;
+  }
+
+  .cwc_footer-disclaimer {
+    font-size: 13px;
+  }
+
+  .cwc_footer__column-list {
+    gap: 4px;
+  }
+
+  .cwc_footer__column-title {
+    font-size: 14px;
+  }
+
   .cwc_footer {
     --ft-gutter: 16px;
     padding-top: var(--padding-top-mobile);

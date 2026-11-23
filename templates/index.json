@@ -359,7 +359,7 @@
           "type": "link",
           "settings": {
             "collection": "rare-limited",
-            "label": "The Allocation",
+            "label": "Allocated",
             "link": "",
             "featured": true
           }
@@ -394,8 +394,8 @@
         "cwc_quick_links_b5": {
           "type": "link",
           "settings": {
-            "collection": "rye-whiskey",
-            "label": "Rye",
+            "collection": "bundles-100-up",
+            "label": "Bundles & Gifts",
             "link": "",
             "featured": false
           }
@@ -403,8 +403,35 @@
         "cwc_quick_links_b6": {
           "type": "link",
           "settings": {
-            "collection": "bundles-100-up",
-            "label": "Gifts",
+            "collection": "american-whiskey",
+            "label": "American",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b7": {
+          "type": "link",
+          "settings": {
+            "collection": "irish-whiskey-over-100",
+            "label": "Irish",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b8": {
+          "type": "link",
+          "settings": {
+            "collection": "rye-whiskey",
+            "label": "Rye",
+            "link": "",
+            "featured": false
+          }
+        },
+        "cwc_quick_links_b9": {
+          "type": "link",
+          "settings": {
+            "collection": "best-selling-products",
+            "label": "Best Sellers",
             "link": "",
             "featured": false
           }
@@ -416,7 +443,10 @@
         "cwc_quick_links_b3",
         "cwc_quick_links_b4",
         "cwc_quick_links_b5",
-        "cwc_quick_links_b6"
+        "cwc_quick_links_b6",
+        "cwc_quick_links_b7",
+        "cwc_quick_links_b8",
+        "cwc_quick_links_b9"
       ],
       "settings": {
         "nav_label": "Shop by category",
@@ -740,16 +770,16 @@
             "image": "shopify://shop_images/image_468_1.png",
             "alt_text": "",
             "overlay_color": "#000000",
-            "overlay_opacity": 25,
+            "overlay_opacity": 35,
             "eyebrow": "Bundles & gift sets",
             "heading": "<p>Ready-made <em>bundles</em></p>",
             "text": "<p>Curated sets, boxed and ready to give.</p>",
-            "content_position": "middle-left",
+            "content_position": "top-left",
             "text_color": "#ffffff",
             "eyebrow_color": "#e9a23b",
             "bold_color": "#e9a23b",
             "button_label": "Shop bundles",
-            "button_style": "link",
+            "button_style": "solid",
             "link": "shopify://collections/bundles-100-up",
             "link_whole_card": true,
             "button_bg_color": "#e9a23b",
@@ -759,19 +789,19 @@
         "cwc_promo_cards_c2": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/image_475_1.png",
+            "image": "shopify://shop_images/best_sellers_1.png",
             "alt_text": "",
             "overlay_color": "#000000",
-            "overlay_opacity": 25,
+            "overlay_opacity": 35,
             "eyebrow": "Customer favorites",
             "heading": "<p>Best <em>sellers</em></p>",
             "text": "<p>The bottles our regulars keep coming back for.</p>",
-            "content_position": "middle-left",
+            "content_position": "bottom-left",
             "text_color": "#ffffff",
             "eyebrow_color": "#e9a23b",
             "bold_color": "#e9a23b",
             "button_label": "Shop best sellers",
-            "button_style": "link",
+            "button_style": "solid",
             "link": "shopify://collections/best-selling-products",
             "link_whole_card": true,
             "button_bg_color": "#e9a23b",
@@ -781,19 +811,19 @@
         "cwc_promo_cards_c3": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/image_468_1.png",
+            "image": "shopify://shop_images/engraving.png",
             "alt_text": "",
             "overlay_color": "#000000",
-            "overlay_opacity": 25,
+            "overlay_opacity": 35,
             "eyebrow": "Personalized",
             "heading": "<p>Custom <em>engraving</em></p>",
             "text": "<p>Add a name, date or message to the bottle.</p>",
-            "content_position": "middle-left",
+            "content_position": "top-left",
             "text_color": "#ffffff",
             "eyebrow_color": "#e9a23b",
             "bold_color": "#e9a23b",
             "button_label": "Learn more",
-            "button_style": "link",
+            "button_style": "solid",
             "link": "",
             "link_whole_card": true,
             "button_bg_color": "#e9a23b",
@@ -810,6 +840,7 @@
         "bg_color": "#ffffff",
         "card_height": 440,
         "card_height_mobile": 360,
+        "content_width": 340,
         "card_gap": 10,
         "mobile_layout": "stack",
         "padding_top": 20,
@@ -873,8 +904,8 @@
         "mobile_content_first": false,
         "image": "shopify://shop_images/image_462_1.png",
         "alt_text": "",
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "cwc_product_tabs_2": {
@@ -1426,15 +1457,16 @@
         "text_color": "#13241c",
         "bold_color": "#8a6a2e",
         "eyebrow_color": "#8a6a2e",
-        "border_color": "#ecece8",
+        "border_color": "#c9c3b6",
         "card_bg_color": "#ffffff",
         "card_title_color": "#13241c",
         "card_text_color": "#5c5c57",
         "button_text_color": "#13241c",
+        "bg_image": "shopify://shop_images/image_437_1.png",
         "overlay_color": "#000000",
         "overlay_opacity": 0,
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "cwc_store_reviews": {

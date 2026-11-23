@@ -238,6 +238,38 @@
 /* ==============================
    Tablet Responsive
    ============================== */
+/* ==============================
+   Desktop: larger copy
+   ============================== */
+@media screen and (min-width: 992px) {
+  .cwc_collection-highlight__body {
+    max-width: 34rem;
+  }
+
+  .cwc_collection-highlight__content-eyebrow {
+    font-size: 0.875rem;
+  }
+
+  .cwc_collection-highlight__content-heading h1,
+  .cwc_collection-highlight__content-heading h2,
+  .cwc_collection-highlight__content-heading h3,
+  .cwc_collection-highlight__content-heading p {
+    font-size: 2.875rem;
+  }
+
+  .cwc_collection-highlight__content-subtext p {
+    font-size: 1.25rem;
+  }
+
+  .cwc_collection-highlight__list-item {
+    font-size: 1.125rem;
+  }
+
+  .cwc_collection-highlight__button-link {
+    font-size: 16px;
+  }
+}
+
 @media screen and (max-width: 991px) {
   .cwc_collection-highlight__container {
     padding: 0 1.25rem;
