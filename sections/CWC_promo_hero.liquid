@@ -93,6 +93,19 @@
 
                 assign overlay = block.settings.overlay_opacity | default: 70 | divided_by: 100.0
                 assign overlay_style = block.settings.overlay_style | default: 'gradient'
+
+                # Image position: a picked side wins, otherwise the image's focal point
+                assign img_pos = block.settings.image_position | default: 'focal'
+                if img_pos == 'focal'
+                  assign img_pos = desktop_image.presentation.focal_point | default: 'center'
+                  if mobile_image != blank
+                    assign img_pos_mobile = mobile_image.presentation.focal_point | default: 'center'
+                  else
+                    assign img_pos_mobile = img_pos
+                  endif
+                else
+                  assign img_pos_mobile = img_pos
+                endif
               -%}
 
               <div
@@ -135,7 +148,7 @@
                         height="{{ desktop_image.height }}"
                         loading="{{ load_mode }}"
                         {% if forloop.first %}fetchpriority="high"{% endif %}
-                        style="object-position: {{ desktop_image.presentation.focal_point | default: 'center' }};"
+                        style="--img-pos: {{ img_pos }}; --img-pos-mobile: {{ img_pos_mobile }};"
                       >
                     </picture>
                   {%- else -%}
@@ -320,6 +333,21 @@
           "id": "image_mobile",
           "label": "Mobile Image",
           "info": "Recommended: 1000 x 1100px. Falls back to the desktop image."
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "info": "Which part of the image stays in view when the panel crops it.",
+          "options": [
+            { "value": "focal", "label": "Focal point (set in Files)" },
+            { "value": "center", "label": "Center" },
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" },
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "focal"
         },
         {
           "type": "text",

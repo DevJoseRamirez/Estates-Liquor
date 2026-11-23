@@ -117,7 +117,16 @@
 
 .cwc_promo-hero__image {
   object-fit: cover;
+  object-position: var(--img-pos, center);
   transition: transform 0.6s ease;
+}
+
+/* Mobile uses the mobile image's own focal point (same breakpoint as the
+   <source> swap) */
+@media screen and (max-width: 767px) {
+  .cwc_promo-hero__image {
+    object-position: var(--img-pos-mobile, var(--img-pos, center));
+  }
 }
 
 .cwc_promo-hero__panel:hover .cwc_promo-hero__image {
@@ -457,12 +466,42 @@ a.cwc_promo-hero__button:focus-visible {
     padding: 1.75rem 1.5rem;
   }
 
+  /* Mobile: copy always sits bottom left, whatever Content Position says */
+  .cwc_promo-hero__panel,
+  .cwc_promo-hero__grid--featured .cwc_promo-hero__panel {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .cwc_promo-hero__panel .cwc_promo-hero__content {
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .cwc_promo-hero__panel .cwc_promo-hero__content:has(.cwc_promo-hero__button--link) {
+    align-items: flex-start;
+  }
+
+  /* Gradient runs up from the bottom, focused on the copy: full strength
+     through the bottom fifth, still strong at ~40%, then a quick fade,
+     gone by 65% so the top of the image stays clear. Strength follows the
+     card's Overlay Opacity. */
+  .cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay,
+  .cwc_promo-hero__panel--middle-center.cwc_promo-hero__panel--overlay-gradient .cwc_promo-hero__overlay {
+    --overlay-fade: linear-gradient(0deg, #000 0, #000 20%, rgba(0, 0, 0, 0.85) 38%, rgba(0, 0, 0, 0.4) 52%, transparent 65%);
+  }
+
   .cwc_promo-hero__eyebrow {
     font-size: 11px;
   }
 
   .cwc_promo-hero__heading {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* A touch more air between the stacked title lines */
+  .cwc_promo-hero__heading>* {
+    line-height: 1.12;
   }
 
   .cwc_promo-hero__heading--xlarge {
@@ -481,8 +520,9 @@ a.cwc_promo-hero__button:focus-visible {
     --panel-heading-size: 26px;
   }
 
-  .cwc_promo-hero__text {
-    margin-bottom: 28px;
+  /* Same tight gap on every card (side cards had their own 18px) */
+  .cwc_promo-hero__panel .cwc_promo-hero__text {
+    margin-bottom: 16px;
   }
 
   .cwc_promo-hero__panel--side .cwc_promo-hero__content {
@@ -491,6 +531,7 @@ a.cwc_promo-hero__button:focus-visible {
 
   .cwc_promo-hero__text p {
     font-size: 16px;
+    line-height: 1.5;
   }
 
   .cwc_promo-hero__button:not(.cwc_promo-hero__button--link) {

@@ -844,8 +844,16 @@
     }
   }
 
-  /* --- Mobile: swipe row of white cards on the sage-tone band --- */
+  /* --- Mobile: up to 3 white cards stacked on the sage-tone band
+     (scroll the drawer, not a swipe row), as on Liquor On Broadway --- */
   @media screen and (max-width: 767px) {
+    /* Set the recs apart from the cart lines: hairline on top, warm tint
+       behind, so the white cards stand out */
+    .global-drawer--secondary__content {
+      border-top: 1px solid var(--el-line-strong, #ddddd7);
+      background: var(--el-tint, #f4f0e8);
+    }
+
     .global-drawer--secondary .cart-recs-head {
       padding: 18px 18px 12px;
       border-bottom: 0;
@@ -856,32 +864,94 @@
     }
 
     .global-drawer--secondary .cart-drawer__recommendations-grid {
-      gap: 12px;
+      flex-direction: column;
+      gap: 8px;
       padding: 0 18px 20px;
-      scroll-snap-type: x mandatory;
-      scroll-padding: 0 18px;
-      scrollbar-width: none;
+      overflow-x: visible;
     }
 
-    .global-drawer--secondary .cart-drawer__recommendations-grid::-webkit-scrollbar {
+    /* Three is enough on a phone (counts cards only, ignoring any other
+       children the grid might hold) */
+    .global-drawer--secondary .cart-drawer__recommendations-grid > .product-card-basic ~ .product-card-basic ~ .product-card-basic ~ .product-card-basic {
       display: none;
     }
 
     .global-drawer--secondary .cart-drawer__recommendations .product-card-basic {
-      width: min(320px, 100vw - 72px);
-      min-width: 260px;
+      width: auto;
+      min-width: 0;
       margin: 0;
       padding: 12px;
       border: 1px solid var(--el-line, #ecece8);
       border-radius: 0;
       background: var(--el-white, #ffffff);
-      scroll-snap-align: start;
     }
 
     .global-drawer--secondary .product-card-basic__image {
       flex-basis: 84px;
       width: 84px;
       height: 84px;
+    }
+
+    /* Broadway-style row: title across the top, then price left and a
+       compact Add button right on one line; card centred on the image */
+    .global-drawer--secondary .cart-drawer__recommendations .product-card-basic {
+      align-items: center;
+    }
+
+    .global-drawer--secondary .product-card-basic__image {
+      align-self: center;
+    }
+
+    .global-drawer--secondary .product-card-basic--info {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        'title title'
+        'price button';
+      align-items: center;
+      gap: 8px 10px;
+    }
+
+    .global-drawer--secondary .product-card-basic--info--body {
+      display: contents;
+    }
+
+    .global-drawer--secondary .product-card-basic--info--body > div:first-child {
+      grid-area: title;
+      min-width: 0;
+    }
+
+    .global-drawer--secondary .product-card-basic .product-card-basic__title {
+      margin-bottom: 0;
+    }
+
+    .global-drawer--secondary .product-card-basic__price {
+      grid-area: price;
+      min-width: 0;
+    }
+
+    .global-drawer--secondary .product-card-basic__price .product-price--sale,
+    .global-drawer--secondary .product-card-basic__price .product-price--regular {
+      margin-bottom: 0;
+    }
+
+    .global-drawer--secondary .product-card-basic--info--footer {
+      grid-area: button;
+    }
+
+    .global-drawer--secondary .product-card-basic__add-button,
+    .global-drawer--secondary .product-card-basic--info--footer .text-link-animated {
+      width: auto;
+    }
+
+    .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon,
+    .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon {
+      width: auto;
+      height: 34px;
+      padding: 0 14px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
     }
   }
 
@@ -1144,9 +1214,9 @@
   .cart-drawer__sub-footer #captain-checkout,
   .captain-button .btn.cart-drawer__footer--button.undefined {
     width: 100% !important;
-    min-height: 54px !important;
+    min-height: 46px !important;
     margin: 0 !important;
-    padding: 0 20px !important;
+    padding: 0 18px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1158,12 +1228,11 @@
     color: var(--el-dark) !important;
     font-family: var(--el-font-body) !important;
     font-weight: 700 !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0.1em !important;
     text-transform: uppercase !important;
     cursor: pointer;
     transition: background-color 0.2s ease;
     font-size: 13px !important;
-    font-size: 14px !important;
   }
   .cart-drawer__sub-footer #captain-checkout:hover,
   .captain-button .btn.cart-drawer__footer--button.undefined:hover {
@@ -1175,7 +1244,7 @@
     display: block !important;
     width: 100% !important;
     min-height: 0 !important;
-    margin: 14px 0 4px !important;
+    margin: 10px 0 2px !important;
     padding: 0 !important;
     background: none !important;
     border: 0 !important;
@@ -1276,8 +1345,26 @@
     color: var(--el-dark);
   }
   @media screen and (max-width: 768px) {
+    /* Compact top: tighter header, smaller "Cart (n)", less gap above the
+       first item so more of the cart shows without scrolling */
+    .global-drawer__sticky-header {
+      padding-top: 10px;
+      padding-bottom: 12px;
+    }
+    .cart-drawer__heading {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .cart-drawer__body.global-drawer__body--with-padding {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
     .cart-drawer__body .cart-drawer__form {
-      padding: 16px 18px 0px 18px;
+      padding: 12px 18px 0px 18px;
+    }
+    .cart-drawer__product_card .cart-drawer__product_card--title {
+      margin-bottom: 6px;
+      font-size: 15px;
     }
     .cart-drawer__sub-footer {
       padding: 16px 12px;
