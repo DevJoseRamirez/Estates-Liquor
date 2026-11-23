@@ -39,7 +39,11 @@
       body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
     })
       .then(function (response) {
-        if (!response.ok) throw new Error('Add to cart failed');
+        if (!response.ok) {
+          var err = new Error('Add to cart failed');
+          err.status = response.status;
+          throw err;
+        }
         return response.json();
       })
       .then(function () {
@@ -61,8 +65,16 @@
           button.classList.remove('cwc_collection-body__card-button--added');
         }, 1600);
       })
-      .catch(function () {
+      .catch(function (err) {
+        /* Say why instead of silently resetting: 422 means Shopify has no
+           more stock for this bottle (sold out, or the rest is already in
+           the cart) */
         button.classList.remove('cwc_collection-body__card-button--loading');
+        var original = button.innerHTML;
+        button.textContent = err && err.status === 422 ? 'Not enough stock' : 'Try again';
+        window.setTimeout(function () {
+          button.innerHTML = original;
+        }, 2500);
       });
   });
 })();

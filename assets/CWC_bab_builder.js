@@ -377,25 +377,44 @@
       showError('');
 
       var boxId = 'box-' + Date.now().toString(36);
+      /* The previous box's lines, kept so they can be put back if the new
+         box fails to add */
+      var oldLines = [];
 
       fetch(root() + 'cart.js', { headers: { Accept: 'application/json' } })
         .then(function (res) {
           return res.json();
         })
         .then(function (cart) {
-          /* One box per cart: clear the previous box's lines first */
+          /* One box per cart: clear the previous box's lines first. Removing
+             before adding (not after) keeps stock from being counted twice
+             when the new box reuses the same bottles. */
           var updates = {};
-          var hasOld = false;
           (cart.items || []).forEach(function (item) {
             if (item.properties && item.properties._bab_box) {
               updates[item.key] = 0;
-              hasOld = true;
+              oldLines.push({ id: item.variant_id, quantity: item.quantity, properties: item.properties });
             }
           });
-          return hasOld ? cartRequest(root() + 'cart/update.js', { updates: updates }) : null;
+          return oldLines.length ? cartRequest(root() + 'cart/update.js', { updates: updates }) : null;
         })
         .then(function () {
-          return cartRequest(root() + 'cart/add.js', { items: store.cartItems(boxId) });
+          return cartRequest(root() + 'cart/add.js', { items: store.cartItems(boxId) }).catch(function (err) {
+            /* New box didn't go in (e.g. a bottle sold out meanwhile): put the
+               old box back so the shopper doesn't lose both, then report the
+               original error. If the restore itself fails there's nothing
+               more to do here; the error message still shows. */
+            if (!oldLines.length) throw err;
+            return cartRequest(root() + 'cart/add.js', { items: oldLines }).then(
+              function () {
+                document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
+                throw err;
+              },
+              function () {
+                throw err;
+              }
+            );
+          });
         })
         .then(function () {
           document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));

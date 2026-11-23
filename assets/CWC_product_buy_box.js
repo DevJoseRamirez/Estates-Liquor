@@ -26,9 +26,19 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items: items }),
     }).then(function (response) {
-      if (!response.ok) throw new Error("Add to cart failed");
+      if (!response.ok) {
+        var err = new Error("Add to cart failed");
+        err.status = response.status;
+        throw err;
+      }
       return response.json();
     });
+  }
+
+  /* 422 = Shopify has no more stock for it (sold out, or the rest is already
+     in the cart), so "Try Again" would never work */
+  function failLabel(err) {
+    return err && err.status === 422 ? "Not enough stock" : "Try Again";
   }
 
   /* The theme's cart drawer listens on the shared eventBus — re-render it with
@@ -234,11 +244,11 @@
           button.classList.remove("cwc_product-buy-box__atc--loading");
           afterAdd(button, original);
         })
-        .catch(function () {
+        .catch(function (err) {
           /* Report it here — posting the form would bounce the shopper to the
              cart page, which is the behaviour this replaces. */
           button.classList.remove("cwc_product-buy-box__atc--loading");
-          button.textContent = "Try Again";
+          button.textContent = failLabel(err);
           window.setTimeout(function () {
             button.textContent = original;
           }, 2000);
@@ -816,9 +826,9 @@
           addButton.disabled = false;
           afterAdd(addButton, original);
         })
-        .catch(function () {
+        .catch(function (err) {
           addButton.disabled = false;
-          addButton.textContent = "Try Again";
+          addButton.textContent = failLabel(err);
           window.setTimeout(function () {
             addButton.textContent = original;
           }, 2000);
