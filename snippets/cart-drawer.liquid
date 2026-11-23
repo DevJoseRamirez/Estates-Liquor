@@ -371,8 +371,8 @@
                 <div class="global-drawer--secondary__header cart-recs-head">
                   {% if settings.cart_recommendations_heading != blank %}
                     {% comment %} <h5 class="text-link-animated">{{ settings.cart_recommendations_heading }}</h5> {% endcomment %}
-                    <span>Complete Your Order</span>
-                    Don’t forget these
+                    <p class="cart-recs-head__eyebrow">Complete Your Order</p>
+                    <p class="cart-recs-head__title">Don’t forget these</p>
                   {% endif %}
                 </div>
 
@@ -611,16 +611,227 @@
   .global-drawer__footer:after {
     display: none;
   }
-
-  .global-drawer--secondary__content {
-    background: #f2efe8;
-    padding: 0rem;
+  .dynamic-section-button--drawer-filled {
+    display: none !important;
   }
 
-  /* === Recommendations rail — desktop ===
-     Bigger image and a real button instead of the 10px underlined link, while
-     the panel only grows 30px (310 → 340). Scoped to the secondary panel so
-     cart line items and the mobile swipe row are untouched. */
+  /* === Recommendations ("Complete your order") — brand tokens ===
+     Desktop: side panel beside the drawer. Mobile: swipe row under the items.
+     Everything is scoped to .global-drawer--secondary so cart line items and
+     the offers drawer (which also uses product-card-basic) are untouched.
+     Fonts and colors follow _theme-styles/estates-brand-tokens.md. */
+  /* Panel ground: white */
+  .global-drawer--secondary__content {
+    padding: 0;
+    background: var(--el-white, #ffffff);
+  }
+
+  .global-drawer--secondary .cart-recs-head {
+    padding: 22px 20px 16px;
+    border-bottom: 1px solid var(--el-line, #ecece8);
+  }
+
+  /* The theme draws a line through the mobile header; not needed here */
+  .global-drawer--secondary .cart-recs-head::after {
+    display: none;
+  }
+
+  .cart-recs-head__eyebrow {
+    margin: 0 0 6px;
+    font-family: var(--el-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--el-brass, #8a6a2e);
+  }
+
+  .cart-recs-head__title {
+    margin: 0;
+    font-family: var(--el-font-display);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--el-dark, #13241c);
+  }
+
+  .global-drawer--secondary .cart-drawer__recommendations-grid {
+    gap: 0;
+  }
+
+  /* --- Card --- */
+  .global-drawer--secondary .product-card-basic {
+    gap: 14px;
+    align-items: stretch;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--el-line, #ecece8);
+    font-family: var(--el-font-body);
+  }
+
+  /* Image on plain white, square, hairline border. The link, the
+     theme's ratio wrapper and the image are all pinned absolutely inside a
+     fixed square, so no theme sizing or white wrapper rule can shrink it. */
+  .global-drawer--secondary .product-card-basic__image {
+    position: relative;
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
+    align-self: flex-start;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--el-line, #ecece8);
+    border-radius: 0;
+    background: var(--el-white, #ffffff);
+    box-sizing: border-box;
+  }
+
+  .global-drawer--secondary .product-card-basic__image > a,
+  .global-drawer--secondary .product-card-basic__image .aspect-ratio {
+    position: absolute !important;
+    inset: 0;
+    display: block;
+    width: auto !important;
+    height: auto !important;
+    margin: 0;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .global-drawer--secondary .product-card-basic__image .theme-img {
+    position: absolute;
+    /* top: 9%; */
+    /* left: 9%; */
+    width: 92% !important;
+    height: 92% !important;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    border-radius: 0;
+  }
+
+  .global-drawer--secondary .product-card-basic--info {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 10px;
+    transform: none;
+  }
+
+  /* Vendor — mono 10px, library green */
+  .global-drawer--secondary .product-card-basic .product-card-basic__vendor {
+    margin-bottom: 4px;
+    font-family: var(--el-font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--el-green, #1f3a2e);
+  }
+
+  /* Title — Fraunces, 2-line clamp */
+  .global-drawer--secondary .product-card-basic .product-card-basic__title {
+    display: -webkit-box;
+    margin-bottom: 6px;
+    overflow: hidden;
+    font-family: var(--el-font-display);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--el-ink, #1c1c19);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .global-drawer--secondary .product-card-basic .product-card-basic__title a {
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+  }
+
+  /* Price — mono; sale in oxblood, compare-at muted and struck */
+  .global-drawer--secondary .product-card-basic__price .money,
+  .global-drawer--secondary .product-card-basic__price .product-price--sale,
+  .global-drawer--secondary .product-card-basic__price .product-price--regular {
+    margin-bottom: 0;
+    font-family: var(--el-font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--el-ink, #1c1c19);
+  }
+
+  .global-drawer--secondary .product-card-basic__price .money.sale-price,
+  .global-drawer--secondary .product-card-basic__price .money.price-line-through {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--el-muted, #5c5c57);
+    opacity: 1;
+  }
+
+  .global-drawer--secondary .product-card-basic__price .money.sale-price + .money,
+  .global-drawer--secondary .product-card-basic__price .money.price-line-through.sale-price + .money {
+    color: var(--el-sale, #7a2226);
+  }
+
+  /* --- Button: card primary (yellow, dark label, square) --- */
+  .global-drawer--secondary .product-card-basic__add-button,
+  .global-drawer--secondary .product-card-basic--info--footer .text-link-animated {
+    display: block;
+    width: 100%;
+    background-image: none;
+  }
+
+  .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon,
+  .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 0;
+    background: var(--el-accent, #e9a23b);
+    color: var(--el-dark, #13241c) !important;
+    font-family: var(--el-font-body);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon:hover,
+  .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon:hover {
+    background: var(--el-accent-hover, #d68f27);
+    color: var(--el-dark, #13241c) !important;
+  }
+
+  .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon:focus-visible,
+  .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon:focus-visible {
+    outline: 2px solid var(--el-brass, #8a6a2e);
+    outline-offset: 3px;
+  }
+
+  /* The theme's animated underline would draw across the solid button */
+  .global-drawer--secondary .product-card-basic .text-link-animated a::before,
+  .global-drawer--secondary .product-card-basic .text-link-animated .btn--underlined::before {
+    display: none;
+  }
+
+  /* Text-only button in the drawer: hide the bag/user icon */
+  .global-drawer--secondary .product-card-basic .btn--underlined-with-icon svg {
+    display: none;
+  }
+
+  /* --- Desktop: side panel --- */
   @media screen and (min-width: 768px) {
     .global-drawer--secondary {
       width: 340px;
@@ -630,121 +841,50 @@
     .global-drawer--secondary .product-card-basic {
       width: auto;
       min-width: 0;
-      gap: 14px;
-      align-items: stretch;
+    }
+  }
+
+  /* --- Mobile: swipe row of white cards on the sage-tone band --- */
+  @media screen and (max-width: 767px) {
+    .global-drawer--secondary .cart-recs-head {
+      padding: 18px 18px 12px;
+      border-bottom: 0;
     }
 
-    .global-drawer--secondary .product-card-basic__image {
-      width: 108px;
-      align-self: flex-start;
-      background: #ffffff;
-      border: 1px solid #e0ddd6;
-      border-radius: 3px;
-      padding: 6px;
+    .cart-recs-head__title {
+      font-size: 19px;
     }
 
-    .global-drawer--secondary .product-card-basic__image .theme-img {
-      width: 100%;
-      object-fit: contain;
+    .global-drawer--secondary .cart-drawer__recommendations-grid {
+      gap: 12px;
+      padding: 0 18px 20px;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 0 18px;
+      scrollbar-width: none;
     }
 
-    .global-drawer--secondary .product-card-basic--info {
-      flex: 1 1 auto;
-      min-width: 0;
-      transform: none;
-      /* gap: 10px; */
-      gap: 0px;
-    }
-
-    .global-drawer--secondary .product-card-basic--info--body .product-grid--title-font-body {
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    /* long titles: cap at 2 lines with an ellipsis to keep rec rows short */
-    .global-drawer--secondary .product-card-basic__title {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      overflow: hidden;
-    }
-
-    .global-drawer--secondary .product-card-basic__price .money,
-    .global-drawer--secondary .product-card-basic__price .product-price--sale {
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    /* Add to cart / View options become a full-width solid button */
-    .global-drawer--secondary .product-card-basic__add-button,
-    .global-drawer--secondary .product-card-basic--info--footer .text-link-animated {
-      display: block;
-      width: 100%;
-    }
-
-    .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon,
-    .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      height: 38px;
-      padding: 0 12px;
-      border: 0;
-      border-radius: 3px;
-      background: #0a1f12;
-      color: #ffffff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-family: var(--body-font-stack);
-      transition: background-color 0.15s ease;
-    }
-
-    .global-drawer--secondary .product-card-basic .btn--underlined.btn--underlined-with-icon:hover,
-    .global-drawer--secondary .product-card-basic a.btn--underlined-with-icon:hover {
-      background: #c4933f;
-      color: #ffffff !important;
-    }
-
-    /* the theme's animated underline (background gradient + :before line)
-       would draw across the solid button — the solid background replaces the
-       gradient, this removes the line */
-    .global-drawer--secondary .product-card-basic .text-link-animated a::before,
-    .global-drawer--secondary .product-card-basic .text-link-animated .btn--underlined::before {
+    .global-drawer--secondary .cart-drawer__recommendations-grid::-webkit-scrollbar {
       display: none;
     }
 
-    .global-drawer--secondary .product-card-basic .btn--underlined-with-icon svg {
-      width: 14px;
-      height: 14px;
+    .global-drawer--secondary .cart-drawer__recommendations .product-card-basic {
+      width: min(320px, 100vw - 72px);
+      min-width: 260px;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--el-line, #ecece8);
+      border-radius: 0;
+      background: var(--el-white, #ffffff);
+      scroll-snap-align: start;
+    }
+
+    .global-drawer--secondary .product-card-basic__image {
+      flex-basis: 84px;
+      width: 84px;
+      height: 84px;
     }
   }
 
-  .cart-recs-head span {
-    display: block;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #c4933f;
-    margin-bottom: 5px;
-    font-family: var(--body-font-stack);
-  }
-
-  /* tesing */
-  .cart-recs-head {
-    padding: 22px 20px 14px;
-    font-size: 17px;
-    font-weight: 700;
-    color: #0a1f12;
-    border-bottom: 1px solid #e0ddd6;
-    font-family: var(--header-font-stack);
-  }
   .rec-item {
     display: flex;
     gap: 12px;
@@ -802,20 +942,64 @@
     font-weight: 700;
     color: #0a1f12;
   }
-  .cart-drawer__product_card--title.product-grid--title-font-body {
-    font-size: 16px;
-    line-height: 1.3;
-    font-weight: 700;
-    color: var(--green);
+  /* === Cart line items — brand fonts (estates-brand-tokens.md §3) ===
+     Title Fraunces · vendor and price IBM Plex Mono · details Inter */
+  .cart-drawer__product_card .cart-drawer__product_card--title {
     margin-bottom: 8px;
-    font-family: var(--header-font-stack);
-    color: #0a1f12;
-  }
-  .cart-drawer__product-card--price.product-grid--price-font-body {
-    font-family: var(--body-font-stack);
-    font-weight: 700;
+    font-family: var(--el-font-display);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3;
     letter-spacing: 0;
-    color: #0a1f12;
+    color: var(--el-ink, #1c1c19);
+  }
+  .cart-drawer__product_card .cart-drawer__product_card--title a {
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+  }
+  .cart-drawer__product_card .cart-drawer__product_card--vendor {
+    margin-bottom: 4px;
+    font-family: var(--el-font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--el-green, #1f3a2e);
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--details,
+  .cart-drawer__product_card .cart-drawer__product-card--detail {
+    font-family: var(--el-font-body);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--el-muted, #5c5c57);
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--price {
+    font-family: var(--el-font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--el-ink, #1c1c19);
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--price--sale {
+    color: var(--el-sale, #7a2226);
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--price--compare {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--el-muted, #5c5c57);
+    text-decoration: line-through;
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--quantity--input,
+  .cart-drawer__product_card .cart-drawer__product-card--quantity--button {
+    font-family: var(--el-font-mono);
+    color: var(--el-ink, #1c1c19);
+  }
+  .cart-drawer__product_card .cart-drawer__product-card--remove {
+    font-family: var(--el-font-body);
+    font-size: 12px;
+    color: var(--el-muted, #5c5c57);
   }
   /* compare-at now follows the final price, so the space goes on its left */
   .price-line-through.price--compare-at-price,
@@ -876,7 +1060,6 @@
     gap: 16px;
     margin-bottom: 14px;
   }
-  .cart-drawer__product_card--vendor.product-grid--vendor-font-body,
   .product-card-basic__vendor.product-grid--vendor-font-body {
     font-size: 9px;
     font-weight: 700;
@@ -1115,10 +1298,6 @@
     .global-drawer__sticky-bottom:after {
       display: none !important;
     }
-    .cart-drawer__recommendations .product-card-basic {
-      background: white;
-      border-radius: 3px;
-    }
     .cart-drawer__sub-footer #tm_cart {
       margin-bottom: 12px !important;
     }
@@ -1145,9 +1324,6 @@
     }
     .cart-drawer__product_card {
       gap: 8px;
-    }
-    .cart-drawer__recommendations .product-card-basic {
-      margin-left: 4px;
     }
   }
 {% endstyle %}

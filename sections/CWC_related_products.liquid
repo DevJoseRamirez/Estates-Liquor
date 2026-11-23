@@ -12,7 +12,7 @@
     --card-button-text: {{ section.settings.button_text_color | default: '#13241C' }};
     --card-meta-color: {{ section.settings.meta_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
-    --columns: {{ section.settings.columns | default: 4 }};
+    --columns: {{ section.settings.columns | default: 5 }};
     --padding-top: {{ section.settings.padding_top | default: 70 }}px;
     --padding-bottom: {{ section.settings.padding_bottom | default: 70 }}px;
     --padding-top-mobile: {{ section.settings.padding_top | default: 70 | times: 0.5 }}px;
@@ -188,7 +188,7 @@
       "min": 2,
       "max": 12,
       "step": 1,
-      "default": 4
+      "default": 5
     },
     {
       "type": "checkbox",
@@ -225,7 +225,7 @@
       "min": 2,
       "max": 5,
       "step": 1,
-      "default": 4
+      "default": 5
     },
     {
       "type": "header",
