@@ -109,7 +109,7 @@
   color: var(--subtext-color);
 }
 
-.cwc_collection-header__content-subtext p + p {
+.cwc_collection-header__content-subtext p+p {
   margin-top: 0.5rem;
 }
 
@@ -339,6 +339,7 @@
 
   .cwc_collection-header__content-heading {
     margin-bottom: 8px;
+    margin-bottom: 0px;
   }
 
   /* Description clamps to --description-lines-mobile lines (line-height 1.7);
@@ -348,7 +349,7 @@
     overflow: hidden;
   }
 
-  .cwc_collection-header__description--clamped .cwc_collection-header__content-subtext p + p {
+  .cwc_collection-header__description--clamped .cwc_collection-header__content-subtext p+p {
     margin-top: 0;
   }
 

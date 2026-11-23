@@ -387,6 +387,24 @@
 
       results.textContent = '';
 
+      // An X pinned top right of the panel closes it (and drops the keyboard
+      // on phones, where there's no Escape key)
+      {
+        const closeRow = el('div', 'cwc_header__search-close-row');
+        const close = el('button', 'cwc_header__search-close');
+        close.type = 'button';
+        close.setAttribute('aria-label', 'Close search');
+        close.innerHTML =
+          '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
+          '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" fill="none"/></svg>';
+        close.addEventListener('click', function () {
+          hide();
+          input.blur();
+        });
+        closeRow.appendChild(close);
+        results.appendChild(closeRow);
+      }
+
       // Panel: collections + suggestions on the left, bottles on the right
       const panel = el('div', 'cwc_header__search-panel');
       const aside = el('div', 'cwc_header__search-aside');

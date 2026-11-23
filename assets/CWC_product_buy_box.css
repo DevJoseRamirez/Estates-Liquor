@@ -661,7 +661,7 @@
   padding: 0 30px;
   font-family: var(--bb-font-body);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -683,6 +683,74 @@
   background-color: #FFFFFF;
   border: 1px solid var(--bb-line-strong);
   cursor: not-allowed;
+}
+
+/* --- Add to Cart shine ---
+   A soft white band sweeps across the yellow: once on its own every 8s
+   (first pass ~2s after load), and once more each time the cursor enters.
+   Only the band's transform animates. Off when disabled / sold out and for
+   shoppers who ask for reduced motion. */
+.cwc_product-buy-box__atc {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.cwc_product-buy-box__atc::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 70%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(105deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.38) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-160%) skewX(-18deg);
+  animation: cwc-atc-shine 8s ease-in-out 2s infinite;
+}
+
+/* Switching the animation name restarts it, so every hover gets a fresh sweep */
+.cwc_product-buy-box__atc:hover:not(:disabled)::after {
+  animation: cwc-atc-shine-hover 1.5s ease-in-out 1;
+}
+
+.cwc_product-buy-box__atc:disabled::after {
+  content: none;
+}
+
+/* Sweep over the first ~22% of the cycle (~1.75s), then rest off the right edge */
+@keyframes cwc-atc-shine {
+  0% {
+    transform: translateX(-160%) skewX(-18deg);
+  }
+
+  22% {
+    transform: translateX(170%) skewX(-18deg);
+  }
+
+  100% {
+    transform: translateX(170%) skewX(-18deg);
+  }
+}
+
+@keyframes cwc-atc-shine-hover {
+  0% {
+    transform: translateX(-160%) skewX(-18deg);
+  }
+
+  100% {
+    transform: translateX(170%) skewX(-18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cwc_product-buy-box__atc::after {
+    content: none;
+  }
 }
 
 .cwc_product-buy-box__atc:focus-visible {
@@ -794,11 +862,8 @@
   display: none;
 }
 
-/* Short hairline ahead of the title; sized under the product title and price */
+/* Sized under the product title and price */
 .cwc_product-buy-box__fbt-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   font-family: var(--bb-font-display);
   font-size: 17px;
   font-weight: 500;
@@ -807,13 +872,6 @@
   margin: 0 0 12px;
 }
 
-.cwc_product-buy-box__fbt-head::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 14px;
-  height: 1px;
-  background-color: var(--bb-line-input);
-}
 
 .cwc_product-buy-box__fbt-row {
   display: flex;
@@ -1207,7 +1265,8 @@
   text-decoration: underline;
   text-decoration-color: var(--estimate-accent, #8A6A2E);
   text-underline-offset: 3px;
-  white-space: nowrap;
+  /* A range can be long on a phone — let it wrap after the dash, not mid-date */
+  white-space: normal;
 }
 
 /* === Fulfillment Details ===
@@ -1229,7 +1288,7 @@
 }
 
 /* No JS, no date: the note stands on its own, so it needs its own top edge */
-.cwc_product-buy-box__estimate[hidden] + .cwc_product-buy-box__fulfillment-details {
+.cwc_product-buy-box__estimate[hidden]+.cwc_product-buy-box__fulfillment-details {
   border-top: 1px solid var(--estimate-bg, #FBEFDD);
 }
 
@@ -1582,6 +1641,16 @@
    Mobile Responsive
    ============================== */
 @media screen and (max-width: 768px) {
+  .cwc_product-buy-box__estimate {
+    text-align: left;
+    font-size: 12px;
+  }
+
+  .cwc_product-buy-box__protect {
+    margin-bottom: 10px;
+  }
+
+
   .cwc_product-buy-box__qty button {
     width: 32px;
   }
@@ -1620,11 +1689,11 @@
   }
 
   .cwc_product-buy-box__rating {
-    margin-bottom: 14px;
+    margin-bottom: 2px;
   }
 
   .cwc_product-buy-box__price-row {
-    padding-top: 16px;
+    padding-top: 10px;
     margin-top: 6px;
   }
 

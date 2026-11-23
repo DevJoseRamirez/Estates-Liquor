@@ -434,6 +434,14 @@
                 else
                   assign transit_range = transit_min | append: '–' | append: transit_max
                 endif
+                # Order to door: processing + transit, the span the dates above cover
+                assign total_min = processing_min | plus: transit_min
+                assign total_max = processing_max | plus: transit_max
+                if total_min == total_max
+                  assign total_range = total_min | append: ''
+                else
+                  assign total_range = total_min | append: '–' | append: total_max
+                endif
                 assign cutoff = block.settings.cutoff_hour | default: 16
                 if cutoff == 0
                   assign cutoff_label = '12 AM'
@@ -459,7 +467,7 @@
                 data-transit-max="{{ transit_max }}"
                 data-cutoff-hour="{{ block.settings.cutoff_hour }}"
                 data-closed-dates="{{ closed_dates | escape }}"
-                data-date-mode="{{ block.settings.date_mode | default: 'latest' }}"
+                data-date-mode="{{ block.settings.date_mode | default: 'range' }}"
                 hidden
               >
                 <svg
@@ -491,6 +499,7 @@
                         | default: 'Ships in [processing] business days'
                         | replace: '[processing]', processing_range
                         | replace: '[transit]', transit_range
+                        | replace: '[total]', total_range
                         | escape -}}
                     </span>
                     <span class="cwc_product-buy-box__fulfillment-toggle">
@@ -518,6 +527,18 @@
                           | escape -}}
                       </dd>
                     </div>
+                    {% if block.settings.total_text != blank %}
+                      <div>
+                        <dt>{{ block.settings.total_heading | default: 'Delivery' | escape }}</dt>
+                        <dd>
+                          {{- block.settings.total_text
+                            | replace: '[total]', total_range
+                            | replace: '[processing]', processing_range
+                            | replace: '[transit]', transit_range
+                            | escape -}}
+                        </dd>
+                      </div>
+                    {% endif %}
                   </dl>
                   {% if block.settings.fulfillment_note != blank %}
                     <div class="cwc_product-buy-box__fulfillment-note">{{ block.settings.fulfillment_note }}</div>
@@ -1588,18 +1609,20 @@
           "type": "text",
           "id": "label",
           "label": "Label",
-          "default": "Estimated delivery by",
-          "info": "Shown before the date, e.g. \"Estimated delivery by Fri, Nov 21\". Keep it short so it fits on one line."
+          "default": "Estimated delivery",
+          "info": "Shown before the dates, e.g. \"Estimated delivery Mon, Dec 1 – Fri, Dec 5\". Keep it short so it fits on one line."
         },
         {
           "type": "select",
           "id": "date_mode",
           "label": "Date Shown",
           "options": [
-            { "value": "latest", "label": "Slowest case (safest promise)" },
-            { "value": "earliest", "label": "Fastest case" }
+            { "value": "range", "label": "Range, fastest to slowest" },
+            { "value": "latest", "label": "Slowest case only (safest promise)" },
+            { "value": "earliest", "label": "Fastest case only" }
           ],
-          "default": "latest"
+          "default": "range",
+          "info": "Every option counts processing time first, then UPS transit"
         },
         {
           "type": "paragraph",
@@ -1673,8 +1696,8 @@
           "type": "text",
           "id": "fulfillment_summary",
           "label": "Summary Line",
-          "default": "Ships in [processing] business days",
-          "info": "[processing] and [transit] fill in the day ranges set above"
+          "default": "Ships Mon–Thu · allow [processing] business days for processing",
+          "info": "[processing], [transit] and [total] fill in the day ranges set above"
         },
         {
           "type": "text",
@@ -1692,7 +1715,7 @@
           "type": "textarea",
           "id": "processing_text",
           "label": "Processing Text",
-          "default": "[processing] business days to check, pack and hand your order to UPS. Order by [cutoff] Pacific on a business day and processing starts the same day.",
+          "default": "Please allow [processing] business days for us to check and pack your order. Orders placed by [cutoff] Pacific on a business day start the same day.",
           "info": "[processing] and [cutoff] fill in from the settings above"
         },
         {
@@ -1705,8 +1728,21 @@
           "type": "textarea",
           "id": "transit_text",
           "label": "Shipping Text",
-          "default": "UPS Ground, [transit] business days from Southern California depending on where it is going.",
+          "default": "We ship Monday to Thursday with UPS Ground, which takes [transit] business days depending on where it is going.",
           "info": "[transit] fills in from the settings above"
+        },
+        {
+          "type": "text",
+          "id": "total_heading",
+          "label": "Delivery Heading",
+          "default": "Delivery"
+        },
+        {
+          "type": "textarea",
+          "id": "total_text",
+          "label": "Delivery Text",
+          "default": "The estimated dates above include processing and UPS Ground shipping. Delivery times vary with the shipping option you choose at checkout.",
+          "info": "[total], [processing] and [transit] fill in from the settings above. Leave empty to hide this row"
         },
         {
           "type": "richtext",

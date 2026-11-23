@@ -367,8 +367,8 @@
         "delivery_estimate": {
           "type": "delivery_estimate",
           "settings": {
-            "label": "Estimated delivery by",
-            "date_mode": "latest",
+            "label": "Estimated delivery",
+            "date_mode": "range",
             "cutoff_hour": 16,
             "processing_min": 3,
             "processing_max": 5,
@@ -560,8 +560,8 @@
         "button_text_color": "#13241C",
         "card_title_color": "#13241C",
         "card_text_color": "#5c5c57",
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "cwc_product_reviews": {
@@ -574,10 +574,10 @@
         "count_singular": "verified review",
         "count_plural": "verified reviews",
         "show_histogram": true,
-        "empty_mode": "hide",
+        "empty_mode": "show",
         "empty_text": "No reviews yet",
         "empty_subtext": "Reviews from customers who bought this bottle will appear here.",
-        "enable_write_review": false,
+        "enable_write_review": true,
         "button_label": "Write a review",
         "reviews_per_load": 5,
         "showing_label": "Showing [shown] of [total]",

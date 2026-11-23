@@ -256,7 +256,10 @@
     {% render 'verification-popup' %}
   {% endif %}
 
-  {% render 'back-to-top-button' %}
+  {%- comment -%} Hidden on the bundle builder page {%- endcomment -%}
+  {% unless template.suffix == 'bundle-build' %}
+    {% render 'back-to-top-button' %}
+  {% endunless %}
 
   <script>
     window.routes = {

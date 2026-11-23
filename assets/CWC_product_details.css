@@ -366,7 +366,7 @@
   padding: 0 30px;
   font-family: var(--pd-font-body);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -398,6 +398,61 @@
 .cwc_product-details__sticky-button:focus-visible {
   outline: 2px solid var(--highlight-color);
   outline-offset: 3px;
+}
+
+/* --- Add to Cart shine ---
+   Same as the buy box Add to Cart (CWC_product_buy_box.css): a wide, soft
+   white band sweeps across every 8s (first pass ~2s in) and again on each
+   hover. Own keyframes so it works without the buy box stylesheet. Off when
+   disabled / sold out and for reduced motion. */
+.cwc_product-details__sticky-button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.cwc_product-details__sticky-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 70%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-160%) skewX(-18deg);
+  animation: cwc-sticky-atc-shine 8s ease-in-out 2s infinite;
+}
+
+.cwc_product-details__sticky-button:hover:not(:disabled)::after {
+  animation: cwc-sticky-atc-shine-hover 1.5s ease-in-out 1;
+}
+
+.cwc_product-details__sticky-button:disabled::after {
+  content: none;
+}
+
+@keyframes cwc-sticky-atc-shine {
+  0% { transform: translateX(-160%) skewX(-18deg); }
+  22% { transform: translateX(170%) skewX(-18deg); }
+  100% { transform: translateX(170%) skewX(-18deg); }
+}
+
+@keyframes cwc-sticky-atc-shine-hover {
+  0% { transform: translateX(-160%) skewX(-18deg); }
+  100% { transform: translateX(170%) skewX(-18deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cwc_product-details__sticky-button::after {
+    content: none;
+  }
 }
 
 /* Shown at every width — the observer decides when, not the viewport size. */

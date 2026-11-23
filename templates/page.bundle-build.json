@@ -38,7 +38,7 @@
           "type": "step",
           "settings": {
             "label": "Save $25, $60 or $120",
-            "label_mobile": "Save up to $120"
+            "label_mobile": "Save"
           }
         }
       },
@@ -121,52 +121,11 @@
         "min_bottles": 3,
         "show_tiers": false
       }
-    },
-    "bab_rules": {
-      "type": "CWC_bab_rules",
-      "blocks": {
-        "rule_1": {
-          "type": "rule",
-          "settings": {
-            "title": "3 bottle minimum",
-            "text": "<p>Any 3 or more bottles from this shelf start a box.</p>"
-          }
-        },
-        "rule_2": {
-          "type": "rule",
-          "settings": {
-            "title": "Highest tier wins",
-            "text": "<p>One discount per box. Reaching a higher tier upgrades it.</p>"
-          }
-        },
-        "rule_3": {
-          "type": "rule",
-          "settings": {
-            "title": "No stacking",
-            "text": "<p>Box rewards don't combine with welcome or other codes.</p>"
-          }
-        },
-        "rule_4": {
-          "type": "rule",
-          "settings": {
-            "title": "Allocated excluded",
-            "text": "<p>Allocated bottles stay at fair retail and sit outside this offer.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "rule_1",
-        "rule_2",
-        "rule_3",
-        "rule_4"
-      ],
-      "settings": {}
     }
   },
   "order": [
     "main",
     "bab_hero",
-    "bab_builder",
-    "bab_rules"
+    "bab_builder"
   ]
 }

@@ -210,10 +210,10 @@
   justify-content: center;
   min-height: 48px;
   padding: 0 30px;
-  border: 1px solid var(--bold-color);
+  border: 1px solid var(--el-dark, #13241C);
   border-radius: 0;
-  background-color: var(--section-bg);
-  color: var(--bold-color);
+  background-color: var(--el-white, #FFFFFF);
+  color: var(--el-dark, #13241C);
   font-family: var(--pr-font-body);
   font-size: 13px;
   font-weight: 600;
@@ -227,8 +227,8 @@
 
 .cwc_product-reviews__button:hover,
 .cwc_product-reviews__more:hover {
-  background-color: var(--bold-color);
-  color: var(--section-bg);
+  background-color: var(--el-dark, #13241C);
+  color: var(--el-white, #FFFFFF);
 }
 
 .cwc_product-reviews__more {
@@ -252,7 +252,7 @@
 .cwc_product-reviews__more:focus-visible,
 .cwc_product-reviews__form-submit:focus-visible,
 .cwc_product-reviews__form-cancel:focus-visible {
-  outline: 2px solid var(--highlight-color);
+  outline: 2px solid var(--el-brass, #8A6A2E);
   outline-offset: 3px;
 }
 
@@ -359,24 +359,34 @@
 /* === Write A Review Form === */
 .cwc_product-reviews__form-panel {
   margin-bottom: 32px;
-  padding: 32px;
+  padding: 36px;
   background: var(--panel-bg);
   border: 1px solid var(--panel-line-color);
+  border-radius: 0;
+  text-align: left;
 }
 
 .cwc_product-reviews__form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .cwc_product-reviews__form-heading {
   margin: 0;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--panel-line-color);
   font-family: var(--pr-font-display);
   font-size: 26px;
   font-weight: 500;
   line-height: 1.12;
-  color: var(--heading-color);
+  color: var(--el-dark, #13241C);
+}
+
+/* The success message reuses the heading without the rule under it */
+.cwc_product-reviews__form-success .cwc_product-reviews__form-heading {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .cwc_product-reviews__form-rating {
@@ -392,9 +402,13 @@
   font-family: var(--pr-font-mono);
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted-color);
+  color: var(--el-ink, #1C1C19);
+}
+
+.cwc_product-reviews__form-label span[aria-hidden] {
+  color: var(--el-brass, #8A6A2E);
 }
 
 .cwc_product-reviews__form-stars {
@@ -403,7 +417,7 @@
 }
 
 .cwc_product-reviews__form-star {
-  font-size: 2rem;
+  font-size: 2.125rem;
   line-height: 1;
   color: var(--star-empty-color);
   cursor: pointer;
@@ -415,7 +429,7 @@
 }
 
 .cwc_product-reviews__form-star-input:focus-visible + .cwc_product-reviews__form-star {
-  outline: 2px solid var(--highlight-color);
+  outline: 2px solid var(--el-brass, #8A6A2E);
   outline-offset: 3px;
 }
 
@@ -429,13 +443,18 @@
   width: 100%;
   min-height: 48px;
   padding: 10px 14px;
-  border: 1px solid var(--bold-color);
+  border: 1px solid var(--el-line-input, #D9D9D3);
   border-radius: 0;
-  background: #ffffff;
-  color: var(--bold-color);
+  background: var(--el-white, #FFFFFF);
+  color: var(--el-ink, #1C1C19);
   font-family: var(--pr-font-body);
   font-size: 16px;
   box-shadow: none;
+  transition: border-color 0.15s ease;
+}
+
+.cwc_product-reviews__form-input:hover {
+  border-color: var(--el-muted, #5C5C57);
 }
 
 .cwc_product-reviews__form-input::placeholder {
@@ -443,14 +462,15 @@
 }
 
 .cwc_product-reviews__form-input:focus {
-  outline: 2px solid var(--highlight-color);
+  border-color: var(--el-dark, #13241C);
+  outline: 2px solid var(--el-brass, #8A6A2E);
   outline-offset: 0;
 }
 
-/* No red: invalid fields use the amber-text accent */
+/* Invalid fields use the oxblood alert colour, matching the error line */
 .cwc_product-reviews__form-input[aria-invalid="true"] {
-  border-color: var(--highlight-color);
-  border-width: 2px;
+  border-color: var(--alert-text-color);
+  box-shadow: inset 0 0 0 1px var(--alert-text-color);
 }
 
 .cwc_product-reviews__form-textarea {
@@ -468,9 +488,11 @@
 .cwc_product-reviews__form-error {
   margin: 0;
   padding: 12px 14px;
-  border-left: 3px solid var(--highlight-color);
-  background: var(--alert-bg);
-  font-size: 15px;
+  border: 1px solid var(--panel-line-color);
+  border-left: 3px solid var(--alert-text-color);
+  background: var(--el-white, #FFFFFF);
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--alert-text-color);
 }
 
@@ -478,29 +500,38 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--panel-line-color);
 }
 
+/* Cancel: the brand text link — mono, ink, yellow underline */
 .cwc_product-reviews__form-cancel {
-  min-height: 44px;
-  padding: 0 4px;
+  padding: 0 0 3px;
   border: 0;
+  border-bottom: 1px solid var(--el-accent, #E9A23B);
   background: none;
-  color: var(--bold-color);
+  color: var(--el-ink, #1C1C19);
   font-family: var(--pr-font-mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  text-decoration: underline;
-  text-decoration-color: var(--highlight-color);
-  text-underline-offset: 4px;
+  text-decoration: none;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cwc_product-reviews__form-cancel:hover {
+  color: var(--el-brass, #8A6A2E);
 }
 
 .cwc_product-reviews__form-success {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding-left: 16px;
+  border-left: 3px solid var(--el-accent, #E9A23B);
   outline: none;
 }
 
@@ -537,6 +568,20 @@
   font-size: 16px;
   line-height: 1.6;
   color: var(--muted-color);
+}
+
+/* Empty: half the section's top and bottom padding — there is far less
+   content, so the full spacing left a tall empty band */
+.cwc_product-reviews.cwc_product-reviews--empty {
+  padding-top: calc(var(--padding-top) / 2);
+  padding-bottom: calc(var(--padding-bottom) / 2);
+}
+
+@media screen and (max-width: 768px) {
+  .cwc_product-reviews.cwc_product-reviews--empty {
+    padding-top: calc(var(--padding-top-mobile) / 2);
+    padding-bottom: calc(var(--padding-bottom-mobile) / 2);
+  }
 }
 
 /* Empty: one centred column, the form opens underneath */
@@ -628,20 +673,6 @@
     gap: 16px;
   }
 
-  /* Summary card on the tint band */
-  .cwc_product-reviews__summary {
-    gap: 16px;
-    padding: 20px 16px;
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-line-color);
-  }
-
-  .cwc_product-reviews__score-group {
-    flex-direction: row;
-    align-items: center;
-    gap: 14px;
-  }
-
   .cwc_product-reviews__button,
   .cwc_product-reviews__more,
   .cwc_product-reviews__form-submit {
@@ -649,7 +680,17 @@
   }
 
   .cwc_product-reviews__form-panel {
-    padding: 20px 16px;
+    padding: 24px 18px;
+  }
+
+  .cwc_product-reviews__form-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .cwc_product-reviews__form-cancel {
+    align-self: center;
   }
 
   .cwc_product-reviews__form-row {
@@ -663,12 +704,6 @@
   .cwc_product-reviews__form-heading,
   .cwc_product-reviews__empty-title {
     font-size: 22px;
-  }
-
-  .cwc_product-reviews--empty .cwc_product-reviews__summary {
-    background: none;
-    border: 0;
-    padding: 0;
   }
 
   .cwc_product-reviews__review {

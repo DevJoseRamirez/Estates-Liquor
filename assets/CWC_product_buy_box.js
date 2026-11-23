@@ -892,8 +892,25 @@
     var format = function (date) {
       return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
     };
-    // One fixed date, not a range: the slowest case by default so the promise holds
-    dateEl.textContent = format(data.dateMode === "earliest" ? earliest : latest);
+    // Both ends already include processing; transit is added on top of it.
+    // Range by default; a single date when the block is set to one case or
+    // when both ends land on the same day.
+    var mode = data.dateMode || "range";
+    if (mode === "earliest") {
+      dateEl.textContent = format(earliest);
+    } else if (mode === "latest" || earliest.getTime() === latest.getTime()) {
+      dateEl.textContent = format(latest);
+    } else {
+      // Each date kept whole, so a phone wraps after the dash rather than mid-date
+      dateEl.textContent = "";
+      [format(earliest) + " \u2013", format(latest)].forEach(function (text, i) {
+        var part = document.createElement("span");
+        part.style.whiteSpace = "nowrap";
+        part.textContent = text;
+        if (i) dateEl.appendChild(document.createTextNode(" "));
+        dateEl.appendChild(part);
+      });
+    }
     estimate.hidden = false;
   }
 
