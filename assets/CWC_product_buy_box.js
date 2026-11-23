@@ -1016,6 +1016,49 @@
     card.hidden = false;
   }
 
+  /* Rating block: Liquid had no review count, so ask Judge.me's feed for the
+     average and total, then show the block. Stays hidden with no reviews. */
+  function initRating(sectionEl) {
+    var el = sectionEl.querySelector("[data-cwc-rating][data-needs-feed]");
+    if (!el || !window.fetch || !el.dataset.productId) return;
+
+    var domain = el.dataset.shopDomain;
+    var params = new URLSearchParams({
+      url: domain,
+      shop_domain: domain,
+      platform: "shopify",
+      product_id: el.dataset.productId,
+      page: "1",
+      per_page: "1",
+    });
+
+    fetch(REVIEW_FEED_URL + "?" + params.toString())
+      .then(function (response) {
+        if (!response.ok) throw new Error("Judge.me feed " + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        var count = parseInt(data.number_of_reviews, 10) || 0;
+        var rating = parseFloat(data.average_rating) || 0;
+        if (count < 1) return;
+
+        var stars = el.querySelector("[data-rating-stars]");
+        if (stars) {
+          stars.style.setProperty("--rating", Math.min(rating * 20, 100) + "%");
+          stars.setAttribute("aria-label", rating.toFixed(1) + " out of 5 stars");
+        }
+        var countEl = el.querySelector("[data-rating-count]");
+        if (countEl) {
+          var label = count === 1 ? el.dataset.countSingular : el.dataset.countPlural;
+          countEl.textContent = count + " " + (label || "");
+        }
+        el.hidden = false;
+      })
+      .catch(function () {
+        // Feed unreachable: the block stays hidden
+      });
+  }
+
   /* Description block: Read More only appears when the copy is actually
      taller than the clamp. Without JS the clamped text stays short, and
      the button stays hidden. */
@@ -1051,6 +1094,7 @@
     initFbt(sectionEl);
     initDeliveryEstimate(sectionEl);
     initTestimonial(sectionEl);
+    initRating(sectionEl);
     initDescription(sectionEl);
   }
 

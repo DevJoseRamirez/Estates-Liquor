@@ -200,6 +200,24 @@
     </div>
   {% endif %}
 </section>
+
+{% if review_count > 0 %}
+  {% comment %}
+    Start each page view at a random point in the loop, so shoppers don't
+    all land on the same first few reviews. Runs inline, right after the
+    markup, so the strip never paints at the start and then jumps. A
+    negative delay just means "already this far in"; the loop is unchanged.
+  {% endcomment %}
+  <script>
+    (function () {
+      var section = document.getElementById('cwc_review-strip-{{ section.id }}');
+      var track = section && section.querySelector('.cwc_review-strip__track');
+      if (!track) return;
+      var seconds = {{ loop_seconds | default: 40 }};
+      track.style.animationDelay = '-' + (Math.random() * seconds).toFixed(2) + 's';
+    })();
+  </script>
+{% endif %}
 {%- endif -%}
 
 {% schema %}

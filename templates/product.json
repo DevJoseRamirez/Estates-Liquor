@@ -261,15 +261,11 @@
         },
         "cwc_product_buy_box_b3": {
           "type": "rating",
-          "disabled": true,
           "settings": {
-            "review_text": "Read 24 reviews",
-            "review_link": ""
+            "count_singular": "review",
+            "count_plural": "reviews",
+            "anchor_id": "cwc_product-reviews"
           }
-        },
-        "judge_me_reviews_preview_badge_pgXwLn": {
-          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {}
         },
         "cwc_product_buy_box_b4": {
           "type": "price",
@@ -399,7 +395,6 @@
         "cwc_product_buy_box_b1",
         "cwc_product_buy_box_b2",
         "cwc_product_buy_box_b3",
-        "judge_me_reviews_preview_badge_pgXwLn",
         "cwc_product_buy_box_b4",
         "cwc_product_buy_box_b5",
         "cwc_product_buy_box_b6",
@@ -470,69 +465,6 @@
         "padding_top": 70,
         "padding_bottom": 70,
         "show_content": false
-      }
-    },
-    "cwc_why_buy": {
-      "type": "CWC_why_buy",
-      "blocks": {
-        "cwc_why_buy_b1": {
-          "type": "card",
-          "settings": {
-            "icon": "store",
-            "custom_icon_alt": "",
-            "title": "A Real Storefront",
-            "text": "<p>We are a licensed retailer operating a physical store in Coronado, California — not a marketplace reseller or a drop shipper.</p>"
-          }
-        },
-        "cwc_why_buy_b2": {
-          "type": "card",
-          "settings": {
-            "icon": "shield",
-            "custom_icon_alt": "",
-            "title": "Verified Authentic",
-            "text": "<p>Every bottle is sourced through licensed channels and inspected before it ships. Nothing comes off the secondary market.</p>"
-          }
-        },
-        "cwc_why_buy_b3": {
-          "type": "card",
-          "settings": {
-            "icon": "box",
-            "custom_icon_alt": "",
-            "title": "Packed for Glass",
-            "text": "<p>Wrapped, braced, and boxed in molded inserts. The same packing whether it is a $35 bottle or a $2,000 one.</p>"
-          }
-        },
-        "cwc_why_buy_b4": {
-          "type": "card",
-          "settings": {
-            "icon": "tag",
-            "custom_icon_alt": "",
-            "title": "Fair Retail Pricing",
-            "text": "<p>Allocated bottles are listed at fair retail when they land. No lottery, no markup games, no waitlist to buy in.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_why_buy_b1",
-        "cwc_why_buy_b2",
-        "cwc_why_buy_b3",
-        "cwc_why_buy_b4"
-      ],
-      "settings": {
-        "eyebrow": "Buy With Confidence",
-        "heading": "<p>Why Buy From Estates</p>",
-        "show_rule": true,
-        "columns": 4,
-        "bg_color": "#ffffff",
-        "text_color": "#13241C",
-        "bold_color": "#8a6a2e",
-        "eyebrow_color": "#8a6a2e",
-        "icon_color": "#1c1c19",
-        "border_color": "#ecece8",
-        "card_bg_color": "#ffffff",
-        "card_text_color": "#5c5c57",
-        "padding_top": 70,
-        "padding_bottom": 70
       }
     },
     "cwc_product_faq": {
@@ -728,9 +660,8 @@
     "cwc_product_buy_box",
     "cwc_review_strip",
     "cwc_product_details",
-    "cwc_why_buy",
+    "cwc_related_products",
     "cwc_product_faq",
-    "cwc_product_reviews",
-    "cwc_related_products"
+    "cwc_product_reviews"
   ]
 }

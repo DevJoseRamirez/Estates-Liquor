@@ -889,7 +889,7 @@
     display: flex;
     gap: 12px;
     padding: 14px 20px;
-    border-bottom: 1px solid #e0ddd6;
+    border-bottom: 1px solid var(--el-line);
   }
   .cart-drawer__recommendations-grid {
     gap: 0rem;
@@ -906,7 +906,7 @@
     color: var(--green);
     line-height: 1.35;
     margin-bottom: 5px;
-    color: #0a1f12;
+    color: var(--el-dark);
   }
   .product-card-basic__image .aspect-ratio:not(.quick-view-media) {
     background: white;
@@ -915,7 +915,7 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--green);
-    color: #0a1f12;
+    color: var(--el-dark);
   }
   /* Same gap under the price whether or not there is a compare-at price */
   .product-card-basic__price .product-price--sale,
@@ -929,18 +929,18 @@
   .cart-drawer__subtotal--heading {
     margin: 0;
     font-size: 15px;
-    color: #0a1f12;
-    font-family: var(--body-font-stack);
+    color: var(--el-dark);
+    font-family: var(--el-font-body);
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
   }
   .cart-drawer__subtotal--price {
     margin: 0;
-    font-family: var(--body-font-stack);
+    font-family: var(--el-font-body);
     font-size: 17px;
     font-weight: 700;
-    color: #0a1f12;
+    color: var(--el-dark);
   }
   /* === Cart line items — brand fonts (estates-brand-tokens.md §3) ===
      Title Fraunces · vendor and price IBM Plex Mono · details Inter */
@@ -1016,13 +1016,13 @@
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #0a1f12;
-    border-bottom: 1px solid #c4933f;
+    color: var(--el-dark);
+    border-bottom: 1px solid var(--el-accent);
     padding-bottom: 2px;
-    font-family: var(--body-font-stack);
+    font-family: var(--el-font-body);
   }
   .btn--underlined.btn--underlined-with-icon:hover {
-    color: #c4933f !important;
+    color: var(--el-brass) !important;
   }
 
   .cart-drawer__product-card--quantity.input-radius {
@@ -1031,9 +1031,9 @@
   .cart-drawer__product-card--quantity.input-radius .cart-drawer__product-card--quantity--button {
     width: 26px;
     height: 26px;
-    border: 1px solid #e0ddd6;
+    border: 1px solid var(--el-line);
     background: none;
-    border-radius: 2px;
+    border-radius: 0;
     cursor: pointer;
     font-size: 14px;
     display: flex;
@@ -1066,14 +1066,14 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     margin-bottom: 3px;
-    color: #c4933f;
+    color: var(--el-green);
   }
   .btn.btn--secondary {
     display: none;
   }
   .cart-drawer__sub-footer {
     padding: 20px 24px 20px 24px;
-    border-top: 1px solid #e0ddd6;
+    border-top: 1px solid var(--el-line);
   }
   /* === Shipping Protection (Captain app) ===
      The app injects its markup with inline styles, so these overrides are
@@ -1095,7 +1095,7 @@
     flex: 0 0 34px;
     width: 34px;
     height: 34px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4933f' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z'/%3E%3Cpath d='m8.5 12 2.5 2.5 4.5-5'/%3E%3C/svg%3E")
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A6A2E' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z'/%3E%3Cpath d='m8.5 12 2.5 2.5 4.5-5'/%3E%3C/svg%3E")
       center / contain no-repeat;
   }
   .cart-drawer__sub-footer #tm_cart .tm_cart_content {
@@ -1118,24 +1118,24 @@
   }
   .cart-drawer__sub-footer #tm_cart .tm_cart_f,
   .cart-drawer__sub-footer #tm_cart .tm_cart_f span {
-    font-family: var(--body-font-stack) !important;
+    font-family: var(--el-font-body) !important;
     font-size: 14px !important;
     font-weight: 700 !important;
     line-height: 1.3 !important;
     letter-spacing: 0 !important;
     text-transform: none !important;
-    color: #0a1f12 !important;
+    color: var(--el-dark) !important;
     margin: 0 !important;
   }
   .cart-drawer__sub-footer #tm_cart .tm_cart_description {
     display: block !important;
-    font-family: var(--body-font-stack) !important;
+    font-family: var(--el-font-body) !important;
     font-size: 12px !important;
     font-size: 10px !important;
     font-weight: 400 !important;
     line-height: 1.4 !important;
     text-transform: none !important;
-    color: #666 !important;
+    color: var(--el-muted) !important;
     margin: 2px 0 0 !important;
     padding: 0 !important;
   }
@@ -1151,23 +1151,23 @@
     align-items: center !important;
     justify-content: center !important;
     gap: 9px;
-    background: #c4933f !important;
-    border: 1.5px solid #c4933f !important;
-    border-radius: 3px !important;
+    background: var(--el-accent) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
-    color: #fff !important;
-    font-family: var(--body-font-stack) !important;
+    color: var(--el-dark) !important;
+    font-family: var(--el-font-body) !important;
     font-weight: 700 !important;
     letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
     cursor: pointer;
-    transition: filter 0.2s ease;
+    transition: background-color 0.2s ease;
     font-size: 13px !important;
     font-size: 14px !important;
   }
   .cart-drawer__sub-footer #captain-checkout:hover,
   .captain-button .btn.cart-drawer__footer--button.undefined:hover {
-    filter: brightness(1.08);
+    background: var(--el-accent-hover) !important;
   }
 
   /* Checkout without protection (text link) */
@@ -1181,7 +1181,7 @@
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    font-family: var(--body-font-stack) !important;
+    font-family: var(--el-font-body) !important;
     font-size: 14px !important;
     font-weight: 500 !important;
     letter-spacing: normal !important;
@@ -1189,11 +1189,11 @@
     text-align: center !important;
     text-decoration: underline !important;
     text-underline-offset: 3px;
-    color: #0a1f12 !important;
+    color: var(--el-dark) !important;
     transition: color 0.2s;
   }
   .cart-drawer__sub-footer a.captain-a-link:hover {
-    color: #c4933f !important;
+    color: var(--el-brass) !important;
   }
   /* The app's small info icon beside the title is also a .captain-a-link — keep it inline */
   .cart-drawer__sub-footer #tm_cart a.captain-a-link {
@@ -1219,24 +1219,24 @@
     width: 56px;
     height: 56px;
     margin-bottom: 18px;
-    border: 1px solid #c4933f;
+    border: 1px solid var(--el-line-input);
     border-radius: 50%;
-    background: #f8f6f1;
-    color: #c4933f;
+    background: var(--el-tint);
+    color: var(--el-brass);
   }
   .cart-drawer__empty-heading {
     margin: 0 0 8px;
-    font-family: var(--header-font-stack);
+    font-family: var(--el-font-display);
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.2;
-    color: #0a1f12;
+    color: var(--el-dark);
   }
   .cart-drawer__empty-message {
-    font-family: var(--body-font-stack);
+    font-family: var(--el-font-body);
     font-size: 14px;
     line-height: 1.5;
-    color: #666;
+    color: var(--el-muted);
   }
   .cart-drawer__empty-btn-container {
     width: 100%;
@@ -1245,10 +1245,10 @@
   .cart-drawer__empty-btn.btn {
     width: 100%;
     background: transparent;
-    color: #0a1f12;
-    border: 1.5px solid #e0ddd6;
-    border-radius: 3px;
-    font-family: var(--body-font-stack);
+    color: var(--el-dark);
+    border: 1px solid var(--el-dark);
+    border-radius: 0;
+    font-family: var(--el-font-body);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -1259,19 +1259,21 @@
   }
   .cart-drawer__empty-btn.btn:hover,
   .cart-drawer__empty-btn.btn:focus-visible {
-    background: #0a1f12;
-    border-color: #0a1f12;
-    color: #fff;
+    background: var(--el-dark);
+    border-color: var(--el-dark);
+    color: var(--el-white);
   }
+  /* First collection is the Primary (yellow), the rest Outline */
   .cart-drawer__empty-btn.btn:first-child {
-    background: #0a1f12;
-    border-color: #0a1f12;
-    color: #fff;
+    background: var(--el-accent);
+    border-color: var(--el-accent);
+    color: var(--el-dark);
   }
   .cart-drawer__empty-btn.btn:first-child:hover,
   .cart-drawer__empty-btn.btn:first-child:focus-visible {
-    background: #c4933f;
-    border-color: #c4933f;
+    background: var(--el-accent-hover);
+    border-color: var(--el-accent-hover);
+    color: var(--el-dark);
   }
   @media screen and (max-width: 768px) {
     .cart-drawer__body .cart-drawer__form {

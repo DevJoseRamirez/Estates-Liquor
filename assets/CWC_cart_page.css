@@ -1,0 +1,936 @@
+/* ==============================
+   CWC Cart Page — brand layer
+   Sits on top of the theme's template-cart.min.css and only restyles it, so
+   the cart form, quantity JS and Shopify checkout behave exactly as before.
+   Everything is scoped to .cwc_cart-page (sections/template--cart.liquid).
+   Styled to _theme-styles/estates-brand-tokens.md: white ground, square,
+   hairlines not shadows, Fraunces headings, IBM Plex Mono for data, Primary
+   yellow Checkout, Outline secondary buttons. Tokens from estates-tokens.css.
+   ============================== */
+
+.cwc_cart-page {
+  background-color: var(--el-white);
+  color: var(--el-body);
+  font-family: var(--el-font-body);
+}
+
+.cwc_cart-page .width--content {
+  max-width: var(--el-container, 1440px);
+}
+
+/* === Header: eyebrow + Fraunces H1, left-aligned like the collection header === */
+.cwc_cart-page .cwc_cart-page__header {
+  margin: 0 0 var(--el-space-6, 40px);
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.cwc_cart-page .cwc_cart-page__eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--el-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--el-brass);
+}
+
+.cwc_cart-page .cwc_cart-page__title {
+  margin: 0;
+  font-family: var(--el-font-display);
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: var(--el-dark);
+}
+
+/* === Free shipping bar: the tint offer box with a green fill === */
+.cwc_cart-page .cart-free-shipping-bar {
+  margin: 0 0 var(--el-space-5, 24px);
+  padding: 16px 18px;
+  background-color: var(--el-tint);
+  border: 0;
+  border-radius: 0;
+}
+
+.cwc_cart-page .cart-free-shipping-bar__message {
+  margin: 0 0 10px;
+  font-family: var(--el-font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page .cart-free-shipping-bar__track {
+  height: 4px;
+  background-color: #E3DCCD;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cwc_cart-page .cart-free-shipping-bar__fill {
+  display: block;
+  height: 100%;
+  background-color: var(--el-green);
+  border-radius: 0;
+}
+
+/* === Line items table === */
+.cwc_cart-page .cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* The theme gives every .cart__row a top border and 30px top padding; the
+   page uses one bottom hairline per row instead, so nothing doubles up */
+.cwc_cart-page .cart-table .cart__row {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cwc_cart-page .cart__header-labels th {
+  padding: 0 0 12px;
+  font-family: var(--el-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--el-muted);
+  border-bottom: 1px solid var(--el-line);
+  border-top: 0px;
+}
+
+.cwc_cart-page .cart-table tbody .cart__row {
+  border-bottom: 1px solid var(--el-line);
+}
+
+.cwc_cart-page .cart-table tbody td {
+  padding: 24px 15px;
+  vertical-align: middle;
+  border: 0;
+}
+
+/* Thumbnail column hugs the image and lines up with the page edge */
+.cwc_cart-page .cart-table tbody td:first-child,
+.cwc_cart-page .cart__header-labels th:first-child {
+  width: 112px;
+  padding-left: 0;
+}
+
+.cwc_cart-page .cart-table tbody td.cart__row--product-details {
+  padding-left: 24px;
+}
+
+.cwc_cart-page .cart-table tbody td:last-child,
+.cwc_cart-page .cart__header-labels th:last-child {
+  padding-right: 0;
+}
+
+/* Thumbnail on the sage product ground, same as the cards */
+.cwc_cart-page .cart__image {
+  position: relative;
+  display: block;
+  width: 112px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 46%, #FFFFFF 0%, #FFFFFF 38%, var(--el-ground-edge) 100%);
+}
+
+/* The theme's image wrapper sizes itself by padding — pin it to the square
+   frame instead so every bottle sits the same way */
+.cwc_cart-page .cart__image .responsive-image-wrapper {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.cwc_cart-page .cart__image img {
+  position: absolute;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  border-radius: 0;
+}
+
+.cwc_cart-page .cart--vendor {
+  margin-bottom: 6px;
+  font-family: var(--el-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--el-green);
+}
+
+.cwc_cart-page .cart__row--title {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--el-font-display);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.28;
+  color: var(--el-ink);
+  text-decoration: none;
+}
+
+.cwc_cart-page .cart__row--title:hover {
+  color: var(--el-dark);
+  text-decoration: underline;
+  text-decoration-color: var(--el-accent);
+  text-underline-offset: 3px;
+}
+
+.cwc_cart-page .cart__meta-text,
+.cwc_cart-page .cart--detail {
+  font-family: var(--el-font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--el-muted);
+}
+
+/* REMOVE: the brand text link — mono, accent underline */
+.cwc_cart-page .cart__row--product-details .text-link-animated {
+  display: inline-block;
+  margin-top: 10px;
+  background-image: none;
+}
+
+.cwc_cart-page .cart__row--product-details .text-link-animated::before,
+.cwc_cart-page .cart__row--product-details .text-link-animated a::before {
+  display: none;
+}
+
+.cwc_cart-page .cart__remove {
+  display: inline-block;
+  padding-bottom: 2px;
+  font-family: var(--el-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--el-ink);
+  text-decoration: none;
+  background-image: none;
+  border-bottom: 1px solid var(--el-accent);
+  transition: color 0.2s ease;
+}
+
+.cwc_cart-page .cart__remove small {
+  font-size: 11px;
+}
+
+.cwc_cart-page .cart__remove:hover {
+  color: var(--el-brass);
+}
+
+/* Prices: mono, ink; compare-at muted and struck; discounts oxblood */
+.cwc_cart-page .cart-table .money {
+  font-family: var(--el-font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page .cart-total-label .money {
+  font-size: 17px;
+}
+
+.cwc_cart-page .price-line-through,
+.cwc_cart-page .discount--line-through {
+  font-family: var(--el-font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--el-muted);
+  text-decoration: line-through;
+}
+
+.cwc_cart-page .discount--sale-color,
+.cwc_cart-page .order-discount--item {
+  color: var(--el-sale);
+}
+
+.cwc_cart-page .order-discount--cart-list {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--el-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* Quantity stepper: square, 1px input line, 44px controls */
+.cwc_cart-page .js-qty {
+  display: inline-flex;
+  align-items: stretch;
+  height: 44px;
+  max-width: none;
+  margin: 0 auto;
+  border: 1px solid var(--el-line-input);
+  border-radius: 0;
+  background-color: var(--el-white);
+  overflow: hidden;
+}
+
+/* The theme lays the buttons absolutely over the input; put them in the row */
+.cwc_cart-page .js-qty .js-qty__adjust {
+  position: static;
+  order: 0;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--el-dark);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.cwc_cart-page .js-qty .js-qty__adjust--minus {
+  order: -1;
+}
+
+.cwc_cart-page .js-qty__adjust:hover {
+  background-color: var(--el-tint);
+}
+
+.cwc_cart-page .js-qty__adjust svg {
+  width: 12px;
+  height: 12px;
+}
+
+.cwc_cart-page .js-qty input.js-qty__num {
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--el-line);
+  border-right: 1px solid var(--el-line);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  font-family: var(--el-font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page .js-qty__adjust:focus-visible,
+.cwc_cart-page .js-qty__num:focus-visible {
+  outline: 2px solid var(--el-brass);
+  outline-offset: -2px;
+}
+
+/* === Summary: notes left, totals + checkout right === */
+.cwc_cart-page .grid.cart__row {
+  margin-top: 0;
+  padding-top: var(--el-space-6, 40px);
+  border-top: 0;
+}
+
+/* Subtotal label and figure on one baseline */
+.cwc_cart-page .grid.cart__row .grid__item>p {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 16px;
+  margin: 0;
+}
+
+.cwc_cart-page .label-font {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--el-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--el-brass);
+}
+
+.cwc_cart-page textarea.input-full {
+  width: 100%;
+  min-height: 110px;
+  padding: 14px;
+  border: 1px solid var(--el-line-input);
+  border-radius: 0;
+  background-color: var(--el-white);
+  font-family: var(--el-font-body);
+  font-size: 16px;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page textarea.input-full:focus {
+  outline: 2px solid var(--el-brass);
+  outline-offset: 0;
+  border-color: var(--el-dark);
+}
+
+.cwc_cart-page .cart__subtotal-title {
+  margin: 0;
+  font-family: var(--el-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page .cart__subtotal,
+.cwc_cart-page .cart__subtotal .money {
+  font-family: var(--el-font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--el-ink);
+}
+
+.cwc_cart-page .cart__subtotal del,
+.cwc_cart-page .cart__subtotal del .money {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--el-muted);
+}
+
+.cwc_cart-page .cart--order-discount-wrapper,
+.cwc_cart-page .cart--order-discount-wrapper .money,
+.cwc_cart-page .cart--order-discount-wrapper .cart__subtotal-title {
+  color: var(--el-sale);
+}
+
+.cwc_cart-page .cart--order-discount-wrapper .cart__subtotal .money {
+  font-size: 18px;
+}
+
+.cwc_cart-page .cart__shipping {
+  margin: 10px 0 22px;
+  font-family: var(--el-font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--el-muted);
+}
+
+.cwc_cart-page .cart__shipping em {
+  font-style: normal;
+}
+
+.cwc_cart-page .cart__shipping a {
+  color: var(--el-ink);
+  text-decoration: none;
+  background-image: none;
+  border-bottom: 1px solid var(--el-accent);
+}
+
+/* Checkout = Primary; Update = Outline */
+.cwc_cart-page .cart--checkout-default {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cwc_cart-page .cart--checkout-default .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  margin: 0;
+  padding: 0 34px;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--el-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cwc_cart-page .cart--button-checkout {
+  min-width: 280px;
+  background: var(--el-accent);
+  border: 0;
+  color: var(--el-dark);
+}
+
+.cwc_cart-page .cart--button-checkout:hover {
+  background: var(--el-accent-hover);
+  color: var(--el-dark);
+}
+
+.cwc_cart-page .cart--button-update,
+.cwc_cart-page input.update-cart {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 48px;
+  background: var(--el-white);
+  border: 1px solid var(--el-dark);
+  color: var(--el-dark);
+}
+
+/* With shipping protection on, the app takes over Checkout and Update ends up
+   on its own row — keep it a modest outline button on the right, not a bar */
+.cwc_cart-page .cart--checkout-default {
+  justify-content: flex-end;
+}
+
+.cwc_cart-page .cart--button-update:hover,
+.cwc_cart-page input.update-cart:hover {
+  background: var(--el-dark);
+  color: var(--el-white);
+}
+
+.cwc_cart-page .cart--checkout-default .btn:focus-visible,
+.cwc_cart-page .cart--empty-btn-container .btn:focus-visible {
+  outline: 2px solid var(--el-brass);
+  outline-offset: 3px;
+}
+
+/* The theme draws an animated fill/line on .btn — the solid colours replace it */
+.cwc_cart-page .cart--checkout-default .btn::before,
+.cwc_cart-page .cart--checkout-default .btn::after,
+.cwc_cart-page .cart--empty-btn-container .btn::before,
+.cwc_cart-page .cart--empty-btn-container .btn::after {
+  display: none;
+}
+
+/* === Empty cart === */
+.cwc_cart-page .cart--empty-cart {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cwc_cart-page .cart--empty-cart>p {
+  margin: 0 0 22px;
+  font-family: var(--el-font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--el-body);
+}
+
+.cwc_cart-page .cart--empty-btn-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.cwc_cart-page .cart--empty-btn-container .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  margin: 0;
+  padding: 0 30px;
+  border: 1px solid var(--el-dark);
+  border-radius: 0;
+  background: var(--el-white);
+  box-shadow: none;
+  font-family: var(--el-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--el-dark);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cwc_cart-page .cart--empty-btn-container .btn:hover {
+  background: var(--el-dark);
+  color: var(--el-white);
+}
+
+/* First collection is the Primary */
+.cwc_cart-page .cart--empty-btn-container .btn:first-child {
+  background: var(--el-accent);
+  border-color: var(--el-accent);
+  color: var(--el-dark);
+}
+
+.cwc_cart-page .cart--empty-btn-container .btn:first-child:hover {
+  background: var(--el-accent-hover);
+  border-color: var(--el-accent-hover);
+}
+
+/* === Recommendations: section heading + the shared CWC product cards === */
+.cwc_cart-page .cart--recommendations {
+  margin-top: var(--el-space-8, 88px);
+  padding-top: var(--el-space-6, 40px);
+  border-top: 1px solid var(--el-line);
+}
+
+.cwc_cart-page .cwc_cart-page__recs-head {
+  margin-bottom: var(--el-space-6, 40px);
+}
+
+.cwc_cart-page .cwc_cart-page__recs-title {
+  margin: 0;
+  font-family: var(--el-font-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--el-dark);
+  background-image: none;
+}
+
+/* Slide height follows the tallest card so the buttons line up */
+.cwc_cart-page .cart--recommendations .swiper-slide {
+  height: auto;
+}
+
+.cwc_cart-page .cart--recommendations .cwc_collection-body__card {
+  height: 100%;
+}
+
+.cwc_cart-page .cart--recommendations .swiper-button--prev,
+.cwc_cart-page .cart--recommendations .swiper-button--next {
+  border: 1px solid var(--el-line-input);
+  border-radius: 0;
+  background: var(--el-white);
+  color: var(--el-dark);
+  box-shadow: none;
+}
+
+.cwc_cart-page .cart--recommendations .swiper-button--prev:hover,
+.cwc_cart-page .cart--recommendations .swiper-button--next:hover {
+  border-color: var(--el-dark);
+}
+
+.cwc_cart-page .swiper-scrollbar-drag {
+  background: var(--el-dark);
+  border-radius: 0;
+}
+
+/* Update Cart is hidden: quantity changes save themselves (the script at the
+   end of sections/template--cart.liquid submits the form after a pause) */
+.cwc_cart-page input.update-cart,
+.cwc_cart-page .cart--button-update {
+  display: none !important;
+}
+
+/* === Subtotal: the slide cart's row, at the drawer's width on the right ===
+   "Subtotal (n items)" left; compare-at struck + total right, sale in oxblood */
+.cwc_cart-page .cwc_cart-page__subtotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 460px;
+  margin: 0 0 16px auto;
+  text-align: left;
+}
+
+.cwc_cart-page .cwc_cart-page__subtotal p {
+  margin: 0;
+}
+
+.cwc_cart-page .cwc_cart-page__subtotal-heading {
+  font-family: var(--el-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--el-dark);
+}
+
+.cwc_cart-page .cwc_cart-page__subtotal-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--el-font-body);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--el-dark);
+  white-space: nowrap;
+}
+
+.cwc_cart-page .cwc_cart-page__subtotal-compare {
+  font-weight: 700;
+  color: var(--el-dark);
+  text-decoration: line-through;
+}
+
+.cwc_cart-page .cwc_cart-page__subtotal-total--sale {
+  color: var(--el-sale);
+}
+
+/* Cart-level discount lines sit at the same width, above the subtotal */
+.cwc_cart-page .cart--order-discount-wrapper {
+  max-width: 460px;
+  margin: 0 0 10px auto;
+}
+
+/* === Shipping protection (Captain app) ===
+   Mirrors the slide cart (snippets/cart-drawer.liquid) so checkout looks the
+   same in both places: shield + title row, full-width Primary "Protected
+   checkout", then a centred "Checkout without protection" link. The app
+   injects inline styles, hence the !important. The block is capped at the
+   drawer's width and sits at the right under the subtotal. */
+.cwc_cart-page .captain-checkout-max-width,
+.cwc_cart-page .captain-button {
+  width: 100% !important;
+  max-width: 460px !important;
+  margin: 0 0 0 auto !important;
+  padding: 0 !important;
+}
+
+.cwc_cart-page #tm_cart {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  max-width: 460px;
+  margin: 0 0 14px auto !important;
+  padding: 0 0 0 2px !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+.cwc_cart-page #tm_cart::before {
+  content: "";
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A6A2E' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z'/%3E%3Cpath d='m8.5 12 2.5 2.5 4.5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.cwc_cart-page #tm_cart .tm_cart_content {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+.cwc_cart-page #tm_cart .tm_cart_f,
+.cwc_cart-page #tm_cart .tm_cart_f>div {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+.cwc_cart-page #tm_cart .tm_cart_f,
+.cwc_cart-page #tm_cart .tm_cart_f span {
+  font-family: var(--el-font-body) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--el-dark) !important;
+  margin: 0 !important;
+}
+
+.cwc_cart-page #tm_cart .tm_cart_description {
+  display: block !important;
+  margin: 2px 0 0 !important;
+  padding: 0 !important;
+  font-family: var(--el-font-body) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  text-transform: none !important;
+  color: var(--el-muted) !important;
+}
+
+/* Protected checkout (Primary) */
+.cwc_cart-page #captain-checkout,
+.cwc_cart-page .captain-button .btn {
+  width: 100% !important;
+  min-height: 54px !important;
+  margin: 0 !important;
+  padding: 0 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px;
+  background: var(--el-accent) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--el-dark) !important;
+  font-family: var(--el-font-body) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cwc_cart-page #captain-checkout:hover,
+.cwc_cart-page .captain-button .btn:hover {
+  background: var(--el-accent-hover) !important;
+}
+
+/* Checkout without protection (text link, centred under the button) */
+.cwc_cart-page a.captain-a-link {
+  display: block !important;
+  width: 100% !important;
+  max-width: 460px;
+  min-height: 0 !important;
+  margin: 14px 0 4px auto !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--el-font-body) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  text-align: center !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+  color: var(--el-dark) !important;
+  transition: color 0.2s;
+}
+
+.cwc_cart-page a.captain-a-link:hover {
+  color: var(--el-brass) !important;
+}
+
+/* The app's small info icon beside the title is also a .captain-a-link — keep it inline */
+.cwc_cart-page #tm_cart a.captain-a-link {
+  display: flex !important;
+  width: auto !important;
+  margin: 0 0 0 10px !important;
+}
+
+/* Update Cart under the protection block: same width, outline */
+.cwc_cart-page .grid.cart__row input.update-cart {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px 0 0 auto;
+}
+
+/* === Tablet === */
+@media screen and (max-width: 991px) {
+  .cwc_cart-page .cwc_cart-page__title {
+    font-size: 44px;
+  }
+
+  .cwc_cart-page .cwc_cart-page__recs-title {
+    font-size: 32px;
+  }
+}
+
+/* === Mobile: the theme stacks the table into labelled rows === */
+@media screen and (max-width: 768px) {
+  .cwc_cart-page .cwc_cart-page__header {
+    margin-bottom: var(--el-space-5, 24px);
+    padding-bottom: var(--el-space-4, 16px);
+  }
+
+  .cwc_cart-page .cwc_cart-page__title {
+    font-size: 36px;
+  }
+
+  .cwc_cart-page .cart-table tbody td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  /* data-label captions the theme prints before each value */
+  .cwc_cart-page .cart-table td[data-label]::before {
+    font-family: var(--el-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--el-muted);
+  }
+
+  .cwc_cart-page .cart__image {
+    width: 96px;
+  }
+
+  .cwc_cart-page .cart__row--title {
+    font-size: 17px;
+  }
+
+  .cwc_cart-page .grid.cart__row .grid__item {
+    text-align: left;
+  }
+
+  .cwc_cart-page .cwc_cart-page__subtotal-heading {
+    font-size: 14px;
+  }
+
+  .cwc_cart-page .cwc_cart-page__subtotal-price {
+    font-size: 16px;
+  }
+
+  .cwc_cart-page .cart--checkout-default {
+    flex-direction: column-reverse;
+  }
+
+  .cwc_cart-page .cart--checkout-default .btn,
+  .cwc_cart-page .cart--button-checkout {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cwc_cart-page .cart--empty-btn-container .btn {
+    width: 100%;
+  }
+
+  .cwc_cart-page .captain-checkout-max-width,
+  .cwc_cart-page .captain-button,
+  .cwc_cart-page #tm_cart,
+  .cwc_cart-page a.captain-a-link,
+  .cwc_cart-page .cwc_cart-page__subtotal,
+  .cwc_cart-page .cart--order-discount-wrapper,
+  .cwc_cart-page .grid.cart__row input.update-cart {
+    max-width: none !important;
+  }
+
+  .cwc_cart-page #tm_cart::before {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .cwc_cart-page .cwc_cart-page__recs-title {
+    font-size: 26px;
+  }
+
+  .cwc_cart-page .cart--recommendations {
+    margin-top: var(--el-space-7, 56px);
+  }
+}
+
+/* While a quantity change saves, dim the items so it reads as working */
+.cwc_cart-page .cwc_cart-page__form--saving .cart-table {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}

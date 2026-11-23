@@ -46,6 +46,13 @@
         button.classList.remove('cwc_collection-body__card-button--loading');
         document.dispatchEvent(new CustomEvent('cwc:cart:added', { bubbles: true }));
 
+        /* On the cart page the line items are server-rendered — reload so the
+           new bottle shows in the list, rather than opening the drawer over it */
+        if (document.querySelector('.cwc_cart-page')) {
+          window.location.reload();
+          return;
+        }
+
         /* the drawer is the confirmation — don't also flash the button */
         if (openCartDrawer()) return;
 

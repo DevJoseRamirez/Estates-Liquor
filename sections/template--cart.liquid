@@ -8,14 +8,25 @@
 {% endcomment %}
 
 {{ 'template-cart.min.css' | asset_url | stylesheet_tag: preload: true }}
+{%- comment -%}
+  Brand layer (estates-brand-tokens.md): loaded after the theme's cart CSS and
+  scoped to .cwc_cart-page, so the cart's form, JS and Shopify behaviour are
+  unchanged — only the look follows the home and collection pages.
+{%- endcomment -%}
+{{ 'CWC_fonts.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_product_card.css' | asset_url | stylesheet_tag }}
+{{ 'CWC_cart_page.css' | asset_url | stylesheet_tag }}
 
-<div class="wrapper-spacing--v--template wrapper-spacing--h">
+<div class="wrapper-spacing--v--template wrapper-spacing--h cwc_cart-page">
   <div class="width--content">
     {% assign subtotal_compare_at_price = 0 %}
 
     {% if cart.item_count > 0 %}
-      <div class="template-title--wrapper show-on-scroll">
-        <h1 class="page--title template-title" data-animate data-animate-order="1" style="text-align: {{ settings.template_heading_alignment }};">{{ 'cart.general.title' | t }}</h1>
+      <div class="template-title--wrapper cwc_cart-page__header show-on-scroll">
+        <p class="cwc_cart-page__eyebrow" data-animate data-animate-order="1">
+          {%- if cart.item_count == 1 -%}1 bottle{%- elsif cart.item_count > 1 -%}{{ cart.item_count }} bottles{%- else -%}Nothing here yet{%- endif -%}
+        </p>
+        <h1 class="page--title template-title cwc_cart-page__title" data-animate data-animate-order="1">{{ 'cart.general.title' | t }}</h1>
       </div>
 
       {% render 'cart-free-shipping-bar' %}
@@ -279,44 +290,37 @@
               </div>
             {%- endif -%}
 
-            {% if subtotal_compare_at_price != cart.total_price %}
-              <span class="cart__subtotal">
-                {% liquid 
-                  if settings.show_currency_code
-                    assign subtotal_compare_at_price = subtotal_compare_at_price | money_with_currency
-                  else
-                    assign subtotal_compare_at_price = subtotal_compare_at_price | money
-                  endif
-                %}
-                <del><span class="money">{{ subtotal_compare_at_price }}</span></del>
-              </span>
-            {% endif %}
-            <p>
-              <span class="cart__subtotal-title">{{ 'cart.general.subtotal' | t }}</span>
-              <span class="h3 cart__subtotal">
-                <span class="money">
-                  {% if settings.show_currency_code %}
-                    {{ cart.total_price | money_with_currency }}
-                  {% else %}
-                    {{ cart.total_price | money }}
-                  {% endif %}
-                </span>
-              </span>
-            </p>
-
-            {%- capture taxes_shipping_checkout -%}
-              {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-              {%- elsif cart.taxes_included -%}
-                {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
-              {%- elsif shop.shipping_policy.body != blank -%}
-                {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-              {%- else -%}
-                {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
-              {%- endif -%}
-            {%- endcapture -%}
-
-            <div class="cart__shipping rte text-link-animated"><em>{{ taxes_shipping_checkout }}</em></div>
+            {% comment %}
+              Same subtotal row as the slide cart: "Subtotal (n items)" on the
+              left, compare-at struck and the sale total on the right. The
+              taxes/shipping line is left out on purpose — checkout covers it.
+            {% endcomment %}
+            {%- liquid
+              if settings.show_currency_code
+                assign cwc_subtotal = cart.total_price | money_with_currency
+                assign cwc_subtotal_compare = subtotal_compare_at_price | money_with_currency
+              else
+                assign cwc_subtotal = cart.total_price | money
+                assign cwc_subtotal_compare = subtotal_compare_at_price | money
+              endif
+            -%}
+            <div class="cwc_cart-page__subtotal">
+              <p class="cwc_cart-page__subtotal-heading">
+                {{- 'cart.general.subtotal' | t }} ({{ cart.item_count }}
+                {{ cart.item_count | pluralize: 'item', 'items' -}}
+                )
+              </p>
+              <p class="cwc_cart-page__subtotal-price">
+                {%- if subtotal_compare_at_price > cart.total_price -%}
+                  <span class="visually-hidden">{{ 'cart.general.regular_subtotal' | t }}</span>
+                  <s class="cwc_cart-page__subtotal-compare">{{ cwc_subtotal_compare | replace: ' ', '&nbsp;' }}</s>
+                  <span class="visually-hidden">{{ 'cart.general.sale_subtotal' | t }}</span>
+                  <span class="cwc_cart-page__subtotal-total cwc_cart-page__subtotal-total--sale">{{ cwc_subtotal | replace: ' ', '&nbsp;' }}</span>
+                {%- else -%}
+                  <span class="cwc_cart-page__subtotal-total">{{ cwc_subtotal | replace: ' ', '&nbsp;' }}</span>
+                {%- endif -%}
+              </p>
+            </div>
 
             <div class="btn-wrapper-default cart--checkout-default">
               <input type="submit" name="update" class="btn btn--secondary update-cart cart--button-update btn--secondary" aria-label="{{ 'cart.general.update' | t }}" value="{{ 'cart.general.update' | t }}">
@@ -345,8 +349,11 @@
       </form>
 
     {% else %}
-      <div class="template-title--wrapper show-on-scroll">
-        <h1 class="page--title template-title" data-animate data-animate-order="1" style="text-align: {{ settings.template_heading_alignment }};">{{ 'cart.general.title' | t }}</h1>
+      <div class="template-title--wrapper cwc_cart-page__header show-on-scroll">
+        <p class="cwc_cart-page__eyebrow" data-animate data-animate-order="1">
+          {%- if cart.item_count == 1 -%}1 bottle{%- elsif cart.item_count > 1 -%}{{ cart.item_count }} bottles{%- else -%}Nothing here yet{%- endif -%}
+        </p>
+        <h1 class="page--title template-title cwc_cart-page__title" data-animate data-animate-order="1">{{ 'cart.general.title' | t }}</h1>
       </div>
 
       {% liquid 
@@ -398,10 +405,21 @@
         {% if cart_recommendations %}
           <div class="cart--recommendations">
             {% assign animation_order = 0 %}
-            {% if settings.cart_recommendations_heading != blank %}
-              <h2 class="h4 text-link-animated cart--recommendations-heading" data-animate data-animate-order="1">{{ settings.cart_recommendations_heading }}</h2>
-              {% assign animation_order = animation_order | plus: 1 %}
-            {% endif %}
+            {%- liquid
+              assign recs_heading = settings.cart_recommendations_heading
+              if recs_heading == blank
+                if cart.item_count > 0
+                  assign recs_heading = 'Pairs well with your cart'
+                else
+                  assign recs_heading = 'Popular right now'
+                endif
+              endif
+            -%}
+            <div class="cwc_cart-page__recs-head" data-animate data-animate-order="1">
+              <p class="cwc_cart-page__eyebrow">You may also like</p>
+              <h2 class="cart--recommendations-heading cwc_cart-page__recs-title">{{ recs_heading }}</h2>
+            </div>
+            {% assign animation_order = animation_order | plus: 1 %}
             <div class="product-grid--wrapper product-grid--slider-enabled" data-grid-slider-wrapper>
               <safe-load-scripts class="hidden">
                 <script src="{{ 'component-grid-slider.js' | asset_url }}" defer="defer" type="module" data-flow-load-key="grid-slider"></script>
@@ -435,8 +453,8 @@
                         data-animate-order="{{ forloop.index | plus: animation_order }}"
                         data-animate-overflow-item
                       >
-                        {% assign badge_anim_order = forloop.index | plus: animation_order | plus: 2 %}
-                        {% render 'grid-view-item', product: recommendation, collection: settings.empty_cart_products, enable_badges: settings.show_badges, grid_count_desktop: 4, grid_count_mobile: 2, badge_anim_order: badge_anim_order %}
+                        {% comment %} Same card as the home and collection grids {% endcomment %}
+                        {% render 'cwc-product-card', product: recommendation, section_settings: section.settings %}
                       </div>
                     {% endif %}
                   {% endfor %}
@@ -460,6 +478,38 @@
     {% endif %}
   </div>
 </div>
+
+<script src="{{ 'CWC_product_card.js' | asset_url }}" defer></script>
+
+{% if cart.item_count > 0 %}
+  {% comment %}
+    Update Cart is hidden, so quantity changes save on their own: the theme's
+    − / + only change the number in the box, then this posts the cart form
+    (the same request Update Cart made) once the shopper pauses. The page
+    reloads with the new totals. Without JS the native checkout button still
+    sends the quantities along.
+  {% endcomment %}
+  <script>
+    (function () {
+      var form = document.querySelector('.cwc_cart-page form.cart');
+      if (!form) return;
+      var timer;
+      var queue = function () {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(function () {
+          form.classList.add('cwc_cart-page__form--saving');
+          form.submit();
+        }, 700);
+      };
+      form.addEventListener('click', function (event) {
+        if (event.target.closest('.js-qty__adjust')) queue();
+      });
+      form.addEventListener('change', function (event) {
+        if (event.target.matches('.js-qty__num')) queue();
+      });
+    })();
+  </script>
+{% endif %}
 
 {% schema %}
 {

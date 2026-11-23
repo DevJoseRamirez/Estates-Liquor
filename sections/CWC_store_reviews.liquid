@@ -4,7 +4,8 @@
     --text-color: {{ section.settings.text_color | default: '#13241C' }};
     --highlight-color: {{ section.settings.bold_color | default: '#8A6A2E' }};
     --eyebrow-color: {{ section.settings.eyebrow_color | default: '#8A6A2E' }};
-    --star-color: {{ section.settings.star_color | default: '#8A6A2E' }};
+    --star-color: {{ section.settings.star_color | default: '#C49340' }};
+    --star-empty-color: {{ section.settings.star_empty_color | default: '#E4DED2' }};
     --card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
     --card-meta-color: {{ section.settings.card_meta_color | default: '#5C5C57' }};
     --border-color: {{ section.settings.border_color | default: '#ECECE8' }};
@@ -351,7 +352,13 @@
       "type": "color",
       "id": "star_color",
       "label": "Star Color",
-      "default": "#8A6A2E"
+      "default": "#C49340"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty Star Color",
+      "default": "#E4DED2"
     },
     {
       "type": "color",

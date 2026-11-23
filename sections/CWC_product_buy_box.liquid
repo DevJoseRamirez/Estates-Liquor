@@ -254,20 +254,49 @@
               </h1>
 
             {% when 'rating' %}
-              <div class="cwc_product-buy-box__rating" {{ block.shopify_attributes }}>
-                <span class="cwc_product-buy-box__stars" role="img" aria-label="5 out of 5 stars">
-                  {% for i in (1..5) %}
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                      <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z" />
-                    </svg>
-                  {% endfor %}
+              {% liquid
+                # Same source as CWC Product Reviews: Judge.me's per-product JSON
+                # metafield, then the standard reviews.* metafields
+                assign rv_data = buy_product.metafields.judgeme.review_widget_data.value
+                assign rv_value = rv_data.average_rating | default: buy_product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
+                assign rv_count = rv_data.number_of_reviews | default: buy_product.metafields.reviews.rating_count.value | default: 0 | plus: 0
+                assign rv_percent = rv_value | times: 20 | at_most: 100
+                assign rv_anchor = block.settings.anchor_id | default: 'cwc_product-reviews' | remove: '#'
+                if rv_count == 1
+                  assign rv_label = block.settings.count_singular
+                else
+                  assign rv_label = block.settings.count_plural
+                endif
+                # No count server-side: hide until the browser asks Judge.me's feed
+                assign rv_hide = false
+                if rv_count == 0 and request.design_mode == false
+                  assign rv_hide = true
+                endif
+              %}
+              <a
+                class="cwc_product-buy-box__rating"
+                href="#{{ rv_anchor | escape }}"
+                data-cwc-rating
+                data-product-id="{{ buy_product.id }}"
+                data-shop-domain="{{ shop.permanent_domain }}"
+                data-count-singular="{{ block.settings.count_singular | escape }}"
+                data-count-plural="{{ block.settings.count_plural | escape }}"
+                {% if rv_count == 0 %}data-needs-feed{% endif %}
+                {% if rv_hide %}hidden{% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <span
+                  class="cwc_product-buy-box__rating-stars"
+                  data-rating-stars
+                  style="--rating: {{ rv_percent }}%;"
+                  role="img"
+                  aria-label="{{ rv_value | round: 1 }} out of 5 stars"
+                  >★★★★★</span
+                >
+                <span class="cwc_product-buy-box__rating-count" data-rating-count>
+                  {{- rv_count }} {{ rv_label | escape -}}
                 </span>
-                {% if block.settings.review_text != blank %}
-                  <a href="{{ block.settings.review_link | default: '#cwc_product-reviews' }}">
-                    {{ block.settings.review_text }}
-                  </a>
-                {% endif %}
-              </div>
+              </a>
 
             {% when 'price' %}
               <div class="cwc_product-buy-box__price-row" {{ block.shopify_attributes }} data-cwc-price-row>
@@ -393,6 +422,34 @@
                 assign transit_max = block.settings.transit_max | default: 5 | at_least: transit_min
                 assign closed_dates = block.settings.closed_dates | newline_to_br | strip_newlines | replace: '<br />', ',' | remove: ' '
               -%}
+              {%- liquid
+                # Ranges for the fulfillment note, from the same settings as the date
+                if processing_min == processing_max
+                  assign processing_range = processing_min | append: ''
+                else
+                  assign processing_range = processing_min | append: '–' | append: processing_max
+                endif
+                if transit_min == transit_max
+                  assign transit_range = transit_min | append: ''
+                else
+                  assign transit_range = transit_min | append: '–' | append: transit_max
+                endif
+                assign cutoff = block.settings.cutoff_hour | default: 16
+                if cutoff == 0
+                  assign cutoff_label = '12 AM'
+                elsif cutoff < 12
+                  assign cutoff_label = cutoff | append: ' AM'
+                elsif cutoff == 12
+                  assign cutoff_label = '12 PM'
+                else
+                  assign cutoff_label = cutoff | minus: 12 | append: ' PM'
+                endif
+              -%}
+              <div
+                class="cwc_product-buy-box__fulfillment"
+                style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#13241C' }}; --estimate-accent: {{ block.settings.accent_color | default: '#8A6A2E' }};"
+                {{ block.shopify_attributes }}
+              >
               <p
                 class="cwc_product-buy-box__estimate"
                 data-delivery-estimate
@@ -403,9 +460,7 @@
                 data-cutoff-hour="{{ block.settings.cutoff_hour }}"
                 data-closed-dates="{{ closed_dates | escape }}"
                 data-date-mode="{{ block.settings.date_mode | default: 'latest' }}"
-                style="--estimate-bg: {{ block.settings.bg_color | default: '#FBEFDD' }}; --estimate-text: {{ block.settings.text_color | default: '#13241C' }}; --estimate-accent: {{ block.settings.accent_color | default: '#8A6A2E' }};"
                 hidden
-                {{ block.shopify_attributes }}
               >
                 <svg
                   class="cwc_product-buy-box__estimate-icon"
@@ -422,6 +477,54 @@
                   <strong class="cwc_product-buy-box__estimate-date" data-estimate-date></strong>
                 </span>
               </p>
+
+              {% if block.settings.show_fulfillment %}
+                {% comment %}
+                  Native details/summary: opens without JS and keeps keyboard
+                  and screen reader behaviour. [processing], [transit] and
+                  [cutoff] are filled from the estimate settings above.
+                {% endcomment %}
+                <details class="cwc_product-buy-box__fulfillment-details">
+                  <summary class="cwc_product-buy-box__fulfillment-summary">
+                    <span>
+                      {{- block.settings.fulfillment_summary
+                        | default: 'Ships in [processing] business days'
+                        | replace: '[processing]', processing_range
+                        | replace: '[transit]', transit_range
+                        | escape -}}
+                    </span>
+                    <span class="cwc_product-buy-box__fulfillment-toggle">
+                      {{- block.settings.fulfillment_toggle | default: 'Details' | escape -}}
+                      <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+                        <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  </summary>
+                  <dl class="cwc_product-buy-box__fulfillment-list">
+                    <div>
+                      <dt>{{ block.settings.processing_heading | default: 'Processing' | escape }}</dt>
+                      <dd>
+                        {{- block.settings.processing_text
+                          | replace: '[processing]', processing_range
+                          | replace: '[cutoff]', cutoff_label
+                          | escape -}}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{{ block.settings.transit_heading | default: 'Shipping' | escape }}</dt>
+                      <dd>
+                        {{- block.settings.transit_text
+                          | replace: '[transit]', transit_range
+                          | escape -}}
+                      </dd>
+                    </div>
+                  </dl>
+                  {% if block.settings.fulfillment_note != blank %}
+                    <div class="cwc_product-buy-box__fulfillment-note">{{ block.settings.fulfillment_note }}</div>
+                  {% endif %}
+                </details>
+              {% endif %}
+              </div>
 
             {% when 'buy_buttons' %}
               <div class="cwc_product-buy-box__buy" {{ block.shopify_attributes }}>
@@ -912,13 +1015,13 @@
                     {{ block.settings.total_label | default: 'Total for selected' }}
                   </span>
                   {% comment %}
-                    Flat on purpose. All four are direct children so the narrow
-                    layout can regroup them into two lines — label + badge, then
-                    was + now — and collapse back to one line with no discount.
+                    Same order as the main price row: price, compare-at, saving.
+                    Flat on purpose so the narrow layout can drop the label onto
+                    its own line and keep the three figures together under it.
                   {% endcomment %}
-                  <span class="cwc_product-buy-box__fbt-save" data-cwc-fbt-save hidden></span>
-                  <s class="cwc_product-buy-box__fbt-total-was" data-cwc-fbt-total-was hidden></s>
                   <span class="cwc_product-buy-box__fbt-total-price" data-cwc-fbt-total></span>
+                  <s class="cwc_product-buy-box__fbt-total-was" data-cwc-fbt-total-was hidden></s>
+                  <span class="cwc_product-buy-box__fbt-save" data-cwc-fbt-save hidden></span>
                 </div>
 
                 {% if fbt_offer_bottom %}
@@ -1184,19 +1287,27 @@
       "limit": 1,
       "settings": [
         {
-          "type": "text",
-          "id": "review_text",
-          "label": "Review Link Text",
-          "default": "Read 24 reviews"
-        },
-        {
-          "type": "url",
-          "id": "review_link",
-          "label": "Review Link"
-        },
-        {
           "type": "paragraph",
-          "content": "Shows five stars. Swap for your review app's badge once it is installed."
+          "content": "Stars and count come from this product's Judge.me reviews. Hidden when the product has no reviews."
+        },
+        {
+          "type": "text",
+          "id": "count_singular",
+          "label": "Count Label (One)",
+          "default": "review"
+        },
+        {
+          "type": "text",
+          "id": "count_plural",
+          "label": "Count Label (Many)",
+          "default": "reviews"
+        },
+        {
+          "type": "text",
+          "id": "anchor_id",
+          "label": "Reviews Section Anchor",
+          "default": "cwc_product-reviews",
+          "info": "Clicking the rating scrolls here. Match the Anchor ID set on CWC Product Reviews"
         }
       ]
     },
@@ -1546,6 +1657,62 @@
           "id": "closed_dates",
           "label": "Closed Dates",
           "info": "Holidays with no processing or delivery. One per line as YYYY-MM-DD, e.g. 2026-11-26"
+        },
+        {
+          "type": "header",
+          "content": "Fulfillment Details"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_fulfillment",
+          "label": "Show Fulfillment Details",
+          "default": true,
+          "info": "A line under the date that opens to explain processing and shipping times"
+        },
+        {
+          "type": "text",
+          "id": "fulfillment_summary",
+          "label": "Summary Line",
+          "default": "Ships in [processing] business days",
+          "info": "[processing] and [transit] fill in the day ranges set above"
+        },
+        {
+          "type": "text",
+          "id": "fulfillment_toggle",
+          "label": "Toggle Label",
+          "default": "Details"
+        },
+        {
+          "type": "text",
+          "id": "processing_heading",
+          "label": "Processing Heading",
+          "default": "Processing"
+        },
+        {
+          "type": "textarea",
+          "id": "processing_text",
+          "label": "Processing Text",
+          "default": "[processing] business days to check, pack and hand your order to UPS. Order by [cutoff] Pacific on a business day and processing starts the same day.",
+          "info": "[processing] and [cutoff] fill in from the settings above"
+        },
+        {
+          "type": "text",
+          "id": "transit_heading",
+          "label": "Shipping Heading",
+          "default": "Shipping"
+        },
+        {
+          "type": "textarea",
+          "id": "transit_text",
+          "label": "Shipping Text",
+          "default": "UPS Ground, [transit] business days from Southern California depending on where it is going.",
+          "info": "[transit] fills in from the settings above"
+        },
+        {
+          "type": "richtext",
+          "id": "fulfillment_note",
+          "label": "Extra Note",
+          "info": "Optional, e.g. signature or holiday notes. Hidden when empty"
         },
         {
           "type": "header",

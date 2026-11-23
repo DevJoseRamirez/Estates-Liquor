@@ -281,7 +281,7 @@
   font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.01em;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: var(--text-color);
 }
 
@@ -302,41 +302,47 @@
 }
 
 /* === Rating === */
+/* Links down to CWC Product Reviews; stars match the testimonial strip */
 .cwc_product-buy-box__rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.cwc_product-buy-box__stars {
   display: inline-flex;
-  gap: 2px;
-  color: var(--highlight-color);
-}
-
-.cwc_product-buy-box__stars svg {
-  width: 14px;
-  height: 14px;
-  fill: currentColor;
-  display: block;
-}
-
-.cwc_product-buy-box__rating a {
-  font-family: var(--bb-font-mono);
-  font-size: 12px;
-  line-height: 1.3;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--subtext-color);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border-color);
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.cwc_product-buy-box__rating a:hover {
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
   color: var(--bb-ink);
-  border-color: var(--highlight-color);
+  text-decoration: none;
+}
+
+.cwc_product-buy-box__rating[hidden] {
+  display: none;
+}
+
+.cwc_product-buy-box__rating-stars {
+  display: inline-block;
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #C49340 var(--rating, 100%), #E4DED2 var(--rating, 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cwc_product-buy-box__rating-count {
+  font-family: var(--bb-font-body, inherit);
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--bb-ink);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.cwc_product-buy-box__rating:hover .cwc_product-buy-box__rating-count {
+  border-color: currentColor;
+}
+
+.cwc_product-buy-box__rating:focus-visible {
+  outline: 2px solid var(--highlight-color);
+  outline-offset: 3px;
 }
 
 /* === Price === */
@@ -769,15 +775,18 @@
 
 /* ==============================
    Frequently Bought Together
-   Brand §5 PDP: white box, 1px hairline, Outline (dark green) button so it
-   stays clearly secondary to the yellow Add to Cart. Checked = dark green
-   fill with a yellow tick.
+   Deliberately secondary: white panel and cards on hairlines, 4px corners
+   to match the testimonial card. Unpicked rows fade back. Outline (dark
+   green) button so it stays clearly secondary to the yellow Add to Cart. Checked = dark green fill with a yellow tick.
    ============================== */
 .cwc_product-buy-box__fbt {
-  padding: 22px;
+  --fbt-radius: 4px;
+
+  padding: 20px 20px 18px;
   background-color: #FFFFFF;
   border: 1px solid var(--bb-line);
-  border-radius: 0;
+  border-radius: var(--fbt-radius);
+  background-color: #fbefdd;
 }
 
 /* set until live recommendations arrive, when nothing is picked to fall back on */
@@ -785,40 +794,92 @@
   display: none;
 }
 
+/* Short hairline ahead of the title; sized under the product title and price */
 .cwc_product-buy-box__fbt-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--bb-font-display);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--bb-dark);
-  margin: 0 0 16px;
+  margin: 0 0 12px;
+}
+
+.cwc_product-buy-box__fbt-head::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 14px;
+  height: 1px;
+  background-color: var(--bb-line-input);
 }
 
 .cwc_product-buy-box__fbt-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 18px;
 }
 
-/* The whole row is the hit target — a white row on the tint box; the selected
-   state is carried by the tick and the thumbnail frame */
+/* The whole row is the hit target. Picked rows get a slightly firmer
+   hairline; unpicked ones fade back but stay clickable */
 .cwc_product-buy-box__fbt-item {
+  position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-areas: "thumb info price";
   align-items: center;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 14px 16px 14px 14px;
   cursor: pointer;
   background-color: #FFFFFF;
-  border: 1px solid var(--bb-line-input);
-  border-radius: 0;
-  transition: border-color 0.15s ease;
+  border: 1px solid var(--bb-line);
+  border-radius: var(--fbt-radius);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .cwc_product-buy-box__fbt-item:hover {
-  border-color: var(--bb-dark);
+  border-color: var(--bb-line-input);
+}
+
+.cwc_product-buy-box__fbt-item--selected {
+  border-color: var(--bb-line-strong);
+}
+
+.cwc_product-buy-box__fbt-item:not(.cwc_product-buy-box__fbt-item--selected) {
+  background-color: #FCFBF9;
+}
+
+.cwc_product-buy-box__fbt-item:not(.cwc_product-buy-box__fbt-item--selected) .cwc_product-buy-box__fbt-thumb-frame,
+.cwc_product-buy-box__fbt-item:not(.cwc_product-buy-box__fbt-item--selected) .cwc_product-buy-box__fbt-info {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+/* "+" joining each card to the one above, centred on the thumbnail column */
+.cwc_product-buy-box__fbt-item+.cwc_product-buy-box__fbt-item::before {
+  content: "+";
+  position: absolute;
+  top: -15px;
+  left: calc(14px + var(--cwc-fbt-thumb, 56px) / 2 - 10px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-family: var(--bb-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--meta-color);
+  background-color: #FFFFFF;
+  border: 1px solid var(--bb-line);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 /* Focus lives on the hidden input, so lift it onto the row the eye is on */
@@ -853,7 +914,7 @@
   width: 20px;
   height: 20px;
   border: 1px solid var(--bb-line-input);
-  border-radius: 0;
+  border-radius: 3px;
   background-color: #FFFFFF;
   color: transparent;
   transition:
@@ -893,8 +954,8 @@
   padding: 3px;
   overflow: hidden;
   border: 1px solid var(--bb-line);
-  border-radius: 0;
-  background-color: #FFFFFF;
+  border-radius: 3px;
+  background-color: #F7F5F0;
   transition: border-color 0.15s ease;
 }
 
@@ -975,7 +1036,7 @@
   border-top: 1px solid var(--bb-line);
 }
 
-/* Pushes the badge and both figures to the right edge as one group */
+/* Pushes price, compare-at and saving to the right edge as one group */
 .cwc_product-buy-box__fbt-total-label {
   margin-right: auto;
   font-family: var(--bb-font-mono);
@@ -999,8 +1060,9 @@
 }
 
 .cwc_product-buy-box__fbt-save {
+  align-self: center;
   padding: 4px 8px;
-  border-radius: 0;
+  border-radius: 2px;
   font-family: var(--bb-font-mono);
   font-size: 10px;
   font-weight: 500;
@@ -1022,7 +1084,8 @@
   color: var(--bb-ink);
 }
 
-/* Opens the block, so it carries more weight than the heading under it */
+/* A quiet brass line with a small diamond mark — present, but no fill
+   competing with the Add to Cart above */
 .cwc_product-buy-box__fbt-offer {
   display: flex;
   align-items: center;
@@ -1038,13 +1101,22 @@
   color: var(--bb-brass);
 }
 
+.cwc_product-buy-box__fbt-offer::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  background-color: currentColor;
+  transform: rotate(45deg);
+}
+
 /* Still short of the threshold — a nudge, not an award */
 .cwc_product-buy-box__fbt-offer--pending {
   color: var(--subtext-color);
 }
 
 .cwc_product-buy-box__fbt-offer--bottom {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
 }
 
 .cwc_product-buy-box__fbt-offer[hidden] {
@@ -1081,7 +1153,7 @@
   color: var(--bb-dark);
   background-color: #FFFFFF;
   border: 1px solid var(--bb-dark);
-  border-radius: 0;
+  border-radius: var(--fbt-radius);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
@@ -1107,7 +1179,7 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
-  margin: 0 0 14px;
+  margin: 0;
   padding: 12px 16px;
   box-sizing: border-box;
   background-color: var(--estimate-bg, #FBEFDD);
@@ -1136,6 +1208,116 @@
   text-decoration-color: var(--estimate-accent, #8A6A2E);
   text-underline-offset: 3px;
   white-space: nowrap;
+}
+
+/* === Fulfillment Details ===
+   Wraps the estimate bar and a quiet note under it. The note hangs off the
+   bar as a white panel edged in the bar colour, small muted type, so it
+   explains the date without competing with Add to Cart below. */
+.cwc_product-buy-box__fulfillment {
+  margin: 0 0 14px;
+}
+
+.cwc_product-buy-box__fulfillment-details {
+  border: 1px solid var(--estimate-bg, #FBEFDD);
+  border-top: 0;
+  background-color: #FFFFFF;
+  font-family: var(--bb-font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--subtext-color);
+}
+
+/* No JS, no date: the note stands on its own, so it needs its own top edge */
+.cwc_product-buy-box__estimate[hidden] + .cwc_product-buy-box__fulfillment-details {
+  border-top: 1px solid var(--estimate-bg, #FBEFDD);
+}
+
+.cwc_product-buy-box__fulfillment-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cwc_product-buy-box__fulfillment-summary::-webkit-details-marker {
+  display: none;
+}
+
+.cwc_product-buy-box__fulfillment-summary:focus-visible {
+  outline: 2px solid var(--estimate-accent, #8A6A2E);
+  outline-offset: -2px;
+}
+
+.cwc_product-buy-box__fulfillment-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  font-weight: 500;
+  color: var(--estimate-text, #13241C);
+  text-decoration: underline;
+  text-decoration-color: var(--bb-line-input);
+  text-underline-offset: 3px;
+}
+
+.cwc_product-buy-box__fulfillment-summary:hover .cwc_product-buy-box__fulfillment-toggle {
+  text-decoration-color: var(--estimate-accent, #8A6A2E);
+}
+
+.cwc_product-buy-box__fulfillment-toggle svg {
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.cwc_product-buy-box__fulfillment-details[open] .cwc_product-buy-box__fulfillment-toggle svg {
+  transform: rotate(180deg);
+}
+
+.cwc_product-buy-box__fulfillment-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 2px 16px 14px;
+}
+
+.cwc_product-buy-box__fulfillment-list div {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.cwc_product-buy-box__fulfillment-list dt {
+  font-family: var(--bb-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--estimate-accent, #8A6A2E);
+}
+
+.cwc_product-buy-box__fulfillment-list dd {
+  margin: 0;
+}
+
+.cwc_product-buy-box__fulfillment-note {
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--bb-line);
+}
+
+.cwc_product-buy-box__fulfillment-note p {
+  margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .cwc_product-buy-box__fulfillment-list div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
 }
 
 /* === Help Block ===
@@ -1223,19 +1405,20 @@
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* Secondary — white, amber-text outline; fills amber-text on hover */
+/* Secondary — the inverse of Chat now: white with a dark green outline and
+   label, filling dark green on hover */
 .cwc_product-buy-box__help-button--outline {
   background-color: #FFFFFF;
-  border-color: var(--help-amber-text);
-  color: var(--help-amber-text);
+  border-color: var(--help-green);
+  color: var(--help-green);
 }
 
 .cwc_product-buy-box__help-button--outline:hover {
-  background-color: var(--help-amber-text);
+  background-color: var(--help-green);
+  border-color: var(--help-green);
   color: #FFFFFF;
 }
 
-/* Chat — solid green, white text */
 .cwc_product-buy-box__help-button--dark {
   background-color: var(--help-green);
   border-color: var(--help-green);
@@ -1278,7 +1461,7 @@
   font-size: 17px;
   line-height: 1;
   letter-spacing: 1px;
-  background: linear-gradient(90deg, #8A6A2E var(--rating, 100%), #D9D9D3 var(--rating, 100%));
+  background: linear-gradient(90deg, #C49340 var(--rating, 100%), #E4DED2 var(--rating, 100%));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1485,6 +1668,11 @@
     padding: 12px;
   }
 
+  /* Follows the narrower row padding so it stays centred on the thumbnail */
+  .cwc_product-buy-box__fbt-item+.cwc_product-buy-box__fbt-item::before {
+    left: calc(12px + var(--cwc-fbt-thumb, 56px) / 2 - 10px);
+  }
+
   /* Spans both rows by sitting in both areas, so it stays centred against the
      title and price together */
   .cwc_product-buy-box__fbt-thumb {
@@ -1514,26 +1702,20 @@
     margin-right: 6px;
   }
 
-  /* Auto-placement, not named areas: with no discount the badge and the struck
-     figure are both absent and this collapses to one line on its own. */
+  /* Label on its own line, then price, compare-at and saving left to right
+     like the main price row. With no discount only the price follows. */
   .cwc_product-buy-box__fbt-total {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    flex-wrap: wrap;
     column-gap: 10px;
-    row-gap: 6px;
-    align-items: baseline;
+    row-gap: 8px;
   }
 
   .cwc_product-buy-box__fbt-total-label {
+    flex: 1 0 100%;
     margin-right: 0;
   }
 
-  .cwc_product-buy-box__fbt-save {
-    justify-self: end;
-  }
-
   .cwc_product-buy-box__fbt-total-price {
-    justify-self: end;
     font-size: 22px;
   }
 }
