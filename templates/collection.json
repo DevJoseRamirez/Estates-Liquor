@@ -66,6 +66,7 @@
     },
     "cwc_breadcrumb": {
       "type": "CWC_breadcrumb",
+      "disabled": true,
       "settings": {
         "home_label": "Home",
         "separator": "/",
@@ -79,11 +80,10 @@
         "separator_color": "#ecece8",
         "show_border": false,
         "border_color": "#ecece8",
+        "alignment": "center",
         "padding_top": 25,
-        "padding_bottom": 0,
-        "alignment": "center"
-      },
-      "disabled": true
+        "padding_bottom": 0
+      }
     },
     "cwc_collection_header": {
       "type": "CWC_collection_header",
@@ -93,6 +93,7 @@
         "show_count": false,
         "title": "",
         "description": "",
+        "show_pills": false,
         "show_all_pill": true,
         "all_label": "All",
         "search_crumb": "Search",
@@ -112,8 +113,7 @@
         "pill_active_bg_color": "#e9a23b",
         "pill_active_text_color": "#13241C",
         "padding_top": 26,
-        "padding_bottom": 22,
-        "show_pills": false
+        "padding_bottom": 22
       }
     },
     "cwc_subcategory_rail": {
@@ -353,6 +353,7 @@
     },
     "cwc_collection_body": {
       "type": "CWC_collection_body",
+      "disabled": true,
       "settings": {
         "products_per_page": 48,
         "use_pagination": false,
@@ -378,8 +379,7 @@
         "button_bg_color": "#e9a23b",
         "padding_top": 35,
         "padding_bottom": 80
-      },
-      "disabled": true
+      }
     },
     "cwc_related_collections": {
       "type": "CWC_related_collections",
@@ -435,6 +435,7 @@
         "cwc_related_collections_b3",
         "cwc_related_collections_b4"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "Keep Browsing",
         "heading": "<p>Related Collections</p>",
@@ -453,8 +454,7 @@
         "card_text_color": "#e9a23b",
         "padding_top": 70,
         "padding_bottom": 70
-      },
-      "disabled": true
+      }
     },
     "cwc_collection_seo": {
       "type": "CWC_collection_seo",
@@ -511,16 +511,16 @@
         "show_collection_description": true,
         "use_metafield": true,
         "content_width": 820,
+        "enable_read_more": true,
+        "visible_blocks": 2,
+        "more_label": "Read More",
+        "less_label": "Read Less",
         "bg_color": "#ffffff",
         "text_color": "#13241C",
         "body_text_color": "#5c5c57",
         "bold_color": "#8a6a2e",
         "padding_top": 80,
-        "padding_bottom": 80,
-        "enable_read_more": true,
-        "visible_blocks": 2,
-        "more_label": "Read More",
-        "less_label": "Read Less"
+        "padding_bottom": 80
       }
     },
     "cwc_trust_strip": {
@@ -565,6 +565,7 @@
         "cwc_trust_strip_b3",
         "cwc_trust_strip_b4"
       ],
+      "disabled": true,
       "settings": {
         "icon_size": 20,
         "bg_color": "#f4f0e8",
@@ -574,14 +575,69 @@
         "border_color": "#e6e6e1",
         "padding_top": 20,
         "padding_bottom": 20
-      },
-      "disabled": true
+      }
     },
     "cwc_collection_grid": {
       "type": "CWC_collection_grid",
+      "blocks": {
+        "cwc_subcategory_tiles": {
+          "type": "subcategory_tiles",
+          "settings": {
+            "metafield_key": "sub_collections",
+            "hide_empty": true,
+            "aria_label": "Shop by type",
+            "eyebrow": "Shop by Type",
+            "tile_style": "compact",
+            "eyebrow_color": "#8A6A2E",
+            "card_bg_color": "#FFFFFF",
+            "text_color": "#1C1C19",
+            "tile_bg_color": "#FFFFFF",
+            "tile_edge_color": "#E4EBE6",
+            "tile_border_color": "#ECECE8",
+            "tile_hover_color": "#E9A23B",
+            "columns_desktop": 6,
+            "mobile_layout": "scroll_two_rows",
+            "gap_below": 24
+          }
+        },
+        "cwc_collection_promo_b1": {
+          "type": "promo_card",
+          "settings": {
+            "position": 13,
+            "eyebrow": "Today’s Picks",
+            "heading": "<p>A few bottles, <em>picked today.</em></p>",
+            "text": "<p>The bottles our team is pouring and recommending right now, at fair retail.</p>",
+            "content_layout": "split",
+            "button_label": "See Today’s Picks",
+            "link": "shopify://collections/todays-featured"
+          }
+        },
+        "cwc_collection_promo_b2": {
+          "type": "promo_card",
+          "settings": {
+            "position": 29,
+            "eyebrow": "Allocated · Rare & Limited",
+            "heading": "<p>Hard-to-find bottles, <em>at fair retail.</em></p>",
+            "text": "<p>Allocated releases and limited bottles, listed as they land. Once they’re gone, they’re gone.</p>",
+            "content_layout": "split",
+            "button_label": "Shop Rare & Limited",
+            "link": "shopify://collections/rare-limited",
+            "bg_color": "#6F4822",
+            "eyebrow_color": "#E8DCCB",
+            "bold_color": "#E9A23B"
+          }
+        }
+      },
+      "block_order": [
+        "cwc_subcategory_tiles",
+        "cwc_collection_promo_b1",
+        "cwc_collection_promo_b2"
+      ],
       "settings": {
         "products_per_page": 48,
         "columns_desktop": "4",
+        "show_card_vendor": true,
+        "show_card_meta": false,
         "load_more_icon": "chevron",
         "show_filters": true,
         "button_filters": "Bottle size, Size",
@@ -606,64 +662,8 @@
         "button_bg_color": "#e9a23b",
         "button_text_color": "#13241C",
         "padding_top": 0,
-        "padding_bottom": 72,
-        "show_card_vendor": true,
-        "show_card_meta": false
-      },
-      "blocks": {
-        "cwc_subcategory_tiles": {
-          "type": "subcategory_tiles",
-          "settings": {
-            "metafield_key": "sub_collections",
-            "hide_empty": true,
-            "aria_label": "Shop by type",
-            "text_color": "#1C1C19",
-            "tile_bg_color": "#FFFFFF",
-            "tile_edge_color": "#E4EBE6",
-            "tile_border_color": "#ECECE8",
-            "tile_hover_color": "#E9A23B",
-            "columns_desktop": 6,
-            "mobile_layout": "scroll_two_rows",
-            "gap_below": 24,
-            "tile_style": "compact",
-            "eyebrow": "Shop by Type",
-            "eyebrow_color": "#8A6A2E",
-            "card_bg_color": "#FFFFFF"
-          }
-        },
-        "cwc_collection_promo_b1": {
-          "type": "promo_card",
-          "settings": {
-            "position": 13,
-            "eyebrow": "Today’s Picks",
-            "heading": "<p>A few bottles, <em>picked today.</em></p>",
-            "text": "<p>The bottles our team is pouring and recommending right now, at fair retail.</p>",
-            "button_label": "See Today’s Picks",
-            "link": "shopify://collections/popular-picks",
-            "content_layout": "split"
-          }
-        },
-        "cwc_collection_promo_b2": {
-          "type": "promo_card",
-          "settings": {
-            "position": 29,
-            "eyebrow": "Allocated · Rare & Limited",
-            "heading": "<p>Hard-to-find bottles, <em>at fair retail.</em></p>",
-            "text": "<p>Allocated releases and limited bottles, listed as they land. Once they’re gone, they’re gone.</p>",
-            "button_label": "Shop Rare & Limited",
-            "link": "shopify://collections/rare-limited",
-            "content_layout": "split",
-            "bg_color": "#6F4822",
-            "eyebrow_color": "#E8DCCB",
-            "bold_color": "#E9A23B"
-          }
-        }
-      },
-      "block_order": [
-        "cwc_subcategory_tiles",
-        "cwc_collection_promo_b1",
-        "cwc_collection_promo_b2"
-      ]
+        "padding_bottom": 72
+      }
     }
   },
   "order": [

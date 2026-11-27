@@ -1,0 +1,26 @@
+{%- comment -%}
+  CWC Build a Box: shelf page (data-only section).
+  Not placed on any template. CWC_bab_builder.js fetches it with the Section
+  Rendering API to load more bottles for a tab:
+    /collections/<handle>?section_id=cwc_bab_shelf&page=<n>  (lowercase: Shopify 404s on uppercase section ids)
+  It returns one page of cards. The builder JS filters them (allocated, bundles,
+  sold out), works out their tabs and swaps in the live copy.
+  The page size (48) must match the first-page limit in CWC_bab_builder.liquid.
+{%- endcomment -%}
+<div class="cwc_bab-shelf" data-bab-shelf>
+  {%- if collection != blank -%}
+    {%- paginate collection.products by 48 -%}
+      <div data-bab-shelf-meta data-next="{% if paginate.next %}{{ paginate.current_page | plus: 1 }}{% endif %}" data-pages="{{ paginate.pages }}" hidden></div>
+      {%- for product in collection.products -%}
+        {% render 'CWC_bab_card', product: product, tabs: '' %}
+      {%- endfor -%}
+    {%- endpaginate -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "CWC Build a Box Shelf",
+  "settings": []
+}
+{% endschema %}

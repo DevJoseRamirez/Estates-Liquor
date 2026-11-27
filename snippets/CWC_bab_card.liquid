@@ -1,0 +1,118 @@
+{%- comment -%}
+  CWC Build a Box: shelf card.
+  Used by CWC_bab_builder (first page of each tab) and CWC_bab_shelf
+  ("Load more" pages fetched with the Section Rendering API).
+
+  Params:
+  - product          (required)
+  - tabs             space-wrapped tab indexes, e.g. " 0 2 ". Blank = JS works it out
+  - low_stock        show "N left" at or under this stock (default 5)
+  - add_label, in_box_label, sold_out_label  (optional copy)
+{%- endcomment -%}
+{%- liquid
+  assign low_stock = low_stock | default: 5
+  assign p_variant = product.selected_or_first_available_variant
+  assign p_soldout = false
+  if product.available == false
+    assign p_soldout = true
+  endif
+
+  # Max that can go in the box: tracked + deny = stock, else open
+  assign p_max = 99
+  if p_variant.inventory_management == 'shopify' and p_variant.inventory_policy == 'deny'
+    assign p_max = p_variant.inventory_quantity
+    if p_max < 0
+      assign p_max = 0
+    endif
+  endif
+  assign p_low = false
+  if p_max > 0 and p_max <= low_stock
+    assign p_low = true
+  endif
+
+  assign p_search = product.title | append: ' ' | append: product.vendor | append: ' ' | append: product.type
+  if product.metafields.custom.distillery != blank
+    assign p_search = p_search | append: ' ' | append: product.metafields.custom.distillery.value
+  endif
+  assign p_search = p_search | downcase
+
+  assign p_handles = product.collections | map: 'handle' | join: ','
+  assign p_tag_str = product.tags | join: ',' | downcase
+-%}
+<div
+  class="cwc_bab-builder__card{% if p_soldout %} cwc_bab-builder__card--soldout{% endif %}"
+  data-bab-card
+  data-product-id="{{ product.id }}"
+  data-variant-id="{{ p_variant.id }}"
+  data-price="{{ p_variant.price }}"
+  data-max="{{ p_max }}"
+  data-title="{{ product.title | escape }}"
+  data-url="{{ product.url }}"
+  data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 }}{% endif %}"
+  data-tabs="{{ tabs }}"
+  data-search="{{ p_search | escape }}"
+  data-handles=",{{ p_handles | escape }},"
+  data-tags=",{{ p_tag_str | escape }},"
+  data-soldout="{{ p_soldout }}"
+>
+  <a href="{{ product.url }}" class="cwc_bab-builder__card-media" tabindex="-1" aria-hidden="true">
+    {% if product.featured_image != blank %}
+      <img
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="{{ product.featured_image | image_url: width: 300 }} 300w, {{ product.featured_image | image_url: width: 600 }} 600w"
+        sizes="(max-width: 768px) 50vw, 25vw"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="600"
+        height="600"
+      >
+    {% else %}
+      <span class="cwc_bab-builder__card-placeholder">
+        <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
+          <rect x="16" y="0" width="20" height="6" rx="2" />
+          <rect x="18" y="6" width="16" height="11" />
+          <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
+        </svg>
+      </span>
+    {% endif %}
+    <span class="cwc_bab-builder__card-badge" data-bab-in-box hidden>
+      {{- in_box_label | default: 'In your box' -}}
+    </span>
+    {% if p_soldout %}
+      <span class="cwc_bab-builder__card-badge cwc_bab-builder__card-badge--soldout" data-bab-soldout-badge>
+        {{- sold_out_label | default: 'Sold out' -}}
+      </span>
+    {% endif %}
+  </a>
+
+  <div class="cwc_bab-builder__card-body">
+    <a href="{{ product.url }}" class="cwc_bab-builder__card-title">{{ product.title }}</a>
+
+    <div class="cwc_bab-builder__card-price-row">
+      <span class="cwc_bab-builder__card-price">{{ p_variant.price | money }}</span>
+      {% if p_low %}
+        <span class="cwc_bab-builder__card-stock">{{ p_max }} left</span>
+      {% endif %}
+    </div>
+
+    {% unless p_soldout %}
+      <button
+        type="button"
+        class="cwc_bab-builder__card-button"
+        data-bab-add
+        aria-label="Add {{ product.title | escape }} to box"
+      >
+        {{- add_label | default: 'Add to box' -}}
+      </button>
+      <div class="cwc_bab-builder__stepper" data-bab-stepper hidden>
+        <button type="button" class="cwc_bab-builder__stepper-button" data-bab-dec aria-label="Remove one {{ product.title | escape }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14" /></svg>
+        </button>
+        <span class="cwc_bab-builder__stepper-value" data-bab-qty aria-live="polite"></span>
+        <button type="button" class="cwc_bab-builder__stepper-button" data-bab-inc aria-label="Add one more {{ product.title | escape }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
+        </button>
+      </div>
+    {% endunless %}
+  </div>
+</div>

@@ -82,29 +82,36 @@
         "tab_1": {
           "type": "tab",
           "settings": {
-            "collection": "bourbon",
+            "collection": "box-bourbon",
             "label": "Bourbon"
           }
         },
         "tab_2": {
           "type": "tab",
           "settings": {
-            "collection": "tequila",
-            "label": "Tequila"
+            "collection": "box-scotch",
+            "label": "Scotch"
           }
         },
         "tab_3": {
           "type": "tab",
           "settings": {
-            "collection": "cognac",
-            "label": "Cognac"
+            "collection": "box-tequila",
+            "label": "Tequila"
           }
         },
         "tab_4": {
           "type": "tab",
           "settings": {
-            "collection": "best-selling-products",
-            "label": "Best sellers"
+            "collection": "box-rye",
+            "label": "Rye"
+          }
+        },
+        "tab_5": {
+          "type": "tab",
+          "settings": {
+            "collection": "box-rare-and-limited",
+            "label": "Rare & Allocated"
           }
         }
       },
@@ -115,11 +122,14 @@
         "tab_1",
         "tab_2",
         "tab_3",
-        "tab_4"
+        "tab_4",
+        "tab_5"
       ],
       "settings": {
         "min_bottles": 3,
-        "show_tiers": false
+        "show_tiers": false,
+        "show_all_tab": true,
+        "exclude_tags": ""
       }
     }
   },

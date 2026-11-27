@@ -47,6 +47,23 @@
     var bar = sectionEl.querySelector('[data-bab-bar]');
     var sheet = sectionEl.querySelector('[data-bab-sheet]');
     var lineTemplate = sectionEl.querySelector('[data-bab-line-template]');
+    var gridEl = sectionEl.querySelector('.cwc_bab-builder__grid');
+    var moreEl = sectionEl.querySelector('[data-bab-more]');
+    var moreBtn = sectionEl.querySelector('[data-bab-load-more]');
+    var moreNote = sectionEl.querySelector('[data-bab-more-note]');
+
+    /* Per-tab paging: page 1 is rendered by Liquid, later pages load on demand */
+    var shelf = config.shelf || { tabs: [] };
+    var pageSize = Number(shelf.pageSize) || 48;
+    var shelfTabs = (shelf.tabs || []).map(function (tab) {
+      return {
+        handle: tab.handle,
+        url: tab.url,
+        label: tab.label,
+        nextPage: Number(tab.count) > pageSize ? 2 : null
+      };
+    });
+    var loadingMore = false;
 
     var cardById = {};
     cards.forEach(function (card) {
@@ -76,7 +93,8 @@
       var q = normalize(query.trim());
       var visible = 0;
       cards.forEach(function (card) {
-        var inTab = activeTab === 'all' || (card.dataset.tabs || '').indexOf(' ' + activeTab + ' ') > -1;
+        // A search looks across the whole offer, not just the active tab
+        var inTab = q || activeTab === 'all' || (card.dataset.tabs || '').indexOf(' ' + activeTab + ' ') > -1;
         var match = !q || card.dataset.searchNorm.indexOf(q) > -1;
         var show = inTab && match;
         card.hidden = !show;
@@ -87,11 +105,129 @@
         resultsEl.textContent =
           visible === 1 && copy.resultsOne ? copy.resultsOne : store.fill(copy.results, { count: visible });
       }
+      updateMore(q);
+
       if (emptyEl) {
         emptyEl.hidden = visible > 0;
         var clearBtn = emptyEl.querySelector('[data-bab-clear]');
         if (clearBtn) clearBtn.hidden = !q;
       }
+    }
+
+    /* ---------- Load more ---------- */
+    function pagedTabs(q) {
+      /* A search or the All tab spans every tab; otherwise just the active one */
+      return shelfTabs
+        .map(function (tab, i) {
+          return { tab: tab, index: i };
+        })
+        .filter(function (entry) {
+          if (!entry.tab.nextPage) return false;
+          return q || activeTab === 'all' || String(entry.index) === String(activeTab);
+        });
+    }
+
+    function updateMore(q) {
+      if (!moreEl) return;
+      var pending = pagedTabs(q);
+      moreEl.hidden = pending.length === 0;
+      if (moreBtn && !loadingMore) {
+        var single = !q && activeTab !== 'all' && pending.length === 1;
+        moreBtn.textContent = single
+          ? store.fill(copy.loadMoreTab || 'Load more [tab]', { tab: pending[0].tab.label })
+          : copy.loadMore || 'Load more bottles';
+      }
+      if (moreNote) {
+        moreNote.textContent = q && pending.length ? copy.searchMore || 'Searching the bottles loaded so far.' : '';
+        moreNote.hidden = !moreNote.textContent;
+      }
+    }
+
+    function isExcluded(card) {
+      if (card.dataset.soldout === 'true' && shelf.soldOutMode !== 'grey') return true;
+      if (shelf.excludeHandle && (card.dataset.handles || '').indexOf(shelf.excludeHandle) > -1) return true;
+      var tags = (card.dataset.tags || ',').split(',').filter(Boolean);
+      var excludeTags = shelf.excludeTags || ',';
+      return tags.some(function (tag) {
+        return excludeTags.indexOf(',' + tag + ',') > -1;
+      });
+    }
+
+    function tabsFor(card, sourceIndex) {
+      var list = ' ';
+      var handles = card.dataset.handles || '';
+      shelfTabs.forEach(function (tab, i) {
+        if (i === sourceIndex || handles.indexOf(',' + tab.handle + ',') > -1) list += i + ' ';
+      });
+      return list;
+    }
+
+    function ingest(sourceIndex, html) {
+      var tab = shelfTabs[sourceIndex];
+      var holder = document.createElement('div');
+      holder.innerHTML = html;
+      var meta = holder.querySelector('[data-bab-shelf-meta]');
+      tab.nextPage = meta && meta.dataset.next ? Number(meta.dataset.next) : null;
+
+      Array.prototype.slice.call(holder.querySelectorAll('[data-bab-card]')).forEach(function (card) {
+        if (isExcluded(card)) return;
+        var id = card.dataset.variantId;
+        var existing = cardById[id];
+        if (existing) {
+          var token = ' ' + sourceIndex + ' ';
+          if ((existing.dataset.tabs || ' ').indexOf(token) === -1) {
+            existing.dataset.tabs = (existing.dataset.tabs || ' ') + sourceIndex + ' ';
+          }
+          return;
+        }
+        card.dataset.tabs = tabsFor(card, sourceIndex);
+        card.dataset.searchNorm = normalize(card.dataset.search);
+        /* Swap in the live copy (the shelf section only knows the defaults) */
+        var addBtn = card.querySelector('[data-bab-add]');
+        if (addBtn && copy.addLabel) addBtn.textContent = copy.addLabel;
+        var badge = card.querySelector('[data-bab-in-box]');
+        if (badge && copy.inBoxLabel) badge.textContent = copy.inBoxLabel;
+        var soldBadge = card.querySelector('[data-bab-soldout-badge]');
+        if (soldBadge && copy.soldOutLabel) soldBadge.textContent = copy.soldOutLabel;
+        if (gridEl) gridEl.appendChild(card);
+        cards.push(card);
+        cardById[id] = card;
+      });
+    }
+
+    function loadMore() {
+      if (loadingMore) return;
+      var q = normalize(query.trim());
+      var pending = pagedTabs(q);
+      if (!pending.length) return;
+
+      loadingMore = true;
+      if (moreBtn) {
+        moreBtn.disabled = true;
+        moreBtn.textContent = copy.loading || 'Loading…';
+      }
+
+      var requests = pending.map(function (entry) {
+        var url = entry.tab.url + '?section_id=cwc_bab_shelf&page=' + entry.tab.nextPage;
+        return fetch(url, { credentials: 'same-origin' })
+          .then(function (res) {
+            if (!res.ok) throw new Error('shelf ' + res.status);
+            return res.text();
+          })
+          .then(function (html) {
+            ingest(entry.index, html);
+          })
+          .catch(function () {
+            /* leave nextPage as is so the button can retry */
+          });
+      });
+
+      Promise.all(requests).then(function () {
+        loadingMore = false;
+        if (moreBtn) moreBtn.disabled = false;
+        renderCards();
+        applyFilter();
+      });
     }
 
     function setTab(tabEl) {
@@ -467,6 +603,12 @@
 
     function liveShelf() {
       var live = {};
+      /* Bottles added from a later page aren't on the shelf after a reload: keep them */
+      store.lines().forEach(function (line) {
+        if (!cardById[line.id]) {
+          live[line.id] = { title: line.title, price: line.price, max: line.max, image: line.image, url: line.url };
+        }
+      });
       cards.forEach(function (card) {
         if (!card.querySelector('[data-bab-add]')) return; /* sold out */
         live[card.dataset.variantId] = metaFromCard(card);
@@ -494,6 +636,7 @@
       else if (btn.hasAttribute('data-bab-dec') && id) change(id, -1);
       else if (btn.hasAttribute('data-bab-remove') && id) store.setQty(id, 0);
       else if (btn.hasAttribute('data-bab-tab')) setTab(btn);
+      else if (btn.hasAttribute('data-bab-load-more')) loadMore();
       else if (btn.hasAttribute('data-bab-clear')) {
         query = '';
         if (searchInput) {

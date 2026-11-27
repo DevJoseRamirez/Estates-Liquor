@@ -59,6 +59,20 @@
 
   assign min_bottles = section.settings.min_bottles | default: 3
   assign low_stock = section.settings.low_stock_threshold | default: 5
+
+  # Bundles / sets never join the box: excluded by tag or by collection
+  assign exclude_tags = ','
+  assign exclude_tag_list = section.settings.exclude_tags | split: ','
+  for ex_tag in exclude_tag_list
+    assign ex_clean = ex_tag | strip | downcase
+    if ex_clean != blank
+      assign exclude_tags = exclude_tags | append: ex_clean | append: ','
+    endif
+  endfor
+  assign exclude_handle = ''
+  if section.settings.exclude_collection != blank
+    assign exclude_handle = ',' | append: section.settings.exclude_collection.handle | append: ','
+  endif
 -%}
 
 {%- comment -%} Reward naming, shared by tier cards and the JS config {%- endcomment -%}
@@ -354,24 +368,29 @@
             -%}
             {% for block in section.blocks %}
               {% if block.type == 'tab' and block.settings.collection != blank %}
-                {% for product in block.settings.collection.products limit: 50 %}
+                {%- comment -%} First page only; the rest loads on demand from CWC_bab_shelf (page size must match its paginate) {%- endcomment -%}
+                {% for product in block.settings.collection.products limit: 48 %}
                   {%- liquid
                     assign p_key = ',' | append: product.id | append: ','
                     assign skip = false
                     if seen contains p_key
                       assign skip = true
                     endif
-                    if product.tags contains 'Allocated' or product.tags contains 'allocated'
-                      assign skip = true
-                    endif
-                    assign p_soldout = false
-                    if product.available == false
-                      assign p_soldout = true
-                      if section.settings.sold_out_mode == 'hide'
+                    # Optional exclusions (tags / collection), off by default
+                    assign p_tag_str = product.tags | join: ',' | downcase
+                    assign p_tag_list = p_tag_str | split: ','
+                    for p_tag in p_tag_list
+                      assign p_tag_key = ',' | append: p_tag | append: ','
+                      if exclude_tags contains p_tag_key
                         assign skip = true
                       endif
+                    endfor
+                    assign p_handles = product.collections | map: 'handle' | join: ','
+                    assign p_handles = ',' | append: p_handles | append: ','
+                    if exclude_handle != blank and p_handles contains exclude_handle
+                      assign skip = true
                     endif
-                    if card_total >= 150
+                    if product.available == false and section.settings.sold_out_mode == 'hide'
                       assign skip = true
                     endif
                   -%}
@@ -379,24 +398,8 @@
                     {%- liquid
                       assign seen = seen | append: product.id | append: ','
                       assign card_total = card_total | plus: 1
-                      assign p_variant = product.selected_or_first_available_variant
 
-                      # Max that can go in the box: tracked + deny = stock, else open
-                      assign p_max = 99
-                      if p_variant.inventory_management == 'shopify' and p_variant.inventory_policy == 'deny'
-                        assign p_max = p_variant.inventory_quantity
-                        if p_max < 0
-                          assign p_max = 0
-                        endif
-                      endif
-                      assign p_low = false
-                      if p_max > 0 and p_max <= low_stock
-                        assign p_low = true
-                      endif
-
-                      # Which tabs this bottle belongs to
-                      assign p_handles = product.collections | map: 'handle' | join: ','
-                      assign p_handles = ',' | append: p_handles | append: ','
+                      # Which tabs this bottle belongs to (every tab collection it is in)
                       assign p_tabs = ' '
                       assign tab_j = 0
                       for t_block in section.blocks
@@ -408,90 +411,26 @@
                           assign tab_j = tab_j | plus: 1
                         endif
                       endfor
-
-                      assign p_search = product.title | append: ' ' | append: product.vendor | append: ' ' | append: product.type
-                      if product.metafields.custom.distillery != blank
-                        assign p_search = p_search | append: ' ' | append: product.metafields.custom.distillery.value
-                      endif
-                      assign p_search = p_search | downcase
                     -%}
-                    <div
-                      class="cwc_bab-builder__card{% if p_soldout %} cwc_bab-builder__card--soldout{% endif %}"
-                      data-bab-card
-                      data-variant-id="{{ p_variant.id }}"
-                      data-price="{{ p_variant.price }}"
-                      data-max="{{ p_max }}"
-                      data-title="{{ product.title | escape }}"
-                      data-url="{{ product.url }}"
-                      data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 }}{% endif %}"
-                      data-tabs="{{ p_tabs }}"
-                      data-search="{{ p_search | escape }}"
-                    >
-                      <a href="{{ product.url }}" class="cwc_bab-builder__card-media" tabindex="-1" aria-hidden="true">
-                        {% if product.featured_image != blank %}
-                          <img
-                            src="{{ product.featured_image | image_url: width: 600 }}"
-                            srcset="{{ product.featured_image | image_url: width: 300 }} 300w, {{ product.featured_image | image_url: width: 600 }} 600w"
-                            sizes="(max-width: 768px) 50vw, 25vw"
-                            alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                            loading="lazy"
-                            width="600"
-                            height="600"
-                          >
-                        {% else %}
-                          <span class="cwc_bab-builder__card-placeholder">
-                            <svg viewBox="0 0 52 62" aria-hidden="true" focusable="false">
-                              <rect x="16" y="0" width="20" height="6" rx="2" />
-                              <rect x="18" y="6" width="16" height="11" />
-                              <path d="M10,17 Q10,24 6,28 L6,54 Q6,62 14,62 L38,62 Q46,62 46,54 L46,28 Q42,24 42,17 Z" />
-                            </svg>
-                          </span>
-                        {% endif %}
-                        <span class="cwc_bab-builder__card-badge" data-bab-in-box hidden>
-                          {{- section.settings.in_box_label | default: 'In your box' -}}
-                        </span>
-                        {% if p_soldout %}
-                          <span class="cwc_bab-builder__card-badge cwc_bab-builder__card-badge--soldout">
-                            {{- section.settings.sold_out_label | default: 'Sold out' -}}
-                          </span>
-                        {% endif %}
-                      </a>
-
-                      <div class="cwc_bab-builder__card-body">
-                        <a href="{{ product.url }}" class="cwc_bab-builder__card-title">{{ product.title }}</a>
-
-                        <div class="cwc_bab-builder__card-price-row">
-                          <span class="cwc_bab-builder__card-price">{{ p_variant.price | money }}</span>
-                          {% if p_low %}
-                            <span class="cwc_bab-builder__card-stock">{{ p_max }} left</span>
-                          {% endif %}
-                        </div>
-
-                        {% unless p_soldout %}
-                          <button
-                            type="button"
-                            class="cwc_bab-builder__card-button"
-                            data-bab-add
-                            aria-label="Add {{ product.title | escape }} to box"
-                          >
-                            {{- section.settings.add_label | default: 'Add to box' -}}
-                          </button>
-                          <div class="cwc_bab-builder__stepper" data-bab-stepper hidden>
-                            <button type="button" class="cwc_bab-builder__stepper-button" data-bab-dec aria-label="Remove one {{ product.title | escape }}">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14" /></svg>
-                            </button>
-                            <span class="cwc_bab-builder__stepper-value" data-bab-qty aria-live="polite"></span>
-                            <button type="button" class="cwc_bab-builder__stepper-button" data-bab-inc aria-label="Add one more {{ product.title | escape }}">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
-                            </button>
-                          </div>
-                        {% endunless %}
-                      </div>
-                    </div>
+                    {% render 'CWC_bab_card',
+                      product: product,
+                      tabs: p_tabs,
+                      low_stock: low_stock,
+                      add_label: section.settings.add_label,
+                      in_box_label: section.settings.in_box_label,
+                      sold_out_label: section.settings.sold_out_label
+                    %}
                   {% endunless %}
                 {% endfor %}
               {% endif %}
             {% endfor %}
+          </div>
+
+          <div class="cwc_bab-builder__more" data-bab-more hidden>
+            <p class="cwc_bab-builder__more-note" data-bab-more-note></p>
+            <button type="button" class="cwc_bab-builder__more-button" data-bab-load-more>
+              {{- section.settings.load_more_label | default: 'Load more bottles' -}}
+            </button>
           </div>
 
           <div class="cwc_bab-builder__empty" data-bab-empty hidden>
@@ -555,6 +494,27 @@
           "minBottles": {{ min_bottles }},
           "moneyFormat": {{ shop.money_format | json }},
           "tiers": {{ tier_json }},
+          "shelf": {
+            "pageSize": 48,
+            "soldOutMode": {{ section.settings.sold_out_mode | default: 'hide' | json }},
+            "excludeTags": {{ exclude_tags | json }},
+            "excludeHandle": {{ exclude_handle | json }},
+            "tabs": [
+              {%- assign cfg_first = true -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'tab' and block.settings.collection != blank -%}
+                  {%- unless cfg_first %},{% endunless -%}
+                  {%- assign cfg_first = false -%}
+                  {
+                    "handle": {{ block.settings.collection.handle | json }},
+                    "url": {{ block.settings.collection.url | json }},
+                    "label": {{ block.settings.label | default: block.settings.collection.title | json }},
+                    "count": {{ block.settings.collection.products_count | default: 0 }}
+                  }
+                {%- endif -%}
+              {%- endfor -%}
+            ]
+          },
           "copy": {
             "emptyBold": {{ section.settings.status_empty_bold | json }},
             "emptySub": {{ section.settings.status_empty_sub | json }},
@@ -586,7 +546,14 @@
             "estTotalLabel": {{ section.settings.est_total_label | json }},
             "onlyLeft": {{ section.settings.only_left_text | json }},
             "emptyBox": {{ section.settings.empty_box_text | json }},
-            "addError": {{ section.settings.add_error_text | json }}
+            "addError": {{ section.settings.add_error_text | json }},
+            "addLabel": {{ section.settings.add_label | json }},
+            "inBoxLabel": {{ section.settings.in_box_label | json }},
+            "soldOutLabel": {{ section.settings.sold_out_label | json }},
+            "loadMore": {{ section.settings.load_more_label | json }},
+            "loadMoreTab": {{ section.settings.load_more_tab_label | json }},
+            "loading": {{ section.settings.loading_label | json }},
+            "searchMore": {{ section.settings.search_more_text | json }}
           }
         }
       </script>
@@ -679,7 +646,20 @@
       "type": "checkbox",
       "id": "show_all_tab",
       "label": "Show \"All\" tab",
+      "info": "Off: the shelf opens on the first tab. Search always looks across every tab.",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "exclude_tags",
+      "label": "Exclude products tagged",
+      "info": "Optional, comma separated. Leave blank to show the whole collection."
+    },
+    {
+      "type": "collection",
+      "id": "exclude_collection",
+      "label": "Exclude products in collection",
+      "info": "Optional. Products in this collection are left out."
     },
     {
       "type": "text",
@@ -717,6 +697,31 @@
       "id": "clear_search_label",
       "label": "Clear search label",
       "default": "Clear search"
+    },
+    {
+      "type": "text",
+      "id": "load_more_label",
+      "label": "Load more label (All tab)",
+      "default": "Load more bottles"
+    },
+    {
+      "type": "text",
+      "id": "load_more_tab_label",
+      "label": "Load more label (single tab)",
+      "info": "[tab] is replaced with the tab name.",
+      "default": "Load more [tab]"
+    },
+    {
+      "type": "text",
+      "id": "loading_label",
+      "label": "Loading label",
+      "default": "Loading…"
+    },
+    {
+      "type": "text",
+      "id": "search_more_text",
+      "label": "Search hint while more bottles are unloaded",
+      "default": "Searching the bottles loaded so far."
     },
     {
       "type": "select",
@@ -1184,7 +1189,7 @@
           "type": "collection",
           "id": "collection",
           "label": "Collection",
-          "info": "Bottles in this collection join the offer. Allocated bottles are always excluded."
+          "info": "Bottles in this collection join the offer (first 50)."
         },
         {
           "type": "text",
@@ -1204,9 +1209,10 @@
         { "type": "tier", "settings": { "threshold": 500 } },
         { "type": "tier", "settings": { "threshold": 1000 } },
         { "type": "tab", "settings": { "label": "Bourbon" } },
+        { "type": "tab", "settings": { "label": "Scotch" } },
         { "type": "tab", "settings": { "label": "Tequila" } },
-        { "type": "tab", "settings": { "label": "Cognac" } },
-        { "type": "tab", "settings": { "label": "Gift-ready" } }
+        { "type": "tab", "settings": { "label": "Rye" } },
+        { "type": "tab", "settings": { "label": "Rare & Allocated" } }
       ]
     }
   ]
